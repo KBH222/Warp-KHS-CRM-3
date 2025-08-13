@@ -215,7 +215,7 @@ const CustomersEnhanced = () => {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <div>
-            <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>Customers</h1>
+            <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>Customers (Updated)</h1>
             {lastSyncTime && (
               <p style={{ 
                 fontSize: '12px', 
