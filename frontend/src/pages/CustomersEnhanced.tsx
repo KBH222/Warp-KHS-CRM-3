@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { customerStorage } from '../utils/localStorage';
-import { PracticalSyncStatus } from '../components/PracticalSyncStatus';
 
 const CustomersEnhanced = () => {
   const navigate = useNavigate();
