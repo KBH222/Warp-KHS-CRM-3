@@ -1,0 +1,9 @@
+{
+  "version": "1.0.2",
+  "updated": "2025-08-13T00:00:00Z",
+  "changes": [
+    "Removed Google Drive Setup Required warning",
+    "Removed Security card from dashboard",
+    "Added automatic cloud sync"
+  ]
+}
