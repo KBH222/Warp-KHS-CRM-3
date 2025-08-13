@@ -2,7 +2,7 @@
 // Connects to your InMotion Hosting sync server
 
 const SYNC_SERVER_URL = 'https://kenhawk.biz/crm-sync/';
-const AUTH_TOKEN = 'khs-sync-2024-secure-token'; // TODO: Change this to match your server token!
+const AUTH_TOKEN = 'KHS_Construction_2025_Secure!'; // Matches server token
 
 export interface SyncData {
   customers: any[];
