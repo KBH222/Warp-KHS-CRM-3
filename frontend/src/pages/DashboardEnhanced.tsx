@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { ServerSyncPanel } from '../components/ServerSyncPanel';
 
 const DashboardEnhanced = () => {
   const navigate = useNavigate();
@@ -102,9 +101,6 @@ const DashboardEnhanced = () => {
             {formatDateTime().time}
           </div>
         </div>
-
-        {/* Server Sync Panel */}
-        <ServerSyncPanel />
 
         {/* Navigation Cards */}
         <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '16px', color: '#374151' }}>
