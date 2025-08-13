@@ -13,6 +13,9 @@ dist/
 build/
 *.local
 
+# But include shared packages dist
+!shared/*/dist/
+
 # Environment
 .env
 .env.local
