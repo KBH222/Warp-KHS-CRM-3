@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { AutoSyncPanel } from '../components/AutoSyncPanel';
+import { ServerSyncPanel } from '../components/ServerSyncPanel';
 
 const DashboardEnhanced = () => {
   const navigate = useNavigate();
@@ -103,8 +103,8 @@ const DashboardEnhanced = () => {
           </div>
         </div>
 
-        {/* Auto Sync Panel */}
-        <AutoSyncPanel />
+        {/* Server Sync Panel */}
+        <ServerSyncPanel />
 
         {/* Navigation Cards */}
         <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '16px', color: '#374151' }}>
