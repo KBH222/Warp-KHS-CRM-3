@@ -212,17 +212,6 @@ const CustomersEnhanced = () => {
         paddingBottom: '100px'
       }}>
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-        {/* Practical Google Drive Sync */}
-        <PracticalSyncStatus 
-          onSyncComplete={() => {
-            // Reload data after sync
-            const savedCustomers = customerStorage.getAll();
-            if (savedCustomers) {
-              setCustomers(savedCustomers);
-            }
-          }}
-        />
-
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <div>
