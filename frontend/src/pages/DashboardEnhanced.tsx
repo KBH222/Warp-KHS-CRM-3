@@ -40,14 +40,7 @@ const DashboardEnhanced = () => {
       icon: '⚙️',
       path: '/profile',
       color: '#6B7280'
-    },
-    {
-      title: 'Security',
-      description: 'Privacy and security settings',
-      icon: '🔒',
-      path: '/security',
-      color: '#DC2626'
-    },
+    }
   ];
 
   // Update time every second

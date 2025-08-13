@@ -89,7 +89,7 @@ const Profile = () => {
     { id: 'business', label: 'Business Info', icon: '🏢' },
     { id: 'notifications', label: 'Notifications', icon: '🔔' },
     { id: 'hours', label: 'Working Hours', icon: '🕐' },
-    { id: 'security', label: 'Security', icon: '🔒' },
+    { id: 'security', label: 'Security', icon: '🔒', isLink: true, path: '/security' },
     { id: 'reports', label: 'Reports', icon: '📊', isLink: true, path: '/reports' },
     { id: 'invoices', label: 'Invoices', icon: '💰', isLink: true, path: '/invoices' }
   ];
