@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Working Offline - KHS CRM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .offline-container {
+            max-width: 480px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .offline-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 2rem;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: #fbbf24;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .features-list {
+            text-align: left;
+            margin: 2rem 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .features-list h3 {
+            color: #fbbf24;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .features-list ul {
+            list-style: none;
+        }
+
+        .features-list li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .status-info {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            min-width: 120px;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: #fbbf24;
+            border-color: #f59e0b;
+            color: #1e40af;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: #f59e0b;
+            border-color: #d97706;
+        }
+
+        .construction-icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 480px) {
+            .offline-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+        </div>
+        
+        <h1>
+            <span class="construction-icon">🏗️</span>
+            Working Offline
+        </h1>
+        
+        <p class="subtitle">
+            No internet? No problem! KHS CRM works great offline for field operations.
+        </p>
+
+        <div class="status-info">
+            <strong>📍 You're in offline mode</strong><br>
+            Your work will sync automatically when you're back online.
+        </div>
+
+        <div class="features-list">
+            <h3>Available Offline Features:</h3>
+            <ul>
+                <li>View cached jobs and project details</li>
+                <li>Access customer information and contacts</li>
+                <li>Check materials lists and inventory</li>
+                <li>Add new customers, jobs, and materials</li>
+                <li>Update job status and progress</li>
+                <li>View project photos and documents</li>
+            </ul>
+        </div>
+
+        <div class="buttons">
+            <a href="/" class="btn btn-primary">
+                📋 Open Dashboard
+            </a>
+            <a href="/jobs" class="btn">
+                🔨 View Jobs
+            </a>
+            <a href="/customers" class="btn">
+                👥 Customers
+            </a>
+            <button class="btn" onclick="location.reload()">
+                🔄 Check Connection
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh when online
+        window.addEventListener('online', () => {
+            location.reload();
+        });
+
+        // Show online status
+        function updateConnectionStatus() {
+            if (navigator.onLine) {
+                location.reload();
+            }
+        }
+
+        // Check connection periodically
+        setInterval(updateConnectionStatus, 10000);
+    </script>
+</body>
+</html>

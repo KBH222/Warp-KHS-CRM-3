@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phone Input Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        input { padding: 8px; font-size: 16px; width: 300px; }
+        .info { margin-top: 10px; color: #666; }
+    </style>
+</head>
+<body>
+    <h2>Phone Number Formatter Test</h2>
+    <p>Type numbers only: 8087897845</p>
+    
+    <input type="tel" id="phone" placeholder="(808) 789-7845">
+    
+    <div class="info">
+        <p>Raw value: <span id="raw"></span></p>
+        <p>Display value: <span id="display"></span></p>
+    </div>
+
+    <script>
+        const phoneInput = document.getElementById('phone');
+        const rawSpan = document.getElementById('raw');
+        const displaySpan = document.getElementById('display');
+
+        function formatPhone(input) {
+            // Remove all non-digits
+            const numbers = input.replace(/\D/g, '');
+            
+            // Apply formatting
+            if (numbers.length === 0) return '';
+            if (numbers.length <= 3) return `(${numbers}`;
+            if (numbers.length <= 6) return `(${numbers.slice(0,3)}) ${numbers.slice(3)}`;
+            if (numbers.length <= 10) return `(${numbers.slice(0,3)}) ${numbers.slice(3,6)}-${numbers.slice(6)}`;
+            
+            return `(${numbers.slice(0,3)}) ${numbers.slice(3,6)}-${numbers.slice(6,10)}`;
+        }
+
+        phoneInput.addEventListener('input', (e) => {
+            const input = e.target.value;
+            const numbersOnly = input.replace(/\D/g, '');
+            
+            // Don't allow more than 10 digits
+            if (numbersOnly.length > 10) {
+                e.target.value = formatPhone(numbersOnly.slice(0, 10));
+                return;
+            }
+            
+            const formatted = formatPhone(numbersOnly);
+            e.target.value = formatted;
+            
+            // Update display
+            rawSpan.textContent = numbersOnly;
+            displaySpan.textContent = formatted;
+        });
+    </script>
+</body>
+</html>

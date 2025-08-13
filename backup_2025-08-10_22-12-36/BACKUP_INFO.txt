@@ -1,0 +1,60 @@
+KHS CRM PROJECT BACKUP
+=====================
+Backup Date: 2025-08-10 22:12:36
+Project: KHS Construction & Remodeling CRM
+Location: C:\Users\bruce\dev\khs-crm
+
+BACKUP CONTENTS
+===============
+- /frontend - Frontend React application
+- /backend - Backend Node.js API server  
+- package.json - Root package configuration
+- package-lock.json - Dependency lock file
+- README.md - Project documentation
+- .env.example - Environment variable template
+- docker-compose.yml - Docker configuration
+- tsconfig.json - TypeScript configuration
+
+RECENT CHANGES
+==============
+- Implemented Google Drive integration
+  - Added googleDriveService.ts for API integration
+  - Created GoogleDriveStatus component
+  - Created GoogleDriveIntegration component
+  - Added react-toastify for notifications
+  - Updated Dashboard to show Google Drive status
+
+ENVIRONMENT SETUP
+=================
+The project uses environment variables stored in:
+- frontend/.env (contains Google Drive API credentials)
+- backend/.env (contains database and API configurations)
+
+Note: .env files are not included in backup for security.
+Please ensure you have copies of your environment files.
+
+TO RESTORE
+==========
+1. Copy backup folder to desired location
+2. Run: npm install (in root directory)
+3. Copy your .env files to frontend/ and backend/
+4. Start development servers:
+   - npm run dev (starts both frontend and backend)
+
+DATABASE
+========
+Uses PostgreSQL with Docker. Database data is not included in this backup.
+To restore database, use your database backups or migrations.
+
+GOOGLE DRIVE SETUP
+==================
+OAuth2 credentials configured but require Google Cloud Console setup:
+- Add http://localhost:5173 to authorized JavaScript origins
+- Client ID: 465234055864-4gs9th8oltlpeieae2vba7ova8k0rg3o.apps.googleusercontent.com
+
+CURRENT STATUS
+==============
+- Frontend server runs on port 5173
+- Backend server runs on port 3001
+- PostgreSQL runs on port 5432 (via Docker)
+- Redis runs on port 6379 (via Docker)

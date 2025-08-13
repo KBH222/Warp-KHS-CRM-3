@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["ES2022"],
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "allowJs": false,
+    "noEmit": false,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "incremental": true,
+    "paths": {
+      "@khs-crm/types": ["./shared/types/src"],
+      "@khs-crm/constants": ["./shared/constants/src"]
+    }
+  },
+  "references": [
+    { "path": "./shared/types" },
+    { "path": "./shared/constants" },
+    { "path": "./backend" },
+    { "path": "./frontend" }
+  ]
+}

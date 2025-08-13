@@ -1,0 +1,3942 @@
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mC:/Users/bruce/dev/khs-crm/frontend[39m
+
+ [32m✓[39m src/test/job-photos.test.tsx[2m > [22mJob Photos[2m > [22mrenders job photos page with job details
+ [32m✓[39m src/test/job-photos.test.tsx[2m > [22mJob Photos[2m > [22mshows before, during, and after tabs
+ [32m✓[39m src/test/job-photos.test.tsx[2m > [22mJob Photos[2m > [22mshows empty state when no photos
+ [32m✓[39m src/test/job-photos.test.tsx[2m > [22mJob Photos[2m > [22mopens upload modal when upload button clicked
+[90mstdout[2m | src/test/schedule-customer-dropdown.test.tsx[2m > [22m[2mSchedule Calendar Customer Dropdown[2m > [22m[2mshows customer dropdown when creating new job[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+ [32m✓[39m src/test/job-photos.test.tsx[2m > [22mJob Photos[2m > [22mswitches between tabs
+ [32m✓[39m src/test/job-photos.test.tsx[2m > [22mJob Photos[2m > [22mhandles file upload
+[90mstdout[2m | src/test/recurring-jobs.test.tsx[2m > [22m[2mRecurring Jobs[2m > [22m[2mshows recurring job checkbox in new job modal[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mrenders customers list[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mrenders search input[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mfilters customers based on search term[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+ [32m✓[39m src/pages/__tests__/CustomersNew.test.tsx[2m > [22mCustomersNew[2m > [22mrenders customers list
+ [32m✓[39m src/pages/__tests__/CustomersNew.test.tsx[2m > [22mCustomersNew[2m > [22mrenders search input
+[90mstdout[2m | src/test/drag-drop-calendar.test.tsx[2m > [22m[2mDrag and Drop Calendar[2m > [22m[2mmakes calendar cells droppable[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+[90mstdout[2m | src/test/drag-drop-calendar.test.tsx[2m > [22m[2mDrag and Drop Calendar[2m > [22m[2mcalendar has draggable elements when jobs exist[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+ [32m✓[39m src/test/drag-drop-calendar.test.tsx[2m > [22mDrag and Drop Calendar[2m > [22mmakes calendar cells droppable
+ [32m✓[39m src/test/recurring-jobs.test.tsx[2m > [22mRecurring Jobs[2m > [22mshows recurring job checkbox in new job modal
+[90mstdout[2m | src/test/recurring-jobs.test.tsx[2m > [22m[2mRecurring Jobs[2m > [22m[2mshows recurrence options when checkbox is checked[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+ [32m✓[39m src/pages/__tests__/Dashboard.test.tsx[2m > [22mDashboard[2m > [22mrenders dashboard title
+ [32m✓[39m src/pages/__tests__/Dashboard.test.tsx[2m > [22mDashboard[2m > [22mrenders all navigation cards
+ [32m✓[39m src/pages/__tests__/Dashboard.test.tsx[2m > [22mDashboard[2m > [22mnavigates to customers page when Customers card is clicked
+ [32m✓[39m src/pages/__tests__/Dashboard.test.tsx[2m > [22mDashboard[2m > [22mnavigates to jobs page when Jobs card is clicked
+ [32m✓[39m src/pages/__tests__/Dashboard.test.tsx[2m > [22mDashboard[2m > [22mnavigates to materials page when Materials card is clicked
+ [32m✓[39m src/pages/__tests__/Dashboard.test.tsx[2m > [22mDashboard[2m > [22mnavigates to profile page when Profile card is clicked
+ [32m✓[39m src/pages/__tests__/Dashboard.test.tsx[2m > [22mDashboard[2m > [22mapplies correct styling to cards
+ [32m✓[39m src/pages/__tests__/Dashboard.test.tsx[2m > [22mDashboard[2m > [22mcards have large touch targets
+ [32m✓[39m src/test/invoices.test.tsx[2m > [22mInvoices[2m > [22mrenders invoices page with header
+ [32m✓[39m src/test/invoices.test.tsx[2m > [22mInvoices[2m > [22mdisplays new invoice button
+ [32m✓[39m src/test/invoices.test.tsx[2m > [22mInvoices[2m > [22mshows filter buttons
+ [32m✓[39m src/test/invoices.test.tsx[2m > [22mInvoices[2m > [22mdisplays invoice list
+ [32m✓[39m src/test/invoices.test.tsx[2m > [22mInvoices[2m > [22mshows correct invoice amounts
+ [32m✓[39m src/test/invoices.test.tsx[2m > [22mInvoices[2m > [22mdisplays overdue status correctly
+ [32m✓[39m src/test/schedule-customer-dropdown.test.tsx[2m > [22mSchedule Calendar Customer Dropdown[2m > [22mshows customer dropdown when creating new job
+[90mstdout[2m | src/test/schedule-customer-dropdown.test.tsx[2m > [22m[2mSchedule Calendar Customer Dropdown[2m > [22m[2mallows selecting a customer from dropdown[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+ [32m✓[39m src/test/reports.test.tsx[2m > [22mReports[2m > [22mrenders reports page with header
+ [32m✓[39m src/test/reports.test.tsx[2m > [22mReports[2m > [22mshows time range selector with default month view
+ [32m✓[39m src/test/reports.test.tsx[2m > [22mReports[2m > [22mdisplays summary statistics
+ [32m✓[39m src/test/reports.test.tsx[2m > [22mReports[2m > [22mcalculates correct totals
+ [32m✓[39m src/test/reports.test.tsx[2m > [22mReports[2m > [22mshows job status breakdown
+ [32m✓[39m src/test/reports.test.tsx[2m > [22mReports[2m > [22mdisplays jobs by worker
+ [32m✓[39m src/test/reports.test.tsx[2m > [22mReports[2m > [22mshows top customers
+ [32m✓[39m src/test/reports.test.tsx[2m > [22mReports[2m > [22mchanges date range when time range is changed
+ [32m✓[39m src/test/reports.test.tsx[2m > [22mReports[2m > [22mfilters jobs by date range
+ [32m✓[39m src/test/reports.test.tsx[2m > [22mReports[2m > [22mshows empty state when no data
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mfilters customers based on search term[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: S
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mfilters customers based on search term[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m1[39m
+Search term: Sa
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+
+ [32m✓[39m src/test/gantt-view.test.tsx[2m > [22mGantt Chart View[2m > [22mswitches to gantt view when clicked
+ [32m✓[39m src/test/gantt-view.test.tsx[2m > [22mGantt Chart View[2m > [22mdisplays worker rows in gantt view
+ [32m✓[39m src/test/gantt-view.test.tsx[2m > [22mGantt Chart View[2m > [22mshows view switcher includes gantt option
+[90mstdout[2m | src/test/gantt-view.test.tsx[2m > [22m[2mGantt Chart View[2m > [22m[2mswitches to gantt view when clicked[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+[90mstdout[2m | src/test/gantt-view.test.tsx[2m > [22m[2mGantt Chart View[2m > [22m[2mdisplays worker rows in gantt view[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+[90mstdout[2m | src/test/gantt-view.test.tsx[2m > [22m[2mGantt Chart View[2m > [22m[2mshows view switcher includes gantt option[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mfilters customers based on search term[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m1[39m
+Search term: Sar
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mfilters customers based on search term[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m1[39m
+Search term: Sara
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mfilters customers based on search term[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m1[39m
+Search term: Sarah
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+
+ [32m✓[39m src/test/calendar-views.test.tsx[2m > [22mCalendar Views[2m > [22mrenders month view by default
+ [32m✓[39m src/test/calendar-views.test.tsx[2m > [22mCalendar Views[2m > [22mswitches to week view when clicked
+ [32m✓[39m src/test/calendar-views.test.tsx[2m > [22mCalendar Views[2m > [22mswitches to day view when clicked
+ [32m✓[39m src/test/calendar-views.test.tsx[2m > [22mCalendar Views[2m > [22mshows view switcher buttons
+[90mstdout[2m | src/test/calendar-views.test.tsx[2m > [22m[2mCalendar Views[2m > [22m[2mrenders month view by default[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+[90mstdout[2m | src/test/calendar-views.test.tsx[2m > [22m[2mCalendar Views[2m > [22m[2mswitches to week view when clicked[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+[90mstdout[2m | src/test/calendar-views.test.tsx[2m > [22m[2mCalendar Views[2m > [22m[2mswitches to day view when clicked[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+[90mstdout[2m | src/test/calendar-views.test.tsx[2m > [22m[2mCalendar Views[2m > [22m[2mshows view switcher buttons[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+ [32m✓[39m src/test/invoices.test.tsx[2m > [22mInvoices[2m > [22mopens new invoice modal when button clicked
+ [32m✓[39m src/test/invoices.test.tsx[2m > [22mInvoices[2m > [22mfilters invoices when filter buttons clicked
+ [32m✓[39m src/test/invoices.test.tsx[2m > [22mInvoices[2m > [22mnavigates to invoice detail when view clicked
+ [32m✓[39m src/test/invoices.test.tsx[2m > [22mInvoices[2m > [22mupdates invoice status when send clicked
+ [32m✓[39m src/test/invoices.test.tsx[2m > [22mInvoices[2m > [22mshows empty state when no invoices
+ [32m✓[39m src/test/invoices.test.tsx[2m > [22mInvoices[2m > [22mdeletes invoice when delete button clicked
+ [32m✓[39m src/test/schedule-customer-dropdown.test.tsx[2m > [22mSchedule Calendar Customer Dropdown[2m > [22mallows selecting a customer from dropdown
+[90mstdout[2m | src/test/schedule-customer-dropdown.test.tsx[2m > [22m[2mSchedule Calendar Customer Dropdown[2m > [22m[2mshows customer names in dropdown options[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+ [32m✓[39m src/test/schedule-customer-dropdown.test.tsx[2m > [22mSchedule Calendar Customer Dropdown[2m > [22mshows customer names in dropdown options
+[90mstdout[2m | src/test/drag-drop-calendar.test.tsx[2m > [22m[2mDrag and Drop Calendar[2m > [22m[2mshows drag cursor style[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+[90mstdout[2m | src/test/drag-drop-calendar.test.tsx[2m > [22m[2mDrag and Drop Calendar[2m > [22m[2mhandles drag over event on calendar cells[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+[90mstdout[2m | src/test/drag-drop-calendar.test.tsx[2m > [22m[2mDrag and Drop Calendar[2m > [22m[2mprevents default on drag over to allow drop[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+ [32m✓[39m src/test/drag-drop-calendar.test.tsx[2m > [22mDrag and Drop Calendar[2m > [22mcalendar has draggable elements when jobs exist
+ [32m✓[39m src/test/drag-drop-calendar.test.tsx[2m > [22mDrag and Drop Calendar[2m > [22mshows drag cursor style
+ [32m✓[39m src/test/drag-drop-calendar.test.tsx[2m > [22mDrag and Drop Calendar[2m > [22mhandles drag over event on calendar cells
+ [32m✓[39m src/test/drag-drop-calendar.test.tsx[2m > [22mDrag and Drop Calendar[2m > [22mprevents default on drag over to allow drop
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mopens add customer modal when Add Customer button is clicked[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+ [32m✓[39m src/pages/__tests__/CustomersNew.test.tsx[2m > [22mCustomersNew[2m > [22mfilters customers based on search term
+ [32m✓[39m src/test/recurring-jobs.test.tsx[2m > [22mRecurring Jobs[2m > [22mshows recurrence options when checkbox is checked
+[90mstdout[2m | src/test/recurring-jobs.test.tsx[2m > [22m[2mRecurring Jobs[2m > [22m[2mhas recurrence type dropdown with options[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mopens add customer modal when Add Customer button is clicked[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2madds a new customer when form is submitted[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+ [31m×[39m src/pages/__tests__/CustomersNew.test.tsx[2m > [22mCustomersNew[2m > [22mopens add customer modal when Add Customer button is clicked
+[31m   → Found a label with the text of: Name *, however no form control was found associated to that label. Make sure you're using the "for" attribute or "aria-labelledby" attribute correctly.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"max-w-4xl mx-auto"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"mb-4"[31m
+      [36m>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 active:bg-gray-100 transition-colors"[31m
+        [36m>[31m
+          [36m<svg[31m
+            [33mclass[31m=[32m"w-5 h-5 mr-2"[31m
+            [33mfill[31m=[32m"none"[31m
+            [33mstroke[31m=[32m"currentColor"[31m
+            [33mviewBox[31m=[32m"0 0 24 24"[31m
+          [36m>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M15 19l-7-7 7-7"[31m
+              [33mstroke-linecap[31m=[32m"round"[31m
+              [33mstroke-linejoin[31m=[32m"round"[31m
+              [33mstroke-width[31m=[32m"2"[31m
+            [36m/>[31m
+          [36m</svg>[31m
+          [0mBack to Home[0m
+        [36m</button>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"flex justify-between items-center mb-4"[31m
+      [36m>[31m
+        [36m<h1[31m
+          [33mclass[31m=[32m"text-2xl font-bold"[31m
+        [36m>[31m
+          [0mCustomers ([0m
+          [0m2[0m
+          [0m)[0m
+        [36m</h1>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 active:bg-blue-800 transition-colors inline-flex items-center"[31m
+        [36m>[31m
+          [36m<svg[31m
+            [33mclass[31m=[32m"w-5 h-5 mr-2"[31m
+            [33mfill[31m=[32m"none"[31m
+            [33mstroke[31m=[32m"currentColor"[31m
+            [33mviewBox[31m=[32m"0 0 24 24"[31m
+          [36m>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M12 6v6m0 0v6m0-6h6m-6 0H6"[31m
+              [33mstroke-linecap[31m=[32m"round"[31m
+              [33mstroke-linejoin[31m=[32m"round"[31m
+              [33mstroke-width[31m=[32m"2"[31m
+            [36m/>[31m
+          [36m</svg>[31m
+          [0mAdd Customer[0m
+        [36m</button>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"relative mb-4"[31m
+      [36m>[31m
+        [36m<input[31m
+          [33mclass[31m=[32m"w-full px-4 py-3 pl-10 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500"[31m
+          [33mplaceholder[31m=[32m"Search by name, email, phone, or address..."[31m
+          [33mtype[31m=[32m"text"[31m
+          [33mvalue[31m=[32m""[31m
+        [36m/>[31m
+        [36m<svg[31m
+          [33mclass[31m=[32m"absolute left-3 top-3.5 w-5 h-5 text-gray-400"[31m
+          [33mfill[31m=[32m"none"[31m
+          [33mstroke[31m=[32m"currentColor"[31m
+          [33mviewBox[31m=[32m"0 0 24 24"[31m
+        [36m>[31m
+          [36m<path[31m
+            [33md[31m=[32m"M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"[31m
+            [33mstroke-linecap[31m=[32m"round"[31m
+            [33mstroke-linejoin[31m=[32m"round"[31m
+            [33mstroke-width[31m=[32m"2"[31m
+          [36m/>[31m
+        [36m</svg>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"bg-yellow-100 p-4 mb-4 rounded"[31m
+      [36m>[31m
+        [36m<p>[31m
+          [0mTotal customers in state: [0m
+          [0m2[0m
+        [36m</p>[31m
+        [36m<p>[31m
+          [0mFiltered customers: [0m
+          [0m2[0m
+        [36m</p>[31m
+        [36m<pre>[31m
+          [0m[
+  {
+    "id": "1",
+    "name": "Sarah Johnson",
+    "email": "sarah@email.com",
+    "phone": "(555) 123-4567",
+    "address": "123 Main St, Springfield, IL 62701",
+    "totalJobs": 3,
+    "totalSpent": 15750,
+    "notes": "Prefers morning appointments"
+  },
+  {
+    "id": "2",
+    "name": "Mike Davis",
+    "email": "mike@email.com",
+    "phone": "(555) 234-5678",
+    "address": "456 Oak Ave, Springfield, IL 62702",
+    "totalJobs": 2,
+    "totalSpent": 8500,
+    "notes": "Has two dogs"
+  }
+][0m
+        [36m</pre>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"space-y-3"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"bg-white p-4 rounded-lg shadow cursor-pointer hover:shadow-md active:shadow-lg transition-all"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex justify-between items-start"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"flex-1"[31m
+            [36m>[31m
+              [36m<h3[31m
+                [33mclass[31m=[32m"font-semibold text-lg text-gray-900"[31m
+              [36m>[31m
+                [0mSarah Johnson[0m
+              [36m</h3>[31m
+              [36m<p[31m
+                [33mclass[31m=[32m"text-gray-600"[31m
+              [36m>[31m
+                [0msarah@email.com[0m
+              [36m</p>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"text-blue-600 font-medium hover:text-blue-700 underline transition-colors text-left"[31m
+                [33mtitle[31m=[32m"Call customer"[31m
+              [36m>[31m
+                [0m(555) 123-4567[0m
+              [36m</button>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"block text-gray-500 text-sm hover:text-blue-600 hover:underline transition-colors text-left"[31m
+                [33mtitle[31m=[32m"View on map"[31m
+              [36m>[31m
+                [0m123 Main St, Springfield, IL 62701[0m
+              [36m</button>[31m
+              [36m<p[31m
+                [33mclass[31m=[32m"text-gray-500 text-sm italic mt-1"[31m
+              [36m>[31m
+                [0mNote: [0m
+                [0mPrefers morning appointments[0m
+              [36m</p>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"flex items-start gap-2 ml-4"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"text-right mr-2"[31m
+              [36m>[31m
+                [36m<p[31m
+                  [33mclass[31m=[32m"font-semibold text-gray-900"[31m
+                [36m>[31m
+                  [0m$[0m
+                  [0m15,750[0m
+                [36m</p>[31m
+                [36m<p[31m
+                  [33mclass[31m=[32m"text-sm text-gray-500"[31m
+                [36m>[31m
+                  [0m3[0m
+                  [0m jobs[0m
+                [36m</p>[31m
+              [36m</div>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex flex-col gap-2"[31m
+              [36m>[31m
+                [36m<button[31m
+                  [33mclass[31m=[32m"p-2 bg-green-500 text-white rounded-md hover:bg-green-600 active:bg-green-700 transition-color...[39m
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2madds a new customer when form is submitted[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+ [32m✓[39m src/test/recurring-jobs.test.tsx[2m > [22mRecurring Jobs[2m > [22mhas recurrence type dropdown with options
+[90mstdout[2m | src/test/recurring-jobs.test.tsx[2m > [22m[2mRecurring Jobs[2m > [22m[2mdoes not show recurring options when editing existing job[22m[39m
+Loading customers for calendar: []
+No customers found, using defaults: [
+  { id: [32m'1'[39m, name: [32m'Sarah Johnson'[39m },
+  { id: [32m'2'[39m, name: [32m'Mike Davis'[39m },
+  { id: [32m'3'[39m, name: [32m'John Smith'[39m }
+]
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mformats phone number as user types[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+ [31m×[39m src/pages/__tests__/CustomersNew.test.tsx[2m > [22mCustomersNew[2m > [22madds a new customer when form is submitted
+[31m   → Found a label with the text of: Name *, however no form control was found associated to that label. Make sure you're using the "for" attribute or "aria-labelledby" attribute correctly.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"max-w-4xl mx-auto"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"mb-4"[31m
+      [36m>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 active:bg-gray-100 transition-colors"[31m
+        [36m>[31m
+          [36m<svg[31m
+            [33mclass[31m=[32m"w-5 h-5 mr-2"[31m
+            [33mfill[31m=[32m"none"[31m
+            [33mstroke[31m=[32m"currentColor"[31m
+            [33mviewBox[31m=[32m"0 0 24 24"[31m
+          [36m>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M15 19l-7-7 7-7"[31m
+              [33mstroke-linecap[31m=[32m"round"[31m
+              [33mstroke-linejoin[31m=[32m"round"[31m
+              [33mstroke-width[31m=[32m"2"[31m
+            [36m/>[31m
+          [36m</svg>[31m
+          [0mBack to Home[0m
+        [36m</button>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"flex justify-between items-center mb-4"[31m
+      [36m>[31m
+        [36m<h1[31m
+          [33mclass[31m=[32m"text-2xl font-bold"[31m
+        [36m>[31m
+          [0mCustomers ([0m
+          [0m2[0m
+          [0m)[0m
+        [36m</h1>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 active:bg-blue-800 transition-colors inline-flex items-center"[31m
+        [36m>[31m
+          [36m<svg[31m
+            [33mclass[31m=[32m"w-5 h-5 mr-2"[31m
+            [33mfill[31m=[32m"none"[31m
+            [33mstroke[31m=[32m"currentColor"[31m
+            [33mviewBox[31m=[32m"0 0 24 24"[31m
+          [36m>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M12 6v6m0 0v6m0-6h6m-6 0H6"[31m
+              [33mstroke-linecap[31m=[32m"round"[31m
+              [33mstroke-linejoin[31m=[32m"round"[31m
+              [33mstroke-width[31m=[32m"2"[31m
+            [36m/>[31m
+          [36m</svg>[31m
+          [0mAdd Customer[0m
+        [36m</button>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"relative mb-4"[31m
+      [36m>[31m
+        [36m<input[31m
+          [33mclass[31m=[32m"w-full px-4 py-3 pl-10 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500"[31m
+          [33mplaceholder[31m=[32m"Search by name, email, phone, or address..."[31m
+          [33mtype[31m=[32m"text"[31m
+          [33mvalue[31m=[32m""[31m
+        [36m/>[31m
+        [36m<svg[31m
+          [33mclass[31m=[32m"absolute left-3 top-3.5 w-5 h-5 text-gray-400"[31m
+          [33mfill[31m=[32m"none"[31m
+          [33mstroke[31m=[32m"currentColor"[31m
+          [33mviewBox[31m=[32m"0 0 24 24"[31m
+        [36m>[31m
+          [36m<path[31m
+            [33md[31m=[32m"M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"[31m
+            [33mstroke-linecap[31m=[32m"round"[31m
+            [33mstroke-linejoin[31m=[32m"round"[31m
+            [33mstroke-width[31m=[32m"2"[31m
+          [36m/>[31m
+        [36m</svg>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"bg-yellow-100 p-4 mb-4 rounded"[31m
+      [36m>[31m
+        [36m<p>[31m
+          [0mTotal customers in state: [0m
+          [0m2[0m
+        [36m</p>[31m
+        [36m<p>[31m
+          [0mFiltered customers: [0m
+          [0m2[0m
+        [36m</p>[31m
+        [36m<pre>[31m
+          [0m[
+  {
+    "id": "1",
+    "name": "Sarah Johnson",
+    "email": "sarah@email.com",
+    "phone": "(555) 123-4567",
+    "address": "123 Main St, Springfield, IL 62701",
+    "totalJobs": 3,
+    "totalSpent": 15750,
+    "notes": "Prefers morning appointments"
+  },
+  {
+    "id": "2",
+    "name": "Mike Davis",
+    "email": "mike@email.com",
+    "phone": "(555) 234-5678",
+    "address": "456 Oak Ave, Springfield, IL 62702",
+    "totalJobs": 2,
+    "totalSpent": 8500,
+    "notes": "Has two dogs"
+  }
+][0m
+        [36m</pre>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"space-y-3"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"bg-white p-4 rounded-lg shadow cursor-pointer hover:shadow-md active:shadow-lg transition-all"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex justify-between items-start"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"flex-1"[31m
+            [36m>[31m
+              [36m<h3[31m
+                [33mclass[31m=[32m"font-semibold text-lg text-gray-900"[31m
+              [36m>[31m
+                [0mSarah Johnson[0m
+              [36m</h3>[31m
+              [36m<p[31m
+                [33mclass[31m=[32m"text-gray-600"[31m
+              [36m>[31m
+                [0msarah@email.com[0m
+              [36m</p>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"text-blue-600 font-medium hover:text-blue-700 underline transition-colors text-left"[31m
+                [33mtitle[31m=[32m"Call customer"[31m
+              [36m>[31m
+                [0m(555) 123-4567[0m
+              [36m</button>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"block text-gray-500 text-sm hover:text-blue-600 hover:underline transition-colors text-left"[31m
+                [33mtitle[31m=[32m"View on map"[31m
+              [36m>[31m
+                [0m123 Main St, Springfield, IL 62701[0m
+              [36m</button>[31m
+              [36m<p[31m
+                [33mclass[31m=[32m"text-gray-500 text-sm italic mt-1"[31m
+              [36m>[31m
+                [0mNote: [0m
+                [0mPrefers morning appointments[0m
+              [36m</p>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"flex items-start gap-2 ml-4"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"text-right mr-2"[31m
+              [36m>[31m
+                [36m<p[31m
+                  [33mclass[31m=[32m"font-semibold text-gray-900"[31m
+                [36m>[31m
+                  [0m$[0m
+                  [0m15,750[0m
+                [36m</p>[31m
+                [36m<p[31m
+                  [33mclass[31m=[32m"text-sm text-gray-500"[31m
+                [36m>[31m
+                  [0m3[0m
+                  [0m jobs[0m
+                [36m</p>[31m
+              [36m</div>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex flex-col gap-2"[31m
+              [36m>[31m
+                [36m<button[31m
+                  [33mclass[31m=[32m"p-2 bg-green-500 text-white rounded-md hover:bg-green-600 active:bg-green-700 transition-color...[39m
+ [32m✓[39m src/test/recurring-jobs.test.tsx[2m > [22mRecurring Jobs[2m > [22mdoes not show recurring options when editing existing job
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mformats phone number as user types[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mauto-populates city and state when valid zip is entered[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+ [31m×[39m src/pages/__tests__/CustomersNew.test.tsx[2m > [22mCustomersNew[2m > [22mformats phone number as user types
+[31m   → Found a label with the text of: Phone *, however no form control was found associated to that label. Make sure you're using the "for" attribute or "aria-labelledby" attribute correctly.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"max-w-4xl mx-auto"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"mb-4"[31m
+      [36m>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 active:bg-gray-100 transition-colors"[31m
+        [36m>[31m
+          [36m<svg[31m
+            [33mclass[31m=[32m"w-5 h-5 mr-2"[31m
+            [33mfill[31m=[32m"none"[31m
+            [33mstroke[31m=[32m"currentColor"[31m
+            [33mviewBox[31m=[32m"0 0 24 24"[31m
+          [36m>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M15 19l-7-7 7-7"[31m
+              [33mstroke-linecap[31m=[32m"round"[31m
+              [33mstroke-linejoin[31m=[32m"round"[31m
+              [33mstroke-width[31m=[32m"2"[31m
+            [36m/>[31m
+          [36m</svg>[31m
+          [0mBack to Home[0m
+        [36m</button>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"flex justify-between items-center mb-4"[31m
+      [36m>[31m
+        [36m<h1[31m
+          [33mclass[31m=[32m"text-2xl font-bold"[31m
+        [36m>[31m
+          [0mCustomers ([0m
+          [0m2[0m
+          [0m)[0m
+        [36m</h1>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 active:bg-blue-800 transition-colors inline-flex items-center"[31m
+        [36m>[31m
+          [36m<svg[31m
+            [33mclass[31m=[32m"w-5 h-5 mr-2"[31m
+            [33mfill[31m=[32m"none"[31m
+            [33mstroke[31m=[32m"currentColor"[31m
+            [33mviewBox[31m=[32m"0 0 24 24"[31m
+          [36m>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M12 6v6m0 0v6m0-6h6m-6 0H6"[31m
+              [33mstroke-linecap[31m=[32m"round"[31m
+              [33mstroke-linejoin[31m=[32m"round"[31m
+              [33mstroke-width[31m=[32m"2"[31m
+            [36m/>[31m
+          [36m</svg>[31m
+          [0mAdd Customer[0m
+        [36m</button>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"relative mb-4"[31m
+      [36m>[31m
+        [36m<input[31m
+          [33mclass[31m=[32m"w-full px-4 py-3 pl-10 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500"[31m
+          [33mplaceholder[31m=[32m"Search by name, email, phone, or address..."[31m
+          [33mtype[31m=[32m"text"[31m
+          [33mvalue[31m=[32m""[31m
+        [36m/>[31m
+        [36m<svg[31m
+          [33mclass[31m=[32m"absolute left-3 top-3.5 w-5 h-5 text-gray-400"[31m
+          [33mfill[31m=[32m"none"[31m
+          [33mstroke[31m=[32m"currentColor"[31m
+          [33mviewBox[31m=[32m"0 0 24 24"[31m
+        [36m>[31m
+          [36m<path[31m
+            [33md[31m=[32m"M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"[31m
+            [33mstroke-linecap[31m=[32m"round"[31m
+            [33mstroke-linejoin[31m=[32m"round"[31m
+            [33mstroke-width[31m=[32m"2"[31m
+          [36m/>[31m
+        [36m</svg>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"bg-yellow-100 p-4 mb-4 rounded"[31m
+      [36m>[31m
+        [36m<p>[31m
+          [0mTotal customers in state: [0m
+          [0m2[0m
+        [36m</p>[31m
+        [36m<p>[31m
+          [0mFiltered customers: [0m
+          [0m2[0m
+        [36m</p>[31m
+        [36m<pre>[31m
+          [0m[
+  {
+    "id": "1",
+    "name": "Sarah Johnson",
+    "email": "sarah@email.com",
+    "phone": "(555) 123-4567",
+    "address": "123 Main St, Springfield, IL 62701",
+    "totalJobs": 3,
+    "totalSpent": 15750,
+    "notes": "Prefers morning appointments"
+  },
+  {
+    "id": "2",
+    "name": "Mike Davis",
+    "email": "mike@email.com",
+    "phone": "(555) 234-5678",
+    "address": "456 Oak Ave, Springfield, IL 62702",
+    "totalJobs": 2,
+    "totalSpent": 8500,
+    "notes": "Has two dogs"
+  }
+][0m
+        [36m</pre>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"space-y-3"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"bg-white p-4 rounded-lg shadow cursor-pointer hover:shadow-md active:shadow-lg transition-all"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex justify-between items-start"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"flex-1"[31m
+            [36m>[31m
+              [36m<h3[31m
+                [33mclass[31m=[32m"font-semibold text-lg text-gray-900"[31m
+              [36m>[31m
+                [0mSarah Johnson[0m
+              [36m</h3>[31m
+              [36m<p[31m
+                [33mclass[31m=[32m"text-gray-600"[31m
+              [36m>[31m
+                [0msarah@email.com[0m
+              [36m</p>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"text-blue-600 font-medium hover:text-blue-700 underline transition-colors text-left"[31m
+                [33mtitle[31m=[32m"Call customer"[31m
+              [36m>[31m
+                [0m(555) 123-4567[0m
+              [36m</button>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"block text-gray-500 text-sm hover:text-blue-600 hover:underline transition-colors text-left"[31m
+                [33mtitle[31m=[32m"View on map"[31m
+              [36m>[31m
+                [0m123 Main St, Springfield, IL 62701[0m
+              [36m</button>[31m
+              [36m<p[31m
+                [33mclass[31m=[32m"text-gray-500 text-sm italic mt-1"[31m
+              [36m>[31m
+                [0mNote: [0m
+                [0mPrefers morning appointments[0m
+              [36m</p>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"flex items-start gap-2 ml-4"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"text-right mr-2"[31m
+              [36m>[31m
+                [36m<p[31m
+                  [33mclass[31m=[32m"font-semibold text-gray-900"[31m
+                [36m>[31m
+                  [0m$[0m
+                  [0m15,750[0m
+                [36m</p>[31m
+                [36m<p[31m
+                  [33mclass[31m=[32m"text-sm text-gray-500"[31m
+                [36m>[31m
+                  [0m3[0m
+                  [0m jobs[0m
+                [36m</p>[31m
+              [36m</div>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex flex-col gap-2"[31m
+              [36m>[31m
+                [36m<button[31m
+                  [33mclass[31m=[32m"p-2 bg-green-500 text-white rounded-md hover:bg-green-600 active:bg-green-700 transition-color...[39m
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mauto-populates city and state when valid zip is entered[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mnavigates to customer detail when customer is clicked[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+ [31m×[39m src/pages/__tests__/CustomersNew.test.tsx[2m > [22mCustomersNew[2m > [22mauto-populates city and state when valid zip is entered
+[31m   → Found a label with the text of: Zip *, however no form control was found associated to that label. Make sure you're using the "for" attribute or "aria-labelledby" attribute correctly.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"max-w-4xl mx-auto"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"mb-4"[31m
+      [36m>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 active:bg-gray-100 transition-colors"[31m
+        [36m>[31m
+          [36m<svg[31m
+            [33mclass[31m=[32m"w-5 h-5 mr-2"[31m
+            [33mfill[31m=[32m"none"[31m
+            [33mstroke[31m=[32m"currentColor"[31m
+            [33mviewBox[31m=[32m"0 0 24 24"[31m
+          [36m>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M15 19l-7-7 7-7"[31m
+              [33mstroke-linecap[31m=[32m"round"[31m
+              [33mstroke-linejoin[31m=[32m"round"[31m
+              [33mstroke-width[31m=[32m"2"[31m
+            [36m/>[31m
+          [36m</svg>[31m
+          [0mBack to Home[0m
+        [36m</button>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"flex justify-between items-center mb-4"[31m
+      [36m>[31m
+        [36m<h1[31m
+          [33mclass[31m=[32m"text-2xl font-bold"[31m
+        [36m>[31m
+          [0mCustomers ([0m
+          [0m2[0m
+          [0m)[0m
+        [36m</h1>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 active:bg-blue-800 transition-colors inline-flex items-center"[31m
+        [36m>[31m
+          [36m<svg[31m
+            [33mclass[31m=[32m"w-5 h-5 mr-2"[31m
+            [33mfill[31m=[32m"none"[31m
+            [33mstroke[31m=[32m"currentColor"[31m
+            [33mviewBox[31m=[32m"0 0 24 24"[31m
+          [36m>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M12 6v6m0 0v6m0-6h6m-6 0H6"[31m
+              [33mstroke-linecap[31m=[32m"round"[31m
+              [33mstroke-linejoin[31m=[32m"round"[31m
+              [33mstroke-width[31m=[32m"2"[31m
+            [36m/>[31m
+          [36m</svg>[31m
+          [0mAdd Customer[0m
+        [36m</button>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"relative mb-4"[31m
+      [36m>[31m
+        [36m<input[31m
+          [33mclass[31m=[32m"w-full px-4 py-3 pl-10 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500"[31m
+          [33mplaceholder[31m=[32m"Search by name, email, phone, or address..."[31m
+          [33mtype[31m=[32m"text"[31m
+          [33mvalue[31m=[32m""[31m
+        [36m/>[31m
+        [36m<svg[31m
+          [33mclass[31m=[32m"absolute left-3 top-3.5 w-5 h-5 text-gray-400"[31m
+          [33mfill[31m=[32m"none"[31m
+          [33mstroke[31m=[32m"currentColor"[31m
+          [33mviewBox[31m=[32m"0 0 24 24"[31m
+        [36m>[31m
+          [36m<path[31m
+            [33md[31m=[32m"M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"[31m
+            [33mstroke-linecap[31m=[32m"round"[31m
+            [33mstroke-linejoin[31m=[32m"round"[31m
+            [33mstroke-width[31m=[32m"2"[31m
+          [36m/>[31m
+        [36m</svg>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"bg-yellow-100 p-4 mb-4 rounded"[31m
+      [36m>[31m
+        [36m<p>[31m
+          [0mTotal customers in state: [0m
+          [0m2[0m
+        [36m</p>[31m
+        [36m<p>[31m
+          [0mFiltered customers: [0m
+          [0m2[0m
+        [36m</p>[31m
+        [36m<pre>[31m
+          [0m[
+  {
+    "id": "1",
+    "name": "Sarah Johnson",
+    "email": "sarah@email.com",
+    "phone": "(555) 123-4567",
+    "address": "123 Main St, Springfield, IL 62701",
+    "totalJobs": 3,
+    "totalSpent": 15750,
+    "notes": "Prefers morning appointments"
+  },
+  {
+    "id": "2",
+    "name": "Mike Davis",
+    "email": "mike@email.com",
+    "phone": "(555) 234-5678",
+    "address": "456 Oak Ave, Springfield, IL 62702",
+    "totalJobs": 2,
+    "totalSpent": 8500,
+    "notes": "Has two dogs"
+  }
+][0m
+        [36m</pre>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"space-y-3"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"bg-white p-4 rounded-lg shadow cursor-pointer hover:shadow-md active:shadow-lg transition-all"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex justify-between items-start"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"flex-1"[31m
+            [36m>[31m
+              [36m<h3[31m
+                [33mclass[31m=[32m"font-semibold text-lg text-gray-900"[31m
+              [36m>[31m
+                [0mSarah Johnson[0m
+              [36m</h3>[31m
+              [36m<p[31m
+                [33mclass[31m=[32m"text-gray-600"[31m
+              [36m>[31m
+                [0msarah@email.com[0m
+              [36m</p>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"text-blue-600 font-medium hover:text-blue-700 underline transition-colors text-left"[31m
+                [33mtitle[31m=[32m"Call customer"[31m
+              [36m>[31m
+                [0m(555) 123-4567[0m
+              [36m</button>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"block text-gray-500 text-sm hover:text-blue-600 hover:underline transition-colors text-left"[31m
+                [33mtitle[31m=[32m"View on map"[31m
+              [36m>[31m
+                [0m123 Main St, Springfield, IL 62701[0m
+              [36m</button>[31m
+              [36m<p[31m
+                [33mclass[31m=[32m"text-gray-500 text-sm italic mt-1"[31m
+              [36m>[31m
+                [0mNote: [0m
+                [0mPrefers morning appointments[0m
+              [36m</p>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"flex items-start gap-2 ml-4"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"text-right mr-2"[31m
+              [36m>[31m
+                [36m<p[31m
+                  [33mclass[31m=[32m"font-semibold text-gray-900"[31m
+                [36m>[31m
+                  [0m$[0m
+                  [0m15,750[0m
+                [36m</p>[31m
+                [36m<p[31m
+                  [33mclass[31m=[32m"text-sm text-gray-500"[31m
+                [36m>[31m
+                  [0m3[0m
+                  [0m jobs[0m
+                [36m</p>[31m
+              [36m</div>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex flex-col gap-2"[31m
+              [36m>[31m
+                [36m<button[31m
+                  [33mclass[31m=[32m"p-2 bg-green-500 text-white rounded-md hover:bg-green-600 active:bg-green-700 transition-color...[39m
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2minitiates phone call when call button is clicked[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+ [32m✓[39m src/pages/__tests__/CustomersNew.test.tsx[2m > [22mCustomersNew[2m > [22mnavigates to customer detail when customer is clicked
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2minitiates text message when text button is clicked[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+ [32m✓[39m src/pages/__tests__/CustomersNew.test.tsx[2m > [22mCustomersNew[2m > [22minitiates phone call when call button is clicked
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mcloses modal when Cancel button is clicked[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+ [32m✓[39m src/pages/__tests__/CustomersNew.test.tsx[2m > [22mCustomersNew[2m > [22minitiates text message when text button is clicked
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mcloses modal when Cancel button is clicked[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mcloses modal when Cancel button is clicked[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mdisplays customer notes when present[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+[90mstdout[2m | src/pages/__tests__/CustomersNew.test.tsx[2m > [22m[2mCustomersNew[2m > [22m[2mdisplays customer total spent and job count[22m[39m
+Total customers: [33m2[39m
+Filtered customers: [33m2[39m
+Search term: 
+Rendering customer: {
+  id: [32m'1'[39m,
+  name: [32m'Sarah Johnson'[39m,
+  email: [32m'sarah@email.com'[39m,
+  phone: [32m'(555) 123-4567'[39m,
+  address: [32m'123 Main St, Springfield, IL 62701'[39m,
+  totalJobs: [33m3[39m,
+  totalSpent: [33m15750[39m,
+  notes: [32m'Prefers morning appointments'[39m
+}
+Rendering customer: {
+  id: [32m'2'[39m,
+  name: [32m'Mike Davis'[39m,
+  email: [32m'mike@email.com'[39m,
+  phone: [32m'(555) 234-5678'[39m,
+  address: [32m'456 Oak Ave, Springfield, IL 62702'[39m,
+  totalJobs: [33m2[39m,
+  totalSpent: [33m8500[39m,
+  notes: [32m'Has two dogs'[39m
+}
+
+ [32m✓[39m src/pages/__tests__/CustomersNew.test.tsx[2m > [22mCustomersNew[2m > [22mcloses modal when Cancel button is clicked
+ [32m✓[39m src/pages/__tests__/CustomersNew.test.tsx[2m > [22mCustomersNew[2m > [22mdisplays customer notes when present
+ [32m✓[39m src/pages/__tests__/CustomersNew.test.tsx[2m > [22mCustomersNew[2m > [22mdisplays customer total spent and job count
+ [31m×[39m src/test/integration/app-verification.test.tsx[2m > [22mApp Integration Tests[2m > [22mPage Loading Tests[2m > [22mloads dashboard page successfully[33m 1084[2mms[22m[39m
+[31m   → Unable to find an element with the text: /Welcome/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+      [36m>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+          [36m>[31m
+            [36m<h1[31m
+              [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+            [36m>[31m
+              [0mKHS CRM[0m
+            [36m</h1>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"flex items-center gap-4"[31m
+            [36m>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"text-sm text-gray-600"[31m
+              [36m>[31m
+                [0mTest User[0m
+              [36m</span>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+              [36m>[31m
+                [36m<svg[31m
+                  [33mclass[31m=[32m"w-6 h-6"[31m
+                  [33mfill[31m=[32m"none"[31m
+                  [33mstroke[31m=[32m"currentColor"[31m
+                  [33mviewBox[31m=[32m"0 0 24 24"[31m
+                [36m>[31m
+                  [36m<path[31m
+                    [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                    [33mstroke-linecap[31m=[32m"round"[31m
+                    [33mstroke-linejoin[31m=[32m"round"[31m
+                    [33mstroke-width[31m=[32m"2"[31m
+                  [36m/>[31m
+                [36m</svg>[31m
+              [36m</button>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"px-4 py-4"[31m
+        [36m/>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center space-x-3"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"flex-shrink-0"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"flex-1 min-w-0"[31m
+            [36m>[31m
+              [36m<p[31m
+                [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+              [36m>[31m
+                [0mAll changes saved[0m
+              [36m</p>[31m
+              [36m<p[31m
+                [33mclass[31m=[32m"text-xs text-gray-500"[31m
+              [36m>[31m
+                [0mLast sync: [0m
+                [0mNever[0m
+              [36m</p>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</body>[31m
+[36m</html>[31m[39m
+ [31m×[39m src/test/integration/app-verification.test.tsx[2m > [22mApp Integration Tests[2m > [22mPage Loading Tests[2m > [22mloads customers page successfully[33m 1013[2mms[22m[39m
+[31m   → Unable to find an element with the text: Customers. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+ [31m×[39m src/test/integration/app-verification.test.tsx[2m > [22mApp Integration Tests[2m > [22mPage Loading Tests[2m > [22mloads jobs page successfully[33m 1009[2mms[22m[39m
+[31m   → Unable to find an element with the text: Jobs. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+ [31m×[39m src/test/integration/app-verification.test.tsx[2m > [22mApp Integration Tests[2m > [22mPage Loading Tests[2m > [22mloads materials page successfully[33m 1009[2mms[22m[39m
+[31m   → Unable to find an element with the text: Materials. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+ [31m×[39m src/test/integration/app-verification.test.tsx[2m > [22mApp Integration Tests[2m > [22mPage Loading Tests[2m > [22mloads profile page successfully[33m 1008[2mms[22m[39m
+[31m   → Unable to find an element with the text: Profile. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+ [31m×[39m src/test/integration/app-verification.test.tsx[2m > [22mApp Integration Tests[2m > [22mNavigation Tests[2m > [22mnavigates between pages correctly[33m 1006[2mms[22m[39m
+[31m   → Unable to find an element with the text: /Welcome/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+ [31m×[39m src/test/integration/app-verification.test.tsx[2m > [22mApp Integration Tests[2m > [22mButton Functionality Tests[2m > [22mAdd Customer button opens modal[33m 1006[2mms[22m[39m
+[31m   → Unable to find an element with the text: Customers. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+ [31m×[39m src/test/integration/app-verification.test.tsx[2m > [22mApp Integration Tests[2m > [22mButton Functionality Tests[2m > [22mCancel button closes modal[33m 1005[2mms[22m[39m
+[31m   → Unable to find an element with the text: Customers. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+ [31m×[39m src/test/integration/app-verification.test.tsx[2m > [22mApp Integration Tests[2m > [22mButton Functionality Tests[2m > [22mCall and Text buttons have correct functionality[33m 1007[2mms[22m[39m
+[31m   → Unable to find an element with the text: Customers. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+ [31m×[39m src/test/integration/app-verification.test.tsx[2m > [22mApp Integration Tests[2m > [22mForm Functionality Tests[2m > [22mCustomer form validates required fields[33m 1006[2mms[22m[39m
+[31m   → Unable to find an element with the text: Customers. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+ [31m×[39m src/test/integration/app-verification.test.tsx[2m > [22mApp Integration Tests[2m > [22mForm Functionality Tests[2m > [22mPhone number auto-formats correctly[33m 1006[2mms[22m[39m
+[31m   → Unable to find an element with the text: Customers. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+ [31m×[39m src/test/integration/app-verification.test.tsx[2m > [22mApp Integration Tests[2m > [22mForm Functionality Tests[2m > [22mZip code auto-populates city and state[33m 1004[2mms[22m[39m
+[31m   → Unable to find an element with the text: Customers. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+ [31m×[39m src/test/integration/app-verification.test.tsx[2m > [22mApp Integration Tests[2m > [22mForm Functionality Tests[2m > [22mSearch functionality filters customers[33m 1004[2mms[22m[39m
+[31m   → Unable to find an element with the text: Customers. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"min-h-screen bg-gray-50"[31m
+    [36m>[31m
+      [36m<header[31m
+        [33mclass[31m=[32m"bg-white shadow-sm sticky top-0 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"px-4 h-14 flex items-center justify-between"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-gray-900"[31m
+          [36m>[31m
+            [0mKHS CRM[0m
+          [36m</h1>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-4"[31m
+          [36m>[31m
+            [36m<span[31m
+              [33mclass[31m=[32m"text-sm text-gray-600"[31m
+            [36m>[31m
+              [0mTest User[0m
+            [36m</span>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"p-2 -mr-2 rounded-lg hover:bg-gray-100"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"w-6 h-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M4 6h16M4 12h16M4 18h16"[31m
+                  [33mstroke-linecap[31m=[32m"round"[31m
+                  [33mstroke-linejoin[31m=[32m"round"[31m
+                  [33mstroke-width[31m=[32m"2"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</header>[31m
+      [36m<main[31m
+        [33mclass[31m=[32m"px-4 py-4"[31m
+      [36m/>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"fixed bottom-24 right-4 bg-white rounded-lg shadow-md border border-gray-200 p-3 z-30"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center space-x-3"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-shrink-0"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"w-5 h-5 text-green-500"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M5 13l4 4L19 7"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex-1 min-w-0"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm font-medium text-gray-900"[31m
+            [36m>[31m
+              [0mAll changes saved[0m
+            [36m</p>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-xs text-gray-500"[31m
+            [36m>[31m
+              [0mLast sync: [0m
+              [0mNever[0m
+            [36m</p>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m9 passed[39m[22m[90m (11)[39m
+[2m      Tests [22m [1m[31m17 failed[39m[22m[2m | [22m[1m[32m64 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (82)[39m
+[2m   Start at [22m 07:41:35
+[2m   Duration [22m 15.47s[2m (transform 1.03s, setup 3.96s, collect 2.79s, tests 18.16s, environment 10.28s, prepare 2.62s)[22m
+
