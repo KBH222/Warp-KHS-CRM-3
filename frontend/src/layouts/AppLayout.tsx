@@ -1,7 +1,6 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuth, useUser } from '../stores/auth.store';
 import { useState, useEffect } from 'react';
-import OfflineStatusBar from '../components/OfflineStatusBar';
 
 // Icons - using simple SVGs for now
 const MenuIcon = () => (
@@ -121,9 +120,6 @@ export const AppLayout = () => {
         <main className="flex-1 overflow-y-auto px-4 py-4">
           <Outlet />
         </main>
-        
-        {/* Enhanced Offline Status Bar - Fixed at bottom */}
-        <OfflineStatusBar className="flex-shrink-0" showDetails={false} />
       </div>
       
       {/* Click outside to close menu */}

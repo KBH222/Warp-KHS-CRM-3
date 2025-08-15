@@ -57,7 +57,11 @@
       "Bash(git push:*)",
       "Bash(git config:*)",
       "Bash(git log:*)",
-      "Bash(git remote set-url:*)"
+      "Bash(git remote set-url:*)",
+      "Bash(where npx)",
+      "Bash(where vercel)",
+      "Bash(copy .env.example .env)",
+      "WebFetch(domain:khs-3ge76rxxz-bruce-hawkins-projects.vercel.app)"
     ],
     "deny": []
   }

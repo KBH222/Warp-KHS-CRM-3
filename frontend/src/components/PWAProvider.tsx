@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { PWAInstallBanner } from './PWAInstallBanner';
 import { PWAUpdateNotification } from './PWAUpdateNotification';
-import { PWAStatusIndicator } from './PWAStatusIndicator';
 import { OfflineIndicator } from './OfflineIndicator';
 import { usePWA } from '../hooks/usePWA';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
@@ -121,7 +120,6 @@ export const PWAProvider: React.FC<PWAProviderProps> = ({ children }) => {
       {/* PWA Components */}
       <PWAInstallBanner />
       <PWAUpdateNotification />
-      <PWAStatusIndicator />
       <OfflineIndicator />
       
       {/* Construction-specific PWA features */}

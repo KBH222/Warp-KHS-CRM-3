@@ -197,15 +197,7 @@ const CustomersEnhanced = () => {
   };
 
   return (
-    <>
-      <style>
-        {`
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-        `}
-      </style>
-      <div style={{ 
+    <div style={{ 
         height: '100%',
         overflowY: 'auto',
         WebkitOverflowScrolling: 'touch',
@@ -235,77 +227,9 @@ const CustomersEnhanced = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <div>
-              <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>Customers</h1>
-              {lastSyncTime && (
-                <p style={{ 
-                fontSize: '12px', 
-                color: '#6B7280', 
-                margin: '4px 0 0 0',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}>
-                {isSyncing && (
-                  <span style={{ 
-                    display: 'inline-block',
-                    width: '12px',
-                    height: '12px',
-                    borderRadius: '50%',
-                    border: '2px solid #3B82F6',
-                    borderTopColor: 'transparent',
-                    animation: 'spin 1s linear infinite'
-                  }} />
-                )}
-                {isSyncing ? 'Syncing...' : `Last sync: ${lastSyncTime.toLocaleTimeString()}`}
-              </p>
-            )}
-            </div>
+            <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>Customers</h1>
           </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button
-              onClick={() => {
-                // Manual sync
-                const autoSync = () => {
-                  setIsSyncing(true);
-                  
-                  // Save current data with timestamp
-                  customerStorage.save(customers);
-                  localStorage.setItem('khs-crm-last-sync', new Date().toISOString());
-                  
-                  // Trigger storage event for other tabs
-                  window.dispatchEvent(new Event('storage'));
-                  
-                  // Reload data
-                  setTimeout(() => {
-                    const savedCustomers = customerStorage.getAll();
-                    if (savedCustomers) {
-                      setCustomers(savedCustomers);
-                    }
-                    setLastSyncTime(new Date());
-                    setIsSyncing(false);
-                  }, 500);
-                };
-                autoSync();
-              }}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: '#10B981',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: '500',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-              disabled={isSyncing}
-            >
-              🔄 Sync Now
-            </button>
-            <button
+          <button
               onClick={() => {
                 setEditingCustomer(null);
                 setShowModal(true);
