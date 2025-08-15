@@ -1,7 +1,7 @@
 {
   "root": "frontend",
-  "buildCommand": "npm run build",
+  "buildCommand": "cd .. && npm run build:shared && cd frontend && npm run build",
   "outputDirectory": "dist",
-  "installCommand": "cd .. && npm install --workspaces --legacy-peer-deps && cd frontend",
+  "installCommand": "cd .. && npm install --workspaces --legacy-peer-deps",
   "framework": null
 }
