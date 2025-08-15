@@ -1,151 +1,91 @@
-import { PrismaClient, Role } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Starting seed...');
-
-  // Create test users
-  const ownerPassword = await bcrypt.hash('password123', 10);
-  const workerPassword = await bcrypt.hash('password123', 10);
-
-  // Create owner user
-  const owner = await prisma.user.upsert({
-    where: { email: 'owner@khs.com' },
+  // Create default admin user
+  const hashedPassword = await bcrypt.hash("admin123", 10);
+  
+  const adminUser = await prisma.user.upsert({
+    where: { email: "admin@khscrm.com" },
     update: {},
     create: {
-      email: 'owner@khs.com',
-      password: ownerPassword,
-      name: 'John Owner',
-      role: Role.OWNER,
-      isActive: true,
-    },
+      email: "admin@khscrm.com",
+      password: hashedPassword,
+      name: "Admin User",
+      role: "OWNER",
+      isActive: true
+    }
   });
 
-  console.log('Created owner:', owner);
+  console.log("Created admin user:", adminUser.email);
 
-  // Create worker user
-  const worker = await prisma.user.upsert({
-    where: { email: 'worker@khs.com' },
+  // Create some sample data
+  const customer1 = await prisma.customer.upsert({
+    where: { reference: "A1" },
     update: {},
     create: {
-      email: 'worker@khs.com',
-      password: workerPassword,
-      name: 'Jane Worker',
-      role: Role.WORKER,
-      isActive: true,
-    },
+      reference: "A1",
+      name: "John Smith",
+      phone: "(555) 123-4567",
+      email: "john.smith@email.com",
+      address: "123 Main St, Austin, TX 78701",
+      notes: "Prefers morning appointments"
+    }
   });
 
-  console.log('Created worker:', worker);
+  const customer2 = await prisma.customer.upsert({
+    where: { reference: "A2" },
+    update: {},
+    create: {
+      reference: "A2",
+      name: "Jane Doe",
+      phone: "(555) 987-6543",
+      email: "jane.doe@email.com",
+      address: "456 Oak Ave, Austin, TX 78702",
+      notes: "Has two dogs"
+    }
+  });
 
-  // Create some test customers
-  const customers = await Promise.all([
-    prisma.customer.create({
-      data: {
-        name: 'Sarah Johnson',
-        email: 'sarah.johnson@email.com',
-        phone: '(555) 123-4567',
-        address: '123 Main St, Springfield, IL 62701',
-        notes: 'Prefers morning appointments',
-      },
-    }),
-    prisma.customer.create({
-      data: {
-        name: 'Mike Davis',
-        email: 'mike.davis@email.com',
-        phone: '(555) 234-5678',
-        address: '456 Oak Ave, Springfield, IL 62702',
-        notes: 'Has two dogs',
-      },
-    }),
-    prisma.customer.create({
-      data: {
-        name: 'Robert Brown',
-        email: 'robert.brown@email.com',
-        phone: '(555) 345-6789',
-        address: '789 Pine Rd, Springfield, IL 62703',
-        notes: 'Commercial property owner',
-      },
-    }),
-  ]);
+  console.log("Created sample customers");
 
-  console.log('Created customers:', customers.length);
-
-  // Create some test jobs
+  // Create sample jobs
   const job1 = await prisma.job.create({
     data: {
-      title: 'Kitchen Remodel',
-      description: 'Complete kitchen renovation including cabinets, countertops, and appliances',
-      customerId: customers[0].id,
-      status: 'IN_PROGRESS',
-      priority: 'HIGH',
-      startDate: new Date('2024-12-01'),
-      endDate: new Date('2024-12-15'),
-      estimatedCost: 15000,
-      actualCost: 0,
-      notes: 'Customer wants modern farmhouse style',
-      assignedWorkers: {
-        connect: { id: worker.id },
-      },
-    },
+      title: "Kitchen Remodel",
+      description: "Complete kitchen renovation including cabinets and countertops",
+      status: "IN_PROGRESS",
+      priority: "high",
+      totalCost: 25000,
+      depositPaid: 5000,
+      customerId: customer1.id,
+      createdById: adminUser.id,
+      startDate: new Date("2024-01-15"),
+      endDate: new Date("2024-02-15")
+    }
   });
 
   const job2 = await prisma.job.create({
     data: {
-      title: 'Bathroom Renovation',
-      description: 'Master bathroom update with new tile, fixtures, and vanity',
-      customerId: customers[1].id,
-      status: 'QUOTED',
-      priority: 'MEDIUM',
-      startDate: new Date('2024-12-20'),
-      endDate: new Date('2025-01-05'),
-      estimatedCost: 8500,
-      actualCost: 0,
-      notes: 'Waiting for customer approval on tile selection',
-    },
+      title: "Bathroom Renovation",
+      description: "Master bathroom remodel",
+      status: "QUOTED",
+      priority: "medium",
+      totalCost: 15000,
+      customerId: customer2.id,
+      createdById: adminUser.id
+    }
   });
 
-  console.log('Created jobs:', [job1.title, job2.title]);
-
-  // Add some materials to the first job
-  await prisma.material.createMany({
-    data: [
-      {
-        jobId: job1.id,
-        name: 'Cabinet handles',
-        description: 'Brushed nickel cabinet pulls',
-        quantity: 12,
-        unit: 'each',
-        unitCost: 8.50,
-        totalCost: 102,
-        status: 'ORDERED',
-        supplier: 'Home Depot',
-      },
-      {
-        jobId: job1.id,
-        name: 'Wood screws 2.5"',
-        description: 'Stainless steel wood screws',
-        quantity: 1,
-        unit: 'box',
-        unitCost: 12.99,
-        totalCost: 12.99,
-        status: 'IN_STOCK',
-        supplier: 'Lowes',
-      },
-    ],
-  });
-
-  console.log('Seed completed successfully!');
+  console.log("Created sample jobs");
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
+  .catch((e) => {
     console.error(e);
-    await prisma.$disconnect();
     process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
   });

@@ -20,6 +20,9 @@ enum JobStatus {
   WAITING_ON_MATERIALS
   COMPLETED
   ON_HOLD
+  QUOTED
+  APPROVED
+  CANCELLED
 }
 
 // User model for authentication and role management
@@ -62,6 +65,7 @@ model RefreshToken {
 // Customer model
 model Customer {
   id          String    @id @default(cuid())
+  reference   String    @unique // Customer reference like "A1", "B2"
   name        String
   phone       String?
   email       String?
@@ -77,6 +81,7 @@ model Customer {
   @@index([name])
   @@index([phone])
   @@index([address])
+  @@index([reference])
   @@index([isArchived])
 }
 
@@ -85,14 +90,19 @@ model Job {
   id            String    @id @default(cuid())
   title         String
   description   String?
-  status        JobStatus @default(NOT_STARTED)
+  status        JobStatus @default(QUOTED)
+  priority      String    @default("medium") // low, medium, high
+  totalCost     Float     @default(0)
+  depositPaid   Float     @default(0)
+  actualCost    Float     @default(0)
   startDate     DateTime?
   endDate       DateTime?
+  completedDate DateTime?
   notes         String?
   customerId    String
   customer      Customer  @relation(fields: [customerId], references: [id])
-  createdById   String
-  createdBy     User      @relation("JobCreator", fields: [createdById], references: [id])
+  createdById   String?
+  createdBy     User?     @relation("JobCreator", fields: [createdById], references: [id])
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -101,12 +111,15 @@ model Job {
   materials     Material[]
   statusHistory JobStatusHistory[]
   activityLogs  ActivityLog[]
+  photos        JobPhoto[]
+  invoices      Invoice[]
 
   @@index([status])
   @@index([customerId])
   @@index([createdById])
   @@index([startDate])
   @@index([endDate])
+  @@index([priority])
 }
 
 // Many-to-many relation for job assignments
@@ -197,4 +210,37 @@ model SyncQueue {
   @@index([userId])
   @@index([status])
   @@index([createdAt])
+}
+
+// Job photos model
+model JobPhoto {
+  id          String    @id @default(cuid())
+  jobId       String
+  job         Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  url         String
+  caption     String?
+  uploadedBy  String?
+  createdAt   DateTime  @default(now())
+
+  @@index([jobId])
+  @@index([createdAt])
+}
+
+// Invoice model
+model Invoice {
+  id          String    @id @default(cuid())
+  invoiceNumber String  @unique
+  jobId       String
+  job         Job       @relation(fields: [jobId], references: [id])
+  amount      Float
+  status      String    @default("pending") // pending, paid, overdue, cancelled
+  dueDate     DateTime?
+  paidDate    DateTime?
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([jobId])
+  @@index([status])
+  @@index([invoiceNumber])
 }

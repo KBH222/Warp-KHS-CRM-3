@@ -1,14 +1,12 @@
 import { Router } from 'express';
-import { authenticate } from '../middleware/auth.middleware.js';
-import { prisma } from '../db/prisma.js';
+import { PrismaClient } from '@prisma/client';
+import { authenticateToken } from '../middleware/auth';
 
 const router = Router();
+const prisma = new PrismaClient();
 
-// All routes require authentication
-router.use(authenticate);
-
-// GET /api/customers
-router.get('/', async (req, res) => {
+// Get all customers
+router.get('/', authenticateToken, async (req, res) => {
   try {
     const customers = await prisma.customer.findMany({
       where: { isArchived: false },
@@ -33,8 +31,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/customers/:id
-router.get('/:id', async (req, res) => {
+// Get single customer
+router.get('/:id', authenticateToken, async (req, res) => {
   try {
     const customer = await prisma.customer.findUnique({
       where: { id: req.params.id },
@@ -64,8 +62,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST /api/customers
-router.post('/', async (req, res) => {
+// Create customer
+router.post('/', authenticateToken, async (req, res) => {
   try {
     const { reference, name, phone, email, address, notes } = req.body;
 
@@ -99,8 +97,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/customers/:id
-router.put('/:id', async (req, res) => {
+// Update customer
+router.put('/:id', authenticateToken, async (req, res) => {
   try {
     const { name, phone, email, address, notes } = req.body;
 
@@ -125,8 +123,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE /api/customers/:id  
-router.delete('/:id', async (req, res) => {
+// Archive customer (soft delete)
+router.delete('/:id', authenticateToken, async (req, res) => {
   try {
     await prisma.customer.update({
       where: { id: req.params.id },
@@ -143,15 +141,15 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// POST /api/customers/sync
-router.post('/sync', async (req, res) => {
+// Sync customers (for offline support)
+router.post('/sync', authenticateToken, async (req, res) => {
   try {
     const { customers } = req.body;
     const results = [];
 
     for (const customer of customers) {
       try {
-        if (customer.id && !customer.id.startsWith('temp_')) {
+        if (customer.id) {
           // Update existing customer
           const updated = await prisma.customer.update({
             where: { id: customer.id },
@@ -177,7 +175,7 @@ router.post('/sync', async (req, res) => {
             }
           });
           results.push({ 
-            id: customer.id || customer.localId || customer.reference, 
+            id: customer.localId || customer.reference, 
             status: 'created', 
             data: created 
           });
@@ -197,4 +195,4 @@ router.post('/sync', async (req, res) => {
   }
 });
 
-export { router as customerRouter };
+export default router;

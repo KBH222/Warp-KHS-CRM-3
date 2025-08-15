@@ -1,20 +1,42 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { customerStorage } from '../utils/localStorage';
+import { customersApi, jobsApi, authApi } from '../services/api';
+import { toast } from 'react-toastify';
 
 const CustomersEnhanced = () => {
   const navigate = useNavigate();
   
-  // Load customers from localStorage
-  const [customers, setCustomers] = useState(() => {
-    const savedCustomers = customerStorage.getAll();
-    return savedCustomers || [];
-  });
+  // State
+  const [customers, setCustomers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Save customers to localStorage whenever they change
+  // Load customers from API
+  const loadCustomers = async () => {
+    try {
+      setIsLoading(true);
+      const data = await customersApi.getAll();
+      setCustomers(data);
+      setError(null);
+    } catch (err) {
+      setError('Failed to load customers');
+      // Will fall back to localStorage in the API
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Auto-login and load data on mount
   useEffect(() => {
-    customerStorage.save(customers);
-  }, [customers]);
+    const init = async () => {
+      // Auto-login if no token
+      if (!authApi.getToken()) {
+        await authApi.autoLogin();
+      }
+      await loadCustomers();
+    };
+    init();
+  }, []);
 
   // Auto-sync every 15 minutes and handle cross-tab synchronization
   useEffect(() => {
@@ -102,32 +124,71 @@ const CustomersEnhanced = () => {
     (customer.notes && customer.notes.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  // Get jobs for each customer
-  const getCustomerJobs = (customerId: string) => {
-    const jobs = JSON.parse(localStorage.getItem('khs-crm-jobs') || '[]');
-    return jobs.filter((job: any) => job.customerId === customerId);
-  };
+  // Jobs state for customer display
+  const [customerJobs, setCustomerJobs] = useState({});
 
-  const handleAddCustomer = (newCustomer: any) => {
-    const customer = {
-      id: Date.now().toString(),
-      ...newCustomer,
-      totalJobs: 0,
-      totalSpent: 0
+  // Load jobs for all customers
+  useEffect(() => {
+    const loadJobs = async () => {
+      try {
+        const jobs = await jobsApi.getAll();
+        // Group jobs by customer
+        const jobsByCustomer = {};
+        jobs.forEach(job => {
+          if (!jobsByCustomer[job.customerId]) {
+            jobsByCustomer[job.customerId] = [];
+          }
+          jobsByCustomer[job.customerId].push(job);
+        });
+        setCustomerJobs(jobsByCustomer);
+      } catch (err) {
+        // Fallback handled in API
+      }
     };
-    setCustomers([customer, ...customers]);
+    if (customers.length > 0) {
+      loadJobs();
+    }
+  }, [customers]);
+
+  // Get jobs for a customer
+  const getCustomerJobs = (customerId: string) => {
+    return customerJobs[customerId] || [];
   };
 
-  const handleEditCustomer = (updatedCustomer: any) => {
-    setCustomers(customers.map(c => 
-      c.id === updatedCustomer.id ? { ...c, ...updatedCustomer } : c
-    ));
-    setEditingCustomer(null);
+  const handleAddCustomer = async (newCustomer: any) => {
+    try {
+      const customer = await customersApi.create(newCustomer);
+      setCustomers([customer, ...customers]);
+      toast.success('Customer added successfully');
+      setShowModal(false);
+    } catch (err) {
+      toast.error('Failed to add customer');
+    }
   };
 
-  const handleDeleteCustomer = (id: string) => {
+  const handleEditCustomer = async (updatedCustomer: any) => {
+    try {
+      const customer = await customersApi.update(editingCustomer.id, updatedCustomer);
+      setCustomers(customers.map(c => 
+        c.id === customer.id ? customer : c
+      ));
+      toast.success('Customer updated successfully');
+      setEditingCustomer(null);
+      setShowModal(false);
+    } catch (err) {
+      toast.error('Failed to update customer');
+    }
+  };
+
+  const handleDeleteCustomer = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this customer?')) {
-      setCustomers(customers.filter(c => c.id !== id));
+      try {
+        await customersApi.delete(id);
+        setCustomers(customers.filter(c => c.id !== id));
+        toast.success('Customer deleted successfully');
+      } catch (err) {
+        toast.error('Failed to delete customer');
+      }
     }
   };
 
@@ -152,29 +213,41 @@ const CustomersEnhanced = () => {
     setShowAddJobModal(true);
   };
 
-  const handleSaveJob = (jobData: any) => {
-    const jobs = JSON.parse(localStorage.getItem('khs-crm-jobs') || '[]');
-    
-    if (jobData.id) {
-      // Update existing job
-      const updatedJobs = jobs.map((job: any) => 
-        job.id === jobData.id ? { ...job, ...jobData } : job
-      );
-      localStorage.setItem('khs-crm-jobs', JSON.stringify(updatedJobs));
-    } else {
-      // Create new job
-      const newJob = {
-        id: Date.now().toString(),
-        customerId: selectedCustomerForJob.id,
-        customer: selectedCustomerForJob.name,
-        address: selectedCustomerForJob.address,
-        assignedTo: [],
-        status: 'QUOTED',
-        totalCost: 0,
-        ...jobData
-      };
-      jobs.push(newJob);
-      localStorage.setItem('khs-crm-jobs', JSON.stringify(jobs));
+  const handleSaveJob = async (jobData: any) => {
+    try {
+      if (jobData.id) {
+        // Update existing job
+        const updatedJob = await jobsApi.update(jobData.id, jobData);
+        // Update local state
+        setCustomerJobs(prev => {
+          const customerJobs = [...(prev[updatedJob.customerId] || [])];
+          const index = customerJobs.findIndex(j => j.id === updatedJob.id);
+          if (index !== -1) {
+            customerJobs[index] = updatedJob;
+            return { ...prev, [updatedJob.customerId]: customerJobs };
+          }
+          return prev;
+        });
+        toast.success('Job updated successfully');
+      } else {
+        // Create new job
+        const newJob = await jobsApi.create({
+          ...jobData,
+          customerId: selectedCustomerForJob.id,
+          status: jobData.status || 'QUOTED',
+          priority: jobData.priority || 'medium',
+          totalCost: jobData.totalCost || 0,
+          depositPaid: jobData.depositPaid || 0
+        });
+        // Update local state
+        setCustomerJobs(prev => ({
+          ...prev,
+          [selectedCustomerForJob.id]: [...(prev[selectedCustomerForJob.id] || []), newJob]
+        }));
+        toast.success('Job created successfully');
+      }
+    } catch (err) {
+      toast.error('Failed to save job');
     }
     
     setShowAddJobModal(false);
@@ -182,10 +255,21 @@ const CustomersEnhanced = () => {
     setEditingJob(null);
   };
 
-  const handleDeleteJob = (jobId: string) => {
-    const jobs = JSON.parse(localStorage.getItem('khs-crm-jobs') || '[]');
-    const updatedJobs = jobs.filter((job: any) => job.id !== jobId);
-    localStorage.setItem('khs-crm-jobs', JSON.stringify(updatedJobs));
+  const handleDeleteJob = async (jobId: string) => {
+    try {
+      await jobsApi.delete(jobId);
+      // Update local state
+      setCustomerJobs(prev => {
+        const updated = { ...prev };
+        Object.keys(updated).forEach(customerId => {
+          updated[customerId] = updated[customerId].filter(j => j.id !== jobId);
+        });
+        return updated;
+      });
+      toast.success('Job deleted successfully');
+    } catch (err) {
+      toast.error('Failed to delete job');
+    }
   };
 
   return (
@@ -306,7 +390,20 @@ const CustomersEnhanced = () => {
         </div>
 
         {/* Customer Cards */}
-        {filteredCustomers.length === 0 ? (
+        {isLoading ? (
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '40px',
+            color: '#6B7280'
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p>Loading customers...</p>
+            </div>
+          </div>
+        ) : filteredCustomers.length === 0 ? (
           <div style={{
             backgroundColor: 'white',
             padding: '40px',
