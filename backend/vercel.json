@@ -1,5 +1,7 @@
 {
   "version": 2,
+  "buildCommand": "cp package.vercel.json package.json && npm install && npm run vercel-build",
+  "outputDirectory": ".",
   "builds": [
     {
       "src": "dist/server.js",
