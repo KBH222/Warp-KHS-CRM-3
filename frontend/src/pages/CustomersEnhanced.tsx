@@ -236,7 +236,7 @@ const CustomersEnhanced = () => {
               </svg>
             </button>
             <div>
-              <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>Customers (Updated)</h1>
+              <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>Customers</h1>
               {lastSyncTime && (
                 <p style={{ 
                 fontSize: '12px', 
