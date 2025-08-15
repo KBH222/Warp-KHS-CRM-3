@@ -20,9 +20,7 @@
     "lint": "npm run lint --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "db:migrate": "npm run db:migrate --workspace=backend",
-    "db:seed": "npm run db:seed --workspace=backend",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down"
+    "db:seed": "npm run db:seed --workspace=backend"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
