@@ -628,7 +628,7 @@ const CustomersEnhanced = () => {
         />
       )}
     </div>
-    </>
+    </div>
   );
 };
 
