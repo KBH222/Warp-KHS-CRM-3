@@ -25,7 +25,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
             loadLastSyncTime();
           }
         }).catch(err => {
-          console.error('Failed to initialize Google API:', err);
+          // Failed to initialize Google API
           setError('Google Drive not configured. See setup instructions.');
         });
       } else {
@@ -44,7 +44,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
       const time = await googleDriveSync.getLastSyncTime();
       setLastSync(time);
     } catch (error) {
-      console.error('Error loading last sync time:', error);
+      // Error loading last sync time
     }
   };
 
@@ -55,7 +55,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
       setIsSignedIn(true);
       await loadLastSyncTime();
     } catch (error: any) {
-      console.error('Sign in error:', error);
+      // Sign in error
       setError(error.message || 'Failed to sign in');
     }
   };
@@ -66,7 +66,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
       setIsSignedIn(false);
       setLastSync(null);
     } catch (error: any) {
-      console.error('Sign out error:', error);
+      // Sign out error
       setError(error.message || 'Failed to sign out');
     }
   };
@@ -97,7 +97,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
         onSyncComplete();
       }
     } catch (error: any) {
-      console.error('Sync error:', error);
+      // Sync error
       setError(error.message || 'Sync failed');
     } finally {
       setIsSyncing(false);

@@ -31,7 +31,7 @@ export const GoogleDriveStatus = ({ onSyncComplete }: GoogleDriveStatusProps) =>
         setError('Google Drive not configured');
       }
     } catch (err) {
-      console.error('Failed to initialize Google Drive:', err);
+      // Failed to initialize Google Drive
       setError('Failed to initialize Google Drive');
     }
   };
@@ -43,7 +43,7 @@ export const GoogleDriveStatus = ({ onSyncComplete }: GoogleDriveStatusProps) =>
         setLastGoogleSync(new Date(syncTime));
       }
     } catch (error) {
-      console.error('Error loading last sync time:', error);
+      // Error loading last sync time
     }
   };
 
@@ -58,7 +58,7 @@ export const GoogleDriveStatus = ({ onSyncComplete }: GoogleDriveStatusProps) =>
         setError('Failed to sign in');
       }
     } catch (error: any) {
-      console.error('Sign in error:', error);
+      // Sign in error
       setError(error.message || 'Failed to sign in');
     }
   };
@@ -69,7 +69,7 @@ export const GoogleDriveStatus = ({ onSyncComplete }: GoogleDriveStatusProps) =>
       setIsSignedIn(false);
       setLastGoogleSync(null);
     } catch (error: any) {
-      console.error('Sign out error:', error);
+      // Sign out error
       setError(error.message || 'Failed to sign out');
     }
   };
@@ -114,7 +114,7 @@ export const GoogleDriveStatus = ({ onSyncComplete }: GoogleDriveStatusProps) =>
         onSyncComplete();
       }
     } catch (error: any) {
-      console.error('Sync error:', error);
+      // Sync error
       setError(error.message || 'Sync failed');
     } finally {
       setIsSyncing(false);

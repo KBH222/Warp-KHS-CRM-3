@@ -54,7 +54,7 @@ export const AuthSetup = ({ onComplete }: AuthSetupProps) => {
 
       onComplete();
     } catch (error) {
-      console.error('Auth setup failed:', error);
+      // Auth setup failed
       setError('Failed to set up authentication. Please try again.');
     } finally {
       setIsLoading(false);

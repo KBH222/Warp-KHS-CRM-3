@@ -20,24 +20,18 @@ const CustomersEnhanced = () => {
   useEffect(() => {
     // Function to sync data
     const syncData = () => {
-      setIsSyncing(true);
       const savedCustomers = customerStorage.getAll();
-      const savedJobs = JSON.parse(localStorage.getItem('khs-crm-jobs') || '[]');
       
       // Update state with latest data from localStorage
       if (savedCustomers) {
         setCustomers(savedCustomers);
       }
       
-      const now = new Date();
-      setLastSyncTime(now);
-      setIsSyncing(false);
-      console.log(`Auto-sync completed at ${now.toLocaleTimeString()}`);
+      // Auto-sync completed
     };
 
     // Auto-sync every 15 minutes
     const autoSync = () => {
-      setIsSyncing(true);
       
       // Save current data with timestamp
       customerStorage.save(customers);
@@ -52,7 +46,7 @@ const CustomersEnhanced = () => {
     // Listen for storage changes from other tabs
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'khs-crm-customers' || e.key === 'khs-crm-jobs' || e.key === 'khs-crm-last-sync') {
-        console.log(`Storage change detected from another tab at ${new Date().toLocaleTimeString()}`);
+        // Storage change detected from another tab
         syncData();
       }
     };
@@ -74,14 +68,12 @@ const CustomersEnhanced = () => {
   }, []);
 
   const [showModal, setShowModal] = useState(false);
-  const [editingCustomer, setEditingCustomer] = useState<any>(null);
+  const [editingCustomer, setEditingCustomer] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('name'); // name, reference, recent
   const [showAddJobModal, setShowAddJobModal] = useState(false);
   const [selectedCustomerForJob, setSelectedCustomerForJob] = useState(null);
   const [editingJob, setEditingJob] = useState(null);
-  const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
-  const [isSyncing, setIsSyncing] = useState(false);
 
   // Sort customers
   const sortedCustomers = [...customers].sort((a, b) => {

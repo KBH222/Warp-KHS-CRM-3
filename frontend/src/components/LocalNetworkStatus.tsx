@@ -45,7 +45,7 @@ export const LocalNetworkStatus = ({ onSyncComplete }: LocalNetworkStatusProps) 
         onSyncComplete();
       }
     } catch (error: any) {
-      console.error('Local sync error:', error);
+      // Local sync error
       setError(error.message || 'Sync failed');
     } finally {
       setIsSyncing(false);
@@ -57,7 +57,7 @@ export const LocalNetworkStatus = ({ onSyncComplete }: LocalNetworkStatusProps) 
       setError(null);
       await localNetworkSync.initialize();
     } catch (error: any) {
-      console.error('Connection error:', error);
+      // Connection error
       setError('Failed to connect to local network');
     }
   };

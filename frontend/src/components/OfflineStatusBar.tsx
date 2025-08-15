@@ -45,9 +45,9 @@ const OfflineStatusBar: React.FC<OfflineStatusBarProps> = ({
     if (isOnline) {
       try {
         // Placeholder - sync functionality will be restored later
-        console.log('Sync requested');
+        // Sync requested
       } catch (error) {
-        console.error('Force sync failed:', error);
+        // Force sync failed
       }
     }
   };

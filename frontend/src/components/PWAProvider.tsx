@@ -54,13 +54,13 @@ export const PWAProvider: React.FC<PWAProviderProps> = ({ children }) => {
               newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                   // Show update notification
-                  console.log('Service worker update available');
+                  // Service worker update available
                 }
               });
             }
           });
 
-          console.log('Service Worker registered successfully');
+          // Service Worker registered successfully
         }
 
         // Initialize background sync if PWA is initialized
@@ -69,7 +69,7 @@ export const PWAProvider: React.FC<PWAProviderProps> = ({ children }) => {
         }
 
       } catch (error) {
-        console.error('Service Worker registration failed:', error);
+        // Service Worker registration failed
       }
     };
 
@@ -93,7 +93,7 @@ export const PWAProvider: React.FC<PWAProviderProps> = ({ children }) => {
     if (pwa.capabilities?.deviceType === 'mobile' && pwa.isInstallable) {
       // Show install banner after 30 seconds for mobile users
       const timeoutId = setTimeout(() => {
-        console.log('PWA installation available for mobile construction worker');
+        // PWA installation available for mobile construction worker
       }, 30000);
 
       return () => clearTimeout(timeoutId);
@@ -143,7 +143,7 @@ const ConstructionPWAFeatures: React.FC = () => {
           try {
             await triggerSync('critical');
           } catch (error) {
-            console.error('Periodic sync failed:', error);
+            // Periodic sync failed
           }
         }
       }, 5 * 60 * 1000); // 5 minutes

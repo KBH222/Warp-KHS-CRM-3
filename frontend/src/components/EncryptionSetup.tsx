@@ -52,7 +52,7 @@ export const EncryptionSetup = ({ onComplete }: EncryptionSetupProps) => {
 
       onComplete();
     } catch (error) {
-      console.error('Encryption setup failed:', error);
+      // Encryption setup failed
       setError('Failed to set up encryption. Please try again.');
     } finally {
       setIsLoading(false);

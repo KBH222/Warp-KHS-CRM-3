@@ -17,11 +17,11 @@ export const DebugPhoneInput = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
-    console.log('Input received:', input);
+    // Input received debug
     
     // Get only numbers
     const numbers = input.replace(/\D/g, '');
-    console.log('Numbers only:', numbers);
+    // Numbers only debug
     
     // Format the display
     let formatted = '';
@@ -35,7 +35,7 @@ export const DebugPhoneInput = ({
       }
     }
     
-    console.log('Formatted:', formatted);
+    // Formatted debug
     setLocalValue(formatted);
     
     if (onChange) {

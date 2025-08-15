@@ -68,7 +68,7 @@ export const AutoSyncPanel = () => {
       // Programmatically click the file input
       fileInputRef.current?.click();
     } catch (error) {
-      console.error('Auto-sync check failed:', error);
+      // Auto-sync check failed
     } finally {
       setIsChecking(false);
       toast.dismiss('sync-check');

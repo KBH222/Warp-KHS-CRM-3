@@ -37,7 +37,7 @@ export const EncryptionLogin = ({ onSuccess, onSkip }: EncryptionLoginProps) => 
 
       onSuccess();
     } catch (error) {
-      console.error('Encryption login failed:', error);
+      // Encryption login failed
       setError('Invalid password. Please try again.');
       encryptionService.clear();
     } finally {

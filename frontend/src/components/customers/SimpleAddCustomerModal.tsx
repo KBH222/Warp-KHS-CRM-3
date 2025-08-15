@@ -19,7 +19,7 @@ export const SimpleAddCustomerModal = ({ isOpen, onClose, onAdd }: SimpleAddCust
     address: '',
   });
 
-  console.log('SimpleAddCustomerModal - isOpen:', isOpen);
+  // SimpleAddCustomerModal - isOpen debug
   
   if (!isOpen) {
 return null;

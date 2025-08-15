@@ -61,9 +61,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       try {
         // Use offline auth service for login
         user = await offlineAuthService.login(credentials, enableBiometric);
-        console.log('[AUTH] Offline login successful:', user.email);
+        // [AUTH] Offline login successful
       } catch (error) {
-        console.warn('[AUTH] Offline login failed, trying mock fallback:', error);
+        // [AUTH] Offline login failed, trying mock fallback
         
         // Fallback to mock users for development
         const mockUser = MOCK_USERS[credentials.email];
@@ -79,7 +79,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         try {
           await offlineAuthService.login(credentials, enableBiometric);
         } catch (offlineError) {
-          console.warn('[AUTH] Failed to store credentials offline:', offlineError);
+          // [AUTH] Failed to store credentials offline
         }
       }
       
@@ -91,7 +91,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       
       // Preload critical data after successful login
       offlineDataService.preloadCriticalData().catch(error => {
-        console.warn('[AUTH] Failed to preload critical data:', error);
+        // [AUTH] Failed to preload critical data
       });
       
     } finally {
@@ -112,29 +112,29 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       
       // Preload critical data
       offlineDataService.preloadCriticalData().catch(error => {
-        console.warn('[AUTH] Failed to preload critical data:', error);
+        // [AUTH] Failed to preload critical data
       });
       
-      console.log('[AUTH] Biometric login successful:', user.email);
+      // [AUTH] Biometric login successful
     } finally {
       set({ isLoading: false });
     }
   },
 
   logout: async () => {
-    console.log('[AUTH] Logging out');
+    // [AUTH] Logging out
     
     try {
       await offlineAuthService.logout();
     } catch (error) {
-      console.error('[AUTH] Offline logout failed:', error);
+      // [AUTH] Offline logout failed
     }
     
     // Clear caches
     try {
       await offlineDataService.clearAllCaches();
     } catch (error) {
-      console.warn('[AUTH] Failed to clear caches:', error);
+      // [AUTH] Failed to clear caches
     }
     
     set({ 
@@ -145,7 +145,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   refreshUser: async () => {
-    console.log('[AUTH] Refreshing user data');
+    // [AUTH] Refreshing user data
     
     try {
       const user = await offlineAuthService.refreshUser();
@@ -153,12 +153,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({ user });
       }
     } catch (error) {
-      console.error('[AUTH] Failed to refresh user:', error);
+      // [AUTH] Failed to refresh user
     }
   },
 
   setUser: (user: User | null) => {
-    console.log('[AUTH] setUser called with:', user ? user.email : 'null');
+    // [AUTH] setUser called
     set({ user, isAuthenticated: !!user });
   },
 
@@ -170,7 +170,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       }
       return enabled;
     } catch (error) {
-      console.error('[AUTH] Failed to enable biometric:', error);
+      // [AUTH] Failed to enable biometric
       return false;
     }
   },
@@ -180,7 +180,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await offlineAuthService.disableBiometric();
       set({ isBiometricEnabled: false });
     } catch (error) {
-      console.error('[AUTH] Failed to disable biometric:', error);
+      // [AUTH] Failed to disable biometric
     }
   },
 
@@ -203,7 +203,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       });
     }
   } catch (error) {
-    console.error('[AUTH] Failed to initialize offline auth:', error);
+    // [AUTH] Failed to initialize offline auth
   }
 })();
 

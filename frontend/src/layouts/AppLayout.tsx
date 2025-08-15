@@ -14,7 +14,6 @@ export const AppLayout = () => {
   const { logout } = useAuth();
   const user = useUser();
   const [showMenu, setShowMenu] = useState(false);
-  const [showOfflineDashboard, setShowOfflineDashboard] = useState(false);
   const [isBiometricEnabled, setIsBiometricEnabled] = useState(false);
 
   useEffect(() => {
@@ -28,8 +27,7 @@ export const AppLayout = () => {
       await logout();
       navigate('/login');
     } catch (error) {
-      console.error('Logout failed:', error);
-      // Force navigation even if logout fails
+      // Logout failed - force navigation
       navigate('/login');
     }
   };

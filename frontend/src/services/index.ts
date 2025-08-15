@@ -38,7 +38,7 @@ export * from './offline-cache.service';
  */
 export const initializeServices = async (): Promise<void> => {
   // Simplified initialization - skip complex services for now
-  console.log('[SERVICES] Using simplified initialization');
+  // [SERVICES] Using simplified initialization
   return Promise.resolve();
 };
 
@@ -47,5 +47,5 @@ export const initializeServices = async (): Promise<void> => {
  * Call this when the app is shutting down
  */
 export const cleanupServices = (): void => {
-  console.log('[SERVICES] Cleanup skipped - using simplified services');
+  // [SERVICES] Cleanup skipped - using simplified services
 };

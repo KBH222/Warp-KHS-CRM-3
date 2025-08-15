@@ -32,7 +32,7 @@ export const LoginForm = () => {
         setError('Invalid password');
       }
     } catch (error) {
-      console.error('Login failed:', error);
+      // Login failed
       setError((error as Error).message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);

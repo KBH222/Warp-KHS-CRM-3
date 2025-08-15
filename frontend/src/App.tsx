@@ -3,13 +3,10 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Router } from './router';
-import { useAuthStore } from './stores/auth.store';
 import { initializeServices, cleanupServices } from './services';
 import { PWAProvider } from './components/PWAProvider';
-import { authService } from './services/authService';
 import { AuthSetup } from './components/AuthSetup';
 import { LoginForm } from './components/LoginForm';
-import { SecurityOnboarding } from './components/SecurityOnboarding';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -19,7 +16,7 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes - keep data fresh for field workers
       gcTime: 30 * 60 * 1000, // 30 minutes - longer cache for offline scenarios
-      retry: (failureCount, error: any) => {
+      retry: (failureCount, error) => {
         // Don't retry on authentication errors
         if (error?.status === 401 || error?.status === 403) {
           return false;
@@ -51,25 +48,15 @@ function App() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [needsAuthSetup, setNeedsAuthSetup] = useState(false);
   const [needsLogin, setNeedsLogin] = useState(false);
-  const [needsOnboarding, setNeedsOnboarding] = useState(false);
 
   useEffect(() => {
     // Initialize all services
     const initializeApp = async () => {
       try {
-        console.log('[APP] Initializing KHS CRM with comprehensive offline capabilities...');
-        
         await initializeServices();
-        
-        // Skip all auth for now to get app running
-        console.log('[APP] Skipping authentication for practical use');
-        
         setIsInitialized(true);
-        console.log('[APP] Application initialized successfully');
       } catch (error) {
-        console.error('[APP] Failed to initialize application:', error);
-        // Don't set error - let the app continue
-        // setInitError(error instanceof Error ? error.message : 'Initialization failed');
+        // Failed to initialize application
         setIsInitialized(true); // Show the app even with initialization errors
       }
     };
@@ -78,7 +65,6 @@ function App() {
 
     // Cleanup function
     return () => {
-      console.log('[APP] Cleaning up application...');
       cleanupServices();
     };
   }, []);

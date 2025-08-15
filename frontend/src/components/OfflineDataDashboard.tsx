@@ -88,7 +88,7 @@ const OfflineDataDashboard: React.FC = () => {
       setUnsyncedData(unsynced);
       setCacheStats(cache);
     } catch (error) {
-      console.error('Failed to load dashboard data:', error);
+      // Failed to load dashboard data
     } finally {
       setIsLoading(false);
     }
@@ -100,7 +100,7 @@ const OfflineDataDashboard: React.FC = () => {
         await offlineDataService.clearAllCaches();
         await loadDashboardData();
       } catch (error) {
-        console.error('Failed to clear cache:', error);
+        // Failed to clear cache
       }
     }
   };
@@ -125,7 +125,7 @@ const OfflineDataDashboard: React.FC = () => {
       
       await loadDashboardData();
     } catch (error) {
-      console.error('Selective sync failed:', error);
+      // Selective sync failed
       alert('Selective sync failed. Please try again.');
     } finally {
       setIsSyncing(false);
@@ -139,7 +139,7 @@ const OfflineDataDashboard: React.FC = () => {
       alert('Critical data has been preloaded for offline use.');
       await loadDashboardData();
     } catch (error) {
-      console.error('Failed to preload data:', error);
+      // Failed to preload data
       alert('Failed to preload data. Please try again.');
     } finally {
       setIsLoading(false);
