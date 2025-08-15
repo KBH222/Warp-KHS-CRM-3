@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "prisma generate && tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/server-simple.js",
+    "start:full": "node dist/server.js",
     "vercel-build-disabled": "prisma generate && tsc -p tsconfig.standalone.json",
     "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
     "typecheck": "tsc --noEmit",

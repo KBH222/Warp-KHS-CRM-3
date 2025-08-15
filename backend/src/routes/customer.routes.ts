@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
     });
 
     res.json(customers);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ error: 'Failed to fetch customers' });
   }
 });
@@ -59,7 +59,7 @@ router.get('/:id', async (req, res) => {
     }
 
     res.json(customer);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ error: 'Failed to fetch customer' });
   }
 });
@@ -90,7 +90,7 @@ router.post('/', async (req, res) => {
     });
 
     res.status(201).json(customer);
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'P2002') {
       res.status(400).json({ error: 'Customer reference already exists' });
     } else {
@@ -116,7 +116,7 @@ router.put('/:id', async (req, res) => {
     });
 
     res.json(customer);
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'P2025') {
       res.status(404).json({ error: 'Customer not found' });
     } else {
@@ -134,7 +134,7 @@ router.delete('/:id', async (req, res) => {
     });
 
     res.status(204).send();
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'P2025') {
       res.status(404).json({ error: 'Customer not found' });
     } else {
@@ -182,7 +182,7 @@ router.post('/sync', async (req, res) => {
             data: created 
           });
         }
-      } catch (error) {
+      } catch (error: any) {
         results.push({ 
           id: customer.id || customer.localId || customer.reference, 
           status: 'error', 
@@ -192,7 +192,7 @@ router.post('/sync', async (req, res) => {
     }
 
     res.json({ results });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ error: 'Sync failed' });
   }
 });

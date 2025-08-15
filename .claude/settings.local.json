@@ -63,7 +63,9 @@
       "Bash(copy .env.example .env)",
       "WebFetch(domain:khs-3ge76rxxz-bruce-hawkins-projects.vercel.app)",
       "Bash(git checkout:*)",
-      "Bash(npx prettier:*)"
+      "Bash(npx prettier:*)",
+      "WebFetch(domain:khs-crm.vercel.app)",
+      "Bash(sed:*)"
     ],
     "deny": []
   }
