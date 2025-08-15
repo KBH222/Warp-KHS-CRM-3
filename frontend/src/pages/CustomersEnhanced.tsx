@@ -599,7 +599,6 @@ const CustomersEnhanced = () => {
             ))}
           </div>
         )}
-      </div>
 
       {/* Customer Modal */}
       {showModal && (
@@ -627,7 +626,6 @@ const CustomersEnhanced = () => {
           onDelete={handleDeleteJob}
         />
       )}
-    </div>
     </div>
   );
 };
