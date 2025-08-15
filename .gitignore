@@ -16,6 +16,9 @@ build/
 # But include shared packages dist
 !shared/*/dist/
 
+# Temporarily include backend dist for Render
+!backend/dist/
+
 # Environment
 .env
 .env.local

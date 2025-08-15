@@ -7,7 +7,7 @@ import { prisma } from './db/prisma.js';
 config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = parseInt(process.env.PORT || '3001', 10);
 
 // Middleware
 app.use(cors({
@@ -188,7 +188,8 @@ app.use((req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Simple server running on port ${PORT}`);
-  console.log(`Health check: http://localhost:${PORT}/api/health`);
+const HOST = '0.0.0.0'; // Important for Render!
+app.listen(PORT, HOST, () => {
+  console.log(`Simple server running on ${HOST}:${PORT}`);
+  console.log(`Health check: http://${HOST}:${PORT}/api/health`);
 });
