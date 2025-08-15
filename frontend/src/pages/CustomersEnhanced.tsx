@@ -213,8 +213,8 @@ const CustomersEnhanced = () => {
       }}>
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
             <button
               onClick={() => navigate('/dashboard')}
               style={{
@@ -225,7 +225,8 @@ const CustomersEnhanced = () => {
                 display: 'flex',
                 alignItems: 'center',
                 color: '#6B7280',
-                borderRadius: '6px'
+                borderRadius: '6px',
+                marginTop: '-4px'
               }}
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
