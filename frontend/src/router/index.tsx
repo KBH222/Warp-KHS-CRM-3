@@ -63,21 +63,20 @@ export const Router = () => {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/home" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          {/* All other routes redirect to dashboard */}
-          <Route path="/customers" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/customers/:id" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/jobs" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/jobs/:id" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/profile" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/materials" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/workers" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/schedule" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/jobs/:id/photos" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/reports" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/invoices" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/invoices/:id" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/offline-dashboard" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/security" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/customers/:id" element={<CustomerDetail />} />
+          <Route path="/jobs" element={<Jobs />} />
+          <Route path="/jobs/:id" element={<JobDetail />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/materials" element={<Materials />} />
+          <Route path="/workers" element={<Workers />} />
+          <Route path="/schedule" element={<ScheduleCalendar />} />
+          <Route path="/jobs/:id/photos" element={<JobPhotos />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/invoices" element={<Invoices />} />
+          <Route path="/invoices/:id" element={<InvoiceDetail />} />
+          <Route path="/offline-dashboard" element={<OfflineDataDashboard />} />
+          <Route path="/security" element={<PracticalSecurity />} />
         </Route>
         
         {/* Catch all */}
