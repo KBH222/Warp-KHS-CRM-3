@@ -67,7 +67,8 @@
       "WebFetch(domain:khs-crm.vercel.app)",
       "Bash(sed:*)",
       "Bash(timeout 10 npm run start:simple)",
-      "Bash(timeout 10 npm start)"
+      "Bash(timeout 10 npm start)",
+      "Bash(tsc)"
     ],
     "deny": []
   }

@@ -15,4 +15,3 @@ router.get('/tasks', async (req, res) => {
     });
 });
 export { router as workerRouter };
-//# sourceMappingURL=worker.routes.js.map

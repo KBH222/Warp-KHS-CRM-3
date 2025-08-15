@@ -6,4 +6,3 @@ export const notFoundHandler = (req, res) => {
         },
     });
 };
-//# sourceMappingURL=notFoundHandler.js.map

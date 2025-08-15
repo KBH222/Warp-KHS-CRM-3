@@ -1,7 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { Role } from '@khs-crm/types';
-import { ERROR_CODES } from '@khs-crm/constants';
+// Types defined inline
+type Role = 'OWNER' | 'WORKER';
+const ERROR_CODES = {
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
+  UNAUTHORIZED: 'UNAUTHORIZED',
+  FORBIDDEN: 'FORBIDDEN',
+  NOT_FOUND: 'NOT_FOUND',
+  CONFLICT: 'CONFLICT',
+  INTERNAL_ERROR: 'INTERNAL_ERROR',
+  TOKEN_EXPIRED: 'TOKEN_EXPIRED'
+};
 import { ApiError } from '../utils/ApiError.js';
 import { prisma } from '../db/prisma.js';
 

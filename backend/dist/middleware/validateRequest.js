@@ -1,6 +1,9 @@
 import { validationResult } from 'express-validator';
-import { ERROR_CODES } from '@khs-crm/constants';
 import { ApiError } from '../utils/ApiError.js';
+// Inline constants to avoid @khs-crm imports
+const ERROR_CODES = {
+    VALIDATION_ERROR: 'VALIDATION_ERROR',
+};
 export const validateRequest = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -12,4 +15,3 @@ export const validateRequest = (req, res, next) => {
     }
     next();
 };
-//# sourceMappingURL=validateRequest.js.map

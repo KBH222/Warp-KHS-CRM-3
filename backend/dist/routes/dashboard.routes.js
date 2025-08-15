@@ -14,4 +14,3 @@ router.get('/stats', async (req, res) => {
     });
 });
 export { router as dashboardRouter };
-//# sourceMappingURL=dashboard.routes.js.map

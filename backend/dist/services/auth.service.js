@@ -1,8 +1,13 @@
 import jwt from 'jsonwebtoken';
-import { ERROR_CODES } from '@khs-crm/constants';
 import { prisma } from '../db/prisma.js';
 import { ApiError } from '../utils/ApiError.js';
 import { logger } from '../utils/logger.js';
+// Inline constants to avoid @khs-crm imports
+const ERROR_CODES = {
+    INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
+    TOKEN_EXPIRED: 'TOKEN_EXPIRED',
+    UNAUTHORIZED: 'UNAUTHORIZED',
+};
 const ACCESS_TOKEN_EXPIRY = '15m';
 const REFRESH_TOKEN_EXPIRY_SHORT = '7d';
 const REFRESH_TOKEN_EXPIRY_LONG = '30d';
@@ -89,4 +94,3 @@ export function generateResetToken() {
     }
     return buffer.toString('hex');
 }
-//# sourceMappingURL=auth.service.js.map

@@ -1,10 +1,15 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { VALIDATION } from '@khs-crm/constants';
 import { authenticate } from '../middleware/auth.middleware.js';
 import { validateRequest } from '../middleware/validateRequest.js';
 import { rateLimiter } from '../middleware/rateLimiter.js';
 import * as authController from '../controllers/auth.controller.js';
+
+// Inline constants to avoid @khs-crm imports
+const VALIDATION = {
+  PASSWORD_MIN_LENGTH: 8,
+  PASSWORD_PATTERN: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+} as const;
 
 export const authRouter = Router();
 

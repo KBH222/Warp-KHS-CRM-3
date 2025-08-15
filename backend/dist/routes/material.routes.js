@@ -24,4 +24,3 @@ router.put('/bulk-update', async (req, res) => {
     res.json({ message: 'Bulk update materials not yet implemented' });
 });
 export { router as materialRouter };
-//# sourceMappingURL=material.routes.js.map

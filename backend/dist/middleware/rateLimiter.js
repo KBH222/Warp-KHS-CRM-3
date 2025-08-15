@@ -1,5 +1,11 @@
 import rateLimit from 'express-rate-limit';
-import { ERROR_CODES, ERROR_MESSAGES } from '@khs-crm/constants';
+// Inline constants to avoid @khs-crm imports
+const ERROR_CODES = {
+    RATE_LIMIT_EXCEEDED: 'RATE_LIMIT_EXCEEDED',
+};
+const ERROR_MESSAGES = {
+    [ERROR_CODES.RATE_LIMIT_EXCEEDED]: 'Too many requests. Please try again later',
+};
 export const rateLimiter = (options = {}) => {
     return rateLimit({
         windowMs: options.windowMs || 15 * 60 * 1000, // 15 minutes default
@@ -21,4 +27,3 @@ export const rateLimiter = (options = {}) => {
 export const authLimiter = rateLimiter({ windowMs: 60000, max: 5 }); // 5 per minute
 export const apiLimiter = rateLimiter({ windowMs: 60000, max: 100 }); // 100 per minute
 export const strictLimiter = rateLimiter({ windowMs: 60000, max: 10 }); // 10 per minute
-//# sourceMappingURL=rateLimiter.js.map

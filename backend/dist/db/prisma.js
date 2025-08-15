@@ -41,4 +41,3 @@ prisma.$on('info', (e) => {
 prisma.$on('warn', (e) => {
     logger.warn('Prisma warning:', e);
 });
-//# sourceMappingURL=prisma.js.map

@@ -1,9 +1,15 @@
 import jwt from 'jsonwebtoken';
 import { User, RefreshToken } from '@prisma/client';
-import { ERROR_CODES } from '@khs-crm/constants';
 import { prisma } from '../db/prisma.js';
 import { ApiError } from '../utils/ApiError.js';
 import { logger } from '../utils/logger.js';
+
+// Inline constants to avoid @khs-crm imports
+const ERROR_CODES = {
+  INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
+  TOKEN_EXPIRED: 'TOKEN_EXPIRED',
+  UNAUTHORIZED: 'UNAUTHORIZED',
+} as const;
 
 interface TokenPayload {
   userId: string;

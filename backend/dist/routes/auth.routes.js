@@ -1,10 +1,14 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { VALIDATION } from '@khs-crm/constants';
 import { authenticate } from '../middleware/auth.middleware.js';
 import { validateRequest } from '../middleware/validateRequest.js';
 import { rateLimiter } from '../middleware/rateLimiter.js';
 import * as authController from '../controllers/auth.controller.js';
+// Inline constants to avoid @khs-crm imports
+const VALIDATION = {
+    PASSWORD_MIN_LENGTH: 8,
+    PASSWORD_PATTERN: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+};
 export const authRouter = Router();
 // Login with rate limiting
 authRouter.post('/login', rateLimiter({ windowMs: 60000, max: 5 }), // 5 attempts per minute
@@ -29,4 +33,3 @@ authRouter.post('/refresh', [body('refreshToken').notEmpty()], validateRequest, 
 authRouter.post('/logout', authenticate, authController.logout);
 // Get current user
 authRouter.get('/me', authenticate, authController.getCurrentUser);
-//# sourceMappingURL=auth.routes.js.map

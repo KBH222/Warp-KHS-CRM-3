@@ -28,4 +28,3 @@ router.post('/:id/assign', async (req, res) => {
     res.json({ message: 'Assign job not yet implemented' });
 });
 export { router as jobRouter };
-//# sourceMappingURL=job.routes.js.map

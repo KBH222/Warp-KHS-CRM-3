@@ -153,4 +153,3 @@ export const UI_CONFIG = {
     MAX_MOBILE_WIDTH: 768,
     TRANSITIONS_ENABLED: true,
 };
-//# sourceMappingURL=index.js.map

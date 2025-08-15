@@ -1,5 +1,13 @@
 import rateLimit from 'express-rate-limit';
-import { ERROR_CODES, ERROR_MESSAGES } from '@khs-crm/constants';
+
+// Inline constants to avoid @khs-crm imports
+const ERROR_CODES = {
+  RATE_LIMIT_EXCEEDED: 'RATE_LIMIT_EXCEEDED',
+} as const;
+
+const ERROR_MESSAGES: Record<string, string> = {
+  [ERROR_CODES.RATE_LIMIT_EXCEEDED]: 'Too many requests. Please try again later',
+};
 
 interface RateLimiterOptions {
   windowMs?: number;

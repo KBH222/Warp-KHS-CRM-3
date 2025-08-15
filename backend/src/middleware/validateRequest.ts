@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
-import { ERROR_CODES } from '@khs-crm/constants';
 import { ApiError } from '../utils/ApiError.js';
+
+// Inline constants to avoid @khs-crm imports
+const ERROR_CODES = {
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
+} as const;
 
 export const validateRequest = (
   req: Request,

@@ -1,8 +1,29 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { Role, LoginRequest, RegisterRequest } from '@khs-crm/types';
-import { ERROR_CODES } from '@khs-crm/constants';
+// Types defined inline
+type Role = 'OWNER' | 'WORKER';
+interface LoginRequest {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+}
+interface RegisterRequest {
+  email: string;
+  password: string;
+  name: string;
+  role?: Role;
+}
+const ERROR_CODES = {
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
+  UNAUTHORIZED: 'UNAUTHORIZED',
+  FORBIDDEN: 'FORBIDDEN',
+  NOT_FOUND: 'NOT_FOUND',
+  CONFLICT: 'CONFLICT',
+  INTERNAL_ERROR: 'INTERNAL_ERROR',
+  INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
+  DUPLICATE_ENTRY: 'DUPLICATE_ENTRY'
+};
 import { prisma } from '../db/prisma.js';
 import { ApiError } from '../utils/ApiError.js';
 import { logger } from '../utils/logger.js';
@@ -59,11 +80,11 @@ export const register = async (
 ) => {
   try {
     // Only owners can create new users
-    if (req.user?.role !== Role.OWNER) {
+    if (req.user?.role !== 'OWNER') {
       throw new ApiError(403, ERROR_CODES.FORBIDDEN, 'Only owners can create new users');
     }
 
-    const { email, password, name, role = Role.WORKER } = req.body;
+    const { email, password, name, role = 'WORKER' } = req.body;
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({

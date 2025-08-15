@@ -72,4 +72,3 @@ process.on('SIGINT', () => {
     process.exit(0);
 });
 startServer();
-//# sourceMappingURL=server.js.map

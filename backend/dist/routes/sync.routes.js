@@ -21,4 +21,3 @@ router.post('/pull', async (req, res) => {
     res.json({ message: 'Sync pull not yet implemented' });
 });
 export { router as syncRouter };
-//# sourceMappingURL=sync.routes.js.map

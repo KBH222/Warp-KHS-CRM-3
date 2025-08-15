@@ -32,4 +32,3 @@ export async function closeRedis() {
         redisClient = null;
     }
 }
-//# sourceMappingURL=redis.service.js.map
