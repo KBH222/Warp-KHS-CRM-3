@@ -600,7 +600,6 @@ const CustomersEnhanced = () => {
           </div>
         )}
       </div>
-      </div>
 
       {/* Customer Modal */}
       {showModal && (
