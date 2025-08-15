@@ -1,7 +1,7 @@
 // Test Render backend deployment
 // Run this to verify your backend is working
 
-const BACKEND_URL = 'https://khs-crm-backend.onrender.com'; // Update this with your actual Render URL
+const BACKEND_URL = 'https://khs-crm.onrender.com'; // Update this with your actual Render URL
 
 async function testBackend() {
   console.log('Testing backend at:', BACKEND_URL);
