@@ -61,7 +61,8 @@
       "Bash(where npx)",
       "Bash(where vercel)",
       "Bash(copy .env.example .env)",
-      "WebFetch(domain:khs-3ge76rxxz-bruce-hawkins-projects.vercel.app)"
+      "WebFetch(domain:khs-3ge76rxxz-bruce-hawkins-projects.vercel.app)",
+      "Bash(git checkout:*)"
     ],
     "deny": []
   }
