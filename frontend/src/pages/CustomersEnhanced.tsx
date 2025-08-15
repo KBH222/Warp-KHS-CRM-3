@@ -212,31 +212,32 @@ const CustomersEnhanced = () => {
         paddingBottom: '100px'
       }}>
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-        {/* Back Button */}
-        <button
-          onClick={() => navigate('/dashboard')}
-          style={{
-            marginBottom: '20px',
-            padding: '8px 16px',
-            backgroundColor: '#E5E7EB',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            fontSize: '14px'
-          }}
-        >
-          ← Back to Dashboard
-        </button>
-        
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <div>
-            <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>Customers (Updated)</h1>
-            {lastSyncTime && (
-              <p style={{ 
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <button
+              onClick={() => navigate('/dashboard')}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: '8px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                color: '#6B7280',
+                borderRadius: '6px'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+            >
+              <svg style={{ width: '28px', height: '28px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <div>
+              <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>Customers (Updated)</h1>
+              {lastSyncTime && (
+                <p style={{ 
                 fontSize: '12px', 
                 color: '#6B7280', 
                 margin: '4px 0 0 0',
@@ -258,6 +259,7 @@ const CustomersEnhanced = () => {
                 {isSyncing ? 'Syncing...' : `Last sync: ${lastSyncTime.toLocaleTimeString()}`}
               </p>
             )}
+            </div>
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
             <button
