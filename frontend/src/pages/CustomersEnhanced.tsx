@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { customerStorage } from '../utils/localStorage';
-import { BackButton } from '../components/BackButton';
 
 const CustomersEnhanced = () => {
   const navigate = useNavigate();
@@ -214,9 +213,23 @@ const CustomersEnhanced = () => {
       }}>
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
         {/* Back Button */}
-        <div style={{ marginBottom: '16px' }}>
-          <BackButton />
-        </div>
+        <button
+          onClick={() => navigate('/dashboard')}
+          style={{
+            marginBottom: '20px',
+            padding: '8px 16px',
+            backgroundColor: '#E5E7EB',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: '14px'
+          }}
+        >
+          ← Back to Dashboard
+        </button>
         
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
