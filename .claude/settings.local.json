@@ -65,7 +65,9 @@
       "Bash(git checkout:*)",
       "Bash(npx prettier:*)",
       "WebFetch(domain:khs-crm.vercel.app)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(timeout 10 npm run start:simple)",
+      "Bash(timeout 10 npm start)"
     ],
     "deny": []
   }
