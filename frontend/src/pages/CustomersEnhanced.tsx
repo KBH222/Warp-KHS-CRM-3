@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { customersApi, jobsApi, authApi } from '../services/api';
 import { toast } from 'react-toastify';
 import { SyncDiagnostics } from '../components/SyncDiagnostics';
-import { customerStorage } from '../services/localStorage';
+import { customerStorage } from '../services/localStorageService';
 
 const CustomersEnhanced = () => {
   const navigate = useNavigate();
