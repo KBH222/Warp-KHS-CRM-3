@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { customersApi, jobsApi, authApi } from '../services/api';
 import { toast } from 'react-toastify';
-import { SyncDiagnostics } from '../components/SyncDiagnostics';
 import { customerStorage } from '../services/localStorageService';
 
 const CustomersEnhanced = () => {
@@ -303,13 +302,7 @@ const CustomersEnhanced = () => {
   };
 
   return (
-    <div style={{ 
-        height: '100%',
-        overflowY: 'auto',
-        WebkitOverflowScrolling: 'touch',
-        paddingBottom: '100px'
-      }}>
-      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px', paddingBottom: '100px' }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
@@ -774,9 +767,6 @@ const CustomersEnhanced = () => {
           onDelete={handleDeleteJob}
         />
       )}
-      
-      {/* Sync Diagnostics - TEMPORARY for debugging */}
-      <SyncDiagnostics />
     </div>
   );
 };
