@@ -328,53 +328,54 @@ const CustomersEnhanced = () => {
             </button>
             <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>Customers</h1>
           </div>
-          <button
-              onClick={() => {
-                setEditingCustomer(null);
-                setShowModal(true);
-              }}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: '#3B82F6',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: '500'
-              }}
-            >
-              + Add Customer
-            </button>
+          <div style={{ display: 'flex', gap: '8px' }}>
             <button
-              onClick={async () => {
-                try {
-                  const hamBurger = await customersApi.create({
-                    name: 'Ham Burger',
-                    phone: '555-0123',
-                    email: 'ham.burger@test.com',
-                    address: '123 Test Street, Test City',
-                    notes: 'Test customer created to verify deployment'
-                  });
-                  setCustomers([hamBurger, ...customers]);
-                  toast.success('Ham Burger created successfully!');
-                } catch (err) {
-                  toast.error('Failed to create Ham Burger');
-                }
-              }}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: '#10B981',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: '500'
-              }}
-            >
-              🍔 Create Ham Burger
-            </button>
+                onClick={() => {
+                  setEditingCustomer(null);
+                  setShowModal(true);
+                }}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#3B82F6',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500'
+                }}
+              >
+                + Add Customer
+              </button>
+              <button
+                onClick={async () => {
+                  try {
+                    const hamBurger = await customersApi.create({
+                      name: 'Ham Burger',
+                      phone: '555-0123',
+                      email: 'ham.burger@test.com',
+                      address: '123 Test Street, Test City',
+                      notes: 'Test customer created to verify deployment'
+                    });
+                    setCustomers([hamBurger, ...customers]);
+                    toast.success('Ham Burger created successfully!');
+                  } catch (err) {
+                    toast.error('Failed to create Ham Burger');
+                  }
+                }}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#10B981',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500'
+                }}
+              >
+                🍔 Create Ham Burger
+              </button>
           </div>
         </div>
 
