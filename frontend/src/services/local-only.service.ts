@@ -55,12 +55,19 @@ class LocalOnlyService {
   /**
    * Enable local-only mode (disables API calls)
    */
-  enableLocalMode() {
+  async enableLocalMode() {
     console.log('[LocalOnlyService] Enabling local-only mode - all operations will use local storage');
     this.isLocalMode = true;
     
     // Store in localStorage so it persists
     localStorage.setItem('khs-crm-local-mode', 'true');
+    
+    // Check if we need to add sample data
+    const stats = await this.getLocalStats();
+    if (stats.customers === 0) {
+      console.log('[LocalOnlyService] No customers found, adding sample data...');
+      await this.addSampleData();
+    }
   }
 
   /**
@@ -305,6 +312,57 @@ class LocalOnlyService {
       jobs: jobs.length,
       localMode: this.isLocalModeEnabled(),
     };
+  }
+
+  /**
+   * Add sample data for demonstration
+   */
+  private async addSampleData(): Promise<void> {
+    try {
+      // Sample customers
+      const sampleCustomers = [
+        {
+          name: 'John Smith',
+          phone: '555-0123',
+          email: 'john.smith@example.com',
+          address: '123 Main St, Springfield, IL 62701',
+          notes: 'Regular customer, prefers morning appointments'
+        },
+        {
+          name: 'Sarah Johnson',
+          phone: '555-0124',
+          email: 'sarah.j@example.com',
+          address: '456 Oak Ave, Springfield, IL 62702',
+          notes: 'New construction project'
+        },
+        {
+          name: 'Mike Wilson',
+          phone: '555-0125',
+          address: '789 Pine Rd, Springfield, IL 62703',
+          notes: 'Commercial property owner'
+        }
+      ];
+
+      for (const customerData of sampleCustomers) {
+        const customer = await this.createCustomer(customerData);
+        
+        // Add a sample job for each customer
+        await this.createJob({
+          title: `Project for ${customer.name}`,
+          description: 'Sample project description',
+          customerId: customer.id,
+          status: 'QUOTED',
+          priority: 'medium',
+          totalCost: Math.floor(Math.random() * 10000) + 1000,
+          depositPaid: 0,
+          notes: 'This is a sample job for demonstration'
+        });
+      }
+
+      console.log('[LocalOnlyService] Sample data added successfully');
+    } catch (error) {
+      console.error('[LocalOnlyService] Failed to add sample data:', error);
+    }
   }
 }
 
