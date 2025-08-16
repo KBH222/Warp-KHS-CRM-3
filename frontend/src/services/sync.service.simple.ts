@@ -21,6 +21,8 @@ class SimpleSyncService {
   private syncing = false;
 
   constructor() {
+    console.log('[SyncService] Initializing sync service...');
+    
     // Load queue from localStorage on startup
     this.loadQueue();
     
@@ -30,12 +32,23 @@ class SimpleSyncService {
       this.syncAll();
     });
     
+    window.addEventListener('offline', () => {
+      console.log('[SyncService] Device went offline');
+    });
+    
     // Auto-sync every 30 seconds if online
     setInterval(() => {
       if (navigator.onLine && !this.syncing) {
+        console.log('[SyncService] Auto-sync timer triggered');
         this.syncAll();
       }
     }, 30000);
+    
+    // Initial sync on startup if online
+    if (navigator.onLine) {
+      console.log('[SyncService] Online at startup, syncing in 2 seconds...');
+      setTimeout(() => this.syncAll(), 2000);
+    }
   }
 
   private loadQueue() {

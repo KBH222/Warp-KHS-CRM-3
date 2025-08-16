@@ -53,11 +53,22 @@ const CustomersEnhanced = () => {
     };
 
     // Auto-sync every 15 minutes
-    const autoSync = () => {
+    const autoSync = async () => {
+      console.log('[CustomersPage] Running auto-sync...');
       
       // Save current data with timestamp
       customerStorage.save(customers);
       localStorage.setItem('khs-crm-last-sync', new Date().toISOString());
+      
+      // Trigger actual sync with backend
+      try {
+        await customersApi.sync();
+        console.log('[CustomersPage] Sync completed');
+        // Reload data after sync
+        await loadCustomers();
+      } catch (error) {
+        console.error('[CustomersPage] Sync failed:', error);
+      }
       
       // Trigger storage event for other tabs
       window.dispatchEvent(new Event('storage'));
@@ -76,6 +87,15 @@ const CustomersEnhanced = () => {
     // Set up 15-minute interval (900000 ms)
     const syncInterval = setInterval(autoSync, 900000);
     
+    // Sync when coming online
+    const handleOnline = () => {
+      console.log('[CustomersPage] Device came online, syncing...');
+      autoSync();
+    };
+    
+    // Listen for online event
+    window.addEventListener('online', handleOnline);
+    
     // Listen for storage events from other tabs
     window.addEventListener('storage', handleStorageChange);
 
@@ -86,6 +106,7 @@ const CustomersEnhanced = () => {
     return () => {
       clearInterval(syncInterval);
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('online', handleOnline);
     };
   }, []);
 

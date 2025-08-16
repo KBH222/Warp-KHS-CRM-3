@@ -9,6 +9,8 @@ import { AuthSetup } from './components/AuthSetup';
 import { LoginForm } from './components/LoginForm';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// Initialize sync service
+import './services/init';
 
 // Create a client optimized for construction field work
 const queryClient = new QueryClient({
