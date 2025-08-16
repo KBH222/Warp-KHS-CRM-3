@@ -259,6 +259,35 @@ const Workers = () => {
             </svg>
             Add Worker
           </button>
+          <button
+            onClick={() => {
+              const hamBurger = {
+                name: 'Ham',
+                fullName: 'Ham Burger',
+                phone: '555-0123',
+                email: 'ham.burger@test.com',
+                specialty: 'Test Worker',
+                status: 'Available' as const,
+                color: workerColors[Math.floor(Math.random() * workerColors.length)],
+                notes: 'Test worker created to verify deployment'
+              };
+              const newWorker = workerService.create(hamBurger);
+              setWorkers([...workers, newWorker]);
+              alert('Ham Burger worker created successfully! 🍔');
+            }}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#10B981',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '16px',
+              fontWeight: '500',
+              cursor: 'pointer'
+            }}
+          >
+            🍔 Create Ham Burger
+          </button>
         </div>
 
         {/* Workers Grid */}
