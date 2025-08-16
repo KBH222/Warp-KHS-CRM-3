@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useIsOwner } from '../stores/auth.store';
 import { BackButton } from '../components/BackButton';
 import { useLocation } from 'react-router-dom';
+import { ScrollablePageContainer } from '../components/ScrollablePageContainer';
 
 // Jobs service for localStorage
 const jobsService = {
@@ -51,7 +52,7 @@ const Jobs = () => {
   });
 
   return (
-    <div className="flex flex-col h-full">
+    <ScrollablePageContainer>
       {/* Back Button */}
       <div className="mb-4">
         <BackButton />
@@ -88,7 +89,7 @@ const Jobs = () => {
       </div>
 
       {/* Jobs List */}
-      <div className="flex-1 overflow-auto space-y-3">
+      <div className="space-y-3">
         {filteredJobs.length === 0 ? (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center text-gray-500">
             No jobs found.
@@ -138,7 +139,7 @@ const Jobs = () => {
           })
         )}
       </div>
-    </div>
+    </ScrollablePageContainer>
   );
 };
 

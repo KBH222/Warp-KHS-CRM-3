@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ScrollablePageContainer } from '../components/ScrollablePageContainer';
 
 const Materials = () => {
   const navigate = useNavigate();
@@ -78,12 +79,7 @@ const Materials = () => {
   const totalCost = filteredMaterials.reduce((sum, m) => sum + m.total, 0);
 
   return (
-    <div style={{ 
-      height: '100%',
-      overflowY: 'auto',
-      WebkitOverflowScrolling: 'touch',
-      paddingBottom: '100px'
-    }}>
+    <ScrollablePageContainer customPaddingBottom={100}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
         {/* Header */}
         <div style={{ 
@@ -407,7 +403,7 @@ const Materials = () => {
       ))}
 
       </div>
-    </div>
+    </ScrollablePageContainer>
   );
 };
 

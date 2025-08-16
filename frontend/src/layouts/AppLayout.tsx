@@ -38,9 +38,9 @@ export const AppLayout = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="app-layout">
       {/* Header */}
-      <header className="bg-white shadow-sm flex-shrink-0 z-30 relative">
+      <header className="app-header bg-white shadow-sm">
         <div className="px-4 h-14 flex items-center justify-between">
           <h1 className="text-lg font-semibold text-gray-900">KHS CRM</h1>
           <div className="flex items-center gap-4">
@@ -112,13 +112,10 @@ export const AppLayout = () => {
         )}
       </header>
 
-      {/* Main Content Area with proper scrolling */}
-      <div className="flex-1 overflow-hidden">
-        {/* Main Content - Scrollable */}
-        <main className="h-full overflow-y-auto overflow-x-hidden px-4 py-4" style={{ WebkitOverflowScrolling: 'touch' }}>
-          <Outlet />
-        </main>
-      </div>
+      {/* Main Content Area */}
+      <main className="app-main">
+        <Outlet />
+      </main>
       
       {/* Click outside to close menu */}
       {showMenu && (

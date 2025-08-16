@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { workerService, Worker, workerColors } from '../services/worker.service';
+import { ScrollablePageContainer } from '../components/ScrollablePageContainer';
 
 const Workers = () => {
   const navigate = useNavigate();
@@ -199,12 +200,7 @@ const Workers = () => {
   };
 
   return (
-    <div style={{ 
-      height: '100%',
-      overflowY: 'auto',
-      WebkitOverflowScrolling: 'touch',
-      paddingBottom: '100px'
-    }}>
+    <ScrollablePageContainer customPaddingBottom={100}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
         {/* Header */}
         <div style={{ 
@@ -1024,7 +1020,7 @@ const Workers = () => {
           </div>
         </div>
       )}
-    </div>
+    </ScrollablePageContainer>
   );
 };
 

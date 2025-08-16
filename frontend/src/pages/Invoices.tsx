@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { calendarJobStorage, customerStorage } from '../utils/localStorage';
+import { ScrollablePageContainer } from '../components/ScrollablePageContainer';
 
 const Invoices = () => {
   const navigate = useNavigate();
@@ -188,7 +189,8 @@ const Invoices = () => {
   };
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+    <ScrollablePageContainer>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
       {/* Header */}
       <div style={{ 
         display: 'flex', 
@@ -715,7 +717,8 @@ const Invoices = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </ScrollablePageContainer>
   );
 };
 

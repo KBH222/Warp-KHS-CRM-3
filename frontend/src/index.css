@@ -1,3 +1,6 @@
+/* Import global scrolling styles */
+@import './styles/scrolling.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
