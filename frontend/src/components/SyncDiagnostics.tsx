@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiClient } from '../services/api.service';
 import { simpleSyncService } from '../services/sync.service.simple';
+import { localOnlyService } from '../services/local-only.service';
 
 export function SyncDiagnostics() {
   const [diagnostics, setDiagnostics] = useState({
@@ -8,7 +9,8 @@ export function SyncDiagnostics() {
     online: navigator.onLine,
     token: localStorage.getItem('khs-crm-token') ? 'Present' : 'Missing',
     syncQueue: simpleSyncService.getPendingOperations(),
-    lastError: null as any
+    lastError: null as any,
+    localMode: localOnlyService.isLocalModeEnabled()
   });
 
   // Force token creation if missing
@@ -80,6 +82,7 @@ export function SyncDiagnostics() {
         <div>Online: {diagnostics.online ? '✅' : '❌'}</div>
         <div>Auth Token: {diagnostics.token}</div>
         <div>Queue Size: {diagnostics.syncQueue.length}</div>
+        <div>Mode: {diagnostics.localMode ? '🔒 Local Only' : '☁️ API Enabled'}</div>
         {diagnostics.lastError && (
           <div className="text-red-600">Error: {diagnostics.lastError.message}</div>
         )}
@@ -115,6 +118,20 @@ export function SyncDiagnostics() {
           className="w-full text-xs bg-green-500 text-white px-2 py-1 rounded"
         >
           Test Create Customer
+        </button>
+        <button
+          onClick={() => {
+            if (diagnostics.localMode) {
+              localOnlyService.disableLocalMode();
+              setDiagnostics(prev => ({ ...prev, localMode: false }));
+            } else {
+              localOnlyService.enableLocalMode();
+              setDiagnostics(prev => ({ ...prev, localMode: true }));
+            }
+          }}
+          className={`w-full text-xs ${diagnostics.localMode ? 'bg-yellow-500' : 'bg-purple-500'} text-white px-2 py-1 rounded`}
+        >
+          {diagnostics.localMode ? '☁️ Enable API Mode' : '🔒 Enable Local Mode'}
         </button>
       </div>
     </div>

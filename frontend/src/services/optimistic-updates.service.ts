@@ -1,6 +1,7 @@
 import { offlineDb } from './db.service';
 import { syncService } from './sync.service';
 import { apiClient } from './api.service';
+import { localOnlyService } from './local-only.service';
 
 // Types defined inline
 interface Customer {
@@ -163,15 +164,21 @@ class OptimisticUpdatesService {
       updatedAt: now,
     };
 
-    if (navigator.onLine) {
+    if (navigator.onLine && !localOnlyService.isLocalModeEnabled()) {
       try {
         // Try online creation first
         const serverCustomer = await apiClient.post<Customer>(API_ENDPOINTS.CUSTOMERS, data);
         await offlineDb.saveCustomer(serverCustomer);
         await offlineDb.markAsSynced('customer', serverCustomer.id);
         return serverCustomer;
-      } catch (error) {
+      } catch (error: any) {
         console.warn('Online customer creation failed, falling back to optimistic update:', error);
+        
+        // If it's a CORS error, enable local mode
+        if (error?.code === 'NETWORK_ERROR' || error?.message?.includes('Network error')) {
+          console.log('[OptimisticUpdatesService] Detected CORS/network error, enabling local mode');
+          localOnlyService.enableLocalMode();
+        }
       }
     }
 
@@ -192,7 +199,7 @@ class OptimisticUpdatesService {
       updatedAt: new Date(),
     };
 
-    if (navigator.onLine) {
+    if (navigator.onLine && !localOnlyService.isLocalModeEnabled()) {
       try {
         // Try online update first
         const serverCustomer = await apiClient.put<Customer>(
@@ -202,8 +209,14 @@ class OptimisticUpdatesService {
         await offlineDb.saveCustomer(serverCustomer);
         await offlineDb.markAsSynced('customer', id);
         return serverCustomer;
-      } catch (error) {
+      } catch (error: any) {
         console.warn('Online customer update failed, falling back to optimistic update:', error);
+        
+        // If it's a CORS error, enable local mode
+        if (error?.code === 'NETWORK_ERROR' || error?.message?.includes('Network error')) {
+          console.log('[OptimisticUpdatesService] Detected CORS/network error, enabling local mode');
+          localOnlyService.enableLocalMode();
+        }
       }
     }
 
@@ -212,14 +225,20 @@ class OptimisticUpdatesService {
   }
 
   async deleteCustomer(id: string): Promise<void> {
-    if (navigator.onLine) {
+    if (navigator.onLine && !localOnlyService.isLocalModeEnabled()) {
       try {
         // Try online deletion first
         await apiClient.delete(API_ENDPOINTS.CUSTOMER_BY_ID(id));
         await offlineDb.deleteCustomer(id);
         return;
-      } catch (error) {
+      } catch (error: any) {
         console.warn('Online customer deletion failed, falling back to optimistic update:', error);
+        
+        // If it's a CORS error, enable local mode
+        if (error?.code === 'NETWORK_ERROR' || error?.message?.includes('Network error')) {
+          console.log('[OptimisticUpdatesService] Detected CORS/network error, enabling local mode');
+          localOnlyService.enableLocalMode();
+        }
       }
     }
 
