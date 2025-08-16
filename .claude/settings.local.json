@@ -69,7 +69,9 @@
       "Bash(timeout 10 npm run start:simple)",
       "Bash(timeout 10 npm start)",
       "Bash(tsc)",
-      "Bash(git remote get-url:*)"
+      "Bash(git remote get-url:*)",
+      "Bash(git fetch:*)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ],
     "deny": []
   }

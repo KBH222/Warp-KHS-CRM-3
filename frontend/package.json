@@ -19,7 +19,8 @@
     "verify:full": "node test-runner.cjs",
     "verify:quick": "node quick-test.cjs",
     "precommit": "node verify-components.cjs",
-    "predeploy": "npm run build",
+    "build:github": "vite build --config vite.config.github.ts",
+    "predeploy": "npm run build:github",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
