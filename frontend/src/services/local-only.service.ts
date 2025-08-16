@@ -46,10 +46,11 @@ class LocalOnlyService {
     }
     
     // Auto-enable local mode if we detect CORS issues
-    if (import.meta.env.VITE_API_URL?.includes('render.com') && window.location.hostname.includes('vercel')) {
-      console.log('[LocalOnlyService] Detected Vercel frontend with Render backend - enabling local mode to bypass CORS');
-      this.enableLocalMode();
-    }
+    // Commented out since CORS is now configured on Render
+    // if (import.meta.env.VITE_API_URL?.includes('render.com') && window.location.hostname.includes('vercel')) {
+    //   console.log('[LocalOnlyService] Detected Vercel frontend with Render backend - enabling local mode to bypass CORS');
+    //   this.enableLocalMode();
+    // }
   }
 
   /**

@@ -28,6 +28,13 @@ export function SyncDiagnostics() {
       }));
       setDiagnostics(prev => ({ ...prev, token: 'Present' }));
     }
+    
+    // Clear local mode if it was set (since CORS is now fixed)
+    if (localStorage.getItem('khs-crm-local-mode') === 'true') {
+      console.log('[SyncDiagnostics] Clearing local mode since CORS should be fixed');
+      localStorage.removeItem('khs-crm-local-mode');
+      localOnlyService.disableLocalMode();
+    }
   }, []);
 
   useEffect(() => {
