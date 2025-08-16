@@ -1,13 +1,35 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosError } from 'axios';
-import { API_BASE_URL, STORAGE_KEYS, ERROR_CODES } from '@khs-crm/constants';
-import { ApiError, AuthTokens } from '@khs-crm/types';
 import { useAuthStore } from '@stores/auth.store';
+
+// Constants defined inline
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const STORAGE_KEYS = {
+  AUTH_TOKEN: 'khs-crm-token',
+  REFRESH_TOKEN: 'khs-crm-refresh-token'
+};
+const ERROR_CODES = {
+  NETWORK_ERROR: 'NETWORK_ERROR',
+  INTERNAL_ERROR: 'INTERNAL_ERROR'
+};
+
+// Types defined inline
+interface ApiError {
+  code: string;
+  message: string;
+  details?: any;
+}
+interface AuthTokens {
+  token: string;
+  refreshToken: string;
+}
 
 class ApiClient {
   private client: AxiosInstance;
   private refreshPromise: Promise<string> | null = null;
 
   constructor() {
+    console.log('[ApiClient] Initializing with base URL:', API_BASE_URL);
+    
     this.client = axios.create({
       baseURL: API_BASE_URL,
       timeout: 30000,
@@ -23,19 +45,27 @@ class ApiClient {
     // Request interceptor
     this.client.interceptors.request.use(
       (config) => {
+        console.log('[ApiClient] Request:', config.method?.toUpperCase(), config.url);
         const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
       },
-      (error) => Promise.reject(error),
+      (error) => {
+        console.error('[ApiClient] Request error:', error);
+        return Promise.reject(error);
+      },
     );
 
     // Response interceptor
     this.client.interceptors.response.use(
-      (response) => response.data,
+      (response) => {
+        console.log('[ApiClient] Response:', response.status, response.config.url);
+        return response.data;
+      },
       async (error: AxiosError<{ error: ApiError }>) => {
+        console.error('[ApiClient] Response error:', error.response?.status, error.config?.url, error.message);
         const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
         // Handle token expiration

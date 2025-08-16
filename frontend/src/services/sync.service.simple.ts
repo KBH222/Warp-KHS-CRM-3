@@ -1,7 +1,41 @@
-import { Customer, Job, Material } from '@khs-crm/types';
 import { offlineDb } from './db.service';
 import { apiClient } from './api.service';
-import { API_ENDPOINTS } from '@khs-crm/constants';
+
+// Types defined inline
+interface Customer {
+  id: string;
+  reference: string;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  address: string;
+  notes: string | null;
+  isArchived: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface Job {
+  id: string;
+  title: string;
+  customerId: string;
+  status: string;
+  // Add other job fields as needed
+}
+
+interface Material {
+  id: string;
+  name: string;
+  // Add other material fields as needed
+}
+
+// API endpoints
+const API_ENDPOINTS = {
+  CUSTOMERS: '/api/customers',
+  CUSTOMER_BY_ID: (id: string) => `/api/customers/${id}`,
+  JOBS: '/api/jobs',
+  JOB_BY_ID: (id: string) => `/api/jobs/${id}`
+};
 
 interface SyncOperation {
   id: string;

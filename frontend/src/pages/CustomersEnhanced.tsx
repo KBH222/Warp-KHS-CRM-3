@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { customersApi, jobsApi, authApi } from '../services/api';
 import { toast } from 'react-toastify';
+import { SyncDiagnostics } from '../components/SyncDiagnostics';
 
 const CustomersEnhanced = () => {
   const navigate = useNavigate();
@@ -1650,6 +1651,9 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         </form>
       </div>
     </div>
+    
+    {/* Sync Diagnostics - TEMPORARY for debugging */}
+    <SyncDiagnostics />
   );
 };
 

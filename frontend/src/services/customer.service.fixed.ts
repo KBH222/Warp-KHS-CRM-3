@@ -1,8 +1,50 @@
-import { Customer, CreateCustomerRequest, UpdateCustomerRequest, CustomerFilters } from '@khs-crm/types';
 import { offlineDb } from './db.service';
 import { apiClient } from './api.service';
-import { API_ENDPOINTS } from '@khs-crm/constants';
 import { simpleSyncService } from './sync.service.simple';
+
+// Types defined inline
+interface Customer {
+  id: string;
+  reference: string;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  address: string;
+  notes: string | null;
+  isArchived: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  modifiedBy: string;
+  jobs?: any[];
+}
+
+interface CreateCustomerRequest {
+  name: string;
+  phone?: string;
+  email?: string;
+  address: string;
+  notes?: string;
+}
+
+interface UpdateCustomerRequest {
+  name?: string;
+  phone?: string | null;
+  email?: string | null;
+  address?: string;
+  notes?: string | null;
+}
+
+interface CustomerFilters {
+  search?: string;
+  isArchived?: boolean;
+}
+
+// API endpoints
+const API_ENDPOINTS = {
+  CUSTOMERS: '/api/customers',
+  CUSTOMER_BY_ID: (id: string) => `/api/customers/${id}`
+};
 
 /**
  * Fixed customer service with proper sync

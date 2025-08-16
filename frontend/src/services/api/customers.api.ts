@@ -1,6 +1,22 @@
-import { Customer } from '@khs-crm/types';
 import { customerServiceFixed } from '../customer.service.fixed';
 import { simpleSyncService } from '../sync.service.simple';
+
+// Type defined inline
+interface Customer {
+  id: string;
+  reference: string;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  address: string;
+  notes: string | null;
+  isArchived: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  modifiedBy: string;
+  jobs?: any[];
+}
 
 // Re-export the fixed customer service methods under the old API interface
 export const customersApi = {
