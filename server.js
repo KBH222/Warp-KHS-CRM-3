@@ -17,6 +17,23 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'frontend/dist')));
 
+// Simple auth middleware - accepts any token for now
+const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    console.log('No auth token provided');
+    // For now, allow requests without auth to make testing easier
+    // In production, you would return 401 here
+    // return res.status(401).json({ error: 'No authorization token provided' });
+  } else {
+    console.log('Auth token received:', authHeader.substring(0, 20) + '...');
+  }
+  
+  // For now, accept any token
+  next();
+};
+
 // API Routes
 app.get('/api/health', (req, res) => {
   res.json({ 
@@ -47,7 +64,8 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // Customer routes
-app.get('/api/customers', async (req, res) => {
+app.get('/api/customers', authMiddleware, async (req, res) => {
+  console.log('GET /api/customers - Request received');
   try {
     const customers = await prisma.customer.findMany({
       where: { isArchived: false },
@@ -63,14 +81,21 @@ app.get('/api/customers', async (req, res) => {
       },
       orderBy: { createdAt: 'desc' }
     });
+    console.log(`Found ${customers.length} customers`);
     res.json(customers);
   } catch (error) {
     console.error('Error fetching customers:', error);
-    res.status(500).json({ error: 'Failed to fetch customers' });
+    // Check if it's a Prisma/DB error
+    if (error.code === 'P2021') {
+      console.error('Table does not exist - migrations may need to run');
+      res.status(500).json({ error: 'Database table not found. Migrations may need to run.' });
+    } else {
+      res.status(500).json({ error: 'Failed to fetch customers: ' + error.message });
+    }
   }
 });
 
-app.post('/api/customers', async (req, res) => {
+app.post('/api/customers', authMiddleware, async (req, res) => {
   try {
     const { reference, name, phone, email, address, notes } = req.body;
     
@@ -100,7 +125,7 @@ app.post('/api/customers', async (req, res) => {
   }
 });
 
-app.put('/api/customers/:id', async (req, res) => {
+app.put('/api/customers/:id', authMiddleware, async (req, res) => {
   try {
     const { name, phone, email, address, notes } = req.body;
     
@@ -116,7 +141,7 @@ app.put('/api/customers/:id', async (req, res) => {
   }
 });
 
-app.delete('/api/customers/:id', async (req, res) => {
+app.delete('/api/customers/:id', authMiddleware, async (req, res) => {
   try {
     await prisma.customer.update({
       where: { id: req.params.id },
@@ -131,7 +156,7 @@ app.delete('/api/customers/:id', async (req, res) => {
 });
 
 // Job routes
-app.get('/api/jobs', async (req, res) => {
+app.get('/api/jobs', authMiddleware, async (req, res) => {
   try {
     const jobs = await prisma.job.findMany({
       include: {
@@ -148,7 +173,7 @@ app.get('/api/jobs', async (req, res) => {
   }
 });
 
-app.post('/api/jobs', async (req, res) => {
+app.post('/api/jobs', authMiddleware, async (req, res) => {
   try {
     const job = await prisma.job.create({
       data: {
