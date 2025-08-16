@@ -150,7 +150,7 @@ export const GoogleDriveIntegration: React.FC<GoogleDriveIntegrationProps> = ({
             border: 'none',
             borderRadius: '6px',
             cursor: loading ? 'not-allowed' : 'pointer',
-            fontSize: '16px',
+            fontSize: '18.4px',
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px'
@@ -208,7 +208,7 @@ export const GoogleDriveIntegration: React.FC<GoogleDriveIntegrationProps> = ({
               padding: '8px 12px',
               border: '1px solid #E5E7EB',
               borderRadius: '6px',
-              fontSize: '14px',
+              fontSize: '16.1px',
               width: '200px'
             }}
           />
@@ -221,7 +221,7 @@ export const GoogleDriveIntegration: React.FC<GoogleDriveIntegrationProps> = ({
               color: 'white',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: '16.1px',
               display: 'inline-block'
             }}>
               Upload
@@ -268,7 +268,7 @@ export const GoogleDriveIntegration: React.FC<GoogleDriveIntegrationProps> = ({
               transition: 'width 0.3s ease'
             }} />
           </div>
-          <p style={{ fontSize: '12px', color: '#6B7280', marginTop: '4px' }}>
+          <p style={{ fontSize: '13.8px', color: '#6B7280', marginTop: '4px' }}>
             Uploading... {Math.round(uploadProgress)}%
           </p>
         </div>
@@ -311,7 +311,7 @@ export const GoogleDriveIntegration: React.FC<GoogleDriveIntegrationProps> = ({
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   {/* File icon */}
-                  <span style={{ fontSize: '20px' }}>
+                  <span style={{ fontSize: '23px' }}>
                     {file.mimeType?.includes('folder') ? '📁' :
                      file.mimeType?.includes('image') ? '🖼️' :
                      file.mimeType?.includes('pdf') ? '📄' :
@@ -320,7 +320,7 @@ export const GoogleDriveIntegration: React.FC<GoogleDriveIntegrationProps> = ({
                   </span>
                   <div>
                     <h4 style={{ margin: 0, fontSize: '14px' }}>{file.name}</h4>
-                    <p style={{ margin: 0, fontSize: '12px', color: '#6B7280' }}>
+                    <p style={{ margin: 0, fontSize: '13.8px', color: '#6B7280' }}>
                       {formatFileSize(file.size)} • {formatDate(file.modifiedTime)}
                     </p>
                   </div>

@@ -9,7 +9,7 @@ export const SecurityWarning = () => {
     }}>
       <h3 style={{ 
         margin: '0 0 12px 0', 
-        fontSize: '16px', 
+        fontSize: '18.4px', 
         fontWeight: '600',
         color: '#991B1B'
       }}>
@@ -17,7 +17,7 @@ export const SecurityWarning = () => {
       </h3>
       <p style={{ 
         margin: '0 0 16px 0', 
-        fontSize: '14px',
+        fontSize: '16.1px',
         color: '#991B1B'
       }}>
         Google Drive sync has been disabled due to critical security vulnerabilities:
@@ -25,7 +25,7 @@ export const SecurityWarning = () => {
       <ul style={{ 
         margin: '0 0 16px 0', 
         paddingLeft: '20px',
-        fontSize: '14px',
+        fontSize: '16.1px',
         color: '#991B1B'
       }}>
         <li>API credentials were exposed in frontend code</li>
@@ -34,7 +34,7 @@ export const SecurityWarning = () => {
       </ul>
       <p style={{ 
         margin: '0', 
-        fontSize: '14px',
+        fontSize: '16.1px',
         color: '#991B1B',
         fontWeight: '600'
       }}>

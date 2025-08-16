@@ -67,7 +67,7 @@ export const LoginForm = () => {
           <div style={{ textAlign: 'center', marginBottom: '24px' }}>
             <h1 style={{ 
               margin: '0 0 8px 0', 
-              fontSize: '28px', 
+              fontSize: '32.2px', 
               fontWeight: '700',
               color: '#111827',
             }}>
@@ -75,7 +75,7 @@ export const LoginForm = () => {
             </h1>
             <p style={{ 
               margin: 0, 
-              fontSize: '14px',
+              fontSize: '16.1px',
               color: '#6B7280',
             }}>
               Sign in to continue
@@ -86,7 +86,7 @@ export const LoginForm = () => {
             <label style={{ 
               display: 'block', 
               marginBottom: '4px',
-              fontSize: '14px',
+              fontSize: '16.1px',
               fontWeight: '500',
               color: '#374151',
             }}>
@@ -105,7 +105,7 @@ export const LoginForm = () => {
                   padding: '10px 40px 10px 12px',
                   border: '1px solid #D1D5DB',
                   borderRadius: '6px',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   outline: 'none',
                   transition: 'border-color 0.2s',
                 }}
@@ -128,7 +128,7 @@ export const LoginForm = () => {
                   backgroundColor: 'transparent',
                   border: 'none',
                   cursor: 'pointer',
-                  fontSize: '12px',
+                  fontSize: '13.8px',
                 }}
               >
                 {showPassword ? '👁️' : '👁️‍🗨️'}
@@ -146,7 +146,7 @@ export const LoginForm = () => {
             }}>
               <p style={{ 
                 margin: 0, 
-                fontSize: '14px',
+                fontSize: '16.1px',
                 color: '#DC2626',
               }}>
                 {error}
@@ -165,7 +165,7 @@ export const LoginForm = () => {
               border: 'none',
               borderRadius: '6px',
               cursor: isLoading ? 'not-allowed' : 'pointer',
-              fontSize: '14px',
+              fontSize: '16.1px',
               fontWeight: '500',
               transition: 'background-color 0.2s',
             }}
@@ -192,7 +192,7 @@ export const LoginForm = () => {
           }}>
             <p style={{ 
               margin: 0, 
-              fontSize: '13px',
+              fontSize: '14.95px',
               color: '#6B7280',
               textAlign: 'center',
             }}>

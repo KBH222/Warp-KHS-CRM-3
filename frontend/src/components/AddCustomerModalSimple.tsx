@@ -62,11 +62,11 @@ export const AddCustomerModalSimple = ({ isOpen, onClose, onAdd }: AddCustomerMo
         width: '90%',
         maxWidth: '400px'
       }}>
-        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: 'bold' }}>Add Customer</h2>
+        <h2 style={{ marginBottom: '16px', fontSize: '23px', fontWeight: 'bold' }}>Add Customer</h2>
         
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '12px' }}>
-            <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px' }}>Name *</label>
+            <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px' }}>Name *</label>
             <input
               type="text"
               value={formData.name}
@@ -82,7 +82,7 @@ export const AddCustomerModalSimple = ({ isOpen, onClose, onAdd }: AddCustomerMo
           </div>
 
           <div style={{ marginBottom: '12px' }}>
-            <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px' }}>Email *</label>
+            <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px' }}>Email *</label>
             <input
               type="email"
               value={formData.email}
@@ -98,7 +98,7 @@ export const AddCustomerModalSimple = ({ isOpen, onClose, onAdd }: AddCustomerMo
           </div>
 
           <div style={{ marginBottom: '12px' }}>
-            <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px' }}>Phone *</label>
+            <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px' }}>Phone *</label>
             <input
               type="tel"
               value={formData.phone}
@@ -114,7 +114,7 @@ export const AddCustomerModalSimple = ({ isOpen, onClose, onAdd }: AddCustomerMo
           </div>
 
           <div style={{ marginBottom: '12px' }}>
-            <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px' }}>Street *</label>
+            <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px' }}>Street *</label>
             <input
               type="text"
               value={formData.street}
@@ -131,7 +131,7 @@ export const AddCustomerModalSimple = ({ isOpen, onClose, onAdd }: AddCustomerMo
 
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '8px', marginBottom: '16px' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px' }}>City *</label>
+              <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px' }}>City *</label>
               <input
                 type="text"
                 value={formData.city}
@@ -146,7 +146,7 @@ export const AddCustomerModalSimple = ({ isOpen, onClose, onAdd }: AddCustomerMo
               />
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px' }}>State *</label>
+              <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px' }}>State *</label>
               <input
                 type="text"
                 value={formData.state}
@@ -162,7 +162,7 @@ export const AddCustomerModalSimple = ({ isOpen, onClose, onAdd }: AddCustomerMo
               />
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px' }}>Zip *</label>
+              <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px' }}>Zip *</label>
               <input
                 type="text"
                 value={formData.zip}

@@ -80,7 +80,7 @@ export const LocalNetworkStatus = ({ onSyncComplete }: LocalNetworkStatusProps) 
         <div>
           <h3 style={{ 
             margin: '0 0 4px 0', 
-            fontSize: '14px', 
+            fontSize: '16.1px', 
             fontWeight: '600',
             display: 'flex',
             alignItems: 'center',
@@ -89,7 +89,7 @@ export const LocalNetworkStatus = ({ onSyncComplete }: LocalNetworkStatusProps) 
             <span>📡 Local Network Sync</span>
             {isConnected ? (
               <span style={{
-                fontSize: '12px',
+                fontSize: '13.8px',
                 padding: '2px 8px',
                 backgroundColor: '#10B981',
                 color: 'white',
@@ -100,7 +100,7 @@ export const LocalNetworkStatus = ({ onSyncComplete }: LocalNetworkStatusProps) 
               </span>
             ) : (
               <span style={{
-                fontSize: '12px',
+                fontSize: '13.8px',
                 padding: '2px 8px',
                 backgroundColor: '#6B7280',
                 color: 'white',
@@ -114,7 +114,7 @@ export const LocalNetworkStatus = ({ onSyncComplete }: LocalNetworkStatusProps) 
           {error && (
             <p style={{ 
               margin: '4px 0', 
-              fontSize: '12px', 
+              fontSize: '13.8px', 
               color: '#DC2626',
             }}>
               ⚠️ {error}
@@ -122,7 +122,7 @@ export const LocalNetworkStatus = ({ onSyncComplete }: LocalNetworkStatusProps) 
           )}
           <p style={{ 
             margin: '4px 0', 
-            fontSize: '12px', 
+            fontSize: '13.8px', 
             color: '#6B7280',
           }}>
             Sync data with devices on the same WiFi network
@@ -139,7 +139,7 @@ export const LocalNetworkStatus = ({ onSyncComplete }: LocalNetworkStatusProps) 
                 border: 'none',
                 borderRadius: '6px',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '16.1px',
                 fontWeight: '500',
               }}
             >
@@ -157,7 +157,7 @@ export const LocalNetworkStatus = ({ onSyncComplete }: LocalNetworkStatusProps) 
                   border: 'none',
                   borderRadius: '6px',
                   cursor: isSyncing ? 'not-allowed' : 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   fontWeight: '500',
                   display: 'flex',
                   alignItems: 'center',
@@ -190,7 +190,7 @@ export const LocalNetworkStatus = ({ onSyncComplete }: LocalNetworkStatusProps) 
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   fontWeight: '500',
                 }}
               >
@@ -209,7 +209,7 @@ export const LocalNetworkStatus = ({ onSyncComplete }: LocalNetworkStatusProps) 
         }}>
           <h4 style={{ 
             margin: '0 0 8px 0', 
-            fontSize: '14px', 
+            fontSize: '16.1px', 
             fontWeight: '600',
           }}>
             Connected Devices:
@@ -222,18 +222,18 @@ export const LocalNetworkStatus = ({ onSyncComplete }: LocalNetworkStatusProps) 
                   padding: '8px',
                   backgroundColor: 'white',
                   borderRadius: '4px',
-                  fontSize: '13px',
+                  fontSize: '14.95px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
                 }}
               >
-                <span style={{ fontSize: '16px' }}>
+                <span style={{ fontSize: '18.4px' }}>
                   {peer.name.includes('iPhone') || peer.name.includes('Android') ? '📱' : '💻'}
                 </span>
                 <span style={{ fontWeight: '500' }}>{peer.name}</span>
                 <span style={{ 
-                  fontSize: '11px', 
+                  fontSize: '12.65px', 
                   color: '#6B7280',
                   marginLeft: 'auto',
                 }}>
@@ -251,7 +251,7 @@ export const LocalNetworkStatus = ({ onSyncComplete }: LocalNetworkStatusProps) 
           padding: '12px',
           backgroundColor: '#EFF6FF',
           borderRadius: '6px',
-          fontSize: '12px',
+          fontSize: '13.8px',
           color: '#1E40AF',
         }}>
           <strong>Note:</strong> Only job and material data syncs over local network. 

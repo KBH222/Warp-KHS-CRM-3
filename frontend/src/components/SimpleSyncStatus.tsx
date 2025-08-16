@@ -65,14 +65,14 @@ export const SimpleSyncStatus = () => {
         <div>
           <h3 style={{ 
             margin: '0 0 8px 0', 
-            fontSize: '16px', 
+            fontSize: '18.4px', 
             fontWeight: '600',
             color: '#0369A1'
           }}>
             💾 Data Backup & Sync
           </h3>
           
-          <div style={{ fontSize: '14px', color: '#0C4A6E', marginBottom: '8px' }}>
+          <div style={{ fontSize: '16.1px', color: '#0C4A6E', marginBottom: '8px' }}>
             {lastBackup ? (
               <>Last backup: {lastBackup.toLocaleTimeString()}</>
             ) : (
@@ -87,7 +87,7 @@ export const SimpleSyncStatus = () => {
               checked={autoBackup}
               onChange={(e) => setAutoBackup(e.target.checked)}
             />
-            <label htmlFor="auto-backup" style={{ fontSize: '14px', color: '#0C4A6E' }}>
+            <label htmlFor="auto-backup" style={{ fontSize: '16.1px', color: '#0C4A6E' }}>
               Auto-backup every 5 minutes
             </label>
           </div>
@@ -103,7 +103,7 @@ export const SimpleSyncStatus = () => {
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: '16.1px',
               fontWeight: '500'
             }}
           >
@@ -116,7 +116,7 @@ export const SimpleSyncStatus = () => {
             color: 'white',
             borderRadius: '6px',
             cursor: 'pointer',
-            fontSize: '14px',
+            fontSize: '16.1px',
             fontWeight: '500',
             display: 'inline-block'
           }}>
@@ -136,7 +136,7 @@ export const SimpleSyncStatus = () => {
         padding: '12px',
         backgroundColor: '#DBEAFE',
         borderRadius: '6px',
-        fontSize: '13px',
+        fontSize: '14.95px',
         color: '#1E40AF'
       }}>
         <strong>💡 Tip:</strong> Save backup files to your OneDrive folder for automatic cloud sync. 

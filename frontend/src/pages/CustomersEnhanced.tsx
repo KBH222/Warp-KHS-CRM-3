@@ -330,7 +330,7 @@ const CustomersEnhanced = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>Customers</h1>
+            <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: 0 }}>Customers</h1>
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
             <button
@@ -345,7 +345,7 @@ const CustomersEnhanced = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   fontWeight: '500'
                 }}
               >
@@ -374,7 +374,7 @@ const CustomersEnhanced = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   fontWeight: '500'
                 }}
               >
@@ -395,7 +395,7 @@ const CustomersEnhanced = () => {
               padding: '12px',
               border: '1px solid #D1D5DB',
               borderRadius: '8px',
-              fontSize: '16px'
+              fontSize: '18.4px'
             }}
           />
         </div>
@@ -411,7 +411,7 @@ const CustomersEnhanced = () => {
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '14px'
+              fontSize: '16.1px'
             }}
           >
             Name
@@ -425,7 +425,7 @@ const CustomersEnhanced = () => {
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '14px'
+              fontSize: '16.1px'
             }}
           >
             Reference
@@ -439,7 +439,7 @@ const CustomersEnhanced = () => {
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '14px'
+              fontSize: '16.1px'
             }}
           >
             Recent
@@ -498,7 +498,7 @@ const CustomersEnhanced = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                      <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{customer.name}</h3>
+                      <h3 style={{ margin: 0, fontSize: '18.4px', fontWeight: '600' }}>{customer.name}</h3>
                       {customer.reference && (
                         <span style={{
                           padding: '2px 8px',
@@ -506,7 +506,7 @@ const CustomersEnhanced = () => {
                                          customer.reference === 'Yelp' ? '#F59E0B' : '#3B82F6',
                           color: 'white',
                           borderRadius: '12px',
-                          fontSize: '10px',
+                          fontSize: '11.5px',
                           fontWeight: '500'
                         }}>
                           {customer.reference}
@@ -523,7 +523,7 @@ const CustomersEnhanced = () => {
                         cursor: 'pointer',
                         padding: '4px 0',
                         font: 'inherit',
-                        fontSize: '12px',
+                        fontSize: '13.8px',
                         display: 'block',
                         marginBottom: '8px',
                         overflow: 'hidden',
@@ -554,7 +554,7 @@ const CustomersEnhanced = () => {
                           borderRadius: '4px',
                           cursor: 'pointer',
                           padding: '4px 8px',
-                          fontSize: '12px',
+                          fontSize: '13.8px',
                           display: 'flex',
                           alignItems: 'center',
                           gap: '4px'
@@ -575,7 +575,7 @@ const CustomersEnhanced = () => {
                           borderRadius: '4px',
                           cursor: 'pointer',
                           padding: '4px 8px',
-                          fontSize: '12px',
+                          fontSize: '13.8px',
                           display: 'flex',
                           alignItems: 'center',
                           gap: '4px'
@@ -583,7 +583,7 @@ const CustomersEnhanced = () => {
                       >
                         💬 Text
                       </button>
-                      <span style={{ fontSize: '12px', color: '#666' }}>{customer.phone}</span>
+                      <span style={{ fontSize: '13.8px', color: '#666' }}>{customer.phone}</span>
                     </div>
                     <button
                       onClick={(e) => handleAddressClick(customer.address, e)}
@@ -595,7 +595,7 @@ const CustomersEnhanced = () => {
                         cursor: 'pointer',
                         padding: '4px 0',
                         font: 'inherit',
-                        fontSize: '11px',
+                        fontSize: '12.65px',
                         display: 'block',
                         lineHeight: '1.3',
                         textAlign: 'left',
@@ -614,7 +614,7 @@ const CustomersEnhanced = () => {
                     </button>
                     {customer.notes && (
                       <p style={{ 
-                        fontSize: '11px', 
+                        fontSize: '12.65px', 
                         color: '#9CA3AF',
                         fontStyle: 'italic',
                         margin: '0',
@@ -636,7 +636,7 @@ const CustomersEnhanced = () => {
                             borderTop: '1px solid #E5E7EB'
                           }}>
                             <p style={{ 
-                              fontSize: '12px', 
+                              fontSize: '13.8px', 
                               fontWeight: '600',
                               color: '#374151',
                               marginBottom: '8px'
@@ -660,7 +660,7 @@ const CustomersEnhanced = () => {
                                     padding: '6px 8px',
                                     textAlign: 'left',
                                     cursor: 'pointer',
-                                    fontSize: '11px',
+                                    fontSize: '12.65px',
                                     color: '#374151',
                                     transition: 'all 0.2s'
                                   }}
@@ -675,7 +675,7 @@ const CustomersEnhanced = () => {
                                 >
                                   <div style={{ fontWeight: '500' }}>{job.title}</div>
                                   {job.startDate && (
-                                    <div style={{ color: '#6B7280', fontSize: '10px' }}>
+                                    <div style={{ color: '#6B7280', fontSize: '11.5px' }}>
                                       {new Date(job.startDate).toLocaleDateString()}
                                     </div>
                                   )}
@@ -697,7 +697,7 @@ const CustomersEnhanced = () => {
                       }}
                       style={{
                         padding: '4px 12px',
-                        fontSize: '12px',
+                        fontSize: '13.8px',
                         backgroundColor: '#E5E7EB',
                         border: 'none',
                         borderRadius: '6px',
@@ -713,7 +713,7 @@ const CustomersEnhanced = () => {
                       }}
                       style={{
                         padding: '4px 12px',
-                        fontSize: '12px',
+                        fontSize: '13.8px',
                         backgroundColor: '#FEE2E2',
                         color: '#DC2626',
                         border: 'none',
@@ -730,7 +730,7 @@ const CustomersEnhanced = () => {
                       }}
                       style={{
                         padding: '4px 12px',
-                        fontSize: '12px',
+                        fontSize: '13.8px',
                         backgroundColor: '#10B981',
                         color: 'white',
                         border: 'none',
@@ -741,7 +741,7 @@ const CustomersEnhanced = () => {
                         gap: '4px'
                       }}
                     >
-                      <span style={{ fontSize: '14px' }}>+</span> Add Job
+                      <span style={{ fontSize: '16.1px' }}>+</span> Add Job
                     </button>
                   </div>
                 </div>
@@ -960,7 +960,7 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
                 padding: '8px 12px',
                 border: '1px solid #D1D5DB',
                 borderRadius: '6px',
-                fontSize: '16px',
+                fontSize: '18.4px',
                 backgroundColor: 'white'
               }}
             >
@@ -985,7 +985,7 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
                 padding: '8px 12px',
                 border: '1px solid #D1D5DB',
                 borderRadius: '6px',
-                fontSize: '16px'
+                fontSize: '18.4px'
               }}
             />
           </div>
@@ -1004,7 +1004,7 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
                 padding: '8px 12px',
                 border: '1px solid #D1D5DB',
                 borderRadius: '6px',
-                fontSize: '16px'
+                fontSize: '18.4px'
               }}
             />
           </div>
@@ -1024,7 +1024,7 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
                 padding: '8px 12px',
                 border: '1px solid #D1D5DB',
                 borderRadius: '6px',
-                fontSize: '16px'
+                fontSize: '18.4px'
               }}
             />
           </div>
@@ -1044,7 +1044,7 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
                 padding: '8px 12px',
                 border: '1px solid #D1D5DB',
                 borderRadius: '6px',
-                fontSize: '16px'
+                fontSize: '18.4px'
               }}
             />
           </div>
@@ -1064,7 +1064,7 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
                   padding: '8px 12px',
                   border: '1px solid #D1D5DB',
                   borderRadius: '6px',
-                  fontSize: '16px'
+                  fontSize: '18.4px'
                 }}
               />
             </div>
@@ -1083,7 +1083,7 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
                   padding: '8px 12px',
                   border: '1px solid #D1D5DB',
                   borderRadius: '6px',
-                  fontSize: '16px',
+                  fontSize: '18.4px',
                   textTransform: 'uppercase'
                 }}
               />
@@ -1103,7 +1103,7 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
                   padding: '8px 12px',
                   border: '1px solid #D1D5DB',
                   borderRadius: '6px',
-                  fontSize: '16px'
+                  fontSize: '18.4px'
                 }}
               />
             </div>
@@ -1122,7 +1122,7 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
                 padding: '8px 12px',
                 border: '1px solid #D1D5DB',
                 borderRadius: '6px',
-                fontSize: '16px',
+                fontSize: '18.4px',
                 resize: 'vertical'
               }}
             />
@@ -1138,7 +1138,7 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
                 color: 'white',
                 border: 'none',
                 borderRadius: '6px',
-                fontSize: '16px',
+                fontSize: '18.4px',
                 fontWeight: '500',
                 cursor: 'pointer'
               }}
@@ -1155,7 +1155,7 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
                 color: '#374151',
                 border: 'none',
                 borderRadius: '6px',
-                fontSize: '16px',
+                fontSize: '18.4px',
                 fontWeight: '500',
                 cursor: 'pointer'
               }}
@@ -1281,7 +1281,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
               <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '600' }}>
                 {existingJob ? 'Edit Job' : 'Add Job'} for {customer.name}
               </h2>
-              <p style={{ margin: '4px 0 0 0', color: '#6B7280', fontSize: '14px' }}>
+              <p style={{ margin: '4px 0 0 0', color: '#6B7280', fontSize: '16.1px' }}>
                 {customer.address}
               </p>
             </div>
@@ -1302,7 +1302,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     border: 'none',
                     borderRadius: '6px',
                     cursor: 'pointer',
-                    fontSize: '14px',
+                    fontSize: '16.1px',
                     fontWeight: '500'
                   }}
                 >
@@ -1329,7 +1329,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 backgroundColor: activeTab === tab.id ? 'white' : 'transparent',
                 borderBottom: activeTab === tab.id ? '2px solid #3B82F6' : '2px solid transparent',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '16.1px',
                 fontWeight: activeTab === tab.id ? '600' : '400',
                 color: activeTab === tab.id ? '#3B82F6' : '#6B7280',
                 whiteSpace: 'nowrap',
@@ -1362,7 +1362,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       padding: '8px 12px',
                       border: '1px solid #D1D5DB',
                       borderRadius: '6px',
-                      fontSize: '16px',
+                      fontSize: '18.4px',
                       backgroundColor: 'white'
                     }}
                   >
@@ -1388,7 +1388,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       padding: '12px',
                       border: '1px solid #D1D5DB',
                       borderRadius: '6px',
-                      fontSize: '16px',
+                      fontSize: '18.4px',
                       resize: 'vertical'
                     }}
                   />
@@ -1417,7 +1417,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       color: 'white',
                       borderRadius: '6px',
                       cursor: 'pointer',
-                      fontSize: '14px',
+                      fontSize: '16.1px',
                       fontWeight: '500'
                     }}
                   >
@@ -1471,7 +1471,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                           borderRadius: '4px',
                           padding: '4px 8px',
                           cursor: 'pointer',
-                          fontSize: '12px'
+                          fontSize: '13.8px'
                         }}
                       >
                         ✕
@@ -1503,7 +1503,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       color: 'white',
                       borderRadius: '6px',
                       cursor: 'pointer',
-                      fontSize: '14px',
+                      fontSize: '16.1px',
                       fontWeight: '500'
                     }}
                   >
@@ -1527,10 +1527,10 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       }}
                       title="Double-click to open"
                     >
-                      <span style={{ fontSize: '24px', marginRight: '12px' }}>
+                      <span style={{ fontSize: '27.6px', marginRight: '12px' }}>
                         {plan.type.includes('pdf') ? '📄' : '🖼️'}
                       </span>
-                      <span style={{ flex: 1, fontSize: '14px' }}>{plan.name}</span>
+                      <span style={{ flex: 1, fontSize: '16.1px' }}>{plan.name}</span>
                       <button
                         type="button"
                         onClick={(e) => {
@@ -1545,7 +1545,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                           color: '#DC2626',
                           border: 'none',
                           cursor: 'pointer',
-                          fontSize: '14px'
+                          fontSize: '16.1px'
                         }}
                       >
                         Remove
@@ -1572,7 +1572,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     padding: '12px',
                     border: '1px solid #D1D5DB',
                     borderRadius: '6px',
-                    fontSize: '16px',
+                    fontSize: '18.4px',
                     resize: 'vertical'
                   }}
                 />
@@ -1593,7 +1593,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                         padding: '8px 12px',
                         border: '1px solid #D1D5DB',
                         borderRadius: '6px',
-                        fontSize: '14px'
+                        fontSize: '16.1px'
                       }}
                       onKeyPress={(e) => {
                         if (e.key === 'Enter') {
@@ -1618,7 +1618,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                         border: 'none',
                         borderRadius: '6px',
                         cursor: 'pointer',
-                        fontSize: '14px'
+                        fontSize: '16.1px'
                       }}
                     >
                       Add
@@ -1635,12 +1635,12 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       border: '1px solid #E5E7EB'
                     }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                        <span style={{ fontWeight: '500', fontSize: '14px' }}>{comment.author}</span>
-                        <span style={{ color: '#6B7280', fontSize: '12px' }}>
+                        <span style={{ fontWeight: '500', fontSize: '16.1px' }}>{comment.author}</span>
+                        <span style={{ color: '#6B7280', fontSize: '13.8px' }}>
                           {new Date(comment.timestamp).toLocaleString()}
                         </span>
                       </div>
-                      <p style={{ margin: 0, fontSize: '14px' }}>{comment.text}</p>
+                      <p style={{ margin: 0, fontSize: '16.1px' }}>{comment.text}</p>
                     </div>
                   ))}
                 </div>
@@ -1664,7 +1664,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 color: 'white',
                 border: 'none',
                 borderRadius: '6px',
-                fontSize: '16px',
+                fontSize: '18.4px',
                 fontWeight: '500',
                 cursor: jobData.title ? 'pointer' : 'not-allowed'
               }}
@@ -1681,7 +1681,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 color: '#374151',
                 border: 'none',
                 borderRadius: '6px',
-                fontSize: '16px',
+                fontSize: '18.4px',
                 fontWeight: '500',
                 cursor: 'pointer'
               }}

@@ -219,7 +219,7 @@ const Invoices = () => {
             </svg>
           </button>
           <div>
-            <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
+            <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
               Invoices
             </h1>
             <p style={{ color: '#6B7280', margin: 0 }}>
@@ -236,7 +236,7 @@ const Invoices = () => {
             border: 'none',
             borderRadius: '6px',
             cursor: 'pointer',
-            fontSize: '14px',
+            fontSize: '16.1px',
             fontWeight: '500'
           }}
         >
@@ -262,7 +262,7 @@ const Invoices = () => {
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: '16.1px',
               textTransform: 'capitalize'
             }}
           >
@@ -289,11 +289,11 @@ const Invoices = () => {
             padding: '60px 20px',
             color: '#9CA3AF'
           }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>📄</div>
-            <p style={{ fontSize: '16px', margin: '0 0 8px 0' }}>
+            <div style={{ fontSize: '55.2px', marginBottom: '16px' }}>📄</div>
+            <p style={{ fontSize: '18.4px', margin: '0 0 8px 0' }}>
               No invoices found
             </p>
-            <p style={{ fontSize: '14px', margin: 0 }}>
+            <p style={{ fontSize: '16.1px', margin: 0 }}>
               Create your first invoice to get started
             </p>
           </div>
@@ -301,25 +301,25 @@ const Invoices = () => {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid #E5E7EB' }}>
-                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6B7280' }}>
+                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '13.8px', fontWeight: '600', color: '#6B7280' }}>
                   Invoice #
                 </th>
-                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6B7280' }}>
+                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '13.8px', fontWeight: '600', color: '#6B7280' }}>
                   Customer
                 </th>
-                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6B7280' }}>
+                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '13.8px', fontWeight: '600', color: '#6B7280' }}>
                   Amount
                 </th>
-                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6B7280' }}>
+                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '13.8px', fontWeight: '600', color: '#6B7280' }}>
                   Issue Date
                 </th>
-                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6B7280' }}>
+                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '13.8px', fontWeight: '600', color: '#6B7280' }}>
                   Due Date
                 </th>
-                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6B7280' }}>
+                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '13.8px', fontWeight: '600', color: '#6B7280' }}>
                   Status
                 </th>
-                <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', fontWeight: '600', color: '#6B7280' }}>
+                <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '13.8px', fontWeight: '600', color: '#6B7280' }}>
                   Actions
                 </th>
               </tr>
@@ -327,26 +327,26 @@ const Invoices = () => {
             <tbody>
               {filteredInvoices.map((invoice, index) => (
                 <tr key={invoice.id} style={{ borderBottom: index < filteredInvoices.length - 1 ? '1px solid #E5E7EB' : 'none' }}>
-                  <td style={{ padding: '16px', fontSize: '14px', fontWeight: '500' }}>
+                  <td style={{ padding: '16px', fontSize: '16.1px', fontWeight: '500' }}>
                     {invoice.invoiceNumber}
                   </td>
-                  <td style={{ padding: '16px', fontSize: '14px', color: '#374151' }}>
+                  <td style={{ padding: '16px', fontSize: '16.1px', color: '#374151' }}>
                     {invoice.customer}
                   </td>
-                  <td style={{ padding: '16px', fontSize: '14px', fontWeight: '600' }}>
+                  <td style={{ padding: '16px', fontSize: '16.1px', fontWeight: '600' }}>
                     ${invoice.total.toFixed(2)}
                   </td>
-                  <td style={{ padding: '16px', fontSize: '14px', color: '#6B7280' }}>
+                  <td style={{ padding: '16px', fontSize: '16.1px', color: '#6B7280' }}>
                     {new Date(invoice.issueDate).toLocaleDateString()}
                   </td>
-                  <td style={{ padding: '16px', fontSize: '14px', color: '#6B7280' }}>
+                  <td style={{ padding: '16px', fontSize: '16.1px', color: '#6B7280' }}>
                     {new Date(invoice.dueDate).toLocaleDateString()}
                   </td>
                   <td style={{ padding: '16px' }}>
                     <span style={{
                       padding: '4px 12px',
                       borderRadius: '12px',
-                      fontSize: '12px',
+                      fontSize: '13.8px',
                       fontWeight: '500',
                       backgroundColor: `${getStatusColor(invoice.status, invoice.dueDate)}20`,
                       color: getStatusColor(invoice.status, invoice.dueDate)
@@ -366,7 +366,7 @@ const Invoices = () => {
                             border: 'none',
                             borderRadius: '4px',
                             cursor: 'pointer',
-                            fontSize: '12px'
+                            fontSize: '13.8px'
                           }}
                         >
                           Send
@@ -382,7 +382,7 @@ const Invoices = () => {
                             border: 'none',
                             borderRadius: '4px',
                             cursor: 'pointer',
-                            fontSize: '12px'
+                            fontSize: '13.8px'
                           }}
                         >
                           Mark Paid
@@ -397,7 +397,7 @@ const Invoices = () => {
                           border: 'none',
                           borderRadius: '4px',
                           cursor: 'pointer',
-                          fontSize: '12px'
+                          fontSize: '13.8px'
                         }}
                       >
                         View
@@ -411,7 +411,7 @@ const Invoices = () => {
                           border: 'none',
                           borderRadius: '4px',
                           cursor: 'pointer',
-                          fontSize: '12px'
+                          fontSize: '13.8px'
                         }}
                       >
                         Delete
@@ -448,13 +448,13 @@ const Invoices = () => {
             maxHeight: '90vh',
             overflowY: 'auto'
           }}>
-            <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '23px', fontWeight: '600', marginBottom: '20px' }}>
               Create New Invoice
             </h2>
 
             {/* Job Selection */}
             <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+              <label style={{ display: 'block', fontSize: '16.1px', fontWeight: '500', marginBottom: '8px' }}>
                 Select Job
               </label>
               <select
@@ -465,7 +465,7 @@ const Invoices = () => {
                   padding: '10px',
                   border: '1px solid #E5E7EB',
                   borderRadius: '6px',
-                  fontSize: '14px'
+                  fontSize: '16.1px'
                 }}
               >
                 <option value="">Select a job...</option>
@@ -480,7 +480,7 @@ const Invoices = () => {
             {/* Invoice Details */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+                <label style={{ display: 'block', fontSize: '16.1px', fontWeight: '500', marginBottom: '8px' }}>
                   Invoice Number
                 </label>
                 <input
@@ -492,12 +492,12 @@ const Invoices = () => {
                     padding: '10px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px'
+                    fontSize: '16.1px'
                   }}
                 />
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+                <label style={{ display: 'block', fontSize: '16.1px', fontWeight: '500', marginBottom: '8px' }}>
                   Issue Date
                 </label>
                 <input
@@ -509,14 +509,14 @@ const Invoices = () => {
                     padding: '10px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px'
+                    fontSize: '16.1px'
                   }}
                 />
               </div>
             </div>
 
             <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+              <label style={{ display: 'block', fontSize: '16.1px', fontWeight: '500', marginBottom: '8px' }}>
                 Due Date
               </label>
               <input
@@ -528,23 +528,23 @@ const Invoices = () => {
                   padding: '10px',
                   border: '1px solid #E5E7EB',
                   borderRadius: '6px',
-                  fontSize: '14px'
+                  fontSize: '16.1px'
                 }}
               />
             </div>
 
             {/* Line Items */}
             <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+              <label style={{ display: 'block', fontSize: '16.1px', fontWeight: '500', marginBottom: '8px' }}>
                 Line Items
               </label>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid #E5E7EB' }}>
-                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '12px', fontWeight: '600' }}>Description</th>
-                    <th style={{ padding: '8px', textAlign: 'center', fontSize: '12px', fontWeight: '600', width: '100px' }}>Qty</th>
-                    <th style={{ padding: '8px', textAlign: 'center', fontSize: '12px', fontWeight: '600', width: '120px' }}>Rate</th>
-                    <th style={{ padding: '8px', textAlign: 'right', fontSize: '12px', fontWeight: '600', width: '120px' }}>Amount</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '13.8px', fontWeight: '600' }}>Description</th>
+                    <th style={{ padding: '8px', textAlign: 'center', fontSize: '13.8px', fontWeight: '600', width: '100px' }}>Qty</th>
+                    <th style={{ padding: '8px', textAlign: 'center', fontSize: '13.8px', fontWeight: '600', width: '120px' }}>Rate</th>
+                    <th style={{ padding: '8px', textAlign: 'right', fontSize: '13.8px', fontWeight: '600', width: '120px' }}>Amount</th>
                     <th style={{ width: '40px' }}></th>
                   </tr>
                 </thead>
@@ -562,7 +562,7 @@ const Invoices = () => {
                             padding: '8px',
                             border: '1px solid #E5E7EB',
                             borderRadius: '4px',
-                            fontSize: '14px'
+                            fontSize: '16.1px'
                           }}
                         />
                       </td>
@@ -576,7 +576,7 @@ const Invoices = () => {
                             padding: '8px',
                             border: '1px solid #E5E7EB',
                             borderRadius: '4px',
-                            fontSize: '14px',
+                            fontSize: '16.1px',
                             textAlign: 'center'
                           }}
                         />
@@ -592,12 +592,12 @@ const Invoices = () => {
                             padding: '8px',
                             border: '1px solid #E5E7EB',
                             borderRadius: '4px',
-                            fontSize: '14px',
+                            fontSize: '16.1px',
                             textAlign: 'right'
                           }}
                         />
                       </td>
-                      <td style={{ padding: '8px', textAlign: 'right', fontSize: '14px', fontWeight: '500' }}>
+                      <td style={{ padding: '8px', textAlign: 'right', fontSize: '16.1px', fontWeight: '500' }}>
                         ${item.amount.toFixed(2)}
                       </td>
                       <td style={{ padding: '8px' }}>
@@ -610,7 +610,7 @@ const Invoices = () => {
                             border: 'none',
                             borderRadius: '4px',
                             cursor: 'pointer',
-                            fontSize: '12px'
+                            fontSize: '13.8px'
                           }}
                         >
                           ×
@@ -630,7 +630,7 @@ const Invoices = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px'
+                  fontSize: '16.1px'
                 }}
               >
                 + Add Line Item
@@ -644,22 +644,22 @@ const Invoices = () => {
               marginBottom: '20px'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ fontSize: '14px', color: '#6B7280' }}>Subtotal:</span>
-                <span style={{ fontSize: '14px', fontWeight: '500' }}>${invoiceData.subtotal.toFixed(2)}</span>
+                <span style={{ fontSize: '16.1px', color: '#6B7280' }}>Subtotal:</span>
+                <span style={{ fontSize: '16.1px', fontWeight: '500' }}>${invoiceData.subtotal.toFixed(2)}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ fontSize: '14px', color: '#6B7280' }}>Tax (8%):</span>
-                <span style={{ fontSize: '14px', fontWeight: '500' }}>${invoiceData.tax.toFixed(2)}</span>
+                <span style={{ fontSize: '16.1px', color: '#6B7280' }}>Tax (8%):</span>
+                <span style={{ fontSize: '16.1px', fontWeight: '500' }}>${invoiceData.tax.toFixed(2)}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #E5E7EB', paddingTop: '8px' }}>
-                <span style={{ fontSize: '16px', fontWeight: '600' }}>Total:</span>
-                <span style={{ fontSize: '16px', fontWeight: '600' }}>${invoiceData.total.toFixed(2)}</span>
+                <span style={{ fontSize: '18.4px', fontWeight: '600' }}>Total:</span>
+                <span style={{ fontSize: '18.4px', fontWeight: '600' }}>${invoiceData.total.toFixed(2)}</span>
               </div>
             </div>
 
             {/* Notes */}
             <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+              <label style={{ display: 'block', fontSize: '16.1px', fontWeight: '500', marginBottom: '8px' }}>
                 Notes
               </label>
               <textarea
@@ -672,7 +672,7 @@ const Invoices = () => {
                   padding: '10px',
                   border: '1px solid #E5E7EB',
                   borderRadius: '6px',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   resize: 'vertical'
                 }}
               />
@@ -692,7 +692,7 @@ const Invoices = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px'
+                  fontSize: '16.1px'
                 }}
               >
                 Cancel
@@ -707,7 +707,7 @@ const Invoices = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: invoiceData.lineItems.length === 0 ? 'not-allowed' : 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   fontWeight: '500'
                 }}
               >

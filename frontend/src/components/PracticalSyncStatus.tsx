@@ -113,10 +113,10 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
         borderRadius: '8px',
         marginBottom: '20px'
       }}>
-        <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: '600', color: '#92400E' }}>
+        <h3 style={{ margin: '0 0 8px 0', fontSize: '18.4px', fontWeight: '600', color: '#92400E' }}>
           ⚠️ Google Drive Setup Required
         </h3>
-        <p style={{ margin: '0', fontSize: '14px', color: '#92400E' }}>
+        <p style={{ margin: '0', fontSize: '16.1px', color: '#92400E' }}>
           To enable sync, add your Google API credentials to the .env file.
           See <code>.env.example</code> for instructions.
         </p>
@@ -142,7 +142,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
         <div>
           <h3 style={{ 
             margin: '0 0 4px 0', 
-            fontSize: '14px', 
+            fontSize: '16.1px', 
             fontWeight: '600',
             display: 'flex',
             alignItems: 'center',
@@ -151,7 +151,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
             <span>☁️ Google Drive Sync</span>
             {isSignedIn && (
               <span style={{
-                fontSize: '12px',
+                fontSize: '13.8px',
                 padding: '2px 8px',
                 backgroundColor: '#10B981',
                 color: 'white',
@@ -165,7 +165,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
           {error && (
             <p style={{ 
               margin: '4px 0', 
-              fontSize: '12px', 
+              fontSize: '13.8px', 
               color: '#DC2626' 
             }}>
               ⚠️ {error}
@@ -174,7 +174,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
           {isSignedIn && lastSync && (
             <p style={{ 
               margin: '4px 0', 
-              fontSize: '12px', 
+              fontSize: '13.8px', 
               color: '#6B7280' 
             }}>
               Last sync: {lastSync.toLocaleTimeString()}
@@ -183,7 +183,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
           {!isSignedIn && (
             <p style={{ 
               margin: '4px 0', 
-              fontSize: '12px', 
+              fontSize: '13.8px', 
               color: '#6B7280' 
             }}>
               Sign in to sync business data across devices
@@ -201,7 +201,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
                 border: 'none',
                 borderRadius: '6px',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '16.1px',
                 fontWeight: '500',
                 display: 'flex',
                 alignItems: 'center',
@@ -228,7 +228,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
                   border: 'none',
                   borderRadius: '6px',
                   cursor: isSyncing ? 'not-allowed' : 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   fontWeight: '500',
                   display: 'flex',
                   alignItems: 'center',
@@ -261,7 +261,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   fontWeight: '500'
                 }}
               >
@@ -276,7 +276,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   fontWeight: '500'
                 }}
               >
@@ -293,15 +293,15 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
           paddingTop: '16px',
           borderTop: '1px solid #E5E7EB'
         }}>
-          <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600' }}>
+          <h4 style={{ margin: '0 0 12px 0', fontSize: '16.1px', fontWeight: '600' }}>
             What Syncs to Google Drive:
           </h4>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <div>
-              <h5 style={{ margin: '0 0 8px 0', fontSize: '13px', fontWeight: '600', color: '#059669' }}>
+              <h5 style={{ margin: '0 0 8px 0', fontSize: '14.95px', fontWeight: '600', color: '#059669' }}>
                 ✓ Customer Info (Business Data)
               </h5>
-              <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '12px', color: '#6B7280' }}>
+              <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '13.8px', color: '#6B7280' }}>
                 <li>Names & addresses (public record)</li>
                 <li>Phone & email (business contact)</li>
                 <li>Job site locations</li>
@@ -309,10 +309,10 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
               </ul>
             </div>
             <div>
-              <h5 style={{ margin: '0 0 8px 0', fontSize: '13px', fontWeight: '600', color: '#059669' }}>
+              <h5 style={{ margin: '0 0 8px 0', fontSize: '14.95px', fontWeight: '600', color: '#059669' }}>
                 ✓ Job Details
               </h5>
-              <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '12px', color: '#6B7280' }}>
+              <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '13.8px', color: '#6B7280' }}>
                 <li>Project descriptions</li>
                 <li>Task assignments</li>
                 <li>Material lists</li>
@@ -321,15 +321,15 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
             </div>
           </div>
           
-          <h4 style={{ margin: '16px 0 12px 0', fontSize: '14px', fontWeight: '600' }}>
+          <h4 style={{ margin: '16px 0 12px 0', fontSize: '16.1px', fontWeight: '600' }}>
             What Stays Local Only:
           </h4>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <div>
-              <h5 style={{ margin: '0 0 8px 0', fontSize: '13px', fontWeight: '600', color: '#DC2626' }}>
+              <h5 style={{ margin: '0 0 8px 0', fontSize: '14.95px', fontWeight: '600', color: '#DC2626' }}>
                 🔒 Financial Data
               </h5>
-              <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '12px', color: '#6B7280' }}>
+              <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '13.8px', color: '#6B7280' }}>
                 <li>Payment methods</li>
                 <li>Credit card info</li>
                 <li>Bank accounts</li>
@@ -337,10 +337,10 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
               </ul>
             </div>
             <div>
-              <h5 style={{ margin: '0 0 8px 0', fontSize: '13px', fontWeight: '600', color: '#DC2626' }}>
+              <h5 style={{ margin: '0 0 8px 0', fontSize: '14.95px', fontWeight: '600', color: '#DC2626' }}>
                 🔒 Private Information
               </h5>
-              <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '12px', color: '#6B7280' }}>
+              <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '13.8px', color: '#6B7280' }}>
                 <li>Social Security Numbers</li>
                 <li>Private family notes</li>
                 <li>Medical information</li>
@@ -354,7 +354,7 @@ export const PracticalSyncStatus = ({ onSyncComplete }: PracticalSyncStatusProps
             padding: '12px',
             backgroundColor: '#EFF6FF',
             borderRadius: '6px',
-            fontSize: '12px',
+            fontSize: '13.8px',
             color: '#1E40AF'
           }}>
             <strong>Note:</strong> This practical approach syncs business-operational data while keeping 

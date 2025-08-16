@@ -91,11 +91,11 @@ export const PracticalSecurity = () => {
         borderRadius: '8px',
         marginBottom: '20px'
       }}>
-        <h2 style={{ margin: '0 0 12px 0', fontSize: '18px' }}>🔧 Practical Security Approach</h2>
-        <p style={{ margin: '0 0 12px 0', fontSize: '14px', color: '#1E40AF' }}>
+        <h2 style={{ margin: '0 0 12px 0', fontSize: '20.7px' }}>🔧 Practical Security Approach</h2>
+        <p style={{ margin: '0 0 12px 0', fontSize: '16.1px', color: '#1E40AF' }}>
           This CRM uses a balanced security approach designed for real construction businesses:
         </p>
-        <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', color: '#1E40AF' }}>
+        <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '16.1px', color: '#1E40AF' }}>
           <li>Customer names, addresses, and job details sync via Google Drive (public record data)</li>
           <li>Financial information (payments, pricing) stays encrypted on your device</li>
           <li>Workers can access job sites and contact customers directly</li>
@@ -110,11 +110,11 @@ export const PracticalSecurity = () => {
         borderRadius: '8px',
         marginBottom: '20px'
       }}>
-        <h2 style={{ margin: '0 0 16px 0', fontSize: '18px' }}>💰 Financial Data Encryption</h2>
+        <h2 style={{ margin: '0 0 16px 0', fontSize: '20.7px' }}>💰 Financial Data Encryption</h2>
         
         {!encryptionEnabled ? (
           <div>
-            <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#6B7280' }}>
+            <p style={{ margin: '0 0 16px 0', fontSize: '16.1px', color: '#6B7280' }}>
               Enable encryption to protect pricing, payment methods, and financial details.
             </p>
             <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
@@ -127,7 +127,7 @@ export const PracticalSecurity = () => {
                   padding: '8px 12px',
                   border: '1px solid #D1D5DB',
                   borderRadius: '6px',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   flex: 1
                 }}
               />
@@ -140,7 +140,7 @@ export const PracticalSecurity = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   fontWeight: '500'
                 }}
               >
@@ -150,7 +150,7 @@ export const PracticalSecurity = () => {
           </div>
         ) : (
           <div>
-            <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#059669' }}>
+            <p style={{ margin: '0 0 16px 0', fontSize: '16.1px', color: '#059669' }}>
               ✅ Financial data encryption is active
             </p>
             <button
@@ -162,7 +162,7 @@ export const PracticalSecurity = () => {
                 border: 'none',
                 borderRadius: '6px',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '16.1px',
                 fontWeight: '500'
               }}
             >
@@ -179,11 +179,11 @@ export const PracticalSecurity = () => {
         borderRadius: '8px',
         marginBottom: '20px'
       }}>
-        <h2 style={{ margin: '0 0 16px 0', fontSize: '18px' }}>🔐 App Password Protection</h2>
+        <h2 style={{ margin: '0 0 16px 0', fontSize: '20.7px' }}>🔐 App Password Protection</h2>
         
         {authEnabled ? (
           <div>
-            <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#6B7280' }}>
+            <p style={{ margin: '0 0 16px 0', fontSize: '16.1px', color: '#6B7280' }}>
               App password is enabled. Users must log in to access the CRM.
             </p>
             <button
@@ -195,7 +195,7 @@ export const PracticalSecurity = () => {
                 border: 'none',
                 borderRadius: '6px',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '16.1px',
                 fontWeight: '500'
               }}
             >
@@ -204,7 +204,7 @@ export const PracticalSecurity = () => {
           </div>
         ) : (
           <div>
-            <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#6B7280' }}>
+            <p style={{ margin: '0 0 16px 0', fontSize: '16.1px', color: '#6B7280' }}>
               App opens directly without password. Enable for device security.
             </p>
             <button
@@ -216,7 +216,7 @@ export const PracticalSecurity = () => {
                 border: 'none',
                 borderRadius: '6px',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '16.1px',
                 fontWeight: '500'
               }}
             >
@@ -233,14 +233,14 @@ export const PracticalSecurity = () => {
         borderRadius: '8px',
         marginBottom: '20px'
       }}>
-        <h2 style={{ margin: '0 0 16px 0', fontSize: '18px' }}>☁️ What Syncs vs What Stays Local</h2>
+        <h2 style={{ margin: '0 0 16px 0', fontSize: '20.7px' }}>☁️ What Syncs vs What Stays Local</h2>
         
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
           <div>
-            <h3 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#059669' }}>
+            <h3 style={{ margin: '0 0 12px 0', fontSize: '18.4px', color: '#059669' }}>
               ✅ Syncs to Google Drive
             </h3>
-            <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', color: '#6B7280' }}>
+            <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '16.1px', color: '#6B7280' }}>
               <li>Customer names & addresses</li>
               <li>Phone numbers & emails</li>
               <li>Job locations & descriptions</li>
@@ -252,10 +252,10 @@ export const PracticalSecurity = () => {
           </div>
           
           <div>
-            <h3 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#DC2626' }}>
+            <h3 style={{ margin: '0 0 12px 0', fontSize: '18.4px', color: '#DC2626' }}>
               🔒 Stays Local Only
             </h3>
-            <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', color: '#6B7280' }}>
+            <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '16.1px', color: '#6B7280' }}>
               <li>Payment methods</li>
               <li>Credit card details</li>
               <li>Bank account info</li>
@@ -274,10 +274,10 @@ export const PracticalSecurity = () => {
         padding: '20px',
         borderRadius: '8px'
       }}>
-        <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', color: '#92400E' }}>
+        <h3 style={{ margin: '0 0 8px 0', fontSize: '18.4px', color: '#92400E' }}>
           💡 Tips for Construction Businesses
         </h3>
-        <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', color: '#92400E' }}>
+        <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '16.1px', color: '#92400E' }}>
           <li>Enable financial encryption if you store payment info</li>
           <li>Use app password if multiple people access your device</li>
           <li>Google Drive sync lets workers see job details remotely</li>

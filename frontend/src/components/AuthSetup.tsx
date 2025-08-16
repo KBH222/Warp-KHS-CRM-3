@@ -72,7 +72,7 @@ export const AuthSetup = ({ onComplete }: AuthSetupProps) => {
     }}>
       <h2 style={{ 
         margin: '0 0 8px 0', 
-        fontSize: '24px', 
+        fontSize: '27.6px', 
         fontWeight: '600',
         textAlign: 'center',
       }}>
@@ -81,7 +81,7 @@ export const AuthSetup = ({ onComplete }: AuthSetupProps) => {
 
       <p style={{ 
         margin: '0 0 24px 0', 
-        fontSize: '14px',
+        fontSize: '16.1px',
         color: '#6B7280',
         textAlign: 'center',
       }}>
@@ -92,7 +92,7 @@ export const AuthSetup = ({ onComplete }: AuthSetupProps) => {
         <label style={{ 
           display: 'block', 
           marginBottom: '4px',
-          fontSize: '14px',
+          fontSize: '16.1px',
           fontWeight: '500',
         }}>
           Password
@@ -108,7 +108,7 @@ export const AuthSetup = ({ onComplete }: AuthSetupProps) => {
               padding: '8px 40px 8px 12px',
               border: '1px solid #D1D5DB',
               borderRadius: '6px',
-              fontSize: '14px',
+              fontSize: '16.1px',
             }}
           />
           <button
@@ -123,7 +123,7 @@ export const AuthSetup = ({ onComplete }: AuthSetupProps) => {
               backgroundColor: 'transparent',
               border: 'none',
               cursor: 'pointer',
-              fontSize: '12px',
+              fontSize: '13.8px',
             }}
           >
             {showPassword ? '👁️' : '👁️‍🗨️'}
@@ -135,7 +135,7 @@ export const AuthSetup = ({ onComplete }: AuthSetupProps) => {
         <label style={{ 
           display: 'block', 
           marginBottom: '4px',
-          fontSize: '14px',
+          fontSize: '16.1px',
           fontWeight: '500',
         }}>
           Confirm Password
@@ -150,7 +150,7 @@ export const AuthSetup = ({ onComplete }: AuthSetupProps) => {
             padding: '8px 12px',
             border: '1px solid #D1D5DB',
             borderRadius: '6px',
-            fontSize: '14px',
+            fontSize: '16.1px',
           }}
         />
       </div>
@@ -165,7 +165,7 @@ export const AuthSetup = ({ onComplete }: AuthSetupProps) => {
         }}>
           <p style={{ 
             margin: 0, 
-            fontSize: '14px',
+            fontSize: '16.1px',
             color: '#DC2626',
           }}>
             ⚠️ {error}
@@ -182,7 +182,7 @@ export const AuthSetup = ({ onComplete }: AuthSetupProps) => {
       }}>
         <h4 style={{ 
           margin: '0 0 8px 0', 
-          fontSize: '14px',
+          fontSize: '16.1px',
           fontWeight: '600',
           color: '#1E40AF',
         }}>
@@ -191,7 +191,7 @@ export const AuthSetup = ({ onComplete }: AuthSetupProps) => {
         <ul style={{ 
           margin: 0, 
           paddingLeft: '20px',
-          fontSize: '13px',
+          fontSize: '14.95px',
           color: '#1E40AF',
         }}>
           <li>At least 8 characters long</li>
@@ -211,7 +211,7 @@ export const AuthSetup = ({ onComplete }: AuthSetupProps) => {
           border: 'none',
           borderRadius: '6px',
           cursor: isLoading ? 'not-allowed' : 'pointer',
-          fontSize: '14px',
+          fontSize: '16.1px',
           fontWeight: '500',
           width: '100%',
         }}

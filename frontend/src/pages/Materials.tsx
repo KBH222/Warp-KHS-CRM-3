@@ -109,7 +109,7 @@ const Materials = () => {
             </svg>
           </button>
           <div>
-            <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
+            <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
               Master Materials List
             </h1>
             <p style={{ color: '#6B7280', margin: 0 }}>
@@ -126,7 +126,7 @@ const Materials = () => {
             border: 'none',
             borderRadius: '6px',
             cursor: 'pointer',
-            fontSize: '14px',
+            fontSize: '16.1px',
             fontWeight: '500'
           }}
         >
@@ -157,13 +157,13 @@ const Materials = () => {
               padding: '10px',
               border: '1px solid #E5E7EB',
               borderRadius: '6px',
-              fontSize: '14px'
+              fontSize: '16.1px'
             }}
           />
         </div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>
+          <label style={{ fontSize: '16.1px', fontWeight: '500', color: '#374151' }}>
             Store:
           </label>
           <select
@@ -173,7 +173,7 @@ const Materials = () => {
               padding: '8px 12px',
               border: '1px solid #E5E7EB',
               borderRadius: '6px',
-              fontSize: '14px',
+              fontSize: '16.1px',
               cursor: 'pointer'
             }}
           >
@@ -185,7 +185,7 @@ const Materials = () => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>
+          <label style={{ fontSize: '16.1px', fontWeight: '500', color: '#374151' }}>
             Group by:
           </label>
           <select
@@ -195,7 +195,7 @@ const Materials = () => {
               padding: '8px 12px',
               border: '1px solid #E5E7EB',
               borderRadius: '6px',
-              fontSize: '14px',
+              fontSize: '16.1px',
               cursor: 'pointer'
             }}
           >
@@ -219,13 +219,13 @@ const Materials = () => {
           boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
           borderLeft: '4px solid #3B82F6'
         }}>
-          <h3 style={{ fontSize: '14px', color: '#6B7280', margin: '0 0 8px 0', fontWeight: '500' }}>
+          <h3 style={{ fontSize: '16.1px', color: '#6B7280', margin: '0 0 8px 0', fontWeight: '500' }}>
             Total Materials
           </h3>
-          <p style={{ fontSize: '28px', fontWeight: 'bold', margin: '0', color: '#111827' }}>
+          <p style={{ fontSize: '32.2px', fontWeight: 'bold', margin: '0', color: '#111827' }}>
             {filteredMaterials.length}
           </p>
-          <p style={{ fontSize: '12px', color: '#9CA3AF', marginTop: '4px' }}>
+          <p style={{ fontSize: '13.8px', color: '#9CA3AF', marginTop: '4px' }}>
             Unique items
           </p>
         </div>
@@ -237,13 +237,13 @@ const Materials = () => {
           boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
           borderLeft: '4px solid #10B981'
         }}>
-          <h3 style={{ fontSize: '14px', color: '#6B7280', margin: '0 0 8px 0', fontWeight: '500' }}>
+          <h3 style={{ fontSize: '16.1px', color: '#6B7280', margin: '0 0 8px 0', fontWeight: '500' }}>
             Total Cost
           </h3>
-          <p style={{ fontSize: '28px', fontWeight: 'bold', margin: '0', color: '#111827' }}>
+          <p style={{ fontSize: '32.2px', fontWeight: 'bold', margin: '0', color: '#111827' }}>
             ${totalCost.toFixed(2)}
           </p>
-          <p style={{ fontSize: '12px', color: '#9CA3AF', marginTop: '4px' }}>
+          <p style={{ fontSize: '13.8px', color: '#9CA3AF', marginTop: '4px' }}>
             All materials
           </p>
         </div>
@@ -255,13 +255,13 @@ const Materials = () => {
           boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
           borderLeft: '4px solid #8B5CF6'
         }}>
-          <h3 style={{ fontSize: '14px', color: '#6B7280', margin: '0 0 8px 0', fontWeight: '500' }}>
+          <h3 style={{ fontSize: '16.1px', color: '#6B7280', margin: '0 0 8px 0', fontWeight: '500' }}>
             Stores
           </h3>
-          <p style={{ fontSize: '28px', fontWeight: 'bold', margin: '0', color: '#111827' }}>
+          <p style={{ fontSize: '32.2px', fontWeight: 'bold', margin: '0', color: '#111827' }}>
             {stores.length}
           </p>
-          <p style={{ fontSize: '12px', color: '#9CA3AF', marginTop: '4px' }}>
+          <p style={{ fontSize: '13.8px', color: '#9CA3AF', marginTop: '4px' }}>
             Different suppliers
           </p>
         </div>
@@ -285,10 +285,10 @@ const Materials = () => {
             alignItems: 'center'
           }}>
             <div>
-              <h3 style={{ fontSize: '16px', fontWeight: '600', margin: '0', color: '#111827' }}>
+              <h3 style={{ fontSize: '18.4px', fontWeight: '600', margin: '0', color: '#111827' }}>
                 {groupName}
               </h3>
-              <p style={{ fontSize: '14px', color: '#6B7280', margin: '4px 0 0 0' }}>
+              <p style={{ fontSize: '16.1px', color: '#6B7280', margin: '4px 0 0 0' }}>
                 {groupData.items.length} items • Total: ${groupData.total.toFixed(2)}
               </p>
             </div>
@@ -307,7 +307,7 @@ const Materials = () => {
                   border: 'none',
                   borderRadius: '4px',
                   cursor: 'pointer',
-                  fontSize: '12px'
+                  fontSize: '13.8px'
                 }}
               >
                 View Job
@@ -318,29 +318,29 @@ const Materials = () => {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid #E5E7EB' }}>
-                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6B7280' }}>
+                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '13.8px', fontWeight: '600', color: '#6B7280' }}>
                   Material
                 </th>
-                <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '12px', fontWeight: '600', color: '#6B7280' }}>
+                <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '13.8px', fontWeight: '600', color: '#6B7280' }}>
                   Quantity
                 </th>
-                <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '12px', fontWeight: '600', color: '#6B7280' }}>
+                <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '13.8px', fontWeight: '600', color: '#6B7280' }}>
                   Unit
                 </th>
                 {groupBy === 'store' && (
-                  <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6B7280' }}>
+                  <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '13.8px', fontWeight: '600', color: '#6B7280' }}>
                     Job
                   </th>
                 )}
                 {groupBy === 'job' && (
-                  <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '12px', fontWeight: '600', color: '#6B7280' }}>
+                  <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '13.8px', fontWeight: '600', color: '#6B7280' }}>
                     Store
                   </th>
                 )}
-                <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', fontWeight: '600', color: '#6B7280' }}>
+                <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '13.8px', fontWeight: '600', color: '#6B7280' }}>
                   Price/Unit
                 </th>
-                <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', fontWeight: '600', color: '#6B7280' }}>
+                <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '13.8px', fontWeight: '600', color: '#6B7280' }}>
                   Total
                 </th>
               </tr>
@@ -358,41 +358,41 @@ const Materials = () => {
                   <tr key={material.id} style={{ 
                     borderBottom: index < groupData.items.length - 1 ? '1px solid #F3F4F6' : 'none' 
                   }}>
-                    <td style={{ padding: '16px', fontSize: '14px', color: '#111827' }}>
+                    <td style={{ padding: '16px', fontSize: '16.1px', color: '#111827' }}>
                       {material.name}
                     </td>
-                    <td style={{ padding: '16px', textAlign: 'center', fontSize: '14px', color: '#374151' }}>
+                    <td style={{ padding: '16px', textAlign: 'center', fontSize: '16.1px', color: '#374151' }}>
                       {material.quantity}
                     </td>
-                    <td style={{ padding: '16px', textAlign: 'center', fontSize: '14px', color: '#374151' }}>
+                    <td style={{ padding: '16px', textAlign: 'center', fontSize: '16.1px', color: '#374151' }}>
                       {material.unit}
                     </td>
                     {groupBy === 'store' && (
-                      <td style={{ padding: '16px', fontSize: '14px', color: '#374151' }}>
+                      <td style={{ padding: '16px', fontSize: '16.1px', color: '#374151' }}>
                         <div>
                           <div style={{ fontWeight: '500' }}>{material.jobTitle}</div>
-                          <div style={{ fontSize: '12px', color: '#6B7280' }}>{material.customerName}</div>
+                          <div style={{ fontSize: '13.8px', color: '#6B7280' }}>{material.customerName}</div>
                         </div>
                       </td>
                     )}
                     {groupBy === 'job' && (
-                      <td style={{ padding: '16px', textAlign: 'center', fontSize: '14px' }}>
+                      <td style={{ padding: '16px', textAlign: 'center', fontSize: '16.1px' }}>
                         <span style={{
                           padding: '4px 8px',
                           backgroundColor: material.store === 'Home Depot' ? '#FEF3C7' : material.store === 'Lowes' ? '#DBEAFE' : '#E5E7EB',
                           color: material.store === 'Home Depot' ? '#92400E' : material.store === 'Lowes' ? '#1E3A8A' : '#374151',
                           borderRadius: '4px',
-                          fontSize: '12px',
+                          fontSize: '13.8px',
                           fontWeight: '500'
                         }}>
                           {material.store}
                         </span>
                       </td>
                     )}
-                    <td style={{ padding: '16px', textAlign: 'right', fontSize: '14px', color: '#374151' }}>
+                    <td style={{ padding: '16px', textAlign: 'right', fontSize: '16.1px', color: '#374151' }}>
                       ${material.price.toFixed(2)}
                     </td>
-                    <td style={{ padding: '16px', textAlign: 'right', fontSize: '14px', fontWeight: '600', color: '#111827' }}>
+                    <td style={{ padding: '16px', textAlign: 'right', fontSize: '16.1px', fontWeight: '600', color: '#111827' }}>
                       ${material.total.toFixed(2)}
                     </td>
                   </tr>

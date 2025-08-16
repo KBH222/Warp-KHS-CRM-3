@@ -229,7 +229,7 @@ const Workers = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>
+            <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: 0 }}>
               Workers
             </h1>
           </div>
@@ -242,7 +242,7 @@ const Workers = () => {
               color: 'white',
               border: 'none',
               borderRadius: '8px',
-              fontSize: '16px',
+              fontSize: '18.4px',
               fontWeight: '500',
               cursor: 'pointer',
               display: 'flex',
@@ -277,7 +277,7 @@ const Workers = () => {
               color: 'white',
               border: 'none',
               borderRadius: '8px',
-              fontSize: '16px',
+              fontSize: '18.4px',
               fontWeight: '500',
               cursor: 'pointer'
             }}
@@ -314,13 +314,13 @@ const Workers = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '18px',
+                    fontSize: '20.7px',
                     fontWeight: 'bold'
                   }}>
                     {worker.name}
                   </div>
                   <div style={{ flex: 1 }}>
-                    <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600' }}>
+                    <h2 style={{ margin: 0, fontSize: '20.7px', fontWeight: '600' }}>
                       {worker.fullName}
                     </h2>
                     <span style={{
@@ -331,7 +331,7 @@ const Workers = () => {
                       color: worker.status === 'Available' ? '#065F46' : 
                              worker.status === 'On Job' ? '#991B1B' : '#374151',
                       borderRadius: '12px',
-                      fontSize: '12px',
+                      fontSize: '13.8px',
                       fontWeight: '500'
                     }}>
                       {worker.status}
@@ -346,7 +346,7 @@ const Workers = () => {
                         backgroundColor: '#FEF3C7',
                         color: '#92400E',
                         borderRadius: '4px',
-                        fontSize: '12px',
+                        fontSize: '13.8px',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '4px'
@@ -401,7 +401,7 @@ const Workers = () => {
                 </div>
               </div>
 
-              <div style={{ fontSize: '14px', color: '#6B7280', marginBottom: '12px' }}>
+              <div style={{ fontSize: '16.1px', color: '#6B7280', marginBottom: '12px' }}>
                 <div style={{ marginBottom: '4px' }}>
                   <strong>Specialty:</strong> {worker.specialty}
                 </div>
@@ -445,7 +445,7 @@ const Workers = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px'
+                  fontSize: '16.1px'
                 }}
               >
                 View Schedule
@@ -562,7 +562,7 @@ const Workers = () => {
                     padding: '8px 12px',
                     border: '1px solid #D1D5DB',
                     borderRadius: '6px',
-                    fontSize: '16px'
+                    fontSize: '18.4px'
                   }}
                 />
               </div>
@@ -583,7 +583,7 @@ const Workers = () => {
                     padding: '8px 12px',
                     border: '1px solid #D1D5DB',
                     borderRadius: '6px',
-                    fontSize: '16px'
+                    fontSize: '18.4px'
                   }}
                 />
               </div>
@@ -604,7 +604,7 @@ const Workers = () => {
                     padding: '8px 12px',
                     border: '1px solid #D1D5DB',
                     borderRadius: '6px',
-                    fontSize: '16px'
+                    fontSize: '18.4px'
                   }}
                 />
               </div>
@@ -625,7 +625,7 @@ const Workers = () => {
                     padding: '8px 12px',
                     border: '1px solid #D1D5DB',
                     borderRadius: '6px',
-                    fontSize: '16px'
+                    fontSize: '18.4px'
                   }}
                 />
               </div>
@@ -646,7 +646,7 @@ const Workers = () => {
                     padding: '8px 12px',
                     border: '1px solid #D1D5DB',
                     borderRadius: '6px',
-                    fontSize: '16px'
+                    fontSize: '18.4px'
                   }}
                 />
               </div>
@@ -664,7 +664,7 @@ const Workers = () => {
                     padding: '8px 12px',
                     border: '1px solid #D1D5DB',
                     borderRadius: '6px',
-                    fontSize: '16px',
+                    fontSize: '18.4px',
                     backgroundColor: 'white'
                   }}
                 >
@@ -734,12 +734,12 @@ const Workers = () => {
                         padding: '12px',
                         border: '1px solid #D1D5DB',
                         borderRadius: '6px',
-                        fontSize: '16px',
+                        fontSize: '18.4px',
                         fontFamily: 'inherit',
                         resize: 'vertical'
                       }}
                     />
-                    <div style={{ marginTop: '8px', fontSize: '14px', color: '#6B7280' }}>
+                    <div style={{ marginTop: '8px', fontSize: '16.1px', color: '#6B7280' }}>
                       Use this space to track important information about the worker.
                     </div>
                   </div>
@@ -755,7 +755,7 @@ const Workers = () => {
                     padding: '16px',
                     marginBottom: '20px'
                   }}>
-                    <h4 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+                    <h4 style={{ margin: '0 0 16px 0', fontSize: '18.4px', fontWeight: '600' }}>
                       Weekly Timesheet
                     </h4>
                     <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
@@ -766,7 +766,7 @@ const Workers = () => {
                               textAlign: 'left', 
                               padding: '8px',
                               borderBottom: '2px solid #E5E7EB',
-                              fontSize: '14px',
+                              fontSize: '16.1px',
                               fontWeight: '600',
                               color: '#374151',
                               minWidth: '50px'
@@ -777,7 +777,7 @@ const Workers = () => {
                               textAlign: 'center', 
                               padding: '8px',
                               borderBottom: '2px solid #E5E7EB',
-                              fontSize: '14px',
+                              fontSize: '16.1px',
                               fontWeight: '600',
                               color: '#374151',
                               minWidth: '80px'
@@ -788,7 +788,7 @@ const Workers = () => {
                               textAlign: 'center', 
                               padding: '8px',
                               borderBottom: '2px solid #E5E7EB',
-                              fontSize: '14px',
+                              fontSize: '16.1px',
                               fontWeight: '600',
                               color: '#374151',
                               minWidth: '80px'
@@ -799,7 +799,7 @@ const Workers = () => {
                               textAlign: 'center', 
                               padding: '8px',
                               borderBottom: '2px solid #E5E7EB',
-                              fontSize: '14px',
+                              fontSize: '16.1px',
                               fontWeight: '600',
                               color: '#374151',
                               minWidth: '60px'
@@ -810,7 +810,7 @@ const Workers = () => {
                               textAlign: 'left', 
                               padding: '8px',
                               borderBottom: '2px solid #E5E7EB',
-                              fontSize: '14px',
+                              fontSize: '16.1px',
                               fontWeight: '600',
                               color: '#374151',
                               minWidth: '180px'
@@ -821,7 +821,7 @@ const Workers = () => {
                               textAlign: 'left', 
                               padding: '8px',
                               borderBottom: '2px solid #E5E7EB',
-                              fontSize: '14px',
+                              fontSize: '16.1px',
                               fontWeight: '600',
                               color: '#374151',
                               minWidth: '140px'
@@ -832,7 +832,7 @@ const Workers = () => {
                               textAlign: 'center', 
                               padding: '8px',
                               borderBottom: '2px solid #E5E7EB',
-                              fontSize: '14px',
+                              fontSize: '16.1px',
                               fontWeight: '600',
                               color: '#374151',
                               minWidth: '80px'
@@ -847,7 +847,7 @@ const Workers = () => {
                               <td style={{ 
                                 padding: '8px',
                                 borderBottom: '1px solid #E5E7EB',
-                                fontSize: '14px',
+                                fontSize: '16.1px',
                                 color: '#374151'
                               }}>
                                 {day}
@@ -862,7 +862,7 @@ const Workers = () => {
                                     padding: '4px 8px',
                                     border: '1px solid #D1D5DB',
                                     borderRadius: '4px',
-                                    fontSize: '14px'
+                                    fontSize: '16.1px'
                                   }}
                                 />
                               </td>
@@ -876,7 +876,7 @@ const Workers = () => {
                                     padding: '4px 8px',
                                     border: '1px solid #D1D5DB',
                                     borderRadius: '4px',
-                                    fontSize: '14px'
+                                    fontSize: '16.1px'
                                   }}
                                 />
                               </td>
@@ -893,7 +893,7 @@ const Workers = () => {
                                     padding: '4px 6px',
                                     border: '1px solid #D1D5DB',
                                     borderRadius: '4px',
-                                    fontSize: '14px',
+                                    fontSize: '16.1px',
                                     textAlign: 'center'
                                   }}
                                 />
@@ -909,7 +909,7 @@ const Workers = () => {
                                     padding: '4px 8px',
                                     border: '1px solid #D1D5DB',
                                     borderRadius: '4px',
-                                    fontSize: '14px'
+                                    fontSize: '16.1px'
                                   }}
                                 />
                               </td>
@@ -922,7 +922,7 @@ const Workers = () => {
                                     padding: '4px 8px',
                                     border: '1px solid #D1D5DB',
                                     borderRadius: '4px',
-                                    fontSize: '14px',
+                                    fontSize: '16.1px',
                                     backgroundColor: 'white'
                                   }}
                                 >
@@ -942,7 +942,7 @@ const Workers = () => {
                                 padding: '8px',
                                 borderBottom: '1px solid #E5E7EB',
                                 textAlign: 'center',
-                                fontSize: '14px',
+                                fontSize: '16.1px',
                                 fontWeight: '500',
                                 color: timesheet[day].totalHours > 0 ? '#059669' : '#6B7280'
                               }}>
@@ -956,7 +956,7 @@ const Workers = () => {
                             <td colSpan={6} style={{ 
                               padding: '8px',
                               borderTop: '2px solid #E5E7EB',
-                              fontSize: '14px',
+                              fontSize: '16.1px',
                               fontWeight: '600',
                               color: '#374151',
                               textAlign: 'right'
@@ -967,7 +967,7 @@ const Workers = () => {
                               padding: '8px',
                               borderTop: '2px solid #E5E7EB',
                               textAlign: 'center',
-                              fontSize: '16px',
+                              fontSize: '18.4px',
                               fontWeight: '700',
                               color: getTotalWeeklyHours() > 40 ? '#DC2626' : '#059669'
                             }}>
@@ -991,7 +991,7 @@ const Workers = () => {
                     color: 'white',
                     border: 'none',
                     borderRadius: '6px',
-                    fontSize: '16px',
+                    fontSize: '18.4px',
                     fontWeight: '500',
                     cursor: 'pointer'
                   }}
@@ -1008,7 +1008,7 @@ const Workers = () => {
                     color: '#374151',
                     border: 'none',
                     borderRadius: '6px',
-                    fontSize: '16px',
+                    fontSize: '18.4px',
                     fontWeight: '500',
                     cursor: 'pointer'
                   }}

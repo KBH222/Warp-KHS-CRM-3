@@ -80,7 +80,7 @@ const CustomerDetailEnhanced = () => {
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
-          fontSize: '14px'
+          fontSize: '16.1px'
         }}
       >
         ← Back to Customers
@@ -96,13 +96,13 @@ const CustomerDetailEnhanced = () => {
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
           <div>
-            <h1 style={{ margin: '0 0 10px 0', fontSize: '24px', fontWeight: 'bold' }}>
+            <h1 style={{ margin: '0 0 10px 0', fontSize: '27.6px', fontWeight: 'bold' }}>
               {customer.name}
             </h1>
             {customer.reference && (
               <span style={{ 
                 display: 'inline-block',
-                fontSize: '12px', 
+                fontSize: '13.8px', 
                 backgroundColor: '#E5E7EB',
                 color: '#374151',
                 padding: '4px 8px',
@@ -121,7 +121,7 @@ const CustomerDetailEnhanced = () => {
                   color: '#6B7280',
                   cursor: 'pointer',
                   padding: 0,
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   textAlign: 'left',
                   textDecoration: 'none'
                 }}
@@ -145,7 +145,7 @@ const CustomerDetailEnhanced = () => {
                   textDecoration: 'underline',
                   cursor: 'pointer',
                   padding: 0,
-                  fontSize: '16px',
+                  fontSize: '18.4px',
                   textAlign: 'left'
                 }}
               >
@@ -159,7 +159,7 @@ const CustomerDetailEnhanced = () => {
                   color: '#6B7280',
                   cursor: 'pointer',
                   padding: 0,
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   textAlign: 'left',
                   textDecoration: 'none'
                 }}
@@ -178,7 +178,7 @@ const CustomerDetailEnhanced = () => {
             {customer.notes && (
               <p style={{
                 marginTop: '15px',
-                fontSize: '14px',
+                fontSize: '16.1px',
                 color: '#6B7280',
                 fontStyle: 'italic',
                 borderTop: '1px solid #E5E7EB',
@@ -197,7 +197,7 @@ const CustomerDetailEnhanced = () => {
                 border: 'none',
                 borderRadius: '6px',
                 cursor: 'pointer',
-                fontSize: '14px'
+                fontSize: '16.1px'
               }}
             >
               Edit
@@ -216,7 +216,7 @@ const CustomerDetailEnhanced = () => {
                 border: 'none',
                 borderRadius: '6px',
                 cursor: 'pointer',
-                fontSize: '14px'
+                fontSize: '16.1px'
               }}
             >
               Delete
@@ -233,7 +233,7 @@ const CustomerDetailEnhanced = () => {
           alignItems: 'center',
           marginBottom: '15px'
         }}>
-          <h2 style={{ fontSize: '20px', fontWeight: 'bold', margin: 0 }}>Jobs</h2>
+          <h2 style={{ fontSize: '23px', fontWeight: 'bold', margin: 0 }}>Jobs</h2>
           <button
             onClick={() => navigate(`/customers/${customer.id}/jobs/new`)}
             style={{
@@ -243,7 +243,7 @@ const CustomerDetailEnhanced = () => {
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: '16.1px',
               display: 'flex',
               alignItems: 'center',
               gap: '6px'
@@ -274,14 +274,14 @@ const CustomerDetailEnhanced = () => {
                 <div style={{ flex: 1 }}>
                   <h3 style={{ 
                     margin: '0 0 8px 0', 
-                    fontSize: '18px', 
+                    fontSize: '20.7px', 
                     fontWeight: '600' 
                   }}>
                     {job.title}
                   </h3>
                   <p style={{ 
                     margin: '0 0 8px 0', 
-                    fontSize: '14px', 
+                    fontSize: '16.1px', 
                     color: '#6B7280' 
                   }}>
                     {job.description}
@@ -289,7 +289,7 @@ const CustomerDetailEnhanced = () => {
                   <div style={{ 
                     display: 'flex', 
                     gap: '20px', 
-                    fontSize: '13px', 
+                    fontSize: '14.95px', 
                     color: '#6B7280' 
                   }}>
                     <span>Start: {formatDate(job.startDate)}</span>
@@ -303,7 +303,7 @@ const CustomerDetailEnhanced = () => {
                     backgroundColor: `${getStatusColor(job.status)}20`,
                     color: getStatusColor(job.status),
                     borderRadius: '12px',
-                    fontSize: '12px',
+                    fontSize: '13.8px',
                     fontWeight: '500',
                     marginBottom: '8px'
                   }}>
@@ -311,7 +311,7 @@ const CustomerDetailEnhanced = () => {
                   </span>
                   <p style={{ 
                     margin: 0, 
-                    fontSize: '18px', 
+                    fontSize: '20.7px', 
                     fontWeight: 'bold',
                     color: '#111827'
                   }}>

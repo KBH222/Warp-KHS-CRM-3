@@ -61,7 +61,7 @@ export const EncryptionLogin = ({ onSuccess, onSkip }: EncryptionLoginProps) => 
     }}>
       <h3 style={{ 
         margin: '0 0 16px 0', 
-        fontSize: '18px', 
+        fontSize: '20.7px', 
         fontWeight: '600',
       }}>
         🔓 Unlock Encrypted Data
@@ -69,7 +69,7 @@ export const EncryptionLogin = ({ onSuccess, onSkip }: EncryptionLoginProps) => 
 
       <p style={{ 
         margin: '0 0 20px 0', 
-        fontSize: '14px',
+        fontSize: '16.1px',
         color: '#6B7280',
       }}>
         Enter your master password to access encrypted information.
@@ -79,7 +79,7 @@ export const EncryptionLogin = ({ onSuccess, onSkip }: EncryptionLoginProps) => 
         <label style={{ 
           display: 'block', 
           marginBottom: '4px',
-          fontSize: '14px',
+          fontSize: '16.1px',
           fontWeight: '500',
         }}>
           Master Password
@@ -97,7 +97,7 @@ export const EncryptionLogin = ({ onSuccess, onSkip }: EncryptionLoginProps) => 
               padding: '8px 40px 8px 12px',
               border: '1px solid #D1D5DB',
               borderRadius: '6px',
-              fontSize: '14px',
+              fontSize: '16.1px',
             }}
           />
           <button
@@ -112,7 +112,7 @@ export const EncryptionLogin = ({ onSuccess, onSkip }: EncryptionLoginProps) => 
               backgroundColor: 'transparent',
               border: 'none',
               cursor: 'pointer',
-              fontSize: '12px',
+              fontSize: '13.8px',
             }}
           >
             {showPassword ? '👁️' : '👁️‍🗨️'}
@@ -130,7 +130,7 @@ export const EncryptionLogin = ({ onSuccess, onSkip }: EncryptionLoginProps) => 
         }}>
           <p style={{ 
             margin: 0, 
-            fontSize: '14px',
+            fontSize: '16.1px',
             color: '#DC2626',
           }}>
             ⚠️ {error}
@@ -150,7 +150,7 @@ export const EncryptionLogin = ({ onSuccess, onSkip }: EncryptionLoginProps) => 
             border: 'none',
             borderRadius: '6px',
             cursor: isLoading ? 'not-allowed' : 'pointer',
-            fontSize: '14px',
+            fontSize: '16.1px',
             fontWeight: '500',
           }}
         >
@@ -168,7 +168,7 @@ export const EncryptionLogin = ({ onSuccess, onSkip }: EncryptionLoginProps) => 
               border: 'none',
               borderRadius: '6px',
               cursor: isLoading ? 'not-allowed' : 'pointer',
-              fontSize: '14px',
+              fontSize: '16.1px',
               fontWeight: '500',
             }}
           >
@@ -179,7 +179,7 @@ export const EncryptionLogin = ({ onSuccess, onSkip }: EncryptionLoginProps) => 
 
       <p style={{ 
         margin: '16px 0 0 0', 
-        fontSize: '12px',
+        fontSize: '13.8px',
         color: '#9CA3AF',
         textAlign: 'center',
       }}>

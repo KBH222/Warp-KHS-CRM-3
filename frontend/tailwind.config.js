@@ -6,6 +6,22 @@ export default {
   ],
   theme: {
     extend: {
+      // Override default font sizes with 15% increase
+      fontSize: {
+        'xs': ['0.75rem', { lineHeight: '1rem' }],      // 13.8px (12px * 1.15)
+        'sm': ['0.875rem', { lineHeight: '1.25rem' }],  // 16.1px (14px * 1.15)
+        'base': ['1rem', { lineHeight: '1.5rem' }],     // 18.4px (16px * 1.15)
+        'lg': ['1.125rem', { lineHeight: '1.75rem' }],  // 20.7px (18px * 1.15)
+        'xl': ['1.25rem', { lineHeight: '1.75rem' }],   // 23px (20px * 1.15)
+        '2xl': ['1.5rem', { lineHeight: '2rem' }],      // 27.6px (24px * 1.15)
+        '3xl': ['1.875rem', { lineHeight: '2.25rem' }], // 34.5px (30px * 1.15)
+        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],   // 41.4px (36px * 1.15)
+        '5xl': ['3rem', { lineHeight: '1' }],           // 55.2px (48px * 1.15)
+        '6xl': ['3.75rem', { lineHeight: '1' }],        // 69px (60px * 1.15)
+        '7xl': ['4.5rem', { lineHeight: '1' }],         // 82.8px (72px * 1.15)
+        '8xl': ['6rem', { lineHeight: '1' }],           // 110.4px (96px * 1.15)
+        '9xl': ['8rem', { lineHeight: '1' }],           // 147.2px (128px * 1.15)
+      },
       colors: {
         primary: {
           50: '#eff6ff',

@@ -525,7 +525,7 @@ const ScheduleCalendar = () => {
                 border: '1px solid #E5E7EB',
                 borderRadius: '4px',
                 cursor: 'pointer',
-                fontSize: '12px',
+                fontSize: '13.8px',
                 color: '#6B7280',
                 display: 'flex',
                 alignItems: 'center',
@@ -548,7 +548,7 @@ const ScheduleCalendar = () => {
             </button>
           </div>
           <div 
-            style={{ fontSize: '12px' }}
+            style={{ fontSize: '13.8px' }}
             onClick={(e) => {
               if (quickAddDate?.toDateString() !== date.toDateString()) {
                 e.stopPropagation();
@@ -578,7 +578,7 @@ const ScheduleCalendar = () => {
                   marginBottom: '4px',
                   border: '1px solid #3B82F6',
                   borderRadius: '3px',
-                  fontSize: '11px',
+                  fontSize: '12.65px',
                   outline: 'none'
                 }}
               />
@@ -601,7 +601,7 @@ const ScheduleCalendar = () => {
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
-                    fontSize: '11px',
+                    fontSize: '12.65px',
                     position: 'relative',
                     opacity: draggedJob?.id === job.id ? 0.5 : 1,
                     transition: 'opacity 0.2s'
@@ -649,7 +649,7 @@ const ScheduleCalendar = () => {
                         padding: '12px 16px',
                         borderBottom: '1px solid #E5E7EB',
                         fontWeight: '600',
-                        fontSize: '14px',
+                        fontSize: '16.1px',
                         color: '#374151'
                       }}>
                         {job.title}
@@ -667,7 +667,7 @@ const ScheduleCalendar = () => {
                         backgroundColor: 'transparent',
                         textAlign: 'left',
                         cursor: 'pointer',
-                        fontSize: '12px',
+                        fontSize: '13.8px',
                         color: '#374151'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
@@ -688,7 +688,7 @@ const ScheduleCalendar = () => {
                         backgroundColor: 'transparent',
                         textAlign: 'left',
                         cursor: 'pointer',
-                        fontSize: '12px',
+                        fontSize: '13.8px',
                         color: '#374151'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
@@ -709,7 +709,7 @@ const ScheduleCalendar = () => {
                         backgroundColor: 'transparent',
                         textAlign: 'left',
                         cursor: 'pointer',
-                        fontSize: '12px',
+                        fontSize: '13.8px',
                         color: '#DC2626'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FEE2E2'}
@@ -723,7 +723,7 @@ const ScheduleCalendar = () => {
               </div>
             ))}
             {dayJobs.length > 2 && (
-              <div style={{ fontSize: '11px', color: '#6B7280', fontStyle: 'italic' }}>
+              <div style={{ fontSize: '12.65px', color: '#6B7280', fontStyle: 'italic' }}>
                 +{dayJobs.length - 2} more
               </div>
             )}
@@ -758,10 +758,10 @@ const ScheduleCalendar = () => {
                   fontWeight: '600'
                 }}
               >
-                <div style={{ fontSize: '12px', color: '#6B7280' }}>
+                <div style={{ fontSize: '13.8px', color: '#6B7280' }}>
                   {day.toLocaleDateString('en-US', { weekday: 'short' })}
                 </div>
-                <div style={{ fontSize: '18px', color: isToday ? '#92400E' : '#374151' }}>
+                <div style={{ fontSize: '20.7px', color: isToday ? '#92400E' : '#374151' }}>
                   {day.getDate()}
                 </div>
               </div>
@@ -775,7 +775,7 @@ const ScheduleCalendar = () => {
             <div style={{
               width: '60px',
               padding: '20px 8px',
-              fontSize: '12px',
+              fontSize: '13.8px',
               color: '#6B7280',
               textAlign: 'right',
               borderRight: '1px solid #E5E7EB'
@@ -833,7 +833,7 @@ const ScheduleCalendar = () => {
                         marginBottom: '4px',
                         border: '1px solid #3B82F6',
                         borderRadius: '3px',
-                        fontSize: '11px',
+                        fontSize: '12.65px',
                         outline: 'none'
                       }}
                     />
@@ -852,7 +852,7 @@ const ScheduleCalendar = () => {
                         padding: '4px',
                         marginBottom: '2px',
                         borderRadius: '4px',
-                        fontSize: '11px',
+                        fontSize: '12.65px',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
@@ -903,7 +903,7 @@ const ScheduleCalendar = () => {
                           padding: '12px 16px',
                           borderBottom: '1px solid #E5E7EB',
                           fontWeight: '600',
-                          fontSize: '14px',
+                          fontSize: '16.1px',
                           color: '#374151'
                         }}>
                           {job.title}
@@ -921,7 +921,7 @@ const ScheduleCalendar = () => {
                           backgroundColor: 'transparent',
                           textAlign: 'left',
                           cursor: 'pointer',
-                          fontSize: '12px',
+                          fontSize: '13.8px',
                           color: '#374151'
                         }}
                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
@@ -942,7 +942,7 @@ const ScheduleCalendar = () => {
                           backgroundColor: 'transparent',
                           textAlign: 'left',
                           cursor: 'pointer',
-                          fontSize: '12px',
+                          fontSize: '13.8px',
                           color: '#374151'
                         }}
                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
@@ -963,7 +963,7 @@ const ScheduleCalendar = () => {
                           backgroundColor: 'transparent',
                           textAlign: 'left',
                           cursor: 'pointer',
-                          fontSize: '12px',
+                          fontSize: '13.8px',
                           color: '#DC2626'
                         }}
                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FEE2E2'}
@@ -1002,7 +1002,7 @@ const ScheduleCalendar = () => {
           textAlign: 'center',
           flexShrink: 0
         }}>
-          <h3 style={{ margin: 0, fontSize: '20px', fontWeight: '600', color: isToday ? '#92400E' : '#374151' }}>
+          <h3 style={{ margin: 0, fontSize: '23px', fontWeight: '600', color: isToday ? '#92400E' : '#374151' }}>
             {currentDate.toLocaleDateString('en-US', { weekday: 'long' })}
           </h3>
           <button
@@ -1015,7 +1015,7 @@ const ScheduleCalendar = () => {
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
-              fontSize: '12px'
+              fontSize: '13.8px'
             }}
           >
             + Add Job
@@ -1037,7 +1037,7 @@ const ScheduleCalendar = () => {
             <div style={{
               width: '80px',
               padding: '20px 12px',
-              fontSize: '14px',
+              fontSize: '16.1px',
               color: '#6B7280',
               textAlign: 'right',
               borderRight: '1px solid #E5E7EB',
@@ -1071,14 +1071,14 @@ const ScheduleCalendar = () => {
                     }}
                     title={`Drag to reschedule ${job.title}`}
                   >
-                    <div style={{ fontWeight: '600', fontSize: '14px', marginBottom: '4px' }}>
+                    <div style={{ fontWeight: '600', fontSize: '16.1px', marginBottom: '4px' }}>
                       {job.title}
                     </div>
-                    <div style={{ fontSize: '12px', opacity: 0.9 }}>
+                    <div style={{ fontSize: '13.8px', opacity: 0.9 }}>
                       {job.customerName} • {job.workers.join(', ')}
                     </div>
                     {job.description && (
-                      <div style={{ fontSize: '11px', marginTop: '4px', opacity: 0.8 }}>
+                      <div style={{ fontSize: '12.65px', marginTop: '4px', opacity: 0.8 }}>
                         {job.description}
                       </div>
                     )}
@@ -1110,7 +1110,7 @@ const ScheduleCalendar = () => {
                           backgroundColor: 'transparent',
                           textAlign: 'left',
                           cursor: 'pointer',
-                          fontSize: '12px',
+                          fontSize: '13.8px',
                           color: '#374151'
                         }}
                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
@@ -1131,7 +1131,7 @@ const ScheduleCalendar = () => {
                           backgroundColor: 'transparent',
                           textAlign: 'left',
                           cursor: 'pointer',
-                          fontSize: '12px',
+                          fontSize: '13.8px',
                           color: '#374151'
                         }}
                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
@@ -1152,7 +1152,7 @@ const ScheduleCalendar = () => {
                           backgroundColor: 'transparent',
                           textAlign: 'left',
                           cursor: 'pointer',
-                          fontSize: '12px',
+                          fontSize: '13.8px',
                           color: '#DC2626'
                         }}
                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FEE2E2'}
@@ -1243,7 +1243,7 @@ const ScheduleCalendar = () => {
                       minWidth: '30px',
                       padding: '8px 4px',
                       textAlign: 'center',
-                      fontSize: '12px',
+                      fontSize: '13.8px',
                       backgroundColor: isPast ? '#E5E7EB' : isWeekend ? '#F9FAFB' : 'white',
                       borderRight: '1px solid #E5E7EB',
                       fontWeight: '400',
@@ -1336,7 +1336,7 @@ const ScheduleCalendar = () => {
                         borderRadius: '4px',
                         padding: '4px 8px',
                         color: 'white',
-                        fontSize: '12px',
+                        fontSize: '13.8px',
                         cursor: 'pointer',
                         overflow: 'hidden',
                         whiteSpace: 'nowrap',
@@ -1379,7 +1379,7 @@ const ScheduleCalendar = () => {
                         backgroundColor: 'transparent',
                         textAlign: 'left',
                         cursor: 'pointer',
-                        fontSize: '12px',
+                        fontSize: '13.8px',
                         color: '#374151'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
@@ -1400,7 +1400,7 @@ const ScheduleCalendar = () => {
                         backgroundColor: 'transparent',
                         textAlign: 'left',
                         cursor: 'pointer',
-                        fontSize: '12px',
+                        fontSize: '13.8px',
                         color: '#374151'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
@@ -1421,7 +1421,7 @@ const ScheduleCalendar = () => {
                         backgroundColor: 'transparent',
                         textAlign: 'left',
                         cursor: 'pointer',
-                        fontSize: '12px',
+                        fontSize: '13.8px',
                         color: '#DC2626'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FEE2E2'}
@@ -1479,7 +1479,7 @@ const ScheduleCalendar = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>
+          <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: 0 }}>
             Schedule
           </h1>
         </div>
@@ -1508,7 +1508,7 @@ const ScheduleCalendar = () => {
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '14px'
+              fontSize: '16.1px'
             }}
           >
             + New Job
@@ -1534,7 +1534,7 @@ const ScheduleCalendar = () => {
                 border: `1px solid ${view === v ? '#3B82F6' : '#E5E7EB'}`,
                 borderRadius: '6px',
                 cursor: 'pointer',
-                fontSize: '16px',
+                fontSize: '18.4px',
                 fontWeight: view === v ? '500' : '400',
                 textTransform: 'capitalize',
                 minHeight: '44px', // iOS minimum touch target
@@ -1569,13 +1569,13 @@ const ScheduleCalendar = () => {
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '14px'
+              fontSize: '16.1px'
             }}
           >
             ← Previous
           </button>
           
-          <h2 style={{ fontSize: '20px', fontWeight: '600', margin: 0 }}>
+          <h2 style={{ fontSize: '23px', fontWeight: '600', margin: 0 }}>
             {view === 'month' && getMonthName(currentDate)}
             {view === 'week' && getWeekRange(currentDate)}
             {view === 'day' && currentDate.toLocaleDateString('en-US', { 
@@ -1599,7 +1599,7 @@ const ScheduleCalendar = () => {
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '14px'
+              fontSize: '16.1px'
             }}
           >
             Next →
@@ -1629,7 +1629,7 @@ const ScheduleCalendar = () => {
                   style={{
                     padding: '12px',
                     fontWeight: '600',
-                    fontSize: '14px',
+                    fontSize: '16.1px',
                     textAlign: 'center',
                     color: '#374151'
                   }}
@@ -1662,14 +1662,14 @@ const ScheduleCalendar = () => {
         borderRadius: '8px',
         boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
       }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px' }}>
+        <h3 style={{ fontSize: '18.4px', fontWeight: '600', marginBottom: '12px' }}>
           Worker Legend
         </h3>
         <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
           {workers.map(workerName => (
             <div key={workerName} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <div style={{ width: '20px', height: '20px', backgroundColor: workerColors[workerName], borderRadius: '4px' }} />
-              <span style={{ fontSize: '14px' }}>{workerName}</span>
+              <span style={{ fontSize: '16.1px' }}>{workerName}</span>
             </div>
           ))}
         </div>
@@ -1703,14 +1703,14 @@ const ScheduleCalendar = () => {
             WebkitOverflowScrolling: 'touch',
             margin: '0 auto'
           }}>
-            <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '23px', fontWeight: '600', marginBottom: '20px' }}>
               {editingJob ? 'Edit Job' : 'Schedule New Job'}
             </h2>
 
             <form onSubmit={handleSubmitJob}>
               {/* Job Title */}
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                   Job Title *
                 </label>
                 <input
@@ -1723,7 +1723,7 @@ const ScheduleCalendar = () => {
                     padding: '8px 12px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px'
+                    fontSize: '16.1px'
                   }}
                   required
                 />
@@ -1731,7 +1731,7 @@ const ScheduleCalendar = () => {
 
               {/* Customer */}
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                   Customer *
                 </label>
                 <select
@@ -1742,7 +1742,7 @@ const ScheduleCalendar = () => {
                     padding: '8px 12px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px',
+                    fontSize: '16.1px',
                     backgroundColor: 'white',
                     cursor: 'pointer',
                     appearance: 'none',
@@ -1774,7 +1774,7 @@ const ScheduleCalendar = () => {
 
               {/* Worker Assignment */}
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                   Assign Workers * (Select one or more)
                 </label>
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
@@ -1806,7 +1806,7 @@ const ScheduleCalendar = () => {
                         }}
                         style={{ cursor: 'pointer' }}
                       />
-                      <span style={{ fontSize: '14px', fontWeight: newJob.workers.includes(worker) ? '500' : '400' }}>
+                      <span style={{ fontSize: '16.1px', fontWeight: newJob.workers.includes(worker) ? '500' : '400' }}>
                         {worker}
                       </span>
                       <div style={{
@@ -1823,7 +1823,7 @@ const ScheduleCalendar = () => {
               {/* Date Range */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                     Start Date *
                   </label>
                   <input
@@ -1835,13 +1835,13 @@ const ScheduleCalendar = () => {
                       padding: '8px 12px',
                       border: '1px solid #E5E7EB',
                       borderRadius: '6px',
-                      fontSize: '14px'
+                      fontSize: '16.1px'
                     }}
                     required
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                     End Date *
                   </label>
                   <input
@@ -1854,7 +1854,7 @@ const ScheduleCalendar = () => {
                       padding: '8px 12px',
                       border: '1px solid #E5E7EB',
                       borderRadius: '6px',
-                      fontSize: '14px'
+                      fontSize: '16.1px'
                     }}
                     required
                   />
@@ -1863,7 +1863,7 @@ const ScheduleCalendar = () => {
 
               {/* Description */}
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                   Description
                 </label>
                 <textarea
@@ -1876,7 +1876,7 @@ const ScheduleCalendar = () => {
                     padding: '8px 12px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px',
+                    fontSize: '16.1px',
                     resize: 'vertical'
                   }}
                 />
@@ -1898,7 +1898,7 @@ const ScheduleCalendar = () => {
                       onChange={(e) => setNewJob({ ...newJob, isRecurring: e.target.checked })}
                       style={{ cursor: 'pointer' }}
                     />
-                    <span style={{ fontSize: '14px', fontWeight: '500' }}>
+                    <span style={{ fontSize: '16.1px', fontWeight: '500' }}>
                       Make this a recurring job
                     </span>
                   </label>
@@ -1911,7 +1911,7 @@ const ScheduleCalendar = () => {
                       border: '1px solid #E5E7EB'
                     }}>
                       <div style={{ marginBottom: '12px' }}>
-                        <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                        <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                           Repeat Every
                         </label>
                         <select
@@ -1922,7 +1922,7 @@ const ScheduleCalendar = () => {
                             padding: '8px 12px',
                             border: '1px solid #E5E7EB',
                             borderRadius: '6px',
-                            fontSize: '14px',
+                            fontSize: '16.1px',
                             backgroundColor: 'white',
                             cursor: 'pointer'
                           }}
@@ -1936,7 +1936,7 @@ const ScheduleCalendar = () => {
 
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                         <div>
-                          <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                          <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                             Number of Occurrences
                           </label>
                           <input
@@ -1950,12 +1950,12 @@ const ScheduleCalendar = () => {
                               padding: '8px 12px',
                               border: '1px solid #E5E7EB',
                               borderRadius: '6px',
-                              fontSize: '14px'
+                              fontSize: '16.1px'
                             }}
                           />
                         </div>
                         <div>
-                          <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                          <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                             End By (Optional)
                           </label>
                           <input
@@ -1968,7 +1968,7 @@ const ScheduleCalendar = () => {
                               padding: '8px 12px',
                               border: '1px solid #E5E7EB',
                               borderRadius: '6px',
-                              fontSize: '14px'
+                              fontSize: '16.1px'
                             }}
                           />
                         </div>
@@ -2005,7 +2005,7 @@ const ScheduleCalendar = () => {
                     border: 'none',
                     borderRadius: '6px',
                     cursor: 'pointer',
-                    fontSize: '14px'
+                    fontSize: '16.1px'
                   }}
                 >
                   Cancel
@@ -2019,7 +2019,7 @@ const ScheduleCalendar = () => {
                     border: 'none',
                     borderRadius: '6px',
                     cursor: 'pointer',
-                    fontSize: '14px'
+                    fontSize: '16.1px'
                   }}
                 >
                   {editingJob ? 'Update Job' : 'Create Job'}

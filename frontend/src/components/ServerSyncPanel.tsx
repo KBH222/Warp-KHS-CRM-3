@@ -171,19 +171,19 @@ export const ServerSyncPanel = () => {
       marginBottom: '20px'
     }}>
       <h2 style={{ 
-        fontSize: '18px', 
+        fontSize: '20.7px', 
         fontWeight: '600', 
         marginBottom: '16px',
         display: 'flex',
         alignItems: 'center',
         gap: '8px'
       }}>
-        <span style={{ fontSize: '24px' }}>☁️</span>
+        <span style={{ fontSize: '27.6px' }}>☁️</span>
         Automatic Cloud Sync
         <span style={{
           padding: '2px 8px',
           borderRadius: '12px',
-          fontSize: '12px',
+          fontSize: '13.8px',
           backgroundColor: isOnline ? '#10B981' : '#EF4444',
           color: 'white'
         }}>
@@ -216,7 +216,7 @@ export const ServerSyncPanel = () => {
           />
           <div>
             <div style={{ fontWeight: '500' }}>Enable Automatic Sync</div>
-            <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '2px' }}>
+            <div style={{ fontSize: '13.8px', color: '#6B7280', marginTop: '2px' }}>
               Syncs every 5 minutes and on startup
             </div>
           </div>
@@ -236,10 +236,10 @@ export const ServerSyncPanel = () => {
           borderRadius: '8px',
           textAlign: 'center'
         }}>
-          <div style={{ fontSize: '24px', fontWeight: '600', color: '#3B82F6' }}>
+          <div style={{ fontSize: '27.6px', fontWeight: '600', color: '#3B82F6' }}>
             {syncStats.customers}
           </div>
-          <div style={{ fontSize: '12px', color: '#6B7280' }}>Customers</div>
+          <div style={{ fontSize: '13.8px', color: '#6B7280' }}>Customers</div>
         </div>
         <div style={{
           padding: '12px',
@@ -247,10 +247,10 @@ export const ServerSyncPanel = () => {
           borderRadius: '8px',
           textAlign: 'center'
         }}>
-          <div style={{ fontSize: '24px', fontWeight: '600', color: '#10B981' }}>
+          <div style={{ fontSize: '27.6px', fontWeight: '600', color: '#10B981' }}>
             {syncStats.jobs}
           </div>
-          <div style={{ fontSize: '12px', color: '#6B7280' }}>Jobs</div>
+          <div style={{ fontSize: '13.8px', color: '#6B7280' }}>Jobs</div>
         </div>
         <div style={{
           padding: '12px',
@@ -258,10 +258,10 @@ export const ServerSyncPanel = () => {
           borderRadius: '8px',
           textAlign: 'center'
         }}>
-          <div style={{ fontSize: '24px', fontWeight: '600', color: '#F59E0B' }}>
+          <div style={{ fontSize: '27.6px', fontWeight: '600', color: '#F59E0B' }}>
             {syncStats.workers}
           </div>
-          <div style={{ fontSize: '12px', color: '#6B7280' }}>Workers</div>
+          <div style={{ fontSize: '13.8px', color: '#6B7280' }}>Workers</div>
         </div>
       </div>
 
@@ -271,7 +271,7 @@ export const ServerSyncPanel = () => {
           padding: '8px 12px',
           backgroundColor: '#E0F2FE',
           borderRadius: '6px',
-          fontSize: '14px',
+          fontSize: '16.1px',
           color: '#0369A1',
           marginBottom: '16px'
         }}>
@@ -292,7 +292,7 @@ export const ServerSyncPanel = () => {
             border: 'none',
             borderRadius: '8px',
             cursor: !isOnline || isSyncing ? 'not-allowed' : 'pointer',
-            fontSize: '14px',
+            fontSize: '16.1px',
             fontWeight: '500',
             display: 'flex',
             alignItems: 'center',
@@ -315,7 +315,7 @@ export const ServerSyncPanel = () => {
             border: 'none',
             borderRadius: '8px',
             cursor: !isOnline || isSyncing ? 'not-allowed' : 'pointer',
-            fontSize: '14px',
+            fontSize: '16.1px',
             fontWeight: '500',
             display: 'flex',
             alignItems: 'center',
@@ -338,7 +338,7 @@ export const ServerSyncPanel = () => {
               border: 'none',
               borderRadius: '8px',
               cursor: !isOnline || isSyncing ? 'not-allowed' : 'pointer',
-              fontSize: '14px',
+              fontSize: '16.1px',
               fontWeight: '500',
               display: 'flex',
               alignItems: 'center',
@@ -358,7 +358,7 @@ export const ServerSyncPanel = () => {
           backgroundColor: '#FEE2E2',
           borderRadius: '8px',
           padding: '12px',
-          fontSize: '14px',
+          fontSize: '16.1px',
           color: '#991B1B',
           marginBottom: '16px'
         }}>
@@ -371,10 +371,10 @@ export const ServerSyncPanel = () => {
         backgroundColor: '#F0FDF4',
         borderRadius: '8px',
         padding: '16px',
-        fontSize: '14px',
+        fontSize: '16.1px',
         lineHeight: '1.6'
       }}>
-        <h3 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600', color: '#166534' }}>
+        <h3 style={{ margin: '0 0 8px 0', fontSize: '16.1px', fontWeight: '600', color: '#166534' }}>
           ✨ Automatic Sync Active!
         </h3>
         <ul style={{ margin: '0', paddingLeft: '20px', color: '#166534' }}>

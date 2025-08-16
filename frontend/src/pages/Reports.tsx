@@ -116,7 +116,7 @@ const Reports = () => {
       borderLeft: `4px solid ${color}`
     }}>
       <h3 style={{ 
-        fontSize: '14px', 
+        fontSize: '16.1px', 
         color: '#6B7280', 
         margin: '0 0 8px 0',
         fontWeight: '500'
@@ -124,7 +124,7 @@ const Reports = () => {
         {title}
       </h3>
       <p style={{ 
-        fontSize: '28px', 
+        fontSize: '32.2px', 
         fontWeight: 'bold', 
         margin: '0 0 4px 0',
         color: '#111827'
@@ -133,7 +133,7 @@ const Reports = () => {
       </p>
       {subtitle && (
         <p style={{ 
-          fontSize: '12px', 
+          fontSize: '13.8px', 
           color: '#9CA3AF', 
           margin: 0 
         }}>
@@ -176,7 +176,7 @@ const Reports = () => {
             </svg>
           </button>
           <div>
-            <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
+            <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
               Reports & Analytics
             </h1>
             <p style={{ color: '#6B7280', margin: 0 }}>
@@ -208,7 +208,7 @@ const Reports = () => {
             padding: '8px 12px',
             border: '1px solid #E5E7EB',
             borderRadius: '6px',
-            fontSize: '14px',
+            fontSize: '16.1px',
             cursor: 'pointer'
           }}
         >
@@ -229,7 +229,7 @@ const Reports = () => {
                 padding: '8px 12px',
                 border: '1px solid #E5E7EB',
                 borderRadius: '6px',
-                fontSize: '14px'
+                fontSize: '16.1px'
               }}
             />
             <span style={{ color: '#6B7280' }}>to</span>
@@ -241,7 +241,7 @@ const Reports = () => {
                 padding: '8px 12px',
                 border: '1px solid #E5E7EB',
                 borderRadius: '6px',
-                fontSize: '14px'
+                fontSize: '16.1px'
               }}
             />
           </>
@@ -249,7 +249,7 @@ const Reports = () => {
         
         <span style={{ 
           marginLeft: 'auto', 
-          fontSize: '14px', 
+          fontSize: '16.1px', 
           color: '#6B7280' 
         }}>
           {new Date(startDate).toLocaleDateString()} - {new Date(endDate).toLocaleDateString()}
@@ -297,15 +297,15 @@ const Reports = () => {
         marginBottom: '24px',
         boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
       }}>
-        <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px' }}>
+        <h2 style={{ fontSize: '20.7px', fontWeight: '600', marginBottom: '16px' }}>
           Job Status Breakdown
         </h2>
         <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
           <div style={{ flex: 1, minWidth: '200px' }}>
             <div style={{ marginBottom: '12px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                <span style={{ fontSize: '14px', color: '#374151' }}>Completed</span>
-                <span style={{ fontSize: '14px', fontWeight: '600' }}>{stats.completedJobs}</span>
+                <span style={{ fontSize: '16.1px', color: '#374151' }}>Completed</span>
+                <span style={{ fontSize: '16.1px', fontWeight: '600' }}>{stats.completedJobs}</span>
               </div>
               <div style={{
                 width: '100%',
@@ -325,8 +325,8 @@ const Reports = () => {
 
             <div style={{ marginBottom: '12px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                <span style={{ fontSize: '14px', color: '#374151' }}>In Progress</span>
-                <span style={{ fontSize: '14px', fontWeight: '600' }}>{stats.inProgressJobs}</span>
+                <span style={{ fontSize: '16.1px', color: '#374151' }}>In Progress</span>
+                <span style={{ fontSize: '16.1px', fontWeight: '600' }}>{stats.inProgressJobs}</span>
               </div>
               <div style={{
                 width: '100%',
@@ -346,8 +346,8 @@ const Reports = () => {
 
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                <span style={{ fontSize: '14px', color: '#374151' }}>Pending</span>
-                <span style={{ fontSize: '14px', fontWeight: '600' }}>{stats.pendingJobs}</span>
+                <span style={{ fontSize: '16.1px', color: '#374151' }}>Pending</span>
+                <span style={{ fontSize: '16.1px', fontWeight: '600' }}>{stats.pendingJobs}</span>
               </div>
               <div style={{
                 width: '100%',
@@ -380,7 +380,7 @@ const Reports = () => {
           padding: '20px',
           boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
         }}>
-          <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '20.7px', fontWeight: '600', marginBottom: '16px' }}>
             Jobs by Worker
           </h2>
           {Object.keys(stats.jobsByWorker).length > 0 ? (
@@ -395,9 +395,9 @@ const Reports = () => {
                     padding: '8px 0',
                     borderBottom: '1px solid #F3F4F6'
                   }}>
-                    <span style={{ fontSize: '14px', color: '#374151' }}>{worker}</span>
+                    <span style={{ fontSize: '16.1px', color: '#374151' }}>{worker}</span>
                     <span style={{ 
-                      fontSize: '14px', 
+                      fontSize: '16.1px', 
                       fontWeight: '600',
                       backgroundColor: '#E0E7FF',
                       color: '#3730A3',
@@ -410,7 +410,7 @@ const Reports = () => {
                 ))}
             </div>
           ) : (
-            <p style={{ color: '#9CA3AF', fontSize: '14px', textAlign: 'center', padding: '20px 0' }}>
+            <p style={{ color: '#9CA3AF', fontSize: '16.1px', textAlign: 'center', padding: '20px 0' }}>
               No worker data available
             </p>
           )}
@@ -423,7 +423,7 @@ const Reports = () => {
           padding: '20px',
           boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
         }}>
-          <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '20.7px', fontWeight: '600', marginBottom: '16px' }}>
             Top Customers
           </h2>
           {Object.keys(stats.jobsByCustomer).length > 0 ? (
@@ -440,7 +440,7 @@ const Reports = () => {
                     borderBottom: '1px solid #F3F4F6'
                   }}>
                     <span style={{ 
-                      fontSize: '14px', 
+                      fontSize: '16.1px', 
                       color: '#374151',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
@@ -450,7 +450,7 @@ const Reports = () => {
                       {customer}
                     </span>
                     <span style={{ 
-                      fontSize: '14px', 
+                      fontSize: '16.1px', 
                       fontWeight: '600',
                       backgroundColor: '#D1FAE5',
                       color: '#065F46',
@@ -463,7 +463,7 @@ const Reports = () => {
                 ))}
             </div>
           ) : (
-            <p style={{ color: '#9CA3AF', fontSize: '14px', textAlign: 'center', padding: '20px 0' }}>
+            <p style={{ color: '#9CA3AF', fontSize: '16.1px', textAlign: 'center', padding: '20px 0' }}>
               No customer data available
             </p>
           )}

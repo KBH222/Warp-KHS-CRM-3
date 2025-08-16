@@ -27,7 +27,7 @@ export const SecurityOnboarding = ({ onComplete }: SecurityOnboardingProps) => {
             padding: '16px',
             backgroundColor: '#EFF6FF',
             borderRadius: '8px',
-            fontSize: '14px',
+            fontSize: '16.1px',
           }}>
             <h4 style={{ margin: '0 0 8px 0', color: '#1E40AF' }}>
               Our Security Principles:
@@ -58,10 +58,10 @@ export const SecurityOnboarding = ({ onComplete }: SecurityOnboardingProps) => {
               borderRadius: '6px',
               border: '1px solid #FCA5A5',
             }}>
-              <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', color: '#991B1B' }}>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '16.1px', color: '#991B1B' }}>
                 🚫 Restricted (Never Syncs)
               </h4>
-              <p style={{ margin: 0, fontSize: '13px', color: '#991B1B' }}>
+              <p style={{ margin: 0, fontSize: '14.95px', color: '#991B1B' }}>
                 Customer names, addresses, phone numbers, and personal information
               </p>
             </div>
@@ -72,10 +72,10 @@ export const SecurityOnboarding = ({ onComplete }: SecurityOnboardingProps) => {
               borderRadius: '6px',
               border: '1px solid #F59E0B',
             }}>
-              <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', color: '#92400E' }}>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '16.1px', color: '#92400E' }}>
                 🔒 Confidential (Encrypted)
               </h4>
-              <p style={{ margin: 0, fontSize: '13px', color: '#92400E' }}>
+              <p style={{ margin: 0, fontSize: '14.95px', color: '#92400E' }}>
                 Worker information, payroll data, sensitive notes
               </p>
             </div>
@@ -86,10 +86,10 @@ export const SecurityOnboarding = ({ onComplete }: SecurityOnboardingProps) => {
               borderRadius: '6px',
               border: '1px solid #10B981',
             }}>
-              <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', color: '#064E3B' }}>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '16.1px', color: '#064E3B' }}>
                 📋 Internal (Can Sync)
               </h4>
-              <p style={{ margin: 0, fontSize: '13px', color: '#064E3B' }}>
+              <p style={{ margin: 0, fontSize: '14.95px', color: '#064E3B' }}>
                 Job details, schedules, project information
               </p>
             </div>
@@ -100,10 +100,10 @@ export const SecurityOnboarding = ({ onComplete }: SecurityOnboardingProps) => {
               borderRadius: '6px',
               border: '1px solid #3B82F6',
             }}>
-              <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', color: '#1E40AF' }}>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '16.1px', color: '#1E40AF' }}>
                 📢 Public (Free to Share)
               </h4>
-              <p style={{ margin: 0, fontSize: '13px', color: '#1E40AF' }}>
+              <p style={{ margin: 0, fontSize: '14.95px', color: '#1E40AF' }}>
                 Material lists, general settings, app preferences
               </p>
             </div>
@@ -165,7 +165,7 @@ export const SecurityOnboarding = ({ onComplete }: SecurityOnboardingProps) => {
             border: '1px solid #F59E0B',
             marginBottom: '16px',
           }}>
-            <p style={{ margin: 0, fontSize: '13px', color: '#92400E' }}>
+            <p style={{ margin: 0, fontSize: '14.95px', color: '#92400E' }}>
               <strong>Note:</strong> If you enable encryption, you'll need to create a 
               master password. This password cannot be recovered if forgotten.
             </p>
@@ -228,7 +228,7 @@ export const SecurityOnboarding = ({ onComplete }: SecurityOnboardingProps) => {
             border: '1px solid #10B981',
             marginBottom: '16px',
           }}>
-            <p style={{ margin: 0, fontSize: '13px', color: '#064E3B' }}>
+            <p style={{ margin: 0, fontSize: '14.95px', color: '#064E3B' }}>
               <strong>How it works:</strong> Devices find each other automatically on 
               your local network. No internet connection required.
             </p>
@@ -273,12 +273,12 @@ export const SecurityOnboarding = ({ onComplete }: SecurityOnboardingProps) => {
               alignItems: 'flex-start',
               gap: '8px',
             }}>
-              <span style={{ fontSize: '20px' }}>🏠</span>
+              <span style={{ fontSize: '23px' }}>🏠</span>
               <div>
                 <h4 style={{ margin: '0 0 4px 0', fontSize: '14px' }}>
                   Your Data, Your Control
                 </h4>
-                <p style={{ margin: 0, fontSize: '13px', color: '#6B7280' }}>
+                <p style={{ margin: 0, fontSize: '14.95px', color: '#6B7280' }}>
                   All data stays on your devices unless you explicitly choose to sync
                 </p>
               </div>
@@ -292,12 +292,12 @@ export const SecurityOnboarding = ({ onComplete }: SecurityOnboardingProps) => {
               alignItems: 'flex-start',
               gap: '8px',
             }}>
-              <span style={{ fontSize: '20px' }}>🚫</span>
+              <span style={{ fontSize: '23px' }}>🚫</span>
               <div>
                 <h4 style={{ margin: '0 0 4px 0', fontSize: '14px' }}>
                   No Cloud Storage of PII
                 </h4>
-                <p style={{ margin: 0, fontSize: '13px', color: '#6B7280' }}>
+                <p style={{ margin: 0, fontSize: '14.95px', color: '#6B7280' }}>
                   Customer personal information never leaves your device
                 </p>
               </div>
@@ -311,12 +311,12 @@ export const SecurityOnboarding = ({ onComplete }: SecurityOnboardingProps) => {
               alignItems: 'flex-start',
               gap: '8px',
             }}>
-              <span style={{ fontSize: '20px' }}>🔍</span>
+              <span style={{ fontSize: '23px' }}>🔍</span>
               <div>
                 <h4 style={{ margin: '0 0 4px 0', fontSize: '14px' }}>
                   Transparent Security
                 </h4>
-                <p style={{ margin: 0, fontSize: '13px', color: '#6B7280' }}>
+                <p style={{ margin: 0, fontSize: '14.95px', color: '#6B7280' }}>
                   All data access is logged and you can review the audit trail
                 </p>
               </div>
@@ -386,21 +386,21 @@ export const SecurityOnboarding = ({ onComplete }: SecurityOnboardingProps) => {
         <div style={{ padding: '32px' }}>
           <div style={{ textAlign: 'center', marginBottom: '24px' }}>
             <div style={{
-              fontSize: '48px',
+              fontSize: '55.2px',
               marginBottom: '16px',
             }}>
               {currentStepData.icon}
             </div>
             <h2 style={{ 
               margin: '0 0 8px 0', 
-              fontSize: '24px', 
+              fontSize: '27.6px', 
               fontWeight: '600',
             }}>
               {currentStepData.title}
             </h2>
             <p style={{ 
               margin: 0, 
-              fontSize: '14px',
+              fontSize: '16.1px',
               color: '#6B7280',
             }}>
               Step {currentStep + 1} of {steps.length}
@@ -428,7 +428,7 @@ export const SecurityOnboarding = ({ onComplete }: SecurityOnboardingProps) => {
                 border: 'none',
                 borderRadius: '6px',
                 cursor: currentStep === 0 ? 'not-allowed' : 'pointer',
-                fontSize: '14px',
+                fontSize: '16.1px',
                 fontWeight: '500',
               }}
             >
@@ -453,7 +453,7 @@ export const SecurityOnboarding = ({ onComplete }: SecurityOnboardingProps) => {
                 border: 'none',
                 borderRadius: '6px',
                 cursor: canProceed ? 'pointer' : 'not-allowed',
-                fontSize: '14px',
+                fontSize: '16.1px',
                 fontWeight: '500',
                 minWidth: '100px',
               }}

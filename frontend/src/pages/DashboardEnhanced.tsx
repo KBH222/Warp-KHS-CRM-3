@@ -79,7 +79,7 @@ const DashboardEnhanced = () => {
         {/* Header Section */}
         <div style={{ marginBottom: '20px' }}>
           <div style={{ 
-            fontSize: '24px', 
+            fontSize: '27.6px', 
             fontWeight: 'bold', 
             color: '#111827',
             marginBottom: '4px'
@@ -87,7 +87,7 @@ const DashboardEnhanced = () => {
             {formatDateTime().date}
           </div>
           <div style={{ 
-            fontSize: '20px', 
+            fontSize: '23px', 
             color: '#3B82F6',
             fontFamily: 'monospace'
           }}>
@@ -96,7 +96,7 @@ const DashboardEnhanced = () => {
         </div>
 
         {/* Navigation Cards */}
-        <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '16px', color: '#374151' }}>
+        <h2 style={{ fontSize: '23px', fontWeight: '600', marginBottom: '16px', color: '#374151' }}>
           Quick Access
         </h2>
         <div style={{ 
@@ -134,10 +134,10 @@ const DashboardEnhanced = () => {
             
             <div style={{ padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'start', marginBottom: '12px' }}>
-                <span style={{ fontSize: '32px', marginRight: '12px' }}>{card.icon}</span>
+                <span style={{ fontSize: '36.8px', marginRight: '12px' }}>{card.icon}</span>
                 <div style={{ flex: 1 }}>
                   <h3 style={{ 
-                    fontSize: '18px', 
+                    fontSize: '20.7px', 
                     fontWeight: '600', 
                     color: '#111827',
                     marginBottom: '4px'
@@ -145,7 +145,7 @@ const DashboardEnhanced = () => {
                     {card.title}
                   </h3>
                   <p style={{ 
-                    fontSize: '14px', 
+                    fontSize: '16.1px', 
                     color: '#6B7280',
                     lineHeight: '1.4'
                   }}>
@@ -186,7 +186,7 @@ const DashboardEnhanced = () => {
               borderRadius: '8px',
               border: 'none',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: '16.1px',
               fontWeight: '500',
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               display: 'flex',
@@ -205,7 +205,7 @@ const DashboardEnhanced = () => {
               borderRadius: '8px',
               border: 'none',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: '16.1px',
               fontWeight: '500',
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               display: 'flex',

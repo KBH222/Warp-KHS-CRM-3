@@ -134,7 +134,7 @@ const Profile = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>
+          <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: 0 }}>
             Profile Settings
           </h1>
         </div>
@@ -148,7 +148,7 @@ const Profile = () => {
                 border: 'none',
                 borderRadius: '6px',
                 cursor: 'pointer',
-                fontSize: '14px'
+                fontSize: '16.1px'
               }}
             >
               Edit Profile
@@ -164,7 +164,7 @@ const Profile = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px'
+                  fontSize: '16.1px'
                 }}
               >
                 Cancel
@@ -178,7 +178,7 @@ const Profile = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px'
+                  fontSize: '16.1px'
                 }}
               >
                 Save Changes
@@ -205,7 +205,7 @@ const Profile = () => {
                 border: 'none',
                 backgroundColor: 'transparent',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '16.1px',
                 fontWeight: '500',
                 color: activeTab === tab.id ? '#3B82F6' : '#6B7280',
                 borderBottom: activeTab === tab.id ? '2px solid #3B82F6' : '2px solid transparent',
@@ -233,12 +233,12 @@ const Profile = () => {
         {/* Personal Info Tab */}
         {activeTab === 'personal' && (
           <div>
-            <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '20.7px', fontWeight: '600', marginBottom: '20px' }}>
               Personal Information
             </h2>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                   Full Name
                 </label>
                 <input
@@ -251,13 +251,13 @@ const Profile = () => {
                     padding: '8px 12px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px',
+                    fontSize: '16.1px',
                     backgroundColor: editMode ? 'white' : '#F9FAFB'
                   }}
                 />
               </div>
               <div>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                   Email
                 </label>
                 <input
@@ -270,13 +270,13 @@ const Profile = () => {
                     padding: '8px 12px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px',
+                    fontSize: '16.1px',
                     backgroundColor: editMode ? 'white' : '#F9FAFB'
                   }}
                 />
               </div>
               <div>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                   Phone
                 </label>
                 <input
@@ -289,13 +289,13 @@ const Profile = () => {
                     padding: '8px 12px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px',
+                    fontSize: '16.1px',
                     backgroundColor: editMode ? 'white' : '#F9FAFB'
                   }}
                 />
               </div>
               <div>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                   Role
                 </label>
                 <input
@@ -307,7 +307,7 @@ const Profile = () => {
                     padding: '8px 12px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px',
+                    fontSize: '16.1px',
                     backgroundColor: '#F9FAFB'
                   }}
                 />
@@ -319,12 +319,12 @@ const Profile = () => {
         {/* Business Info Tab */}
         {activeTab === 'business' && (
           <div>
-            <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '20.7px', fontWeight: '600', marginBottom: '20px' }}>
               Business Information
             </h2>
             <div style={{ display: 'grid', gap: '16px' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                   Business Name
                 </label>
                 <input
@@ -337,14 +337,14 @@ const Profile = () => {
                     padding: '8px 12px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px',
+                    fontSize: '16.1px',
                     backgroundColor: editMode ? 'white' : '#F9FAFB'
                   }}
                 />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                     Business Phone
                   </label>
                   <input
@@ -357,13 +357,13 @@ const Profile = () => {
                       padding: '8px 12px',
                       border: '1px solid #E5E7EB',
                       borderRadius: '6px',
-                      fontSize: '14px',
+                      fontSize: '16.1px',
                       backgroundColor: editMode ? 'white' : '#F9FAFB'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                     Business Email
                   </label>
                   <input
@@ -376,14 +376,14 @@ const Profile = () => {
                       padding: '8px 12px',
                       border: '1px solid #E5E7EB',
                       borderRadius: '6px',
-                      fontSize: '14px',
+                      fontSize: '16.1px',
                       backgroundColor: editMode ? 'white' : '#F9FAFB'
                     }}
                   />
                 </div>
               </div>
               <div>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                   Business Address
                 </label>
                 <input
@@ -396,14 +396,14 @@ const Profile = () => {
                     padding: '8px 12px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px',
+                    fontSize: '16.1px',
                     backgroundColor: editMode ? 'white' : '#F9FAFB'
                   }}
                 />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                     License Number
                   </label>
                   <input
@@ -416,13 +416,13 @@ const Profile = () => {
                       padding: '8px 12px',
                       border: '1px solid #E5E7EB',
                       borderRadius: '6px',
-                      fontSize: '14px',
+                      fontSize: '16.1px',
                       backgroundColor: editMode ? 'white' : '#F9FAFB'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                     Insurance Policy
                   </label>
                   <input
@@ -435,7 +435,7 @@ const Profile = () => {
                       padding: '8px 12px',
                       border: '1px solid #E5E7EB',
                       borderRadius: '6px',
-                      fontSize: '14px',
+                      fontSize: '16.1px',
                       backgroundColor: editMode ? 'white' : '#F9FAFB'
                     }}
                   />
@@ -448,7 +448,7 @@ const Profile = () => {
         {/* Notifications Tab */}
         {activeTab === 'notifications' && (
           <div>
-            <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '20.7px', fontWeight: '600', marginBottom: '20px' }}>
               Notification Preferences
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -472,8 +472,8 @@ const Profile = () => {
                   }}
                 >
                   <div>
-                    <div style={{ fontSize: '14px', fontWeight: '500' }}>{item.label}</div>
-                    <div style={{ fontSize: '12px', color: '#6B7280' }}>{item.desc}</div>
+                    <div style={{ fontSize: '16.1px', fontWeight: '500' }}>{item.label}</div>
+                    <div style={{ fontSize: '13.8px', color: '#6B7280' }}>{item.desc}</div>
                   </div>
                   <input
                     type="checkbox"
@@ -501,7 +501,7 @@ const Profile = () => {
         {/* Working Hours Tab */}
         {activeTab === 'hours' && (
           <div>
-            <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '20.7px', fontWeight: '600', marginBottom: '20px' }}>
               Working Hours
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -523,7 +523,7 @@ const Profile = () => {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
-                    fontSize: '14px',
+                    fontSize: '16.1px',
                     fontWeight: '500'
                   }}>
                     <input
@@ -564,7 +564,7 @@ const Profile = () => {
                           padding: '6px',
                           border: '1px solid #E5E7EB',
                           borderRadius: '4px',
-                          fontSize: '14px'
+                          fontSize: '16.1px'
                         }}
                       />
                       <span style={{ color: '#6B7280' }}>to</span>
@@ -586,7 +586,7 @@ const Profile = () => {
                           padding: '6px',
                           border: '1px solid #E5E7EB',
                           borderRadius: '4px',
-                          fontSize: '14px'
+                          fontSize: '16.1px'
                         }}
                       />
                     </div>
@@ -600,7 +600,7 @@ const Profile = () => {
         {/* Security Tab */}
         {activeTab === 'security' && (
           <div>
-            <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '20.7px', fontWeight: '600', marginBottom: '20px' }}>
               Security Settings
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -613,7 +613,7 @@ const Profile = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   fontWeight: '500',
                   textAlign: 'left'
                 }}
@@ -626,10 +626,10 @@ const Profile = () => {
                 backgroundColor: '#F9FAFB',
                 borderRadius: '6px'
               }}>
-                <h3 style={{ fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+                <h3 style={{ fontSize: '16.1px', fontWeight: '500', marginBottom: '8px' }}>
                   Last Password Change
                 </h3>
-                <p style={{ fontSize: '14px', color: '#6B7280', margin: 0 }}>
+                <p style={{ fontSize: '16.1px', color: '#6B7280', margin: 0 }}>
                   45 days ago (October 26, 2024)
                 </p>
               </div>
@@ -640,10 +640,10 @@ const Profile = () => {
                 border: '1px solid #FCD34D',
                 borderRadius: '6px'
               }}>
-                <h3 style={{ fontSize: '14px', fontWeight: '500', marginBottom: '8px', color: '#92400E' }}>
+                <h3 style={{ fontSize: '16.1px', fontWeight: '500', marginBottom: '8px', color: '#92400E' }}>
                   Security Tip
                 </h3>
-                <p style={{ fontSize: '14px', color: '#92400E', margin: 0 }}>
+                <p style={{ fontSize: '16.1px', color: '#92400E', margin: 0 }}>
                   Enable two-factor authentication for added security (coming soon)
                 </p>
               </div>
@@ -673,13 +673,13 @@ const Profile = () => {
             maxWidth: '400px',
             width: '90%'
           }}>
-            <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '23px', fontWeight: '600', marginBottom: '20px' }}>
               Change Password
             </h2>
             
             <form onSubmit={handlePasswordChange}>
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                   Current Password
                 </label>
                 <input
@@ -692,13 +692,13 @@ const Profile = () => {
                     padding: '8px 12px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px'
+                    fontSize: '16.1px'
                   }}
                 />
               </div>
               
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                   New Password
                 </label>
                 <input
@@ -712,13 +712,13 @@ const Profile = () => {
                     padding: '8px 12px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px'
+                    fontSize: '16.1px'
                   }}
                 />
               </div>
               
               <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                   Confirm New Password
                 </label>
                 <input
@@ -732,7 +732,7 @@ const Profile = () => {
                     padding: '8px 12px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px'
+                    fontSize: '16.1px'
                   }}
                 />
               </div>
@@ -752,7 +752,7 @@ const Profile = () => {
                     border: 'none',
                     borderRadius: '6px',
                     cursor: 'pointer',
-                    fontSize: '14px'
+                    fontSize: '16.1px'
                   }}
                 >
                   Cancel
@@ -767,7 +767,7 @@ const Profile = () => {
                     border: 'none',
                     borderRadius: '6px',
                     cursor: 'pointer',
-                    fontSize: '14px'
+                    fontSize: '16.1px'
                   }}
                 >
                   Change Password

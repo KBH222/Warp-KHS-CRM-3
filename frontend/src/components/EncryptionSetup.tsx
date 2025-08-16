@@ -69,7 +69,7 @@ export const EncryptionSetup = ({ onComplete }: EncryptionSetupProps) => {
     }}>
       <h3 style={{ 
         margin: '0 0 16px 0', 
-        fontSize: '18px', 
+        fontSize: '20.7px', 
         fontWeight: '600',
       }}>
         🔐 Set Up Encryption
@@ -77,7 +77,7 @@ export const EncryptionSetup = ({ onComplete }: EncryptionSetupProps) => {
 
       <p style={{ 
         margin: '0 0 20px 0', 
-        fontSize: '14px',
+        fontSize: '16.1px',
         color: '#6B7280',
       }}>
         Create a master password to encrypt sensitive data. This password will be required to access encrypted information.
@@ -87,7 +87,7 @@ export const EncryptionSetup = ({ onComplete }: EncryptionSetupProps) => {
         <label style={{ 
           display: 'block', 
           marginBottom: '4px',
-          fontSize: '14px',
+          fontSize: '16.1px',
           fontWeight: '500',
         }}>
           Master Password
@@ -103,7 +103,7 @@ export const EncryptionSetup = ({ onComplete }: EncryptionSetupProps) => {
               padding: '8px 40px 8px 12px',
               border: '1px solid #D1D5DB',
               borderRadius: '6px',
-              fontSize: '14px',
+              fontSize: '16.1px',
             }}
           />
           <button
@@ -118,7 +118,7 @@ export const EncryptionSetup = ({ onComplete }: EncryptionSetupProps) => {
               backgroundColor: 'transparent',
               border: 'none',
               cursor: 'pointer',
-              fontSize: '12px',
+              fontSize: '13.8px',
             }}
           >
             {showPassword ? '👁️' : '👁️‍🗨️'}
@@ -130,7 +130,7 @@ export const EncryptionSetup = ({ onComplete }: EncryptionSetupProps) => {
         <label style={{ 
           display: 'block', 
           marginBottom: '4px',
-          fontSize: '14px',
+          fontSize: '16.1px',
           fontWeight: '500',
         }}>
           Confirm Password
@@ -145,7 +145,7 @@ export const EncryptionSetup = ({ onComplete }: EncryptionSetupProps) => {
             padding: '8px 12px',
             border: '1px solid #D1D5DB',
             borderRadius: '6px',
-            fontSize: '14px',
+            fontSize: '16.1px',
           }}
         />
       </div>
@@ -160,7 +160,7 @@ export const EncryptionSetup = ({ onComplete }: EncryptionSetupProps) => {
         }}>
           <p style={{ 
             margin: 0, 
-            fontSize: '14px',
+            fontSize: '16.1px',
             color: '#DC2626',
           }}>
             ⚠️ {error}
@@ -177,7 +177,7 @@ export const EncryptionSetup = ({ onComplete }: EncryptionSetupProps) => {
       }}>
         <h4 style={{ 
           margin: '0 0 8px 0', 
-          fontSize: '14px',
+          fontSize: '16.1px',
           fontWeight: '600',
           color: '#92400E',
         }}>
@@ -186,7 +186,7 @@ export const EncryptionSetup = ({ onComplete }: EncryptionSetupProps) => {
         <ul style={{ 
           margin: 0, 
           paddingLeft: '20px',
-          fontSize: '13px',
+          fontSize: '14.95px',
           color: '#92400E',
         }}>
           <li>Choose a strong password that you haven't used elsewhere</li>
@@ -206,7 +206,7 @@ export const EncryptionSetup = ({ onComplete }: EncryptionSetupProps) => {
           border: 'none',
           borderRadius: '6px',
           cursor: isLoading ? 'not-allowed' : 'pointer',
-          fontSize: '14px',
+          fontSize: '16.1px',
           fontWeight: '500',
           width: '100%',
         }}

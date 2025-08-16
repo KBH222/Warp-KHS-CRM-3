@@ -1,0 +1,125 @@
+/* Global Typography Styles - 15% Font Size Increase */
+
+/* Set new base font size: 16px * 1.15 = 18.4px */
+:root {
+  --base-font-size: 18.4px;
+  --font-scale: 1.15;
+}
+
+/* Apply base font size to html element for rem scaling */
+html {
+  font-size: var(--base-font-size);
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Body font size to maintain rem scaling */
+body {
+  font-size: 1rem; /* This will be 18.4px */
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Responsive font scaling for mobile devices */
+@media screen and (max-width: 640px) {
+  html {
+    font-size: 17.25px; /* Slightly smaller on mobile: 15px * 1.15 */
+  }
+}
+
+@media screen and (max-width: 430px) {
+  /* iPhone 15 Pro Max and smaller */
+  html {
+    font-size: 16.1px; /* Even smaller for small phones: 14px * 1.15 */
+  }
+}
+
+/* Heading scales - maintaining proportions */
+h1 {
+  font-size: 2.5rem; /* 46px at base */
+}
+
+h2 {
+  font-size: 2rem; /* 36.8px at base */
+}
+
+h3 {
+  font-size: 1.75rem; /* 32.2px at base */
+}
+
+h4 {
+  font-size: 1.5rem; /* 27.6px at base */
+}
+
+h5 {
+  font-size: 1.25rem; /* 23px at base */
+}
+
+h6 {
+  font-size: 1.125rem; /* 20.7px at base */
+}
+
+/* Small text helper */
+.text-small {
+  font-size: 0.875rem; /* 16.1px at base */
+}
+
+.text-xs {
+  font-size: 0.75rem; /* 13.8px at base */
+}
+
+/* Large text helper */
+.text-large {
+  font-size: 1.125rem; /* 20.7px at base */
+}
+
+.text-xl {
+  font-size: 1.25rem; /* 23px at base */
+}
+
+/* Ensure inputs and buttons have appropriate font sizes */
+input,
+textarea,
+select,
+button {
+  font-size: 1rem; /* 18.4px at base */
+}
+
+/* Prevent iOS zoom on input focus */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="search"],
+  input[type="url"],
+  input[type="date"],
+  input[type="time"],
+  textarea,
+  select {
+    font-size: 16px !important; /* Minimum to prevent iOS zoom */
+  }
+}
+
+/* Code and monospace fonts */
+code,
+pre,
+kbd,
+samp {
+  font-size: 0.9rem; /* Slightly smaller for code: 16.56px at base */
+}
+
+/* Table text */
+table {
+  font-size: 0.95rem; /* 17.48px at base */
+}
+
+/* Print styles */
+@media print {
+  html {
+    font-size: 12pt;
+  }
+}

@@ -97,7 +97,7 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
             border: 'none',
             borderRadius: '6px',
             cursor: 'pointer',
-            fontSize: '14px'
+            fontSize: '16.1px'
           }}
         >
           ← Back to Invoices
@@ -112,7 +112,7 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '14px'
+              fontSize: '16.1px'
             }}
           >
             🖨️ Print
@@ -126,7 +126,7 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '14px'
+              fontSize: '16.1px'
             }}
           >
             ⬇️ Download
@@ -143,7 +143,7 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
       }}>
         {/* Company Header */}
         <div style={{ marginBottom: '40px', borderBottom: '2px solid #E5E7EB', paddingBottom: '20px' }}>
-          <h1 style={{ fontSize: '32px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
+          <h1 style={{ fontSize: '36.8px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
             KHS CRM
           </h1>
           <p style={{ color: '#6B7280', margin: 0 }}>
@@ -161,7 +161,7 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
           marginBottom: '40px'
         }}>
           <div>
-            <h2 style={{ fontSize: '20px', fontWeight: '600', margin: '0 0 12px 0' }}>
+            <h2 style={{ fontSize: '23px', fontWeight: '600', margin: '0 0 12px 0' }}>
               Bill To:
             </h2>
             <p style={{ color: '#374151', margin: 0 }}>
@@ -169,7 +169,7 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
             </p>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <h2 style={{ fontSize: '24px', fontWeight: '600', margin: '0 0 12px 0' }}>
+            <h2 style={{ fontSize: '27.6px', fontWeight: '600', margin: '0 0 12px 0' }}>
               INVOICE
             </h2>
             <p style={{ color: '#374151', margin: '0 0 4px 0' }}>
@@ -184,7 +184,7 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
             <span style={{
               padding: '4px 12px',
               borderRadius: '12px',
-              fontSize: '12px',
+              fontSize: '13.8px',
               fontWeight: '500',
               backgroundColor: `${getStatusColor(invoice.status, invoice.dueDate)}20`,
               color: getStatusColor(invoice.status, invoice.dueDate)
@@ -201,7 +201,7 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
               <th style={{ 
                 padding: '12px 0', 
                 textAlign: 'left', 
-                fontSize: '14px', 
+                fontSize: '16.1px', 
                 fontWeight: '600',
                 color: '#374151'
               }}>
@@ -210,7 +210,7 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
               <th style={{ 
                 padding: '12px 0', 
                 textAlign: 'center', 
-                fontSize: '14px', 
+                fontSize: '16.1px', 
                 fontWeight: '600',
                 color: '#374151',
                 width: '80px'
@@ -220,7 +220,7 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
               <th style={{ 
                 padding: '12px 0', 
                 textAlign: 'right', 
-                fontSize: '14px', 
+                fontSize: '16.1px', 
                 fontWeight: '600',
                 color: '#374151',
                 width: '100px'
@@ -230,7 +230,7 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
               <th style={{ 
                 padding: '12px 0', 
                 textAlign: 'right', 
-                fontSize: '14px', 
+                fontSize: '16.1px', 
                 fontWeight: '600',
                 color: '#374151',
                 width: '100px'
@@ -242,16 +242,16 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
           <tbody>
             {invoice.lineItems.map((item, index) => (
               <tr key={item.id} style={{ borderBottom: '1px solid #F3F4F6' }}>
-                <td style={{ padding: '16px 0', fontSize: '14px', color: '#374151' }}>
+                <td style={{ padding: '16px 0', fontSize: '16.1px', color: '#374151' }}>
                   {item.description}
                 </td>
-                <td style={{ padding: '16px 0', fontSize: '14px', color: '#374151', textAlign: 'center' }}>
+                <td style={{ padding: '16px 0', fontSize: '16.1px', color: '#374151', textAlign: 'center' }}>
                   {item.quantity}
                 </td>
-                <td style={{ padding: '16px 0', fontSize: '14px', color: '#374151', textAlign: 'right' }}>
+                <td style={{ padding: '16px 0', fontSize: '16.1px', color: '#374151', textAlign: 'right' }}>
                   ${item.rate.toFixed(2)}
                 </td>
-                <td style={{ padding: '16px 0', fontSize: '14px', color: '#374151', textAlign: 'right', fontWeight: '500' }}>
+                <td style={{ padding: '16px 0', fontSize: '16.1px', color: '#374151', textAlign: 'right', fontWeight: '500' }}>
                   ${item.amount.toFixed(2)}
                 </td>
               </tr>
@@ -272,8 +272,8 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
               padding: '8px 0',
               borderBottom: '1px solid #F3F4F6'
             }}>
-              <span style={{ fontSize: '14px', color: '#6B7280' }}>Subtotal:</span>
-              <span style={{ fontSize: '14px', fontWeight: '500' }}>${invoice.subtotal.toFixed(2)}</span>
+              <span style={{ fontSize: '16.1px', color: '#6B7280' }}>Subtotal:</span>
+              <span style={{ fontSize: '16.1px', fontWeight: '500' }}>${invoice.subtotal.toFixed(2)}</span>
             </div>
             <div style={{ 
               display: 'flex', 
@@ -281,16 +281,16 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
               padding: '8px 0',
               borderBottom: '2px solid #E5E7EB'
             }}>
-              <span style={{ fontSize: '14px', color: '#6B7280' }}>Tax (8%):</span>
-              <span style={{ fontSize: '14px', fontWeight: '500' }}>${invoice.tax.toFixed(2)}</span>
+              <span style={{ fontSize: '16.1px', color: '#6B7280' }}>Tax (8%):</span>
+              <span style={{ fontSize: '16.1px', fontWeight: '500' }}>${invoice.tax.toFixed(2)}</span>
             </div>
             <div style={{ 
               display: 'flex', 
               justifyContent: 'space-between',
               padding: '12px 0'
             }}>
-              <span style={{ fontSize: '18px', fontWeight: '600' }}>Total:</span>
-              <span style={{ fontSize: '18px', fontWeight: '600', color: '#3B82F6' }}>
+              <span style={{ fontSize: '20.7px', fontWeight: '600' }}>Total:</span>
+              <span style={{ fontSize: '20.7px', fontWeight: '600', color: '#3B82F6' }}>
                 ${invoice.total.toFixed(2)}
               </span>
             </div>
@@ -305,10 +305,10 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
             borderRadius: '6px',
             marginBottom: '40px'
           }}>
-            <h3 style={{ fontSize: '14px', fontWeight: '600', margin: '0 0 8px 0' }}>
+            <h3 style={{ fontSize: '16.1px', fontWeight: '600', margin: '0 0 8px 0' }}>
               Notes
             </h3>
-            <p style={{ fontSize: '14px', color: '#374151', margin: 0, whiteSpace: 'pre-wrap' }}>
+            <p style={{ fontSize: '16.1px', color: '#374151', margin: 0, whiteSpace: 'pre-wrap' }}>
               {invoice.notes}
             </p>
           </div>
@@ -320,7 +320,7 @@ ${invoice.notes ? `Notes: ${invoice.notes}` : ''}
           paddingTop: '40px',
           borderTop: '1px solid #E5E7EB',
           color: '#6B7280',
-          fontSize: '12px'
+          fontSize: '13.8px'
         }}>
           <p style={{ margin: '0 0 4px 0' }}>
             Thank you for your business!

@@ -9,7 +9,7 @@ export const GoogleDriveSetup = () => {
     }}>
       <h3 style={{ 
         margin: '0 0 12px 0', 
-        fontSize: '16px', 
+        fontSize: '18.4px', 
         fontWeight: '600',
         color: '#92400E'
       }}>
@@ -17,7 +17,7 @@ export const GoogleDriveSetup = () => {
       </h3>
       <p style={{ 
         margin: '0 0 16px 0', 
-        fontSize: '14px',
+        fontSize: '16.1px',
         color: '#92400E'
       }}>
         To enable Google Drive sync, you need to set up Google API credentials:
@@ -25,7 +25,7 @@ export const GoogleDriveSetup = () => {
       <ol style={{ 
         margin: '0 0 16px 0', 
         paddingLeft: '20px',
-        fontSize: '14px',
+        fontSize: '16.1px',
         color: '#92400E'
       }}>
         <li>Go to <a href="https://console.cloud.google.com" target="_blank" rel="noopener noreferrer" style={{ color: '#3B82F6' }}>Google Cloud Console</a></li>
@@ -44,7 +44,7 @@ export const GoogleDriveSetup = () => {
             backgroundColor: '#FEF9E7',
             padding: '8px',
             borderRadius: '4px',
-            fontSize: '12px',
+            fontSize: '13.8px',
             marginTop: '8px',
             overflowX: 'auto'
           }}>
@@ -55,7 +55,7 @@ const API_KEY = 'YOUR_API_KEY_HERE';`}
       </ol>
       <p style={{ 
         margin: '0', 
-        fontSize: '12px',
+        fontSize: '13.8px',
         color: '#92400E',
         fontStyle: 'italic'
       }}>

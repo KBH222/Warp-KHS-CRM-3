@@ -133,10 +133,10 @@ export const GoogleDriveStatus = ({ onSyncComplete }: GoogleDriveStatusProps) =>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ color: '#DC2626' }}>⚠️</span>
           <div>
-            <h3 style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: '600', color: '#991B1B' }}>
+            <h3 style={{ margin: '0 0 4px 0', fontSize: '16.1px', fontWeight: '600', color: '#991B1B' }}>
               Google Drive not configured
             </h3>
-            <p style={{ margin: 0, fontSize: '12px', color: '#991B1B' }}>
+            <p style={{ margin: 0, fontSize: '13.8px', color: '#991B1B' }}>
               Google Drive API credentials are missing. Please check your environment variables.
             </p>
           </div>
@@ -163,7 +163,7 @@ export const GoogleDriveStatus = ({ onSyncComplete }: GoogleDriveStatusProps) =>
         <div>
           <h3 style={{ 
             margin: '0 0 4px 0', 
-            fontSize: '14px', 
+            fontSize: '16.1px', 
             fontWeight: '600',
             display: 'flex',
             alignItems: 'center',
@@ -172,7 +172,7 @@ export const GoogleDriveStatus = ({ onSyncComplete }: GoogleDriveStatusProps) =>
             <span>☁️ Google Drive Sync</span>
             {isSignedIn && (
               <span style={{
-                fontSize: '12px',
+                fontSize: '13.8px',
                 padding: '2px 8px',
                 backgroundColor: '#10B981',
                 color: 'white',
@@ -186,7 +186,7 @@ export const GoogleDriveStatus = ({ onSyncComplete }: GoogleDriveStatusProps) =>
           {error && (
             <p style={{ 
               margin: '4px 0', 
-              fontSize: '12px', 
+              fontSize: '13.8px', 
               color: '#DC2626' 
             }}>
               ⚠️ {error}
@@ -195,7 +195,7 @@ export const GoogleDriveStatus = ({ onSyncComplete }: GoogleDriveStatusProps) =>
           {isSignedIn && lastGoogleSync && (
             <p style={{ 
               margin: '4px 0', 
-              fontSize: '12px', 
+              fontSize: '13.8px', 
               color: '#6B7280' 
             }}>
               Last cloud sync: {lastGoogleSync ? lastGoogleSync.toLocaleTimeString() : 'Never'}
@@ -204,7 +204,7 @@ export const GoogleDriveStatus = ({ onSyncComplete }: GoogleDriveStatusProps) =>
           {!isSignedIn && (
             <p style={{ 
               margin: '4px 0', 
-              fontSize: '12px', 
+              fontSize: '13.8px', 
               color: '#6B7280' 
             }}>
               Sign in to sync across devices
@@ -222,7 +222,7 @@ export const GoogleDriveStatus = ({ onSyncComplete }: GoogleDriveStatusProps) =>
                 border: 'none',
                 borderRadius: '6px',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '16.1px',
                 fontWeight: '500',
                 display: 'flex',
                 alignItems: 'center',
@@ -249,7 +249,7 @@ export const GoogleDriveStatus = ({ onSyncComplete }: GoogleDriveStatusProps) =>
                   border: 'none',
                   borderRadius: '6px',
                   cursor: isSyncing ? 'not-allowed' : 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   fontWeight: '500',
                   display: 'flex',
                   alignItems: 'center',
@@ -282,7 +282,7 @@ export const GoogleDriveStatus = ({ onSyncComplete }: GoogleDriveStatusProps) =>
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   fontWeight: '500'
                 }}
               >

@@ -239,7 +239,7 @@ const JobDetailTabbed = () => {
             border: 'none',
             borderRadius: '6px',
             cursor: 'pointer',
-            fontSize: '14px'
+            fontSize: '16.1px'
           }}
         >
           ← Back to {job.customerName}
@@ -247,7 +247,7 @@ const JobDetailTabbed = () => {
         
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
           <div>
-            <h1 style={{ margin: '0 0 8px 0', fontSize: '24px', fontWeight: 'bold' }}>
+            <h1 style={{ margin: '0 0 8px 0', fontSize: '27.6px', fontWeight: 'bold' }}>
               {job.title}
             </h1>
             <span style={{
@@ -256,17 +256,17 @@ const JobDetailTabbed = () => {
               backgroundColor: `${getStatusColor(job.status)}20`,
               color: getStatusColor(job.status),
               borderRadius: '12px',
-              fontSize: '14px',
+              fontSize: '16.1px',
               fontWeight: '500'
             }}>
               {job.status}
             </span>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <p style={{ margin: '0 0 4px 0', fontSize: '24px', fontWeight: 'bold' }}>
+            <p style={{ margin: '0 0 4px 0', fontSize: '27.6px', fontWeight: 'bold' }}>
               ${job.totalCost.toLocaleString()}
             </p>
-            <p style={{ margin: 0, fontSize: '14px', color: '#6B7280' }}>
+            <p style={{ margin: 0, fontSize: '16.1px', color: '#6B7280' }}>
               Started: {new Date(job.startDate).toLocaleDateString()}
             </p>
           </div>
@@ -290,7 +290,7 @@ const JobDetailTabbed = () => {
                 border: 'none',
                 backgroundColor: 'transparent',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '16.1px',
                 fontWeight: '500',
                 color: activeTab === tab.id ? '#3B82F6' : '#6B7280',
                 borderBottom: activeTab === tab.id ? '2px solid #3B82F6' : '2px solid transparent',
@@ -310,12 +310,12 @@ const JobDetailTabbed = () => {
         {/* Job Description Tab */}
         {activeTab === 'description' && (
           <div>
-            <h2 style={{ margin: '0 0 16px 0', fontSize: '18px', fontWeight: '600' }}>Scope of Work</h2>
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '20.7px', fontWeight: '600' }}>Scope of Work</h2>
             <pre style={{ 
               margin: 0, 
               whiteSpace: 'pre-wrap', 
               fontFamily: 'inherit',
-              fontSize: '14px',
+              fontSize: '16.1px',
               lineHeight: '1.6',
               color: '#374151'
             }}>
@@ -333,7 +333,7 @@ const JobDetailTabbed = () => {
               alignItems: 'center',
               marginBottom: '16px'
             }}>
-              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600' }}>Project Photos</h2>
+              <h2 style={{ margin: 0, fontSize: '20.7px', fontWeight: '600' }}>Project Photos</h2>
               <button
                 style={{
                   padding: '8px 16px',
@@ -342,7 +342,7 @@ const JobDetailTabbed = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px'
+                  fontSize: '16.1px'
                 }}
               >
                 + Add Photo
@@ -365,11 +365,11 @@ const JobDetailTabbed = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: '#6B7280',
-                    fontSize: '12px'
+                    fontSize: '13.8px'
                   }}>
                     [Photo]
                   </div>
-                  <p style={{ margin: 0, fontSize: '12px', color: '#6B7280' }}>{pic.caption}</p>
+                  <p style={{ margin: 0, fontSize: '13.8px', color: '#6B7280' }}>{pic.caption}</p>
                 </div>
               ))}
             </div>
@@ -390,7 +390,7 @@ const JobDetailTabbed = () => {
               alignItems: 'center',
               marginBottom: '16px'
             }}>
-              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600' }}>Plans & Drawings</h2>
+              <h2 style={{ margin: 0, fontSize: '20.7px', fontWeight: '600' }}>Plans & Drawings</h2>
               <button
                 style={{
                   padding: '8px 16px',
@@ -399,7 +399,7 @@ const JobDetailTabbed = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px'
+                  fontSize: '16.1px'
                 }}
               >
                 + Add Document
@@ -419,10 +419,10 @@ const JobDetailTabbed = () => {
                     cursor: 'pointer'
                   }}
                 >
-                  <span style={{ fontSize: '20px' }}>
+                  <span style={{ fontSize: '23px' }}>
                     {plan.type === 'pdf' ? '📄' : '🖼️'}
                   </span>
-                  <span style={{ fontSize: '14px' }}>{plan.name}</span>
+                  <span style={{ fontSize: '16.1px' }}>{plan.name}</span>
                 </div>
               ))}
             </div>
@@ -437,7 +437,7 @@ const JobDetailTabbed = () => {
         {/* Tasks Tab */}
         {activeTab === 'tasks' && (
           <div>
-            <h2 style={{ margin: '0 0 16px 0', fontSize: '18px', fontWeight: '600' }}>Task List</h2>
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '20.7px', fontWeight: '600' }}>Task List</h2>
             
             {/* Add Task Form */}
             <form onSubmit={handleAddTask} style={{ marginBottom: '16px' }}>
@@ -452,7 +452,7 @@ const JobDetailTabbed = () => {
                     padding: '8px 12px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px'
+                    fontSize: '16.1px'
                   }}
                 />
                 <select
@@ -462,7 +462,7 @@ const JobDetailTabbed = () => {
                     padding: '8px 12px',
                     border: '1px solid #E5E7EB',
                     borderRadius: '6px',
-                    fontSize: '14px',
+                    fontSize: '16.1px',
                     backgroundColor: 'white',
                     cursor: 'pointer'
                   }}
@@ -481,7 +481,7 @@ const JobDetailTabbed = () => {
                     border: 'none',
                     borderRadius: '6px',
                     cursor: 'pointer',
-                    fontSize: '14px'
+                    fontSize: '16.1px'
                   }}
                 >
                   Add
@@ -512,7 +512,7 @@ const JobDetailTabbed = () => {
                   />
                   <span style={{
                     flex: '1 1 auto',
-                    fontSize: '14px',
+                    fontSize: '16.1px',
                     textDecoration: task.completed ? 'line-through' : 'none',
                     color: task.completed ? '#9CA3AF' : '#374151',
                     minWidth: '150px'
@@ -526,7 +526,7 @@ const JobDetailTabbed = () => {
                       padding: '4px 8px',
                       border: '1px solid #E5E7EB',
                       borderRadius: '4px',
-                      fontSize: '12px',
+                      fontSize: '13.8px',
                       backgroundColor: task.assignedTo ? '#E0E7FF' : 'white',
                       color: task.assignedTo ? '#3730A3' : '#6B7280',
                       cursor: 'pointer'
@@ -546,7 +546,7 @@ const JobDetailTabbed = () => {
                       border: 'none',
                       borderRadius: '4px',
                       cursor: 'pointer',
-                      fontSize: '12px'
+                      fontSize: '13.8px'
                     }}
                   >
                     Delete
@@ -571,7 +571,7 @@ const JobDetailTabbed = () => {
               alignItems: 'center',
               marginBottom: '16px'
             }}>
-              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600' }}>
+              <h2 style={{ margin: 0, fontSize: '20.7px', fontWeight: '600' }}>
                 Materials List
               </h2>
               <button
@@ -583,7 +583,7 @@ const JobDetailTabbed = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px'
+                  fontSize: '16.1px'
                 }}
               >
                 + Add Material
@@ -600,7 +600,7 @@ const JobDetailTabbed = () => {
               }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr', gap: '12px', alignItems: 'end' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', marginBottom: '4px', color: '#374151' }}>
+                    <label style={{ display: 'block', fontSize: '13.8px', fontWeight: '500', marginBottom: '4px', color: '#374151' }}>
                       Material Name
                     </label>
                     <input
@@ -613,13 +613,13 @@ const JobDetailTabbed = () => {
                         padding: '8px',
                         border: '1px solid #E5E7EB',
                         borderRadius: '4px',
-                        fontSize: '14px'
+                        fontSize: '16.1px'
                       }}
                       required
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', marginBottom: '4px', color: '#374151' }}>
+                    <label style={{ display: 'block', fontSize: '13.8px', fontWeight: '500', marginBottom: '4px', color: '#374151' }}>
                       Quantity
                     </label>
                     <input
@@ -633,13 +633,13 @@ const JobDetailTabbed = () => {
                         padding: '8px',
                         border: '1px solid #E5E7EB',
                         borderRadius: '4px',
-                        fontSize: '14px'
+                        fontSize: '16.1px'
                       }}
                       required
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', marginBottom: '4px', color: '#374151' }}>
+                    <label style={{ display: 'block', fontSize: '13.8px', fontWeight: '500', marginBottom: '4px', color: '#374151' }}>
                       Unit
                     </label>
                     <select
@@ -650,7 +650,7 @@ const JobDetailTabbed = () => {
                         padding: '8px',
                         border: '1px solid #E5E7EB',
                         borderRadius: '4px',
-                        fontSize: '14px'
+                        fontSize: '16.1px'
                       }}
                     >
                       <option value="pieces">pieces</option>
@@ -664,7 +664,7 @@ const JobDetailTabbed = () => {
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', marginBottom: '4px', color: '#374151' }}>
+                    <label style={{ display: 'block', fontSize: '13.8px', fontWeight: '500', marginBottom: '4px', color: '#374151' }}>
                       Store
                     </label>
                     <select
@@ -675,7 +675,7 @@ const JobDetailTabbed = () => {
                         padding: '8px',
                         border: '1px solid #E5E7EB',
                         borderRadius: '4px',
-                        fontSize: '14px'
+                        fontSize: '16.1px'
                       }}
                     >
                       <option value="Home Depot">Home Depot</option>
@@ -687,7 +687,7 @@ const JobDetailTabbed = () => {
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '500', marginBottom: '4px', color: '#374151' }}>
+                    <label style={{ display: 'block', fontSize: '13.8px', fontWeight: '500', marginBottom: '4px', color: '#374151' }}>
                       Price per Unit
                     </label>
                     <input
@@ -701,7 +701,7 @@ const JobDetailTabbed = () => {
                         padding: '8px',
                         border: '1px solid #E5E7EB',
                         borderRadius: '4px',
-                        fontSize: '14px'
+                        fontSize: '16.1px'
                       }}
                       required
                     />
@@ -717,7 +717,7 @@ const JobDetailTabbed = () => {
                       border: 'none',
                       borderRadius: '4px',
                       cursor: 'pointer',
-                      fontSize: '14px'
+                      fontSize: '16.1px'
                     }}
                   >
                     Add Material
@@ -741,7 +741,7 @@ const JobDetailTabbed = () => {
                       border: 'none',
                       borderRadius: '4px',
                       cursor: 'pointer',
-                      fontSize: '14px'
+                      fontSize: '16.1px'
                     }}
                   >
                     Cancel
@@ -756,25 +756,25 @@ const JobDetailTabbed = () => {
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ borderBottom: '2px solid #E5E7EB' }}>
-                      <th style={{ padding: '12px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#374151' }}>
+                      <th style={{ padding: '12px', textAlign: 'left', fontSize: '13.8px', fontWeight: '600', color: '#374151' }}>
                         Material
                       </th>
-                      <th style={{ padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: '600', color: '#374151' }}>
+                      <th style={{ padding: '12px', textAlign: 'center', fontSize: '13.8px', fontWeight: '600', color: '#374151' }}>
                         Quantity
                       </th>
-                      <th style={{ padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: '600', color: '#374151' }}>
+                      <th style={{ padding: '12px', textAlign: 'center', fontSize: '13.8px', fontWeight: '600', color: '#374151' }}>
                         Unit
                       </th>
-                      <th style={{ padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: '600', color: '#374151' }}>
+                      <th style={{ padding: '12px', textAlign: 'center', fontSize: '13.8px', fontWeight: '600', color: '#374151' }}>
                         Store
                       </th>
-                      <th style={{ padding: '12px', textAlign: 'right', fontSize: '12px', fontWeight: '600', color: '#374151' }}>
+                      <th style={{ padding: '12px', textAlign: 'right', fontSize: '13.8px', fontWeight: '600', color: '#374151' }}>
                         Price/Unit
                       </th>
-                      <th style={{ padding: '12px', textAlign: 'right', fontSize: '12px', fontWeight: '600', color: '#374151' }}>
+                      <th style={{ padding: '12px', textAlign: 'right', fontSize: '13.8px', fontWeight: '600', color: '#374151' }}>
                         Total
                       </th>
-                      <th style={{ padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: '600', color: '#374151' }}>
+                      <th style={{ padding: '12px', textAlign: 'center', fontSize: '13.8px', fontWeight: '600', color: '#374151' }}>
                         Actions
                       </th>
                     </tr>
@@ -782,31 +782,31 @@ const JobDetailTabbed = () => {
                   <tbody>
                     {materials.map((material) => (
                       <tr key={material.id} style={{ borderBottom: '1px solid #E5E7EB' }}>
-                        <td style={{ padding: '12px', fontSize: '14px', color: '#111827' }}>
+                        <td style={{ padding: '12px', fontSize: '16.1px', color: '#111827' }}>
                           {material.name}
                         </td>
-                        <td style={{ padding: '12px', textAlign: 'center', fontSize: '14px', color: '#374151' }}>
+                        <td style={{ padding: '12px', textAlign: 'center', fontSize: '16.1px', color: '#374151' }}>
                           {material.quantity}
                         </td>
-                        <td style={{ padding: '12px', textAlign: 'center', fontSize: '14px', color: '#374151' }}>
+                        <td style={{ padding: '12px', textAlign: 'center', fontSize: '16.1px', color: '#374151' }}>
                           {material.unit}
                         </td>
-                        <td style={{ padding: '12px', textAlign: 'center', fontSize: '14px' }}>
+                        <td style={{ padding: '12px', textAlign: 'center', fontSize: '16.1px' }}>
                           <span style={{
                             padding: '4px 8px',
                             backgroundColor: material.store === 'Home Depot' ? '#FEF3C7' : material.store === 'Lowes' ? '#DBEAFE' : '#E5E7EB',
                             color: material.store === 'Home Depot' ? '#92400E' : material.store === 'Lowes' ? '#1E3A8A' : '#374151',
                             borderRadius: '4px',
-                            fontSize: '12px',
+                            fontSize: '13.8px',
                             fontWeight: '500'
                           }}>
                             {material.store}
                           </span>
                         </td>
-                        <td style={{ padding: '12px', textAlign: 'right', fontSize: '14px', color: '#374151' }}>
+                        <td style={{ padding: '12px', textAlign: 'right', fontSize: '16.1px', color: '#374151' }}>
                           ${material.price.toFixed(2)}
                         </td>
-                        <td style={{ padding: '12px', textAlign: 'right', fontSize: '14px', fontWeight: '600', color: '#111827' }}>
+                        <td style={{ padding: '12px', textAlign: 'right', fontSize: '16.1px', fontWeight: '600', color: '#111827' }}>
                           ${material.total.toFixed(2)}
                         </td>
                         <td style={{ padding: '12px', textAlign: 'center' }}>
@@ -819,7 +819,7 @@ const JobDetailTabbed = () => {
                               border: 'none',
                               borderRadius: '4px',
                               cursor: 'pointer',
-                              fontSize: '12px'
+                              fontSize: '13.8px'
                             }}
                           >
                             Delete
@@ -833,7 +833,7 @@ const JobDetailTabbed = () => {
                       <td colSpan="5" style={{
                         padding: '12px',
                         textAlign: 'right',
-                        fontSize: '16px',
+                        fontSize: '18.4px',
                         fontWeight: '600',
                         color: '#111827'
                       }}>
@@ -842,7 +842,7 @@ const JobDetailTabbed = () => {
                       <td style={{
                         padding: '12px',
                         textAlign: 'right',
-                        fontSize: '16px',
+                        fontSize: '18.4px',
                         fontWeight: '700',
                         color: '#059669'
                       }}>
@@ -861,15 +861,15 @@ const JobDetailTabbed = () => {
                 borderRadius: '8px',
                 color: '#6B7280'
               }}>
-                <p style={{ margin: '0 0 8px 0', fontSize: '16px' }}>No materials added yet</p>
-                <p style={{ margin: 0, fontSize: '14px' }}>Click "Add Material" to start tracking materials for this job</p>
+                <p style={{ margin: '0 0 8px 0', fontSize: '18.4px' }}>No materials added yet</p>
+                <p style={{ margin: 0, fontSize: '16.1px' }}>Click "Add Material" to start tracking materials for this job</p>
               </div>
             )}
 
             {/* Store Summary */}
             {materials.length > 0 && (
               <div style={{ marginTop: '24px' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px' }}>Store Summary</h3>
+                <h3 style={{ fontSize: '18.4px', fontWeight: '600', marginBottom: '12px' }}>Store Summary</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
                   {Object.entries(materials.reduce((acc, material) => {
                     if (!acc[material.store]) {
@@ -885,10 +885,10 @@ const JobDetailTabbed = () => {
                       borderRadius: '6px',
                       border: '1px solid #E5E7EB'
                     }}>
-                      <div style={{ fontSize: '14px', fontWeight: '600', color: '#111827', marginBottom: '4px' }}>
+                      <div style={{ fontSize: '16.1px', fontWeight: '600', color: '#111827', marginBottom: '4px' }}>
                         {store}
                       </div>
-                      <div style={{ fontSize: '12px', color: '#6B7280' }}>
+                      <div style={{ fontSize: '13.8px', color: '#6B7280' }}>
                         {data.count} item{data.count !== 1 ? 's' : ''} • ${data.total.toFixed(2)}
                       </div>
                     </div>
@@ -908,7 +908,7 @@ const JobDetailTabbed = () => {
               alignItems: 'center',
               marginBottom: '16px'
             }}>
-              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600' }}>Special Notes</h2>
+              <h2 style={{ margin: 0, fontSize: '20.7px', fontWeight: '600' }}>Special Notes</h2>
               <button
                 onClick={() => {
                   if (editingNotes) {
@@ -923,7 +923,7 @@ const JobDetailTabbed = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px'
+                  fontSize: '16.1px'
                 }}
               >
                 {editingNotes ? 'Save' : 'Edit'}
@@ -939,14 +939,14 @@ const JobDetailTabbed = () => {
                   padding: '12px',
                   border: '1px solid #E5E7EB',
                   borderRadius: '6px',
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   resize: 'vertical'
                 }}
               />
             ) : (
               <p style={{ 
                 margin: 0,
-                fontSize: '14px',
+                fontSize: '16.1px',
                 lineHeight: '1.6',
                 color: '#374151',
                 whiteSpace: 'pre-wrap'
@@ -966,11 +966,11 @@ const JobDetailTabbed = () => {
               alignItems: 'center',
               marginBottom: '16px'
             }}>
-              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600' }}>
+              <h2 style={{ margin: 0, fontSize: '20.7px', fontWeight: '600' }}>
                 Extra Work Items
                 <span style={{ 
                   marginLeft: '12px', 
-                  fontSize: '16px', 
+                  fontSize: '18.4px', 
                   color: '#6B7280' 
                 }}>
                   Total: ${getTotalExtraWorkCost().toLocaleString()} 
@@ -986,7 +986,7 @@ const JobDetailTabbed = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px'
+                  fontSize: '16.1px'
                 }}
               >
                 + Add Extra Work
@@ -1002,7 +1002,7 @@ const JobDetailTabbed = () => {
                 marginBottom: '16px'
               }}>
                 <div style={{ marginBottom: '12px' }}>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                     Description
                   </label>
                   <textarea
@@ -1015,7 +1015,7 @@ const JobDetailTabbed = () => {
                       padding: '8px',
                       border: '1px solid #E5E7EB',
                       borderRadius: '6px',
-                      fontSize: '14px',
+                      fontSize: '16.1px',
                       resize: 'vertical'
                     }}
                     placeholder="Describe the extra work needed..."
@@ -1024,7 +1024,7 @@ const JobDetailTabbed = () => {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   <div>
-                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                       Cost
                     </label>
                     <input
@@ -1039,14 +1039,14 @@ const JobDetailTabbed = () => {
                         padding: '8px',
                         border: '1px solid #E5E7EB',
                         borderRadius: '6px',
-                        fontSize: '14px'
+                        fontSize: '16.1px'
                       }}
                       placeholder="0.00"
                     />
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
+                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                       Status
                     </label>
                     <select
@@ -1057,7 +1057,7 @@ const JobDetailTabbed = () => {
                         padding: '8px',
                         border: '1px solid #E5E7EB',
                         borderRadius: '6px',
-                        fontSize: '14px'
+                        fontSize: '16.1px'
                       }}
                     >
                       <option value="pending">Pending</option>
@@ -1078,7 +1078,7 @@ const JobDetailTabbed = () => {
                       border: 'none',
                       borderRadius: '6px',
                       cursor: 'pointer',
-                      fontSize: '14px'
+                      fontSize: '16.1px'
                     }}
                   >
                     Add Extra Work
@@ -1101,7 +1101,7 @@ const JobDetailTabbed = () => {
                       border: 'none',
                       borderRadius: '6px',
                       cursor: 'pointer',
-                      fontSize: '14px'
+                      fontSize: '16.1px'
                     }}
                   >
                     Cancel
@@ -1112,7 +1112,7 @@ const JobDetailTabbed = () => {
 
             {/* Extra Work Items List */}
             {extraWorkItems.length === 0 ? (
-              <p style={{ textAlign: 'center', color: '#6B7280', fontSize: '14px', marginTop: '40px' }}>
+              <p style={{ textAlign: 'center', color: '#6B7280', fontSize: '16.1px', marginTop: '40px' }}>
                 No extra work items yet.
               </p>
             ) : (
@@ -1131,13 +1131,13 @@ const JobDetailTabbed = () => {
                       <div style={{ flex: 1 }}>
                         <p style={{ 
                           margin: '0 0 8px 0', 
-                          fontSize: '14px', 
+                          fontSize: '16.1px', 
                           fontWeight: '500',
                           whiteSpace: 'pre-wrap'
                         }}>
                           {item.description}
                         </p>
-                        <div style={{ display: 'flex', gap: '16px', fontSize: '13px', color: '#6B7280' }}>
+                        <div style={{ display: 'flex', gap: '16px', fontSize: '14.95px', color: '#6B7280' }}>
                           <span>Added: {new Date(item.dateAdded).toLocaleDateString()}</span>
                           <span style={{
                             padding: '2px 8px',
@@ -1148,7 +1148,7 @@ const JobDetailTabbed = () => {
                                    item.status === 'completed' ? '#1E40AF' :
                                    item.status === 'rejected' ? '#991B1B' : '#374151',
                             borderRadius: '12px',
-                            fontSize: '12px'
+                            fontSize: '13.8px'
                           }}>
                             {item.status}
                           </span>
@@ -1156,7 +1156,7 @@ const JobDetailTabbed = () => {
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                         <span style={{ 
-                          fontSize: '18px', 
+                          fontSize: '20.7px', 
                           fontWeight: '600',
                           color: item.approved ? '#059669' : '#111827'
                         }}>
@@ -1172,7 +1172,7 @@ const JobDetailTabbed = () => {
                               border: 'none',
                               borderRadius: '6px',
                               cursor: 'pointer',
-                              fontSize: '13px'
+                              fontSize: '14.95px'
                             }}
                           >
                             {item.approved ? 'Unapprove' : 'Approve'}

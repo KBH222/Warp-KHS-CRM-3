@@ -94,7 +94,7 @@ const JobPhotos = () => {
             border: 'none',
             borderRadius: '6px',
             cursor: 'pointer',
-            fontSize: '14px'
+            fontSize: '16.1px'
           }}
         >
           ← Back to Schedule
@@ -107,7 +107,7 @@ const JobPhotos = () => {
           marginBottom: '20px'
         }}>
           <div>
-            <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
+            <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
               Job Photos
             </h1>
             <p style={{ color: '#6B7280', margin: 0 }}>
@@ -126,7 +126,7 @@ const JobPhotos = () => {
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '14px'
+              fontSize: '16.1px'
             }}
           >
             + Upload Photos
@@ -154,7 +154,7 @@ const JobPhotos = () => {
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: '16.1px',
               fontWeight: activeTab === tab.id ? '600' : '400',
               color: activeTab === tab.id ? '#111827' : '#6B7280',
               transition: 'all 0.2s',
@@ -171,7 +171,7 @@ const JobPhotos = () => {
                 color: 'white',
                 borderRadius: '12px',
                 padding: '2px 8px',
-                fontSize: '12px',
+                fontSize: '13.8px',
                 fontWeight: '500'
               }}>
                 {tab.count}
@@ -194,11 +194,11 @@ const JobPhotos = () => {
             padding: '60px 20px',
             color: '#9CA3AF'
           }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>📷</div>
-            <p style={{ fontSize: '16px', margin: '0 0 8px 0' }}>
+            <div style={{ fontSize: '55.2px', marginBottom: '16px' }}>📷</div>
+            <p style={{ fontSize: '18.4px', margin: '0 0 8px 0' }}>
               No {activeTab} photos yet
             </p>
-            <p style={{ fontSize: '14px', margin: 0 }}>
+            <p style={{ fontSize: '16.1px', margin: 0 }}>
               Click "Upload Photos" to add some
             </p>
           </div>
@@ -235,7 +235,7 @@ const JobPhotos = () => {
                   borderTop: '1px solid #E5E7EB'
                 }}>
                   <p style={{
-                    fontSize: '14px',
+                    fontSize: '16.1px',
                     fontWeight: '500',
                     margin: '0 0 4px 0',
                     whiteSpace: 'nowrap',
@@ -245,7 +245,7 @@ const JobPhotos = () => {
                     {photo.name}
                   </p>
                   <p style={{
-                    fontSize: '12px',
+                    fontSize: '13.8px',
                     color: '#6B7280',
                     margin: 0
                   }}>
@@ -268,7 +268,7 @@ const JobPhotos = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '16px'
+                    fontSize: '18.4px'
                   }}
                   title="Delete photo"
                 >
@@ -301,7 +301,7 @@ const JobPhotos = () => {
             maxWidth: '500px',
             width: '90%'
           }}>
-            <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '23px', fontWeight: '600', marginBottom: '20px' }}>
               Upload {uploadType.charAt(0).toUpperCase() + uploadType.slice(1)} Photos
             </h2>
             
@@ -327,9 +327,9 @@ const JobPhotos = () => {
                   display: 'block'
                 }}
               >
-                <div style={{ fontSize: '48px', marginBottom: '16px' }}>📁</div>
+                <div style={{ fontSize: '55.2px', marginBottom: '16px' }}>📁</div>
                 <p style={{
-                  fontSize: '16px',
+                  fontSize: '18.4px',
                   fontWeight: '500',
                   color: '#3B82F6',
                   margin: '0 0 8px 0'
@@ -337,7 +337,7 @@ const JobPhotos = () => {
                   Click to select photos
                 </p>
                 <p style={{
-                  fontSize: '14px',
+                  fontSize: '16.1px',
                   color: '#6B7280',
                   margin: 0
                 }}>
@@ -356,7 +356,7 @@ const JobPhotos = () => {
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px'
+                  fontSize: '16.1px'
                 }}
               >
                 Cancel
