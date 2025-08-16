@@ -1,5 +1,5 @@
 {
-  "buildCommand": "echo 'Starting build...' && cd frontend && npm install && npm run build",
+  "buildCommand": "ls -la && cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist",
   "installCommand": "npm install",
   "functions": {
