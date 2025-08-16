@@ -20,8 +20,7 @@ export const authApi = {
         password: 'admin123'
       });
       
-      const { accessToken, refreshToken, user } = response.data;
-      const token = accessToken; // Backend returns accessToken, not token
+      const { token, refreshToken, user } = response.data;
       
       // Store tokens
       localStorage.setItem('khs-crm-token', token);
