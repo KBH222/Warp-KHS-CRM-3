@@ -73,7 +73,9 @@
       "Bash(git fetch:*)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(npx serve:*)",
-      "Bash(git ls-tree:*)"
+      "Bash(git ls-tree:*)",
+      "WebFetch(domain:khs-crm-2-production.up.railway.app)",
+      "Bash(git restore:*)"
     ],
     "deny": []
   }

@@ -58,13 +58,23 @@ export function SyncDiagnostics() {
     try {
       console.log('[SyncDiagnostics] Fetching customers...');
       console.log('[SyncDiagnostics] Using API URL:', diagnostics.apiUrl);
+      console.log('[SyncDiagnostics] Auth token:', localStorage.getItem('khs-crm-token'));
+      
       const customers = await apiClient.get('/api/customers');
       console.log('[SyncDiagnostics] Customers fetched:', customers);
+      
+      if (!Array.isArray(customers)) {
+        console.warn('[SyncDiagnostics] Response is not an array:', customers);
+        alert(`Unexpected response format. Check console for details.`);
+        return;
+      }
+      
       alert(`Fetched ${customers.length} customers from backend`);
     } catch (error) {
       console.error('[SyncDiagnostics] Customer fetch failed:', error);
       const errorMessage = error?.response?.data?.error || error?.message || String(error);
-      alert(`Failed to fetch customers: ${errorMessage}\n\nAPI URL: ${diagnostics.apiUrl}`);
+      const status = error?.response?.status;
+      alert(`Failed to fetch customers:\nStatus: ${status}\nError: ${errorMessage}\n\nAPI URL: ${diagnostics.apiUrl}`);
     }
   };
 
@@ -175,10 +185,22 @@ export function SyncDiagnostics() {
         </button>
         <button
           onClick={async () => {
-            console.log('[SyncDiagnostics] Manually triggering sync...');
-            const result = await simpleSyncService.syncAll();
-            console.log('[SyncDiagnostics] Sync result:', result);
-            alert(`Sync complete!\nSynced: ${result.synced}\nFailed: ${result.failed}`);
+            try {
+              console.log('[SyncDiagnostics] Manually triggering sync...');
+              setDiagnostics(prev => ({ ...prev, lastError: null }));
+              const result = await simpleSyncService.syncAll();
+              console.log('[SyncDiagnostics] Sync result:', result);
+              
+              if (result.success) {
+                alert(`Sync complete!\nSynced: ${result.synced}\nFailed: ${result.failed}`);
+              } else {
+                alert(`Sync failed!\nSynced: ${result.synced}\nFailed: ${result.failed}\n\nCheck console for details.`);
+              }
+            } catch (error) {
+              console.error('[SyncDiagnostics] Sync error:', error);
+              setDiagnostics(prev => ({ ...prev, lastError: error }));
+              alert(`Sync error: ${error?.message || error}`);
+            }
           }}
           className="w-full text-xs bg-indigo-500 text-white px-2 py-1 rounded"
         >

@@ -128,12 +128,12 @@ class ApiClient {
             { refreshToken },
           );
 
-          const { accessToken, refreshToken: newRefreshToken } = response.data;
+          const { token, refreshToken: newRefreshToken } = response.data;
           
-          localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, accessToken);
+          localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
           localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, newRefreshToken);
           
-          resolve(accessToken);
+          resolve(token);
         } catch (error) {
           reject(error);
         } finally {

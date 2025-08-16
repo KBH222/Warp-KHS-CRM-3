@@ -243,20 +243,41 @@ class SimpleSyncService {
       console.log('[SyncService] Refreshing data from server...');
       
       // Fetch all customers
+      console.log('[SyncService] Fetching customers from:', API_ENDPOINTS.CUSTOMERS);
       const customers = await apiClient.get<Customer[]>(API_ENDPOINTS.CUSTOMERS);
-      for (const customer of customers) {
-        await offlineDb.saveCustomer(customer);
+      console.log('[SyncService] Fetched customers:', customers);
+      
+      if (Array.isArray(customers)) {
+        for (const customer of customers) {
+          await offlineDb.saveCustomer(customer);
+        }
+      } else {
+        console.warn('[SyncService] Customers response is not an array:', customers);
       }
       
       // Fetch all jobs
+      console.log('[SyncService] Fetching jobs from:', API_ENDPOINTS.JOBS);
       const jobs = await apiClient.get<Job[]>(API_ENDPOINTS.JOBS);
-      for (const job of jobs) {
-        await offlineDb.saveJob(job);
+      console.log('[SyncService] Fetched jobs:', jobs);
+      
+      if (Array.isArray(jobs)) {
+        for (const job of jobs) {
+          await offlineDb.saveJob(job);
+        }
+      } else {
+        console.warn('[SyncService] Jobs response is not an array:', jobs);
       }
       
       console.log('[SyncService] Data refresh complete');
     } catch (error) {
-      console.error('[SyncService] Failed to refresh data', error);
+      console.error('[SyncService] Failed to refresh data:', error);
+      console.error('[SyncService] Error details:', {
+        message: error?.message,
+        response: error?.response,
+        status: error?.response?.status,
+        data: error?.response?.data
+      });
+      throw error; // Re-throw to let caller know it failed
     }
   }
 
