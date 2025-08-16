@@ -6,12 +6,15 @@ import { SyncDiagnostics } from '../components/SyncDiagnostics';
 import { customerStorage } from '../services/localStorageService';
 
 const CustomersEnhanced = () => {
+  console.log('[CustomersEnhanced] Component rendering...');
   const navigate = useNavigate();
   
   // State
   const [customers, setCustomers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  console.log('[CustomersEnhanced] State initialized');
 
   // Load customers from API
   const loadCustomers = async () => {
@@ -48,7 +51,7 @@ const CustomersEnhanced = () => {
   useEffect(() => {
     // Function to sync data
     const syncData = () => {
-      const savedCustomers = customerStorage.getAll();
+      const savedCustomers = customerStorage.load();
       
       // Update state with latest data from localStorage
       if (savedCustomers) {
