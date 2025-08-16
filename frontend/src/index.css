@@ -225,3 +225,46 @@
     display: none;
   }
 }
+
+/* iPhone-specific font size increase */
+@media screen and (max-width: 430px) {
+  /* iPhone 15 Pro Max and smaller */
+  html {
+    font-size: 115%;
+  }
+  
+  /* Ensure inputs don't zoom on focus */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="search"],
+  input[type="url"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+  
+  /* Adjust button text sizes */
+  .btn {
+    @apply text-base;
+  }
+  
+  /* Adjust text sizes for better readability */
+  .text-xs {
+    font-size: 0.8125rem; /* 13px at 115% */
+  }
+  
+  .text-sm {
+    font-size: 0.9375rem; /* 15px at 115% */
+  }
+  
+  .text-base {
+    font-size: 1.0625rem; /* 17px at 115% */
+  }
+  
+  .text-lg {
+    font-size: 1.1875rem; /* 19px at 115% */
+  }
+}
