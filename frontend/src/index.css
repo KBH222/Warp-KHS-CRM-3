@@ -4,6 +4,122 @@
 /* Import global typography styles */
 @import './styles/typography.css';
 
+/* Global 15% font size increase - OVERRIDE EVERYTHING */
+html {
+  font-size: 18.4px !important; /* Base 16px * 1.15 = 18.4px */
+}
+
+body {
+  font-size: 18.4px !important;
+}
+
+/* Force all elements to use larger sizes */
+* {
+  font-size: inherit;
+}
+
+/* Ultra high specificity universal override */
+html body * {
+  font-size: unset !important;
+}
+
+/* Reset and reapply to all text elements */
+html body p,
+html body span,
+html body div,
+html body a,
+html body li,
+html body td,
+html body th,
+html body label,
+html body button,
+html body input,
+html body select,
+html body textarea {
+  font-size: 18.4px !important;
+}
+
+/* Force specific elements that might have inline styles */
+div, span, p, a, li, td, th, label {
+  font-size: inherit;
+}
+
+/* Override any rem-based sizes */
+[class*="text-"] {
+  font-size: inherit;
+}
+
+/* Specific overrides for Tailwind classes */
+.text-xs { font-size: 13.8px !important; }
+.text-sm { font-size: 16.1px !important; }
+.text-base { font-size: 18.4px !important; }
+.text-lg { font-size: 20.7px !important; }
+.text-xl { font-size: 23px !important; }
+.text-2xl { font-size: 27.6px !important; }
+.text-3xl { font-size: 34.5px !important; }
+.text-4xl { font-size: 41.4px !important; }
+.text-5xl { font-size: 55.2px !important; }
+.text-6xl { font-size: 69px !important; }
+
+/* Headings */
+h1 { font-size: 41.4px !important; }
+h2 { font-size: 34.5px !important; }
+h3 { font-size: 27.6px !important; }
+h4 { font-size: 23px !important; }
+h5 { font-size: 20.7px !important; }
+h6 { font-size: 18.4px !important; }
+
+/* Form elements */
+input, textarea, select, button {
+  font-size: 18.4px !important;
+}
+
+/* Table elements */
+table, thead, tbody, tfoot, tr, td, th {
+  font-size: inherit !important;
+}
+
+/* Common UI elements */
+.btn, .button, .link {
+  font-size: inherit !important;
+}
+
+/* Material icons and symbols - don't scale */
+.material-icons, .material-symbols-outlined {
+  font-size: 24px !important;
+}
+
+/* Override inline styles with more specific selectors - handles both old and new values */
+[style*="fontSize: '10px'"], [style*="fontSize: '11.5px'"] { font-size: 11.5px !important; }
+[style*="fontSize: '11px'"], [style*="fontSize: '12.65px'"] { font-size: 12.65px !important; }
+[style*="fontSize: '12px'"], [style*="fontSize: '13.8px'"] { font-size: 13.8px !important; }
+[style*="fontSize: '13px'"], [style*="fontSize: '14.95px'"] { font-size: 14.95px !important; }
+[style*="fontSize: '14px'"], [style*="fontSize: '16.1px'"] { font-size: 16.1px !important; }
+[style*="fontSize: '16px'"], [style*="fontSize: '18.4px'"] { font-size: 18.4px !important; }
+[style*="fontSize: '18px'"], [style*="fontSize: '20.7px'"] { font-size: 20.7px !important; }
+[style*="fontSize: '20px'"], [style*="fontSize: '23px'"] { font-size: 23px !important; }
+[style*="fontSize: '24px'"], [style*="fontSize: '27.6px'"] { font-size: 27.6px !important; }
+[style*="fontSize: '28px'"], [style*="fontSize: '32.2px'"] { font-size: 32.2px !important; }
+[style*="fontSize: '32px'"], [style*="fontSize: '36.8px'"] { font-size: 36.8px !important; }
+[style*="fontSize: '48px'"], [style*="fontSize: '55.2px'"] { font-size: 55.2px !important; }
+
+/* Prevent iOS zoom - keep at 16px minimum */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="search"],
+  input[type="url"],
+  input[type="date"],
+  input[type="time"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
