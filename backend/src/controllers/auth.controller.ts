@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 // Types defined inline
 type Role = 'OWNER' | 'WORKER';
 interface LoginRequest {
