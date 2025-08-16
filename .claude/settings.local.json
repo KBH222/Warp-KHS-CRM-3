@@ -71,7 +71,8 @@
       "Bash(tsc)",
       "Bash(git remote get-url:*)",
       "Bash(git fetch:*)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(npx serve:*)"
     ],
     "deny": []
   }

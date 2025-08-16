@@ -31,11 +31,15 @@ const CustomersEnhanced = () => {
   // Auto-login and load data on mount
   useEffect(() => {
     const init = async () => {
-      // Auto-login if no token
-      if (!authApi.getToken()) {
+      try {
+        // Always try to auto-login to ensure fresh token
         await authApi.autoLogin();
+        await loadCustomers();
+      } catch (error) {
+        console.error('[CustomersPage] Init error:', error);
+        // Still try to load customers - might work with cached data
+        await loadCustomers();
       }
-      await loadCustomers();
     };
     init();
   }, []);
