@@ -1,4 +1,12 @@
 {
-  "buildCommand": "pwd && ls -la && cd frontend && npm install && npm run build",
-  "outputDirectory": "frontend/dist"
+  "buildCommand": "npm install && npm run build",
+  "outputDirectory": "dist",
+  "functions": {
+    "../api/*.js": {
+      "maxDuration": 10
+    },
+    "../api/**/*.js": {
+      "maxDuration": 10
+    }
+  }
 }
