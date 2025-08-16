@@ -3,6 +3,12 @@ const path = require('path');
 const { PrismaClient } = require('@prisma/client');
 require('dotenv').config();
 
+// Debug environment variables
+console.log('Environment check:');
+console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+console.log('PORT:', process.env.PORT);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+
 const app = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3000;
