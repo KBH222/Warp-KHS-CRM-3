@@ -1,26 +1,28 @@
-import axios from 'axios';
-
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-
-// Create axios instance
-const api = axios.create({
-  baseURL: `${API_URL}/api`,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
 
 export const authApi = {
   // Auto-login for now
   async autoLogin(): Promise<{ token: string; user: any }> {
     try {
-      // Try to login with default credentials
-      const response = await api.post('/auth/login', {
-        email: 'admin@khscrm.com',
-        password: 'admin123'
+      console.log('[AuthAPI] Attempting auto-login...');
+      // Try to login with default credentials using fetch
+      const response = await fetch(`${API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: 'admin@khscrm.com',
+          password: 'admin123'
+        })
       });
-      
-      const { token, refreshToken, user } = response.data;
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const { token, refreshToken, user } = await response.json();
+      console.log('[AuthAPI] Login successful, storing token...');
       
       // Store tokens
       localStorage.setItem('khs-crm-token', token);
@@ -29,6 +31,7 @@ export const authApi = {
       
       return { token, user };
     } catch (error) {
+      console.error('[AuthAPI] Auto-login failed:', error);
       // If login fails, create a mock token for development
       const mockToken = 'dev-token-' + Date.now();
       const mockUser = {
@@ -38,6 +41,7 @@ export const authApi = {
         role: 'OWNER'
       };
       
+      console.log('[AuthAPI] Using mock token:', mockToken);
       localStorage.setItem('khs-crm-token', mockToken);
       localStorage.setItem('khs-crm-user', JSON.stringify(mockUser));
       
