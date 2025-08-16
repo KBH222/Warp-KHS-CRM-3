@@ -446,6 +446,7 @@ const CustomersEnhanced = () => {
           </button>
         </div>
         </div>
+        </div>
 
         {/* Customer List Container */}
         <div style={{ paddingBottom: '20px' }}>
@@ -746,8 +747,9 @@ const CustomersEnhanced = () => {
                 </div>
               </div>
             ))}
+          </div>
+        )}
         </div>
-      </div>
     </ScrollablePageContainer>
 
     {/* Customer Modal */}
