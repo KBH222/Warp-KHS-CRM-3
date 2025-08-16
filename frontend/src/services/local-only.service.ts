@@ -38,6 +38,20 @@ interface Job {
 class LocalOnlyService {
   private isLocalMode = false;
 
+  constructor() {
+    // Check if local mode was previously enabled
+    if (localStorage.getItem('khs-crm-local-mode') === 'true') {
+      this.isLocalMode = true;
+      console.log('[LocalOnlyService] Local mode was previously enabled, keeping it enabled');
+    }
+    
+    // Auto-enable local mode if we detect CORS issues
+    if (import.meta.env.VITE_API_URL?.includes('render.com') && window.location.hostname.includes('vercel')) {
+      console.log('[LocalOnlyService] Detected Vercel frontend with Render backend - enabling local mode to bypass CORS');
+      this.enableLocalMode();
+    }
+  }
+
   /**
    * Enable local-only mode (disables API calls)
    */
