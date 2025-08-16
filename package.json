@@ -23,8 +23,14 @@
     "db:migrate": "npm run db:migrate --workspace=backend",
     "db:seed": "npm run db:seed --workspace=backend"
   },
+  "dependencies": {
+    "@vercel/node": "^3.0.0",
+    "@prisma/client": "^5.22.0",
+    "dotenv": "^16.0.3"
+  },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "prisma": "^5.22.0"
   },
   "engines": {
     "node": ">=18.0.0",
