@@ -4,10 +4,15 @@ import App from './App.tsx';
 import './index.css';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
-// Check if service workers are supported
+// Unregister any existing service workers - they can interfere with API calls
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    // Service worker will be registered by Vite PWA plugin
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for(let registration of registrations) {
+        registration.unregister();
+        console.log('[ServiceWorker] Unregistered:', registration.scope);
+      }
+    });
   });
 }
 

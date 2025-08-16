@@ -81,6 +81,30 @@ export function SyncDiagnostics() {
     }
   };
 
+  const testDirectFetch = async () => {
+    try {
+      console.log('[SyncDiagnostics] Testing direct fetch to backend...');
+      const response = await fetch(`${diagnostics.apiUrl}/api/health`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors', // Explicitly set CORS mode
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      console.log('[SyncDiagnostics] Direct fetch successful:', data);
+      alert(`Direct fetch successful! Backend is reachable.\nResponse: ${JSON.stringify(data)}`);
+    } catch (error) {
+      console.error('[SyncDiagnostics] Direct fetch failed:', error);
+      alert(`Direct fetch failed: ${error}\n\nThis means CORS is still blocking requests.\nCheck if Render has restarted with the new FRONTEND_URL.`);
+    }
+  };
+
   return (
     <div className="fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 max-w-sm z-50">
       <h3 className="font-bold text-sm mb-2">Sync Diagnostics</h3>
@@ -139,6 +163,12 @@ export function SyncDiagnostics() {
           className={`w-full text-xs ${diagnostics.localMode ? 'bg-yellow-500' : 'bg-purple-500'} text-white px-2 py-1 rounded`}
         >
           {diagnostics.localMode ? '☁️ Enable API Mode' : '🔒 Enable Local Mode'}
+        </button>
+        <button
+          onClick={testDirectFetch}
+          className="w-full text-xs bg-orange-500 text-white px-2 py-1 rounded"
+        >
+          🔍 Test CORS Direct
         </button>
       </div>
     </div>
