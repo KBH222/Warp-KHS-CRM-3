@@ -29,11 +29,12 @@ export function SyncDiagnostics() {
       setDiagnostics(prev => ({ ...prev, token: 'Present' }));
     }
     
-    // Clear local mode if it was set (since CORS is now fixed)
+    // Always clear local mode on startup to ensure sync works
     if (localStorage.getItem('khs-crm-local-mode') === 'true') {
-      console.log('[SyncDiagnostics] Clearing local mode since CORS should be fixed');
+      console.log('[SyncDiagnostics] Clearing local mode for Railway deployment');
       localStorage.removeItem('khs-crm-local-mode');
       localOnlyService.disableLocalMode();
+      setDiagnostics(prev => ({ ...prev, localMode: false }));
     }
   }, []);
 
@@ -56,12 +57,14 @@ export function SyncDiagnostics() {
   const testCustomerFetch = async () => {
     try {
       console.log('[SyncDiagnostics] Fetching customers...');
+      console.log('[SyncDiagnostics] Using API URL:', diagnostics.apiUrl);
       const customers = await apiClient.get('/api/customers');
       console.log('[SyncDiagnostics] Customers fetched:', customers);
       alert(`Fetched ${customers.length} customers from backend`);
     } catch (error) {
       console.error('[SyncDiagnostics] Customer fetch failed:', error);
-      alert(`Failed to fetch customers: ${error}`);
+      const errorMessage = error?.response?.data?.error || error?.message || String(error);
+      alert(`Failed to fetch customers: ${errorMessage}\n\nAPI URL: ${diagnostics.apiUrl}`);
     }
   };
 
@@ -107,7 +110,7 @@ export function SyncDiagnostics() {
 
   return (
     <div className="fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 max-w-sm z-50">
-      <h3 className="font-bold text-sm mb-2">Sync Diagnostics (Vercel)</h3>
+      <h3 className="font-bold text-sm mb-2">Sync Diagnostics (Railway)</h3>
       <div className="text-xs space-y-1">
         <div>API URL: {diagnostics.apiUrl}</div>
         <div>Online: {diagnostics.online ? '✅' : '❌'}</div>
@@ -169,6 +172,17 @@ export function SyncDiagnostics() {
           className="w-full text-xs bg-orange-500 text-white px-2 py-1 rounded"
         >
           🔍 Test CORS Direct
+        </button>
+        <button
+          onClick={async () => {
+            console.log('[SyncDiagnostics] Manually triggering sync...');
+            const result = await simpleSyncService.syncAll();
+            console.log('[SyncDiagnostics] Sync result:', result);
+            alert(`Sync complete!\nSynced: ${result.synced}\nFailed: ${result.failed}`);
+          }}
+          className="w-full text-xs bg-indigo-500 text-white px-2 py-1 rounded"
+        >
+          🔄 Force Sync Now
         </button>
       </div>
     </div>
