@@ -4,9 +4,7 @@
   "private": true,
   "description": "KHS Construction & Remodeling CRM - Mobile-first field operations platform",
   "workspaces": [
-    "frontend",
-    "backend",
-    "shared/*"
+    "frontend"
   ],
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
@@ -14,7 +12,7 @@
     "dev:frontend": "npm run dev --workspace=frontend",
     "build": "cd frontend && npm run build",
     "build:vercel": "cd frontend && npm install && npm run build",
-    "build:shared": "echo 'Shared build skipped'",
+    "build:shared": "echo 'Shared build skipped - no longer needed'",
     "build:backend": "echo 'Backend build skipped'",
     "build:frontend": "cd frontend && npm run build",
     "test": "npm run test --workspaces --if-present",
