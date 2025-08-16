@@ -10,7 +10,10 @@
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "npm run dev --workspace=backend",
     "dev:frontend": "npm run dev --workspace=frontend",
-    "build": "cd frontend && npm run build",
+    "build": "cd frontend && npm install && npm run build",
+    "start": "node server.js",
+    "build:railway": "npm install && cd frontend && npm install && npm run build && cd .. && npx prisma generate",
+    "start:railway": "npx prisma migrate deploy && node server.js",
     "build:vercel": "cd frontend && npm install && npm run build",
     "build:shared": "echo 'Shared build skipped - no longer needed'",
     "build:backend": "echo 'Backend build skipped'",
@@ -22,9 +25,9 @@
     "db:seed": "npm run db:seed --workspace=backend"
   },
   "dependencies": {
-    "@vercel/node": "^3.0.0",
     "@prisma/client": "^5.22.0",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
