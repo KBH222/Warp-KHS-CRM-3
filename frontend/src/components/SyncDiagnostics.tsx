@@ -107,7 +107,7 @@ export function SyncDiagnostics() {
 
   return (
     <div className="fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 max-w-sm z-50">
-      <h3 className="font-bold text-sm mb-2">Sync Diagnostics</h3>
+      <h3 className="font-bold text-sm mb-2">Sync Diagnostics (Vercel)</h3>
       <div className="text-xs space-y-1">
         <div>API URL: {diagnostics.apiUrl}</div>
         <div>Online: {diagnostics.online ? '✅' : '❌'}</div>
