@@ -114,9 +114,9 @@ export const AppLayout = () => {
       </header>
 
       {/* Main Content Area with proper scrolling */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 overflow-hidden">
         {/* Main Content - Scrollable */}
-        <main className="flex-1 overflow-y-auto px-4 py-4">
+        <main className="h-full overflow-y-auto overflow-x-hidden px-4 py-4">
           <Outlet />
         </main>
       </div>

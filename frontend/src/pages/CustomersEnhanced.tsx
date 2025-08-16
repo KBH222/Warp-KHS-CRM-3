@@ -302,7 +302,7 @@ const CustomersEnhanced = () => {
   };
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px', paddingBottom: '100px' }}>
+    <div style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '100px' }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
