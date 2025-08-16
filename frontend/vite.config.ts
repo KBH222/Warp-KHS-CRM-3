@@ -171,7 +171,7 @@ VitePWA({
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': ['@tanstack/react-query', 'react-hook-form'],
+          'ui-vendor': ['@tanstack/react-query'],
           'utils-vendor': ['axios', 'date-fns', 'zustand']
         }
       }
