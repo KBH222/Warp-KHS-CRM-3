@@ -132,6 +132,27 @@ export function SyncDiagnostics() {
         )}
       </div>
       <div className="mt-2 space-y-1">
+        <button
+          onClick={async () => {
+            try {
+              console.log('[SyncDiagnostics] Testing health endpoint...');
+              const url = `${diagnostics.apiUrl}/api/health`;
+              console.log('[SyncDiagnostics] Health URL:', url);
+              
+              const response = await fetch(url);
+              const data = await response.json();
+              
+              console.log('[SyncDiagnostics] Health response:', data);
+              alert(`Backend is ${data.status === 'ok' ? 'WORKING' : 'NOT WORKING'}!\n\nResponse: ${JSON.stringify(data, null, 2)}`);
+            } catch (error) {
+              console.error('[SyncDiagnostics] Health check failed:', error);
+              alert(`Backend health check FAILED!\n\nError: ${error?.message || error}\n\nThis means the frontend cannot reach the backend API.`);
+            }
+          }}
+          className="w-full text-xs bg-green-600 text-white px-2 py-1 rounded"
+        >
+          🏥 Test Backend Health
+        </button>
         {diagnostics.token === 'Missing' && (
           <button
             onClick={() => {
