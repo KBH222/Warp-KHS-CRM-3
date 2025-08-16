@@ -1,4 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// Use relative path for Vercel deployment (same domain)
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 export const authApi = {
   // Auto-login for now

@@ -5,7 +5,7 @@ import { localOnlyService } from '../services/local-only.service';
 
 export function SyncDiagnostics() {
   const [diagnostics, setDiagnostics] = useState({
-    apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:3001',
+    apiUrl: import.meta.env.VITE_API_URL || window.location.origin,
     online: navigator.onLine,
     token: localStorage.getItem('khs-crm-token') ? 'Present' : 'Missing',
     syncQueue: simpleSyncService.getPendingOperations(),

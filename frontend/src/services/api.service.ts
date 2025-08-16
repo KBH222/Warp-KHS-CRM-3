@@ -2,7 +2,8 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosError } from 'axios';
 import { useAuthStore } from '@stores/auth.store';
 
 // Constants defined inline
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// Use relative path for Vercel deployment (same domain)
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 const STORAGE_KEYS = {
   AUTH_TOKEN: 'khs-crm-token',
   REFRESH_TOKEN: 'khs-crm-refresh-token'
