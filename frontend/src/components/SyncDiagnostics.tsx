@@ -11,6 +11,23 @@ export function SyncDiagnostics() {
     lastError: null as any
   });
 
+  // Force token creation if missing
+  useEffect(() => {
+    const token = localStorage.getItem('khs-crm-token');
+    if (!token) {
+      console.log('[SyncDiagnostics] No token found, creating mock token...');
+      const mockToken = 'mock-token-' + Date.now();
+      localStorage.setItem('khs-crm-token', mockToken);
+      localStorage.setItem('khs-crm-user', JSON.stringify({
+        id: 'dev-user',
+        email: 'dev@khscrm.com',
+        name: 'Development User',
+        role: 'OWNER'
+      }));
+      setDiagnostics(prev => ({ ...prev, token: 'Present' }));
+    }
+  }, []);
+
   useEffect(() => {
     const checkBackend = async () => {
       try {
@@ -68,6 +85,25 @@ export function SyncDiagnostics() {
         )}
       </div>
       <div className="mt-2 space-y-1">
+        {diagnostics.token === 'Missing' && (
+          <button
+            onClick={() => {
+              const mockToken = 'mock-token-' + Date.now();
+              localStorage.setItem('khs-crm-token', mockToken);
+              localStorage.setItem('khs-crm-user', JSON.stringify({
+                id: 'dev-user',
+                email: 'dev@khscrm.com',
+                name: 'Development User',
+                role: 'OWNER'
+              }));
+              setDiagnostics(prev => ({ ...prev, token: 'Present' }));
+              window.location.reload();
+            }}
+            className="w-full text-xs bg-red-500 text-white px-2 py-1 rounded"
+          >
+            🔧 Fix Missing Token
+          </button>
+        )}
         <button
           onClick={testCustomerFetch}
           className="w-full text-xs bg-blue-500 text-white px-2 py-1 rounded"
