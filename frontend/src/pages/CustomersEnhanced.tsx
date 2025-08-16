@@ -350,6 +350,35 @@ const CustomersEnhanced = () => {
             >
               + Add Customer
             </button>
+            <button
+              onClick={async () => {
+                try {
+                  const hamBurger = await customersApi.create({
+                    name: 'Ham Burger',
+                    phone: '555-0123',
+                    email: 'ham.burger@test.com',
+                    address: '123 Test Street, Test City',
+                    notes: 'Test customer created to verify deployment'
+                  });
+                  setCustomers([hamBurger, ...customers]);
+                  toast.success('Ham Burger created successfully!');
+                } catch (err) {
+                  toast.error('Failed to create Ham Burger');
+                }
+              }}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#10B981',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '500'
+              }}
+            >
+              🍔 Create Ham Burger
+            </button>
           </div>
         </div>
 
