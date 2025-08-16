@@ -115,7 +115,7 @@ export const AppLayout = () => {
       {/* Main Content Area with proper scrolling */}
       <div className="flex-1 overflow-hidden">
         {/* Main Content - Scrollable */}
-        <main className="h-full overflow-y-auto overflow-x-hidden px-4 py-4">
+        <main className="h-full overflow-y-auto overflow-x-hidden px-4 py-4" style={{ WebkitOverflowScrolling: 'touch' }}>
           <Outlet />
         </main>
       </div>
