@@ -1,7 +1,6 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuth, useUser } from '../stores/auth.store';
 import { useState, useEffect } from 'react';
-import { SyncDiagnostics } from '../components/SyncDiagnostics';
 
 // Icons - using simple SVGs for now
 const MenuIcon = () => (
@@ -128,9 +127,6 @@ export const AppLayout = () => {
           onClick={() => setShowMenu(false)}
         />
       )}
-      
-      {/* Sync Diagnostics Panel */}
-      <SyncDiagnostics />
     </div>
   );
 };
