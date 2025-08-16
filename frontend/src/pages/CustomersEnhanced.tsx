@@ -302,9 +302,10 @@ const CustomersEnhanced = () => {
   };
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '100px' }}>
-        {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+    <div className="h-full flex flex-col" style={{ maxWidth: '800px', margin: '0 auto' }}>
+        {/* Fixed Header */}
+        <div className="flex-shrink-0 bg-white sticky top-0 z-10 pb-4">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px', paddingTop: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
             <button
               onClick={() => navigate('/dashboard')}
@@ -380,7 +381,7 @@ const CustomersEnhanced = () => {
         </div>
 
         {/* Search Bar */}
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ marginBottom: '16px' }}>
           <input
             type="text"
             placeholder="Search customers..."
@@ -397,7 +398,7 @@ const CustomersEnhanced = () => {
         </div>
 
         {/* Sort Buttons */}
-        <div style={{ marginBottom: '20px', display: 'flex', gap: '8px' }}>
+        <div style={{ marginBottom: '8px', display: 'flex', gap: '8px' }}>
           <button
             onClick={() => setSortBy('name')}
             style={{
@@ -441,7 +442,14 @@ const CustomersEnhanced = () => {
             Recent
           </button>
         </div>
+      </div>
 
+        {/* Scrollable Customer List Container */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden" style={{ 
+          paddingBottom: '20px',
+          WebkitOverflowScrolling: 'touch',
+          overscrollBehavior: 'contain'
+        }}>
         {/* Customer Cards */}
         {isLoading ? (
           <div style={{
@@ -741,6 +749,7 @@ const CustomersEnhanced = () => {
             ))}
           </div>
         )}
+      </div>
 
       {/* Customer Modal */}
       {showModal && (

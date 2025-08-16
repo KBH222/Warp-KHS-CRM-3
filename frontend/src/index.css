@@ -229,6 +229,21 @@
   }
 }
 
+/* Mobile-specific scrolling fixes */
+.scrollable-content {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+}
+
+/* Ensure proper height calculation */
+.full-height-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 /* iPhone-specific font size increase */
 @media screen and (max-width: 430px) {
   /* iPhone 15 Pro Max and smaller */
