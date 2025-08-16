@@ -1,5 +1,10 @@
 import { vi } from 'vitest';
-import { Role } from '@khs-crm/types';
+// Inline type definitions
+enum Role {
+  OWNER = 'admin',
+  MANAGER = 'manager',
+  WORKER = 'worker'
+}
 
 const mockUser = {
   id: '1',

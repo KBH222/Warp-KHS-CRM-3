@@ -1,4 +1,59 @@
-import { Customer, Job, Material, CustomerFilters, JobFilters, MaterialFilters } from '@khs-crm/types';
+// Inline type definitions
+interface Customer {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  address: string;
+  isArchived?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Job {
+  id: string;
+  customerId: string;
+  title: string;
+  description?: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  scheduledDate?: string;
+  completedDate?: string;
+  estimatedHours?: number;
+  actualHours?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Material {
+  id: string;
+  name: string;
+  description?: string;
+  unit: string;
+  cost: number;
+  supplier?: string;
+  isArchived?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface CustomerFilters {
+  search?: string;
+  isArchived?: boolean;
+}
+
+interface JobFilters {
+  status?: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+  customerId?: string;
+  priority?: 'low' | 'medium' | 'high' | 'urgent';
+  search?: string;
+}
+
+interface MaterialFilters {
+  search?: string;
+  supplier?: string;
+  isArchived?: boolean;
+}
 import { offlineDb } from './db.service';
 import { optimisticUpdatesService } from './optimistic-updates.service';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';

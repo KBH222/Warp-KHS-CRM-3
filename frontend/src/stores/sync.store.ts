@@ -1,5 +1,15 @@
 import { create } from 'zustand';
-import { SyncError } from '@khs-crm/types';
+// Inline type definitions
+interface SyncError {
+  id: string;
+  message: string;
+  code: string;
+  timestamp: string;
+  operation?: string;
+  entityType?: string;
+  entityId?: string;
+  details?: any;
+}
 
 interface SyncState {
   isOnline: boolean;

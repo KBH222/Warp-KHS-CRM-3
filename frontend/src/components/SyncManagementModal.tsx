@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { syncService } from '../services/sync.service';
 import { offlineDb } from '../services/db.service';
-import { SyncOperation } from '@khs-crm/types';
+// Inline type definitions
+interface SyncOperation {
+  id: string;
+  operation: 'create' | 'update' | 'delete';
+  entityType: 'customer' | 'job' | 'material' | 'user';
+  entityId?: string;
+  payload: any;
+  timestamp: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  attempts: number;
+  lastAttemptAt?: string;
+  errorMessage?: string;
+}
 
 interface SyncManagementModalProps {
   isOpen: boolean;

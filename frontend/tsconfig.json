@@ -15,8 +15,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "composite": true,
-    "tsBuildInfoFile": "./node_modules/.cache/tsconfig.tsbuildinfo",
     "paths": {
       "@/*": ["./src/*"],
       "@components/*": ["./src/components/*"],
@@ -27,9 +25,5 @@
       "@pages/*": ["./src/pages/*"]
     }
   },
-  "include": ["src", "src/types/global.d.ts"],
-  "references": [
-    { "path": "../shared/types" },
-    { "path": "../shared/constants" }
-  ]
+  "include": ["src", "src/types/global.d.ts"]
 }

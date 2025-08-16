@@ -5,6 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
 
 export default defineConfig({
+  base: '/KHS-CRM/',
   define: {
     'process.env': {}
   },
@@ -126,7 +127,7 @@ VitePWA({
             }
           }
         ],
-        navigateFallback: '/index.html',
+        navigateFallback: '/KHS-CRM/index.html',
         navigateFallbackDenylist: [
           /^\/__/,
           /\/[^/?]+\.[^/]+$/,

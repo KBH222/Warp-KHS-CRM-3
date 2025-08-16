@@ -1,4 +1,34 @@
-import { Customer, CreateCustomerRequest, UpdateCustomerRequest, CustomerFilters } from '@khs-crm/types';
+// Inline type definitions
+interface Customer {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  address: string;
+  isArchived?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface CreateCustomerRequest {
+  name: string;
+  email?: string;
+  phone?: string;
+  address: string;
+}
+
+interface UpdateCustomerRequest {
+  name?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  isArchived?: boolean;
+}
+
+interface CustomerFilters {
+  search?: string;
+  isArchived?: boolean;
+}
 import { optimisticUpdatesService } from './optimistic-updates.service';
 import { offlineDataService } from './offline-data.service';
 

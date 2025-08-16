@@ -1,5 +1,19 @@
 import axios from 'axios';
-import { Job } from '@khs-crm/types';
+// Inline type definitions
+interface Job {
+  id: string;
+  customerId: string;
+  title: string;
+  description?: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  scheduledDate?: string;
+  completedDate?: string;
+  estimatedHours?: number;
+  actualHours?: number;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 

@@ -1,8 +1,68 @@
-import { Customer, Job, Material, CreateCustomerRequest, UpdateCustomerRequest, CreateJobRequest, UpdateJobRequest, CreateMaterialRequest, UpdateMaterialRequest } from '@khs-crm/types';
 import { offlineDb } from './db.service';
 import { syncService } from './sync.service';
 import { apiClient } from './api.service';
-import { API_ENDPOINTS } from '@khs-crm/constants';
+
+// Types defined inline
+interface Customer {
+  id: string;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  address: string;
+  notes: string | null;
+  isArchived: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface Job {
+  id: string;
+  title: string;
+  description: string | null;
+  status: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  notes: string | null;
+  customerId: string;
+  createdById: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface Material {
+  id: string;
+  jobId: string;
+  itemName: string;
+  quantity: number;
+  unit: string;
+  purchased: boolean;
+  notes: string | null;
+  addedById: string;
+  purchasedById: string | null;
+  purchasedBy: any | null;
+  purchasedAt: Date | null;
+  isDeleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+type CreateCustomerRequest = Omit<Customer, 'id' | 'createdAt' | 'updatedAt' | 'isArchived'>;
+type UpdateCustomerRequest = Partial<CreateCustomerRequest>;
+type CreateJobRequest = Omit<Job, 'id' | 'createdAt' | 'updatedAt' | 'createdById'>;
+type UpdateJobRequest = Partial<CreateJobRequest>;
+type CreateMaterialRequest = Omit<Material, 'id' | 'createdAt' | 'updatedAt' | 'purchased' | 'purchasedById' | 'purchasedBy' | 'purchasedAt' | 'isDeleted' | 'addedById'>;
+type UpdateMaterialRequest = { id: string } & Partial<Material>;
+
+// API endpoints defined inline
+const API_ENDPOINTS = {
+  CUSTOMERS: '/api/customers',
+  CUSTOMER_BY_ID: (id: string) => `/api/customers/${id}`,
+  JOBS: '/api/jobs',
+  JOB_BY_ID: (id: string) => `/api/jobs/${id}`,
+  JOB_MATERIALS: (jobId: string) => `/api/jobs/${jobId}/materials`,
+  MATERIAL_BY_ID: (id: string) => `/api/materials/${id}`,
+  MATERIALS_BULK_UPDATE: '/api/materials/bulk-update'
+};
 
 /**
  * Service for handling optimistic updates - immediately show changes in UI

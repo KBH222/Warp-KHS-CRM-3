@@ -1,8 +1,48 @@
-import { Customer, CreateCustomerRequest, UpdateCustomerRequest, CustomerFilters } from '@khs-crm/types';
+// Inline type definitions
+interface Customer {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  address: string;
+  isArchived?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface CreateCustomerRequest {
+  name: string;
+  email?: string;
+  phone?: string;
+  address: string;
+}
+
+interface UpdateCustomerRequest {
+  name?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  isArchived?: boolean;
+}
+
+interface CustomerFilters {
+  search?: string;
+  isArchived?: boolean;
+}
+
+// Inline constants
+const API_ENDPOINTS = {
+  CUSTOMERS: '/customers',
+  JOBS: '/jobs',
+  MATERIALS: '/materials',
+  USERS: '/users',
+  AUTH: '/auth',
+  SYNC: '/sync'
+};
+
 import { optimisticUpdatesService } from './optimistic-updates.service';
 import { offlineDataService } from './offline-data.service';
 import { apiClient } from './api.service';
-import { API_ENDPOINTS } from '@khs-crm/constants';
 import { offlineDb } from './db.service';
 import { syncService } from './sync.service';
 

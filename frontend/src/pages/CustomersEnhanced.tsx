@@ -737,6 +737,9 @@ const CustomersEnhanced = () => {
           onDelete={handleDeleteJob}
         />
       )}
+      
+      {/* Sync Diagnostics - TEMPORARY for debugging */}
+      <SyncDiagnostics />
     </div>
   );
 };
@@ -1651,9 +1654,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         </form>
       </div>
     </div>
-    
-    {/* Sync Diagnostics - TEMPORARY for debugging */}
-    <SyncDiagnostics />
   );
 };
 

@@ -1,8 +1,99 @@
-import { SyncOperation, SyncStatus, Customer, Job, Material, SyncError } from '@khs-crm/types';
-import { SYNC_CONFIG, API_ENDPOINTS, ERROR_CODES } from '@khs-crm/constants';
 import { offlineDb } from './db.service';
 import { apiClient } from './api.service';
 import { syncStore } from '@stores/sync.store';
+
+// Types defined inline
+interface SyncOperation {
+  id: string;
+  operation: 'create' | 'update' | 'delete';
+  entityType: 'customer' | 'job' | 'material';
+  entityId?: string;
+  payload: any;
+  timestamp: Date;
+  attempts?: number;
+  lastError?: string;
+}
+
+interface SyncStatus {
+  lastSync: Date | null;
+  syncInProgress: boolean;
+  pendingOperations: number;
+  errors: SyncError[];
+}
+
+interface Customer {
+  id: string;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  address: string;
+  notes: string | null;
+  isArchived: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface Job {
+  id: string;
+  title: string;
+  description: string | null;
+  status: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  notes: string | null;
+  customerId: string;
+  createdById: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface Material {
+  id: string;
+  jobId: string;
+  itemName: string;
+  quantity: number;
+  unit: string;
+  purchased: boolean;
+  notes: string | null;
+  addedById: string;
+  purchasedById: string | null;
+  purchasedBy: any | null;
+  purchasedAt: Date | null;
+  isDeleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface SyncError {
+  operation: SyncOperation;
+  error: string;
+  timestamp: Date;
+}
+
+// Constants defined inline
+const SYNC_CONFIG = {
+  AUTO_SYNC_INTERVAL: 30000, // 30 seconds
+  MAX_RETRY_ATTEMPTS: 3,
+  RETRY_DELAY: 5000,
+  BATCH_SIZE: 50
+};
+
+const API_ENDPOINTS = {
+  CUSTOMERS: '/api/customers',
+  CUSTOMER_BY_ID: (id: string) => `/api/customers/${id}`,
+  JOBS: '/api/jobs',
+  JOB_BY_ID: (id: string) => `/api/jobs/${id}`,
+  JOB_MATERIALS: (jobId: string) => `/api/jobs/${jobId}/materials`,
+  MATERIAL_BY_ID: (id: string) => `/api/materials/${id}`,
+  MATERIALS_BULK_UPDATE: '/api/materials/bulk-update'
+};
+
+const ERROR_CODES = {
+  NETWORK_ERROR: 'NETWORK_ERROR',
+  CONFLICT: 'CONFLICT',
+  NOT_FOUND: 'NOT_FOUND',
+  VALIDATION_ERROR: 'VALIDATION_ERROR'
+};
 
 interface ConflictResolutionStrategy {
   name: 'server_wins' | 'client_wins' | 'merge' | 'manual';

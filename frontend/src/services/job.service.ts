@@ -1,4 +1,48 @@
-import { Job, CreateJobRequest, UpdateJobRequest, JobFilters, JobStatus } from '@khs-crm/types';
+// Inline type definitions
+interface Job {
+  id: string;
+  customerId: string;
+  title: string;
+  description?: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  scheduledDate?: string;
+  completedDate?: string;
+  estimatedHours?: number;
+  actualHours?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface CreateJobRequest {
+  customerId: string;
+  title: string;
+  description?: string;
+  status?: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+  priority?: 'low' | 'medium' | 'high' | 'urgent';
+  scheduledDate?: string;
+  estimatedHours?: number;
+}
+
+interface UpdateJobRequest {
+  title?: string;
+  description?: string;
+  status?: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+  priority?: 'low' | 'medium' | 'high' | 'urgent';
+  scheduledDate?: string;
+  completedDate?: string;
+  estimatedHours?: number;
+  actualHours?: number;
+}
+
+interface JobFilters {
+  status?: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+  customerId?: string;
+  priority?: 'low' | 'medium' | 'high' | 'urgent';
+  search?: string;
+}
+
+type JobStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled';
 import { optimisticUpdatesService } from './optimistic-updates.service';
 import { offlineDataService } from './offline-data.service';
 

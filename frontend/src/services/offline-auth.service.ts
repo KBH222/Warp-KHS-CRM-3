@@ -1,5 +1,48 @@
-import { User, LoginRequest, AuthTokens, Role } from '@khs-crm/types';
-import { STORAGE_KEYS, API_ENDPOINTS } from '@khs-crm/constants';
+// Inline type definitions
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: 'admin' | 'manager' | 'worker';
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface LoginRequest {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+}
+
+interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+  expiresAt: string;
+}
+
+type Role = 'admin' | 'manager' | 'worker';
+
+// Inline constants
+const STORAGE_KEYS = {
+  AUTH_TOKEN: 'khs-crm-token',
+  REFRESH_TOKEN: 'khs-crm-refresh-token',
+  USER_DATA: 'khs-crm-user',
+  OFFLINE_DATA: 'khs-crm-offline-data',
+  SYNC_QUEUE: 'khs-crm-sync-queue',
+  CACHE_MANIFEST: 'khs-crm-cache-manifest',
+  ENCRYPTION_KEY: 'khs-crm-encryption-key',
+  BIOMETRIC_ENABLED: 'khs-crm-biometric-enabled'
+};
+
+const API_ENDPOINTS = {
+  CUSTOMERS: '/customers',
+  JOBS: '/jobs',
+  MATERIALS: '/materials',
+  USERS: '/users',
+  AUTH: '/auth',
+  SYNC: '/sync'
+};
 import { offlineDb } from './db.service';
 import { apiClient } from './api.service';
 

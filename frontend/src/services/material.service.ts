@@ -1,4 +1,47 @@
-import { Material, CreateMaterialRequest, UpdateMaterialRequest, BulkUpdateMaterialsRequest, MaterialFilters } from '@khs-crm/types';
+// Inline type definitions
+interface Material {
+  id: string;
+  name: string;
+  description?: string;
+  unit: string;
+  cost: number;
+  supplier?: string;
+  isArchived?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface CreateMaterialRequest {
+  name: string;
+  description?: string;
+  unit: string;
+  cost: number;
+  supplier?: string;
+}
+
+interface UpdateMaterialRequest {
+  name?: string;
+  description?: string;
+  unit?: string;
+  cost?: number;
+  supplier?: string;
+  isArchived?: boolean;
+}
+
+interface BulkUpdateMaterialsRequest {
+  materials: Array<{
+    id: string;
+    cost?: number;
+    supplier?: string;
+    isArchived?: boolean;
+  }>;
+}
+
+interface MaterialFilters {
+  search?: string;
+  supplier?: string;
+  isArchived?: boolean;
+}
 import { optimisticUpdatesService } from './optimistic-updates.service';
 import { offlineDataService } from './offline-data.service';
 

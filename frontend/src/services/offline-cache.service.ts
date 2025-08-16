@@ -1,5 +1,55 @@
 import { openDB, DBSchema, IDBPDatabase } from 'idb';
-import { Customer, Job, Material, SyncOperation } from '@khs-crm/types';
+// Inline type definitions
+interface Customer {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  address: string;
+  isArchived?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Job {
+  id: string;
+  customerId: string;
+  title: string;
+  description?: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  scheduledDate?: string;
+  completedDate?: string;
+  estimatedHours?: number;
+  actualHours?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Material {
+  id: string;
+  name: string;
+  description?: string;
+  unit: string;
+  cost: number;
+  supplier?: string;
+  isArchived?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface SyncOperation {
+  id: string;
+  operation: 'create' | 'update' | 'delete';
+  entityType: 'customer' | 'job' | 'material' | 'user';
+  entityId?: string;
+  payload: any;
+  timestamp: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  attempts: number;
+  lastAttemptAt?: string;
+  errorMessage?: string;
+}
 
 interface CacheMetadata {
   lastUpdated: string;

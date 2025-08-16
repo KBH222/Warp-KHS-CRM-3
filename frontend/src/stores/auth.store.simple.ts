@@ -1,5 +1,26 @@
 import { create } from 'zustand';
-import { User, Role, LoginRequest } from '@khs-crm/types';
+// Inline type definitions
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: 'admin' | 'manager' | 'worker';
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface LoginRequest {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+}
+
+enum Role {
+  OWNER = 'admin',
+  MANAGER = 'manager',
+  WORKER = 'worker'
+}
 import { offlineAuthService } from '../services/offline-auth.service';
 import { offlineDataService } from '../services/offline-data.service';
 
