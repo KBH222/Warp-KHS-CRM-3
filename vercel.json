@@ -1,5 +1,5 @@
 {
-  "buildCommand": "ls -la && cd frontend && npm install && npm run build",
+  "buildCommand": "cd .. && ls -la && cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist",
   "installCommand": "npm install",
   "functions": {
@@ -9,15 +9,5 @@
     "api/**/*.js": {
       "maxDuration": 10
     }
-  },
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/$1"
-    }
-  ]
+  }
 }
