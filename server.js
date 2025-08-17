@@ -69,6 +69,45 @@ app.get('/api/check-schema', async (req, res) => {
   }
 });
 
+// Test photo save
+app.get('/api/test-photo-save/:jobId', async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    
+    // Try to update a job with test photo data
+    const testPhotos = [{
+      id: Date.now(),
+      name: 'test-photo.jpg',
+      url: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwABmX/9k='
+    }];
+    
+    const updatedJob = await prisma.job.update({
+      where: { id: jobId },
+      data: {
+        photos: JSON.stringify(testPhotos)
+      }
+    });
+    
+    // Read it back
+    const readJob = await prisma.job.findUnique({
+      where: { id: jobId }
+    });
+    
+    res.json({
+      status: 'ok',
+      message: 'Test photo save successful',
+      savedPhotos: readJob.photos,
+      parsedPhotos: readJob.photos ? JSON.parse(readJob.photos) : null
+    });
+  } catch (error) {
+    res.json({
+      status: 'error',
+      error: error.message,
+      message: 'Failed to save test photo'
+    });
+  }
+});
+
 // Auth routes
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
@@ -239,10 +278,14 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
     // Handle photos and plans - stringify arrays for storage
     if (req.body.photos && Array.isArray(req.body.photos)) {
       jobData.photos = JSON.stringify(req.body.photos);
+      console.log('Creating job with photos:', req.body.photos);
+      console.log('Photos stringified:', jobData.photos);
     }
     if (req.body.plans && Array.isArray(req.body.plans)) {
       jobData.plans = JSON.stringify(req.body.plans);
     }
+    
+    console.log('Job data before create:', jobData);
     
     const job = await prisma.job.create({
       data: jobData,
@@ -251,9 +294,32 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
       }
     });
     
+    console.log('Raw job from DB after create:', job);
+    console.log('Photos field from DB:', job.photos);
+    
     // Parse back to arrays for response
-    if (job.photos) job.photos = JSON.parse(job.photos);
-    if (job.plans) job.plans = JSON.parse(job.plans);
+    if (job.photos) {
+      try {
+        job.photos = JSON.parse(job.photos);
+        console.log('Parsed photos after create:', job.photos);
+      } catch (e) {
+        console.error('Failed to parse photos:', e);
+        job.photos = [];
+      }
+    } else {
+      job.photos = [];
+    }
+    
+    if (job.plans) {
+      try {
+        job.plans = JSON.parse(job.plans);
+      } catch (e) {
+        console.error('Failed to parse plans:', e);
+        job.plans = [];
+      }
+    } else {
+      job.plans = [];
+    }
     
     console.log('Job created successfully:', job.id);
     res.status(201).json(job);
@@ -286,10 +352,14 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
     // Handle photos and plans - stringify arrays for storage
     if (req.body.photos !== undefined) {
       updateData.photos = Array.isArray(req.body.photos) ? JSON.stringify(req.body.photos) : null;
+      console.log('Photos to save:', req.body.photos);
+      console.log('Photos stringified:', updateData.photos);
     }
     if (req.body.plans !== undefined) {
       updateData.plans = Array.isArray(req.body.plans) ? JSON.stringify(req.body.plans) : null;
     }
+    
+    console.log('Update data before save:', updateData);
     
     const job = await prisma.job.update({
       where: { id: req.params.id },
@@ -299,9 +369,32 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
       }
     });
     
+    console.log('Raw job from DB:', job);
+    console.log('Photos field from DB:', job.photos);
+    
     // Parse back to arrays for response
-    if (job.photos) job.photos = JSON.parse(job.photos);
-    if (job.plans) job.plans = JSON.parse(job.plans);
+    if (job.photos) {
+      try {
+        job.photos = JSON.parse(job.photos);
+        console.log('Parsed photos:', job.photos);
+      } catch (e) {
+        console.error('Failed to parse photos:', e);
+        job.photos = [];
+      }
+    } else {
+      job.photos = [];
+    }
+    
+    if (job.plans) {
+      try {
+        job.plans = JSON.parse(job.plans);
+      } catch (e) {
+        console.error('Failed to parse plans:', e);
+        job.plans = [];
+      }
+    } else {
+      job.plans = [];
+    }
     
     console.log('Job updated successfully:', job.id);
     res.json(job);
