@@ -4,6 +4,7 @@ import { customersApi, jobsApi, authApi } from '../services/api';
 import { toast } from 'react-toastify';
 import { customerStorage } from '../services/localStorageService';
 import { ScrollablePageContainer } from '../components/ScrollablePageContainer';
+import { compressImage } from '../utils/imageCompression';
 
 const CustomersEnhanced = () => {
   console.log('[CustomersEnhanced] Component rendering...');
@@ -1290,41 +1291,81 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     { id: 'comments', label: 'Comments', icon: '💬' }
   ];
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    files.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
+    
+    // Show loading toast
+    const loadingToast = toast.info('Compressing photos...', { autoClose: false });
+    
+    try {
+      for (const file of files) {
+        // Compress image before adding
+        const compressedUrl = await compressImage(file, 1920, 1080, 0.7);
+        
         setJobData(prev => ({
           ...prev,
           photos: [...prev.photos, {
             id: Date.now() + Math.random(),
-            url: event.target?.result as string,
+            url: compressedUrl,
             name: file.name
           }]
         }));
-      };
-      reader.readAsDataURL(file);
-    });
+      }
+      
+      toast.dismiss(loadingToast);
+      toast.success(`${files.length} photo(s) added successfully`);
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error('Failed to process some photos');
+      console.error('Photo upload error:', error);
+    }
   };
 
-  const handlePlanUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePlanUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    files.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setJobData(prev => ({
-          ...prev,
-          plans: [...prev.plans, {
-            id: Date.now() + Math.random(),
-            url: event.target?.result as string,
-            name: file.name,
-            type: file.type
-          }]
-        }));
-      };
-      reader.readAsDataURL(file);
-    });
+    
+    // Show loading toast
+    const loadingToast = toast.info('Processing documents...', { autoClose: false });
+    
+    try {
+      for (const file of files) {
+        if (file.type.startsWith('image/')) {
+          // Compress image files
+          const compressedUrl = await compressImage(file, 1920, 1080, 0.7);
+          setJobData(prev => ({
+            ...prev,
+            plans: [...prev.plans, {
+              id: Date.now() + Math.random(),
+              url: compressedUrl,
+              name: file.name,
+              type: file.type
+            }]
+          }));
+        } else {
+          // For non-image files (PDFs, etc), read as-is
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            setJobData(prev => ({
+              ...prev,
+              plans: [...prev.plans, {
+                id: Date.now() + Math.random(),
+                url: event.target?.result as string,
+                name: file.name,
+                type: file.type
+              }]
+            }));
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+      
+      toast.dismiss(loadingToast);
+      toast.success(`${files.length} document(s) added successfully`);
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error('Failed to process some documents');
+      console.error('Document upload error:', error);
+    }
   };
 
   const handleAddComment = (text: string) => {
