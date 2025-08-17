@@ -261,7 +261,25 @@ const CustomersEnhanced = () => {
     try {
       if (jobData.id) {
         // Update existing job
-        const updatedJob = await jobsApi.update(jobData.id, jobData);
+        // Filter out non-backend fields like photos, plans, comments
+        const updateData = {
+          title: jobData.title,
+          description: jobData.description,
+          status: jobData.status,
+          priority: jobData.priority,
+          totalCost: jobData.totalCost || 0,
+          depositPaid: jobData.depositPaid || 0,
+          actualCost: jobData.actualCost || 0,
+          startDate: jobData.startDate,
+          endDate: jobData.endDate,
+          completedDate: jobData.completedDate,
+          notes: jobData.notes,
+          customerId: jobData.customerId
+        };
+        
+        console.log('Updating job with data:', updateData);
+        const updatedJob = await jobsApi.update(jobData.id, updateData);
+        
         // Update local state
         setCustomerJobs(prev => {
           const customerJobs = [...(prev[updatedJob.customerId] || [])];
@@ -276,12 +294,16 @@ const CustomersEnhanced = () => {
       } else {
         // Create new job
         const newJob = await jobsApi.create({
-          ...jobData,
+          title: jobData.title,
+          description: jobData.description,
           customerId: selectedCustomerForJob.id,
           status: jobData.status || 'QUOTED',
           priority: jobData.priority || 'medium',
           totalCost: jobData.totalCost || 0,
-          depositPaid: jobData.depositPaid || 0
+          depositPaid: jobData.depositPaid || 0,
+          startDate: jobData.startDate,
+          endDate: jobData.endDate,
+          notes: jobData.notes
         });
         // Update local state
         setCustomerJobs(prev => ({
@@ -291,6 +313,7 @@ const CustomersEnhanced = () => {
         toast.success('Job created successfully');
       }
     } catch (err) {
+      console.error('Error saving job:', err);
       toast.error('Failed to save job');
     }
     
