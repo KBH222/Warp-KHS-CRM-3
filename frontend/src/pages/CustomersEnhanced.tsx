@@ -1263,6 +1263,7 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
 // Add Job Modal Component
 const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete = null }: any) => {
   const [activeTab, setActiveTab] = useState('description');
+  const [currentJobId, setCurrentJobId] = useState(existingJob?.id || null);
   
   const [jobData, setJobData] = useState({
     id: existingJob?.id || null,
@@ -1322,8 +1323,18 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
       toast.dismiss(loadingToast);
       toast.success(`${files.length} photo(s) added successfully`);
       
-      // Auto-save the job after adding photos
-      handleSubmit(new Event('submit') as any);
+      // Auto-save the job after adding photos (without closing modal)
+      try {
+        await handleSavePhotos();
+      } catch (saveError: any) {
+        // Show specific error but don't remove photos from UI
+        console.error('Failed to save photos to server:', saveError);
+        if (saveError.response?.data?.error) {
+          toast.error(`Failed to save: ${saveError.response.data.error}`);
+        } else {
+          toast.error('Photos added locally but failed to save to server');
+        }
+      }
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error('Failed to process some photos');
@@ -1379,8 +1390,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
       toast.dismiss(loadingToast);
       toast.success(`${files.length} document(s) added successfully`);
       
-      // Auto-save the job after adding documents
-      handleSubmit(new Event('submit') as any);
+      // Auto-save the job after adding documents (without closing modal)
+      await handleSavePhotos();
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error('Failed to process some documents');
@@ -1408,6 +1419,47 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
       onSave({ ...existingJob, ...jobData });
     } else {
       onSave(jobData);
+    }
+  };
+
+  // Save photos/plans without closing modal
+  const handleSavePhotos = async () => {
+    try {
+      if (currentJobId) {
+        // Update existing job with new photos
+        const updateData = {
+          photos: jobData.photos || [],
+          plans: jobData.plans || []
+        };
+        
+        const updatedJob = await jobsApi.update(currentJobId, updateData);
+        console.log('Photos saved successfully for job:', currentJobId);
+      } else {
+        // Create new job first
+        const newJob = await jobsApi.create({
+          title: jobData.title,
+          description: jobData.description || '',
+          customerId: customer.id,
+          status: jobData.status || 'QUOTED',
+          priority: jobData.priority || 'medium',
+          totalCost: parseFloat(jobData.totalCost) || 0,
+          depositPaid: parseFloat(jobData.depositPaid) || 0,
+          actualCost: parseFloat(jobData.actualCost) || 0,
+          startDate: jobData.startDate,
+          endDate: jobData.endDate,
+          notes: jobData.notes || '',
+          photos: jobData.photos || [],
+          plans: jobData.plans || []
+        });
+        
+        // Update local state with the new job ID
+        setCurrentJobId(newJob.id);
+        setJobData(prev => ({ ...prev, id: newJob.id }));
+        console.log('Job created with photos, new ID:', newJob.id);
+      }
+    } catch (error) {
+      console.error('Failed to save photos:', error);
+      throw error;
     }
   };
 
