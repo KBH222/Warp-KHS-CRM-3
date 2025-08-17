@@ -1430,62 +1430,10 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
       }));
       
       toast.dismiss(loadingToast);
-      toast.success(`${files.length} photo(s) added successfully`);
+      toast.success(`${files.length} photo(s) added`);
       
-      // Show saving indicator
-      const savingToast = toast.info('Saving photos to database...', { autoClose: false });
-      
-      // Auto-save the job after adding photos
-      try {
-        console.log('[Photo Save] Step 2: About to save photos', {
-          currentJobId,
-          jobDataId: jobData.id,
-          photoCount: jobData.photos.length + newPhotos.length,
-          newPhotoCount: newPhotos.length
-        });
-        
-        // Wait a bit to ensure state is updated
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        // Call handleSavePhotos with the updated photo data
-        await handleSavePhotos();
-        
-        toast.dismiss(savingToast);
-        toast.success('Photos saved to database successfully', { autoClose: 3000 });
-        setUnsavedChanges(false);
-        
-      } catch (saveError: any) {
-        toast.dismiss(savingToast);
-        
-        // Show specific error but don't remove photos from UI
-        console.error('[Photo Save] Error:', saveError);
-        console.error('[Photo Save] Error details:', {
-          message: saveError.message,
-          response: saveError.response,
-          data: saveError.response?.data,
-          stack: saveError.stack
-        });
-        
-        // Mark as having unsaved changes
-        setUnsavedChanges(true);
-        
-        // More detailed error message
-        let errorMsg = 'Photos added to screen but NOT saved to database';
-        if (saveError.response?.data?.error) {
-          errorMsg += `: ${saveError.response.data.error}`;
-        } else if (saveError.response?.data?.details) {
-          errorMsg += `: ${saveError.response.data.details}`;
-        } else if (saveError.message) {
-          errorMsg += `: ${saveError.message}`;
-        }
-        
-        toast.error(errorMsg, { autoClose: 10000 }); // Show error for 10 seconds
-        
-        // If it's a new job without ID, suggest saving the job first
-        if (!currentJobId && !jobData.id) {
-          toast.info('Tip: Save the job first by clicking "Create Job" button', { autoClose: 8000 });
-        }
-      }
+      // Mark as having unsaved changes
+      setUnsavedChanges(true);
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error('Failed to process some photos');
@@ -1539,10 +1487,10 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
       }
       
       toast.dismiss(loadingToast);
-      toast.success(`${files.length} document(s) added successfully`);
+      toast.success(`${files.length} document(s) added`);
       
-      // Auto-save the job after adding documents (without closing modal)
-      await handleSavePhotos();
+      // Mark as having unsaved changes
+      setUnsavedChanges(true);
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error('Failed to process some documents');
@@ -2025,30 +1973,15 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       />
                       <button
                         type="button"
-                        onClick={async () => {
+                        onClick={() => {
                           setJobData(prev => ({
                             ...prev,
                             photos: prev.photos.filter(p => p.id !== photo.id)
                           }));
                           
-                          // If it's an existing job, auto-save the removal
-                          if (currentJobId) {
-                            try {
-                              const savingToast = toast.info('Removing photo...', { autoClose: false });
-                              // Wait for state update
-                              await new Promise(resolve => setTimeout(resolve, 100));
-                              await handleSavePhotos();
-                              toast.dismiss(savingToast);
-                              toast.success('Photo removed');
-                            } catch (error) {
-                              toast.dismiss();
-                              toast.error('Failed to remove photo from database');
-                              setUnsavedChanges(true);
-                            }
-                          } else {
-                            // For new jobs, just mark as unsaved
-                            setUnsavedChanges(true);
-                          }
+                          // Mark as having unsaved changes
+                          setUnsavedChanges(true);
+                          toast.info('Photo removed - click Save to update');
                         }}
                         style={{
                           position: 'absolute',
