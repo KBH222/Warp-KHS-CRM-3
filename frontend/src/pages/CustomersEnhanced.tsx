@@ -322,10 +322,19 @@ const CustomersEnhanced = () => {
       } else {
         // Create new job
         console.log('Creating new job');
+        console.log('selectedCustomerForJob:', selectedCustomerForJob);
+        console.log('jobData.customerId:', jobData.customerId);
+        
+        // Ensure we have a customer ID
+        const customerId = jobData.customerId || selectedCustomerForJob?.id;
+        if (!customerId) {
+          throw new Error('No customer selected for this job');
+        }
+        
         const createPayload = {
           title: jobData.title,
           description: jobData.description || '',
-          customerId: selectedCustomerForJob.id,
+          customerId: customerId,
           status: jobData.status || 'QUOTED',
           priority: jobData.priority || 'medium',
           startDate: jobData.startDate,
@@ -341,13 +350,22 @@ const CustomersEnhanced = () => {
         // Update local state - add the new job to the customer's jobs array
         setCustomers(prevCustomers => {
           return prevCustomers.map(customer => {
-            if (customer.id === selectedCustomerForJob.id) {
+            if (customer.id === customerId) {
               const updatedJobs = customer.jobs ? [...customer.jobs, newJob] : [newJob];
               return { ...customer, jobs: updatedJobs };
             }
             return customer;
           });
         });
+        
+        // Also update customerJobs state if it exists
+        if (setCustomerJobs) {
+          setCustomerJobs(prev => ({
+            ...prev,
+            [customerId]: [...(prev[customerId] || []), newJob]
+          }));
+        }
+        
         toast.success('Job created successfully');
       }
     } catch (err: any) {
@@ -1264,6 +1282,9 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
 
 // Add Job Modal Component
 const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete = null, onJobUpdate = null }: any) => {
+  console.log('[AddJobModal] Initialized with customer:', customer);
+  console.log('[AddJobModal] Existing job:', existingJob);
+  
   const [activeTab, setActiveTab] = useState('description');
   const [currentJobId, setCurrentJobId] = useState(existingJob?.id || null);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -1283,6 +1304,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     notes: existingJob?.notes || '',
     comments: existingJob?.comments || []
   });
+  
+  console.log('[AddJobModal] Initial jobData:', jobData);
 
   // Update job data when existingJob changes (e.g., after save)
   useEffect(() => {
@@ -1647,6 +1670,14 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
       throw error;
     }
   };
+
+  // Safety check - ensure we have a customer
+  if (!customer || !customer.id) {
+    console.error('[AddJobModal] ERROR: No customer provided or customer has no ID');
+    toast.error('Error: No customer selected');
+    onClose();
+    return null;
+  }
 
   return (
     <div style={{
