@@ -9,6 +9,20 @@ const CustomersEnhanced = () => {
   console.log('[CustomersEnhanced] Component rendering...');
   const navigate = useNavigate();
   
+  // Add CSS to hide scrollbars on tabs container
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .tabs-container::-webkit-scrollbar {
+        display: none;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+  
   // State
   const [customers, setCustomers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -1284,32 +1298,43 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           </div>
         </div>
 
-        <div style={{
+        <div 
+          className="tabs-container"
+          style={{
           display: 'flex',
           borderBottom: '1px solid #E5E7EB',
           backgroundColor: '#F9FAFB',
-          overflowX: 'auto'
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch', // Smooth scrolling on iOS
+          scrollbarWidth: 'none', // Hide scrollbar Firefox
+          msOverflowStyle: 'none', // Hide scrollbar IE/Edge
+          minHeight: '48px', // Ensure minimum height
+          flexWrap: 'nowrap', // Prevent wrapping
+          gap: '4px', // Add gap between tabs
+          padding: '0 8px' // Add horizontal padding
         }}>
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               style={{
-                padding: '12px 20px',
+                padding: window.innerWidth <= 640 ? '10px 12px' : '12px 20px',
                 border: 'none',
                 backgroundColor: activeTab === tab.id ? 'white' : 'transparent',
                 borderBottom: activeTab === tab.id ? '2px solid #3B82F6' : '2px solid transparent',
                 cursor: 'pointer',
-                fontSize: '16.1px',
+                fontSize: window.innerWidth <= 640 ? '14.95px' : '16.1px',
                 fontWeight: activeTab === tab.id ? '600' : '400',
                 color: activeTab === tab.id ? '#3B82F6' : '#6B7280',
                 whiteSpace: 'nowrap',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px'
+                gap: window.innerWidth <= 640 ? '4px' : '8px',
+                flexShrink: 0, // Prevent tabs from shrinking
+                minWidth: 'fit-content' // Ensure minimum width
               }}
             >
-              <span>{tab.icon}</span>
+              {window.innerWidth > 640 && <span>{tab.icon}</span>}
               {tab.label}
             </button>
           ))}
