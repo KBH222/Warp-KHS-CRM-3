@@ -44,6 +44,31 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Check database schema
+app.get('/api/check-schema', async (req, res) => {
+  try {
+    // Try to query a job with photos field
+    const testQuery = await prisma.$queryRaw`
+      SELECT column_name, data_type 
+      FROM information_schema.columns 
+      WHERE table_name = 'Job' 
+      AND column_name IN ('photos', 'plans')
+    `;
+    
+    res.json({
+      status: 'ok',
+      schema: testQuery,
+      message: testQuery.length > 0 ? 'Photos/plans columns exist' : 'Photos/plans columns missing - migration needed'
+    });
+  } catch (error) {
+    res.json({
+      status: 'error',
+      error: error.message,
+      message: 'Failed to check schema - migration may be needed'
+    });
+  }
+});
+
 // Auth routes
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;

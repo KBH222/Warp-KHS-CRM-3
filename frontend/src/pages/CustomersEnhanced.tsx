@@ -1440,14 +1440,33 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
   const handleSavePhotos = async () => {
     try {
       if (currentJobId) {
-        // Update existing job with new photos
+        // Update existing job with new photos - need to send all fields
         const updateData = {
+          title: jobData.title,
+          description: jobData.description || '',
+          status: jobData.status,
+          priority: jobData.priority,
+          totalCost: jobData.totalCost || 0,
+          depositPaid: jobData.depositPaid || 0,
+          actualCost: jobData.actualCost || 0,
+          startDate: jobData.startDate,
+          endDate: jobData.endDate,
+          completedDate: jobData.completedDate,
+          notes: jobData.notes || '',
+          customerId: jobData.customerId || customer.id,
           photos: jobData.photos || [],
           plans: jobData.plans || []
         };
         
+        console.log('Updating job with photos:', {
+          jobId: currentJobId,
+          photoCount: updateData.photos.length,
+          photosData: updateData.photos
+        });
+        
         const updatedJob = await jobsApi.update(currentJobId, updateData);
-        console.log('Photos saved successfully for job:', currentJobId);
+        console.log('Server response - updated job:', updatedJob);
+        console.log('Photos in response:', updatedJob.photos);
         
         // Update parent component with new job data
         if (onJobUpdate) {
