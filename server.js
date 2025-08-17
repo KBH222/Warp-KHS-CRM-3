@@ -140,14 +140,63 @@ app.get('/api/customers', authMiddleware, async (req, res) => {
             id: true,
             title: true,
             status: true,
-            totalCost: true
+            totalCost: true,
+            description: true,
+            priority: true,
+            depositPaid: true,
+            actualCost: true,
+            startDate: true,
+            endDate: true,
+            completedDate: true,
+            notes: true,
+            photos: true,
+            plans: true,
+            customerId: true
           }
         }
       },
       orderBy: { createdAt: 'desc' }
     });
     console.log(`Found ${customers.length} customers`);
-    res.json(customers);
+    
+    // Parse photos and plans for each job
+    const customersWithParsedJobs = customers.map(customer => {
+      const parsedCustomer = { ...customer };
+      if (customer.jobs) {
+        parsedCustomer.jobs = customer.jobs.map(job => {
+          const parsedJob = { ...job };
+          
+          // Parse photos
+          if (job.photos) {
+            try {
+              parsedJob.photos = JSON.parse(job.photos);
+            } catch (e) {
+              console.error('Failed to parse photos for job:', job.id, e);
+              parsedJob.photos = [];
+            }
+          } else {
+            parsedJob.photos = [];
+          }
+          
+          // Parse plans
+          if (job.plans) {
+            try {
+              parsedJob.plans = JSON.parse(job.plans);
+            } catch (e) {
+              console.error('Failed to parse plans for job:', job.id, e);
+              parsedJob.plans = [];
+            }
+          } else {
+            parsedJob.plans = [];
+          }
+          
+          return parsedJob;
+        });
+      }
+      return parsedCustomer;
+    });
+    
+    res.json(customersWithParsedJobs);
   } catch (error) {
     console.error('Error fetching customers:', error);
     // Check if it's a Prisma/DB error

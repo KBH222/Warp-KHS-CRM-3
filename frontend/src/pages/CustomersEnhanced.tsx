@@ -143,6 +143,12 @@ const CustomersEnhanced = () => {
   const [editingJob, setEditingJob] = useState(null);
 
   // Sort customers
+  // Helper function to get jobs for a customer
+  const getCustomerJobs = (customerId: string) => {
+    const customer = customers.find(c => c.id === customerId);
+    return customer?.jobs || [];
+  };
+
   const sortedCustomers = [...customers].sort((a, b) => {
     switch (sortBy) {
       case 'name':
@@ -333,15 +339,19 @@ const CustomersEnhanced = () => {
         
         const updatedJob = await jobsApi.update(jobData.id, updateData);
         
-        // Update local state
-        setCustomerJobs(prev => {
-          const customerJobs = [...(prev[updatedJob.customerId] || [])];
-          const index = customerJobs.findIndex(j => j.id === updatedJob.id);
-          if (index !== -1) {
-            customerJobs[index] = updatedJob;
-            return { ...prev, [updatedJob.customerId]: customerJobs };
-          }
-          return prev;
+        // Update local state - update the customer's jobs array
+        setCustomers(prevCustomers => {
+          return prevCustomers.map(customer => {
+            if (customer.id === updatedJob.customerId) {
+              const updatedJobs = customer.jobs ? [...customer.jobs] : [];
+              const jobIndex = updatedJobs.findIndex(j => j.id === updatedJob.id);
+              if (jobIndex !== -1) {
+                updatedJobs[jobIndex] = updatedJob;
+              }
+              return { ...customer, jobs: updatedJobs };
+            }
+            return customer;
+          });
         });
         toast.success('Job updated successfully');
       } else {
@@ -366,11 +376,16 @@ const CustomersEnhanced = () => {
         const newJob = await jobsApi.create(createPayload);
         console.log('New job created:', newJob);
         
-        // Update local state
-        setCustomerJobs(prev => ({
-          ...prev,
-          [selectedCustomerForJob.id]: [...(prev[selectedCustomerForJob.id] || []), newJob]
-        }));
+        // Update local state - add the new job to the customer's jobs array
+        setCustomers(prevCustomers => {
+          return prevCustomers.map(customer => {
+            if (customer.id === selectedCustomerForJob.id) {
+              const updatedJobs = customer.jobs ? [...customer.jobs, newJob] : [newJob];
+              return { ...customer, jobs: updatedJobs };
+            }
+            return customer;
+          });
+        });
         toast.success('Job created successfully');
       }
     } catch (err: any) {
@@ -401,13 +416,15 @@ const CustomersEnhanced = () => {
   const handleDeleteJob = async (jobId: string) => {
     try {
       await jobsApi.delete(jobId);
-      // Update local state
-      setCustomerJobs(prev => {
-        const updated = { ...prev };
-        Object.keys(updated).forEach(customerId => {
-          updated[customerId] = updated[customerId].filter(j => j.id !== jobId);
+      // Update local state - remove the job from the customer's jobs array
+      setCustomers(prevCustomers => {
+        return prevCustomers.map(customer => {
+          if (customer.jobs && customer.jobs.some(j => j.id === jobId)) {
+            const updatedJobs = customer.jobs.filter(j => j.id !== jobId);
+            return { ...customer, jobs: updatedJobs };
+          }
+          return customer;
         });
-        return updated;
       });
       toast.success('Job deleted successfully');
     } catch (err) {
@@ -872,17 +889,22 @@ const CustomersEnhanced = () => {
             // Update the editing job with latest data
             setEditingJob(updatedJob);
             // Also update in the customer jobs list
-            setCustomerJobs(prev => {
-              const customerJobs = [...(prev[updatedJob.customerId] || [])];
-              const index = customerJobs.findIndex(j => j.id === updatedJob.id);
-              if (index !== -1) {
-                // Update existing job
-                customerJobs[index] = updatedJob;
-              } else {
-                // Add new job if it doesn't exist (created via photo upload)
-                customerJobs.push(updatedJob);
-              }
-              return { ...prev, [updatedJob.customerId]: customerJobs };
+            setCustomers(prevCustomers => {
+              return prevCustomers.map(customer => {
+                if (customer.id === updatedJob.customerId) {
+                  const updatedJobs = customer.jobs ? [...customer.jobs] : [];
+                  const jobIndex = updatedJobs.findIndex(j => j.id === updatedJob.id);
+                  if (jobIndex !== -1) {
+                    // Update existing job
+                    updatedJobs[jobIndex] = updatedJob;
+                  } else {
+                    // Add new job if it doesn't exist (created via photo upload)
+                    updatedJobs.push(updatedJob);
+                  }
+                  return { ...customer, jobs: updatedJobs };
+                }
+                return customer;
+              });
             });
           }}
         />
