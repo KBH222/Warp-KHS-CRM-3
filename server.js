@@ -155,6 +155,36 @@ app.get('/api/debug/job/:jobId', async (req, res) => {
   }
 });
 
+// Debug endpoint to list all jobs
+app.get('/api/debug/jobs', async (req, res) => {
+  try {
+    const jobs = await prisma.job.findMany({
+      select: {
+        id: true,
+        title: true,
+        customerId: true,
+        photos: true,
+        createdAt: true
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+    
+    res.json({
+      totalJobs: jobs.length,
+      jobs: jobs.map(job => ({
+        id: job.id,
+        title: job.title,
+        customerId: job.customerId,
+        hasPhotos: !!job.photos && job.photos !== '[]',
+        photosLength: job.photos ? job.photos.length : 0,
+        createdAt: job.createdAt
+      }))
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Auth routes
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
@@ -414,6 +444,12 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
     }
     
     console.log('Job created successfully:', job.id);
+    console.log('Created job details:', {
+      id: job.id,
+      title: job.title,
+      customerId: job.customerId,
+      hasPhotos: !!job.photos
+    });
     res.status(201).json(job);
   } catch (error) {
     console.error('Error creating job:', error);

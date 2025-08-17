@@ -1561,9 +1561,11 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         console.log('New job photos:', newJob.photos);
         
         // Update local state with the new job ID
+        console.log('New job created, updating state with ID:', newJob.id);
         setCurrentJobId(newJob.id);
         setJobData(prev => ({ ...prev, id: newJob.id }));
         console.log('Job created with photos, new ID:', newJob.id);
+        console.log('Current state after update - currentJobId:', newJob.id, 'jobData.id:', newJob.id);
         
         // Update parent component with new job data
         if (onJobUpdate) {
