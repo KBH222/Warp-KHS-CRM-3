@@ -249,9 +249,6 @@ const CustomersEnhanced = () => {
           description: jobData.description || '',
           status: jobData.status,
           priority: jobData.priority,
-          totalCost: jobData.totalCost || 0,
-          depositPaid: jobData.depositPaid || 0,
-          actualCost: jobData.actualCost || 0,
           startDate: jobData.startDate,
           endDate: jobData.endDate,
           completedDate: jobData.completedDate,
@@ -296,9 +293,6 @@ const CustomersEnhanced = () => {
           description: jobData.description || '',
           status: jobData.status,
           priority: jobData.priority,
-          totalCost: jobData.totalCost || 0,
-          depositPaid: jobData.depositPaid || 0,
-          actualCost: jobData.actualCost || 0,
           startDate: jobData.startDate,
           endDate: jobData.endDate,
           completedDate: jobData.completedDate,
@@ -334,9 +328,6 @@ const CustomersEnhanced = () => {
           customerId: selectedCustomerForJob.id,
           status: jobData.status || 'QUOTED',
           priority: jobData.priority || 'medium',
-          totalCost: parseFloat(jobData.totalCost) || 0,
-          depositPaid: parseFloat(jobData.depositPaid) || 0,
-          actualCost: parseFloat(jobData.actualCost) || 0,
           startDate: jobData.startDate,
           endDate: jobData.endDate,
           notes: jobData.notes || '',
@@ -1283,9 +1274,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     description: existingJob?.description || '',
     status: existingJob?.status || 'QUOTED',
     priority: existingJob?.priority || 'medium',
-    totalCost: existingJob?.totalCost || 0,
-    depositPaid: existingJob?.depositPaid || 0,
-    actualCost: existingJob?.actualCost || 0,
     startDate: existingJob?.startDate || null,
     endDate: existingJob?.endDate || null,
     completedDate: existingJob?.completedDate || null,
@@ -1306,9 +1294,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         description: existingJob.description || '',
         status: existingJob.status || 'QUOTED',
         priority: existingJob.priority || 'medium',
-        totalCost: existingJob.totalCost || 0,
-        depositPaid: existingJob.depositPaid || 0,
-        actualCost: existingJob.actualCost || 0,
         startDate: existingJob.startDate || null,
         endDate: existingJob.endDate || null,
         completedDate: existingJob.completedDate || null,
@@ -1506,9 +1491,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           description: jobData.description || '',
           status: jobData.status,
           priority: jobData.priority,
-          totalCost: jobData.totalCost || 0,
-          depositPaid: jobData.depositPaid || 0,
-          actualCost: jobData.actualCost || 0,
           startDate: jobData.startDate,
           endDate: jobData.endDate,
           completedDate: jobData.completedDate,
@@ -1524,12 +1506,17 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           photosData: updateData.photos
         });
         
+        console.log('About to update job with ID:', currentJobId);
         const updatedJob = await jobsApi.update(currentJobId, updateData);
         console.log('Server response - updated job:', updatedJob);
         console.log('Photos in response:', updatedJob.photos);
         console.log('Has photos field?', 'photos' in updatedJob);
         console.log('Photos type:', typeof updatedJob.photos);
         console.log('Photos length:', Array.isArray(updatedJob.photos) ? updatedJob.photos.length : 'not an array');
+        
+        if (!updatedJob || !updatedJob.id) {
+          throw new Error('Server did not return a valid job object');
+        }
         
         // Check if photos were actually saved (only if we expected photos)
         if (jobData.photos.length > 0 && (!updatedJob.photos || updatedJob.photos.length === 0)) {
@@ -1563,9 +1550,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           customerId: customer.id,
           status: jobData.status || 'QUOTED',
           priority: jobData.priority || 'medium',
-          totalCost: parseFloat(jobData.totalCost) || 0,
-          depositPaid: parseFloat(jobData.depositPaid) || 0,
-          actualCost: parseFloat(jobData.actualCost) || 0,
           startDate: jobData.startDate,
           endDate: jobData.endDate,
           notes: jobData.notes || '',

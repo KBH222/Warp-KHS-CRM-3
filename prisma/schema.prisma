@@ -92,9 +92,6 @@ model Job {
   description   String?
   status        JobStatus @default(QUOTED)
   priority      String    @default("medium") // low, medium, high
-  totalCost     Float     @default(0)
-  depositPaid   Float     @default(0)
-  actualCost    Float     @default(0)
   startDate     DateTime?
   endDate       DateTime?
   completedDate DateTime?
@@ -113,7 +110,6 @@ model Job {
   materials     Material[]
   statusHistory JobStatusHistory[]
   activityLogs  ActivityLog[]
-  invoices      Invoice[]
 
   @@index([status])
   @@index([customerId])
@@ -214,21 +210,3 @@ model SyncQueue {
 }
 
 
-// Invoice model
-model Invoice {
-  id          String    @id @default(cuid())
-  invoiceNumber String  @unique
-  jobId       String
-  job         Job       @relation(fields: [jobId], references: [id])
-  amount      Float
-  status      String    @default("pending") // pending, paid, overdue, cancelled
-  dueDate     DateTime?
-  paidDate    DateTime?
-  notes       String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@index([jobId])
-  @@index([status])
-  @@index([invoiceNumber])
-}

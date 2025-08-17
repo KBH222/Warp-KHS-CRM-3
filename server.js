@@ -133,11 +133,22 @@ app.get('/api/debug/job/:jobId', async (req, res) => {
       where: { id: jobId }
     });
     
+    // If job not found, try to find all jobs to help debug
+    let allJobs = [];
+    if (!job) {
+      allJobs = await prisma.job.findMany({
+        select: { id: true, title: true }
+      });
+    }
+    
     res.json({
+      requestedJobId: jobId,
       job: job,
+      jobFound: !!job,
       photosField: job?.photos,
       photosLength: job?.photos ? job.photos.length : 0,
-      parsedPhotos: job?.photos ? JSON.parse(job.photos) : null
+      parsedPhotos: job?.photos ? JSON.parse(job.photos) : null,
+      allJobIds: !job ? allJobs : []
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -176,11 +187,8 @@ app.get('/api/customers', authMiddleware, async (req, res) => {
             id: true,
             title: true,
             status: true,
-            totalCost: true,
             description: true,
             priority: true,
-            depositPaid: true,
-            actualCost: true,
             startDate: true,
             endDate: true,
             completedDate: true,
@@ -353,9 +361,6 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
       customerId: req.body.customerId,
       status: req.body.status || 'QUOTED',
       priority: req.body.priority || 'medium',
-      totalCost: req.body.totalCost || 0,
-      depositPaid: req.body.depositPaid || 0,
-      actualCost: req.body.actualCost || 0,
       startDate: req.body.startDate ? new Date(req.body.startDate) : null,
       endDate: req.body.endDate ? new Date(req.body.endDate) : null,
       completedDate: req.body.completedDate ? new Date(req.body.completedDate) : null,
@@ -427,9 +432,6 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
       customerId: req.body.customerId,
       status: req.body.status,
       priority: req.body.priority,
-      totalCost: req.body.totalCost,
-      depositPaid: req.body.depositPaid,
-      actualCost: req.body.actualCost,
       startDate: req.body.startDate ? new Date(req.body.startDate) : null,
       endDate: req.body.endDate ? new Date(req.body.endDate) : null,
       completedDate: req.body.completedDate ? new Date(req.body.completedDate) : null,
