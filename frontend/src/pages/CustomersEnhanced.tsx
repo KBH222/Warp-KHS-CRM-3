@@ -175,36 +175,7 @@ const CustomersEnhanced = () => {
     (customer.notes && customer.notes.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  // Jobs state for customer display
-  const [customerJobs, setCustomerJobs] = useState({});
 
-  // Load jobs for all customers
-  useEffect(() => {
-    const loadJobs = async () => {
-      try {
-        const jobs = await jobsApi.getAll();
-        // Group jobs by customer
-        const jobsByCustomer = {};
-        jobs.forEach(job => {
-          if (!jobsByCustomer[job.customerId]) {
-            jobsByCustomer[job.customerId] = [];
-          }
-          jobsByCustomer[job.customerId].push(job);
-        });
-        setCustomerJobs(jobsByCustomer);
-      } catch (err) {
-        // Fallback handled in API
-      }
-    };
-    if (customers.length > 0) {
-      loadJobs();
-    }
-  }, [customers]);
-
-  // Get jobs for a customer
-  const getCustomerJobs = (customerId: string) => {
-    return customerJobs[customerId] || [];
-  };
 
   const handleAddCustomer = async (newCustomer: any) => {
     try {
