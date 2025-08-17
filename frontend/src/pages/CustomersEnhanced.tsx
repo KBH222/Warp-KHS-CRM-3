@@ -1303,6 +1303,32 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     comments: existingJob?.comments || []
   });
 
+  // Update job data when existingJob changes (e.g., after save)
+  useEffect(() => {
+    if (existingJob) {
+      console.log('Updating job data from existingJob:', existingJob);
+      setJobData({
+        id: existingJob.id,
+        title: existingJob.title || '',
+        description: existingJob.description || '',
+        status: existingJob.status || 'QUOTED',
+        priority: existingJob.priority || 'medium',
+        totalCost: existingJob.totalCost || 0,
+        depositPaid: existingJob.depositPaid || 0,
+        actualCost: existingJob.actualCost || 0,
+        startDate: existingJob.startDate || null,
+        endDate: existingJob.endDate || null,
+        completedDate: existingJob.completedDate || null,
+        customerId: existingJob.customerId || customer?.id,
+        photos: existingJob.photos || [],
+        plans: existingJob.plans || [],
+        notes: existingJob.notes || '',
+        comments: existingJob.comments || []
+      });
+      setCurrentJobId(existingJob.id);
+    }
+  }, [existingJob, customer]);
+
   const tabs = [
     { id: 'description', label: 'Job Description', icon: '📋' },
     { id: 'photos', label: 'Photos', icon: '📸' },
