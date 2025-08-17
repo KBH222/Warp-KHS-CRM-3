@@ -259,12 +259,16 @@ const CustomersEnhanced = () => {
 
   const handleSaveJob = async (jobData: any) => {
     try {
-      if (jobData.id) {
+      console.log('handleSaveJob called with:', jobData);
+      console.log('editingJob:', editingJob);
+      console.log('selectedCustomerForJob:', selectedCustomerForJob);
+      
+      // Check if we're updating or creating
+      if (editingJob && editingJob.id) {
         // Update existing job
-        // Filter out non-backend fields like photos, plans, comments
         const updateData = {
           title: jobData.title,
-          description: jobData.description,
+          description: jobData.description || '',
           status: jobData.status,
           priority: jobData.priority,
           totalCost: jobData.totalCost || 0,
@@ -273,13 +277,56 @@ const CustomersEnhanced = () => {
           startDate: jobData.startDate,
           endDate: jobData.endDate,
           completedDate: jobData.completedDate,
-          notes: jobData.notes,
+          notes: jobData.notes || '',
+          customerId: jobData.customerId || editingJob.customerId
+        };
+        
+        console.log('Updating job ID:', editingJob.id);
+        console.log('Update payload:', updateData);
+        
+        try {
+          const updatedJob = await jobsApi.update(editingJob.id, updateData);
+          console.log('Update successful:', updatedJob);
+          
+          // Update local state
+          setCustomerJobs(prev => {
+            const customerJobs = [...(prev[updatedJob.customerId] || [])];
+            const index = customerJobs.findIndex(j => j.id === updatedJob.id);
+            if (index !== -1) {
+              customerJobs[index] = updatedJob;
+              return { ...prev, [updatedJob.customerId]: customerJobs };
+            }
+            return prev;
+          });
+          toast.success('Job updated successfully');
+        } catch (apiError: any) {
+          console.error('API Error details:', {
+            message: apiError.message,
+            response: apiError.response,
+            data: apiError.response?.data,
+            status: apiError.response?.status
+          });
+          throw apiError;
+        }
+      } else if (jobData.id) {
+        // Legacy path - update using jobData.id
+        console.warn('Using legacy update path with jobData.id:', jobData.id);
+        const updateData = {
+          title: jobData.title,
+          description: jobData.description || '',
+          status: jobData.status,
+          priority: jobData.priority,
+          totalCost: jobData.totalCost || 0,
+          depositPaid: jobData.depositPaid || 0,
+          actualCost: jobData.actualCost || 0,
+          startDate: jobData.startDate,
+          endDate: jobData.endDate,
+          completedDate: jobData.completedDate,
+          notes: jobData.notes || '',
           customerId: jobData.customerId
         };
         
-        console.log('Updating job with data:', updateData);
         const updatedJob = await jobsApi.update(jobData.id, updateData);
-        
         // Update local state
         setCustomerJobs(prev => {
           const customerJobs = [...(prev[updatedJob.customerId] || [])];
@@ -293,9 +340,10 @@ const CustomersEnhanced = () => {
         toast.success('Job updated successfully');
       } else {
         // Create new job
+        console.log('Creating new job');
         const newJob = await jobsApi.create({
           title: jobData.title,
-          description: jobData.description,
+          description: jobData.description || '',
           customerId: selectedCustomerForJob.id,
           status: jobData.status || 'QUOTED',
           priority: jobData.priority || 'medium',
@@ -303,8 +351,10 @@ const CustomersEnhanced = () => {
           depositPaid: jobData.depositPaid || 0,
           startDate: jobData.startDate,
           endDate: jobData.endDate,
-          notes: jobData.notes
+          notes: jobData.notes || ''
         });
+        console.log('New job created:', newJob);
+        
         // Update local state
         setCustomerJobs(prev => ({
           ...prev,
@@ -313,8 +363,8 @@ const CustomersEnhanced = () => {
         toast.success('Job created successfully');
       }
     } catch (err) {
-      console.error('Error saving job:', err);
-      toast.error('Failed to save job');
+      console.error('Failed to save job - Full error:', err);
+      toast.error('Failed to save job - check console for details');
     }
     
     setShowAddJobModal(false);
@@ -657,8 +707,15 @@ const CustomersEnhanced = () => {
                                   key={job.id}
                                   onClick={(e) => {
                                     e.stopPropagation();
+                                    console.log('Setting editingJob to:', job);
+                                    console.log('Job object structure:', {
+                                      id: job.id,
+                                      title: job.title,
+                                      customerId: job.customerId,
+                                      allFields: Object.keys(job)
+                                    });
                                     setSelectedCustomerForJob(customer);
-                                    setEditingJob(job);
+                                    setEditingJob(job);  // Make sure this has the full job object with ID
                                     setShowAddJobModal(true);
                                   }}
                                   style={{
