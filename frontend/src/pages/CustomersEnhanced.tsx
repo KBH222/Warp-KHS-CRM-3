@@ -867,6 +867,20 @@ const CustomersEnhanced = () => {
           }}
           onSave={handleSaveJob}
           onDelete={handleDeleteJob}
+          onJobUpdate={(updatedJob) => {
+            // Update the editing job with latest data
+            setEditingJob(updatedJob);
+            // Also update in the customer jobs list
+            setCustomerJobs(prev => {
+              const customerJobs = [...(prev[updatedJob.customerId] || [])];
+              const index = customerJobs.findIndex(j => j.id === updatedJob.id);
+              if (index !== -1) {
+                customerJobs[index] = updatedJob;
+                return { ...prev, [updatedJob.customerId]: customerJobs };
+              }
+              return prev;
+            });
+          }}
         />
     )}
     </>
@@ -1261,7 +1275,7 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
 };
 
 // Add Job Modal Component
-const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete = null }: any) => {
+const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete = null, onJobUpdate = null }: any) => {
   const [activeTab, setActiveTab] = useState('description');
   const [currentJobId, setCurrentJobId] = useState(existingJob?.id || null);
   
@@ -1434,6 +1448,11 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         
         const updatedJob = await jobsApi.update(currentJobId, updateData);
         console.log('Photos saved successfully for job:', currentJobId);
+        
+        // Update parent component with new job data
+        if (onJobUpdate) {
+          onJobUpdate(updatedJob);
+        }
       } else {
         // Create new job first
         const newJob = await jobsApi.create({
@@ -1456,6 +1475,11 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         setCurrentJobId(newJob.id);
         setJobData(prev => ({ ...prev, id: newJob.id }));
         console.log('Job created with photos, new ID:', newJob.id);
+        
+        // Update parent component with new job data
+        if (onJobUpdate) {
+          onJobUpdate(newJob);
+        }
       }
     } catch (error) {
       console.error('Failed to save photos:', error);
