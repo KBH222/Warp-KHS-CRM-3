@@ -1270,8 +1270,67 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 {customer.address}
               </p>
             </div>
-            {existingJob && onDelete && (
-              <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              {/* Upload Photos button - show when Photos tab is active */}
+              {activeTab === 'photos' && (
+                <>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handlePhotoUpload}
+                    style={{ display: 'none' }}
+                    id="photo-upload-header"
+                  />
+                  <label
+                    htmlFor="photo-upload-header"
+                    style={{
+                      display: 'inline-block',
+                      padding: '8px 16px',
+                      backgroundColor: '#3B82F6',
+                      color: 'white',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '16.1px',
+                      fontWeight: '500'
+                    }}
+                  >
+                    + Upload Photos
+                  </label>
+                </>
+              )}
+              
+              {/* Upload Documents button - show when Plans tab is active */}
+              {activeTab === 'plans' && (
+                <>
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                    multiple
+                    onChange={handlePlanUpload}
+                    style={{ display: 'none' }}
+                    id="plan-upload-header"
+                  />
+                  <label
+                    htmlFor="plan-upload-header"
+                    style={{
+                      display: 'inline-block',
+                      padding: '8px 16px',
+                      backgroundColor: '#3B82F6',
+                      color: 'white',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '16.1px',
+                      fontWeight: '500'
+                    }}
+                  >
+                    + Upload Documents
+                  </label>
+                </>
+              )}
+              
+              {/* Delete Job button */}
+              {existingJob && onDelete && (
                 <button
                   type="button"
                   onClick={() => {
@@ -1293,8 +1352,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 >
                   Delete Job
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
 
@@ -1395,32 +1454,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
             {/* Photos Tab */}
             {activeTab === 'photos' && (
               <div>
-                <div style={{ marginBottom: '20px' }}>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handlePhotoUpload}
-                    style={{ display: 'none' }}
-                    id="photo-upload"
-                  />
-                  <label
-                    htmlFor="photo-upload"
-                    style={{
-                      display: 'inline-block',
-                      padding: '10px 20px',
-                      backgroundColor: '#3B82F6',
-                      color: 'white',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      fontSize: '16.1px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    + Upload Photos
-                  </label>
-                </div>
-                
                 <div style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
@@ -1481,32 +1514,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
             {/* Plans Tab */}
             {activeTab === 'plans' && (
               <div>
-                <div style={{ marginBottom: '20px' }}>
-                  <input
-                    type="file"
-                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                    multiple
-                    onChange={handlePlanUpload}
-                    style={{ display: 'none' }}
-                    id="plan-upload"
-                  />
-                  <label
-                    htmlFor="plan-upload"
-                    style={{
-                      display: 'inline-block',
-                      padding: '10px 20px',
-                      backgroundColor: '#3B82F6',
-                      color: 'white',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      fontSize: '16.1px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    + Upload Documents
-                  </label>
-                </div>
-                
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {jobData.plans.map(plan => (
                     <div 
