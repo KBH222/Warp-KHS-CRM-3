@@ -288,6 +288,16 @@ const CustomersEnhanced = () => {
           const updatedJob = await jobsApi.update(editingJob.id, updateData);
           console.log('Update successful:', updatedJob);
           
+          // Save photos and plans to localStorage (temporary solution)
+          if (jobData.photos && jobData.photos.length > 0) {
+            localStorage.setItem(`job-photos-${editingJob.id}`, JSON.stringify(jobData.photos));
+            console.log('Saved photos to localStorage for job:', editingJob.id);
+          }
+          if (jobData.plans && jobData.plans.length > 0) {
+            localStorage.setItem(`job-plans-${editingJob.id}`, JSON.stringify(jobData.plans));
+            console.log('Saved plans to localStorage for job:', editingJob.id);
+          }
+          
           // Update local state
           setCustomerJobs(prev => {
             const customerJobs = [...(prev[updatedJob.customerId] || [])];
@@ -327,6 +337,15 @@ const CustomersEnhanced = () => {
         };
         
         const updatedJob = await jobsApi.update(jobData.id, updateData);
+        
+        // Save photos and plans to localStorage (legacy path)
+        if (jobData.photos && jobData.photos.length > 0) {
+          localStorage.setItem(`job-photos-${jobData.id}`, JSON.stringify(jobData.photos));
+        }
+        if (jobData.plans && jobData.plans.length > 0) {
+          localStorage.setItem(`job-plans-${jobData.id}`, JSON.stringify(jobData.plans));
+        }
+        
         // Update local state
         setCustomerJobs(prev => {
           const customerJobs = [...(prev[updatedJob.customerId] || [])];
@@ -354,6 +373,16 @@ const CustomersEnhanced = () => {
           notes: jobData.notes || ''
         });
         console.log('New job created:', newJob);
+        
+        // Save photos and plans to localStorage for new job
+        if (jobData.photos && jobData.photos.length > 0) {
+          localStorage.setItem(`job-photos-${newJob.id}`, JSON.stringify(jobData.photos));
+          console.log('Saved photos to localStorage for new job:', newJob.id);
+        }
+        if (jobData.plans && jobData.plans.length > 0) {
+          localStorage.setItem(`job-plans-${newJob.id}`, JSON.stringify(jobData.plans));
+          console.log('Saved plans to localStorage for new job:', newJob.id);
+        }
         
         // Update local state
         setCustomerJobs(prev => ({
@@ -1237,6 +1266,22 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
 // Add Job Modal Component
 const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete = null }: any) => {
   const [activeTab, setActiveTab] = useState('description');
+  
+  // Load photos and plans from localStorage if editing
+  const loadStoredPhotosAndPlans = () => {
+    if (existingJob?.id) {
+      const storedPhotos = localStorage.getItem(`job-photos-${existingJob.id}`);
+      const storedPlans = localStorage.getItem(`job-plans-${existingJob.id}`);
+      return {
+        photos: storedPhotos ? JSON.parse(storedPhotos) : [],
+        plans: storedPlans ? JSON.parse(storedPlans) : []
+      };
+    }
+    return { photos: [], plans: [] };
+  };
+  
+  const { photos: storedPhotos, plans: storedPlans } = loadStoredPhotosAndPlans();
+  
   const [jobData, setJobData] = useState({
     id: existingJob?.id || null,
     title: existingJob?.title || '',
@@ -1250,8 +1295,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     endDate: existingJob?.endDate || null,
     completedDate: existingJob?.completedDate || null,
     customerId: existingJob?.customerId || customer?.id,
-    photos: existingJob?.photos || [],
-    plans: existingJob?.plans || [],
+    photos: storedPhotos.length > 0 ? storedPhotos : (existingJob?.photos || []),
+    plans: storedPlans.length > 0 ? storedPlans : (existingJob?.plans || []),
     notes: existingJob?.notes || '',
     comments: existingJob?.comments || []
   });
