@@ -28,6 +28,8 @@ interface Job {
   createdById: string;
   createdAt: Date;
   updatedAt: Date;
+  photos?: any[];
+  plans?: any[];
 }
 
 interface Material {
@@ -214,6 +216,8 @@ class OptimisticUpdatesService {
       createdById: 'current-user', // This should be set from auth context
       createdAt: now,
       updatedAt: now,
+      photos: data.photos || [],
+      plans: data.plans || [],
     };
 
     if (navigator.onLine) {

@@ -69,6 +69,79 @@ app.get('/api/check-schema', async (req, res) => {
   }
 });
 
+// Test photo size limits
+app.post('/api/test-photo-size-limit', async (req, res) => {
+  try {
+    const { customerId } = req.body;
+    if (!customerId) {
+      return res.status(400).json({ error: 'customerId required' });
+    }
+    
+    const results = [];
+    const sizes = [1, 10, 50, 100, 500, 1000, 5000]; // KB sizes to test
+    
+    for (const sizeKB of sizes) {
+      try {
+        // Create a test photo with specific size
+        const sizeBytes = sizeKB * 1024;
+        const base64Size = Math.floor(sizeBytes * 0.75); // Account for base64 encoding
+        const testData = 'A'.repeat(base64Size);
+        const testPhoto = {
+          id: Date.now(),
+          name: `test-${sizeKB}KB.jpg`,
+          url: `data:image/jpeg;base64,${testData}`
+        };
+        
+        // Create job with test photo
+        const job = await prisma.job.create({
+          data: {
+            title: `Photo Size Test ${sizeKB}KB`,
+            customerId: customerId,
+            status: 'QUOTED',
+            priority: 'low',
+            photos: JSON.stringify([testPhoto])
+          }
+        });
+        
+        // Verify it was saved
+        const verification = await prisma.job.findUnique({
+          where: { id: job.id }
+        });
+        
+        const saved = verification?.photos?.length === job.photos.length;
+        
+        results.push({
+          sizeKB,
+          jobId: job.id,
+          savedSuccessfully: saved,
+          originalLength: job.photos.length,
+          verifiedLength: verification?.photos?.length,
+          truncated: !saved
+        });
+        
+        // Clean up test job
+        await prisma.job.delete({ where: { id: job.id } });
+        
+      } catch (error) {
+        results.push({
+          sizeKB,
+          savedSuccessfully: false,
+          error: error.message
+        });
+      }
+    }
+    
+    res.json({
+      status: 'ok',
+      results,
+      maxSuccessfulSize: results.filter(r => r.savedSuccessfully).pop()?.sizeKB || 0
+    });
+    
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Test photo save and retrieve
 app.get('/api/test-photo-save/:jobId', async (req, res) => {
   try {
@@ -125,6 +198,42 @@ app.get('/api/test-photo-save/:jobId', async (req, res) => {
   }
 });
 
+// Check maximum field size in database
+app.get('/api/debug/field-limits', async (req, res) => {
+  try {
+    // For PostgreSQL, check the maximum size of text fields
+    const result = await prisma.$queryRaw`
+      SELECT 
+        table_name,
+        column_name,
+        data_type,
+        character_maximum_length
+      FROM information_schema.columns
+      WHERE table_name = 'Job' 
+      AND column_name IN ('photos', 'plans', 'notes', 'description')
+    `;
+    
+    // Test with a large string
+    const testSize = 1024 * 1024; // 1MB
+    const testString = 'x'.repeat(testSize);
+    
+    res.json({
+      status: 'ok',
+      database: 'PostgreSQL',
+      textFieldInfo: result,
+      testStringSize: testSize,
+      postgresTextLimit: 'PostgreSQL TEXT type can store up to 1GB',
+      recommendation: 'Photos should be stored without issue unless hitting 1GB limit'
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error',
+      error: error.message,
+      note: 'Could not determine field limits'
+    });
+  }
+});
+
 // Debug endpoint to check job data
 app.get('/api/debug/job/:jobId', async (req, res) => {
   try {
@@ -149,6 +258,32 @@ app.get('/api/debug/job/:jobId', async (req, res) => {
       photosLength: job?.photos ? job.photos.length : 0,
       parsedPhotos: job?.photos ? JSON.parse(job.photos) : null,
       allJobIds: !job ? allJobs : []
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Debug Express configuration
+app.get('/api/debug/express-config', async (req, res) => {
+  try {
+    res.json({
+      status: 'ok',
+      expressConfig: {
+        jsonLimit: '50mb',
+        urlEncodedLimit: '50mb',
+        middlewareStack: app._router.stack
+          .filter(layer => layer.name)
+          .map(layer => ({
+            name: layer.name,
+            regexp: layer.regexp?.toString()
+          }))
+      },
+      requestLimits: {
+        maxJsonSize: '50mb',
+        maxUrlEncodedSize: '50mb',
+        recommendation: 'Current limits should handle photos up to 50MB'
+      }
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -400,14 +535,25 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
     // Handle photos and plans - stringify arrays for storage
     if (req.body.photos && Array.isArray(req.body.photos)) {
       jobData.photos = JSON.stringify(req.body.photos);
-      console.log('Creating job with photos:', req.body.photos);
-      console.log('Photos stringified:', jobData.photos);
+      console.log('=== PHOTO CREATION DEBUG ===');
+      console.log('Creating job with photos count:', req.body.photos.length);
+      console.log('Photos array size in bytes:', JSON.stringify(req.body.photos).length);
+      console.log('Photos stringified length:', jobData.photos.length);
+      console.log('First photo sample:', req.body.photos[0] ? {
+        id: req.body.photos[0].id,
+        name: req.body.photos[0].name,
+        urlLength: req.body.photos[0].url ? req.body.photos[0].url.length : 0,
+        urlFirst100: req.body.photos[0].url ? req.body.photos[0].url.substring(0, 100) : null
+      } : 'No photos');
     }
     if (req.body.plans && Array.isArray(req.body.plans)) {
       jobData.plans = JSON.stringify(req.body.plans);
     }
     
-    console.log('Job data before create:', jobData);
+    console.log('Job data before create (without photos for brevity):', {
+      ...jobData,
+      photos: jobData.photos ? `[${jobData.photos.length} chars]` : undefined
+    });
     
     const job = await prisma.job.create({
       data: jobData,
@@ -444,12 +590,27 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
     }
     
     console.log('Job created successfully:', job.id);
-    console.log('Created job details:', {
-      id: job.id,
-      title: job.title,
-      customerId: job.customerId,
-      hasPhotos: !!job.photos
+    console.log('Created job photos field length:', job.photos ? job.photos.length : 0);
+    
+    // Immediately verify what was saved in database
+    const verification = await prisma.job.findUnique({
+      where: { id: job.id }
     });
+    
+    console.log('=== VERIFICATION AFTER CREATE ===');
+    console.log('Verification - job found:', !!verification);
+    console.log('Verification - photos field exists:', 'photos' in verification);
+    console.log('Verification - photos field length:', verification?.photos?.length);
+    console.log('Verification - photos field first 100 chars:', verification?.photos?.substring(0, 100));
+    console.log('Verification - photos field last 100 chars:', verification?.photos ? verification.photos.substring(verification.photos.length - 100) : null);
+    
+    // Check if photos were truncated
+    if (jobData.photos && verification?.photos && jobData.photos.length !== verification.photos.length) {
+      console.error('WARNING: Photos field was truncated!');
+      console.error('Expected length:', jobData.photos.length);
+      console.error('Actual length:', verification.photos.length);
+    }
+    
     res.status(201).json(job);
   } catch (error) {
     console.error('Error creating job:', error);
@@ -477,14 +638,28 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
     // Handle photos and plans - stringify arrays for storage
     if (req.body.photos !== undefined) {
       updateData.photos = Array.isArray(req.body.photos) ? JSON.stringify(req.body.photos) : null;
-      console.log('Photos to save:', req.body.photos);
-      console.log('Photos stringified:', updateData.photos);
+      console.log('=== PHOTO UPDATE DEBUG ===');
+      console.log('Updating job:', req.params.id);
+      console.log('Photos to save count:', Array.isArray(req.body.photos) ? req.body.photos.length : 'not array');
+      console.log('Photos array size in bytes:', Array.isArray(req.body.photos) ? JSON.stringify(req.body.photos).length : 0);
+      console.log('Photos stringified length:', updateData.photos ? updateData.photos.length : 0);
+      if (Array.isArray(req.body.photos) && req.body.photos[0]) {
+        console.log('First photo sample:', {
+          id: req.body.photos[0].id,
+          name: req.body.photos[0].name,
+          urlLength: req.body.photos[0].url ? req.body.photos[0].url.length : 0,
+          urlFirst100: req.body.photos[0].url ? req.body.photos[0].url.substring(0, 100) : null
+        });
+      }
     }
     if (req.body.plans !== undefined) {
       updateData.plans = Array.isArray(req.body.plans) ? JSON.stringify(req.body.plans) : null;
     }
     
-    console.log('Update data before save:', updateData);
+    console.log('Update data before save (without photos for brevity):', {
+      ...updateData,
+      photos: updateData.photos ? `[${updateData.photos.length} chars]` : undefined
+    });
     
     const job = await prisma.job.update({
       where: { id: req.params.id },
@@ -522,6 +697,27 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
     }
     
     console.log('Job updated successfully:', job.id);
+    console.log('Updated job photos field length:', job.photos ? job.photos.length : 0);
+    
+    // Immediately verify what was saved in database
+    const verification = await prisma.job.findUnique({
+      where: { id: req.params.id }
+    });
+    
+    console.log('=== VERIFICATION AFTER UPDATE ===');
+    console.log('Verification - job found:', !!verification);
+    console.log('Verification - photos field exists:', 'photos' in verification);
+    console.log('Verification - photos field length:', verification?.photos?.length);
+    console.log('Verification - photos field first 100 chars:', verification?.photos?.substring(0, 100));
+    console.log('Verification - photos field last 100 chars:', verification?.photos ? verification.photos.substring(verification.photos.length - 100) : null);
+    
+    // Check if photos were truncated
+    if (updateData.photos && verification?.photos && updateData.photos.length !== verification.photos.length) {
+      console.error('WARNING: Photos field was truncated!');
+      console.error('Expected length:', updateData.photos.length);
+      console.error('Actual length:', verification.photos.length);
+    }
+    
     res.json(job);
   } catch (error) {
     console.error('Error updating job:', error);

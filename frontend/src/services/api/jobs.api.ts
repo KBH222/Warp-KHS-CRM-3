@@ -13,6 +13,8 @@ interface Job {
   actualHours?: number;
   createdAt: string;
   updatedAt: string;
+  photos?: any[];
+  plans?: any[];
 }
 
 const API_URL = import.meta.env.VITE_API_URL || '';

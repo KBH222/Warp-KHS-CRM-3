@@ -12,6 +12,8 @@ interface Job {
   actualHours?: number;
   createdAt: string;
   updatedAt: string;
+  photos?: any[];
+  plans?: any[];
 }
 
 interface CreateJobRequest {
@@ -22,6 +24,8 @@ interface CreateJobRequest {
   priority?: 'low' | 'medium' | 'high' | 'urgent';
   scheduledDate?: string;
   estimatedHours?: number;
+  photos?: any[];
+  plans?: any[];
 }
 
 interface UpdateJobRequest {
@@ -33,6 +37,8 @@ interface UpdateJobRequest {
   completedDate?: string;
   estimatedHours?: number;
   actualHours?: number;
+  photos?: any[];
+  plans?: any[];
 }
 
 interface JobFilters {
