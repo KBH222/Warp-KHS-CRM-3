@@ -1489,8 +1489,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         console.log('Photos type:', typeof updatedJob.photos);
         console.log('Photos length:', Array.isArray(updatedJob.photos) ? updatedJob.photos.length : 'not an array');
         
-        // Check if photos were actually saved
-        if (!updatedJob.photos || updatedJob.photos.length === 0) {
+        // Check if photos were actually saved (only if we expected photos)
+        if (jobData.photos.length > 0 && (!updatedJob.photos || updatedJob.photos.length === 0)) {
           throw new Error('Photos were not saved by the server - database migration may be needed');
         }
         
@@ -1502,6 +1502,12 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         setUnsavedChanges(false);
       } else {
         // Create new job first
+        console.log('Creating new job with photos:', {
+          title: jobData.title,
+          photoCount: jobData.photos.length,
+          photos: jobData.photos
+        });
+        
         const newJob = await jobsApi.create({
           title: jobData.title,
           description: jobData.description || '',
@@ -1517,6 +1523,9 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           photos: jobData.photos || [],
           plans: jobData.plans || []
         });
+        
+        console.log('New job created response:', newJob);
+        console.log('New job photos:', newJob.photos);
         
         // Update local state with the new job ID
         setCurrentJobId(newJob.id);
