@@ -1364,11 +1364,22 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
       
       // Auto-save the job after adding photos (without closing modal)
       try {
+        console.log('About to save photos, current jobData:', {
+          id: jobData.id,
+          currentJobId,
+          photoCount: jobData.photos.length,
+          photos: jobData.photos
+        });
         await handleSavePhotos();
         toast.success('Photos saved to database successfully');
       } catch (saveError: any) {
         // Show specific error but don't remove photos from UI
         console.error('Failed to save photos to server:', saveError);
+        console.error('Save error details:', {
+          message: saveError.message,
+          response: saveError.response,
+          stack: saveError.stack
+        });
         toast.dismiss(loadingToast);
         
         // More detailed error message
@@ -1479,6 +1490,14 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
   // Save photos/plans without closing modal
   const handleSavePhotos = async () => {
+    console.log('[handleSavePhotos] Starting save process:', {
+      currentJobId,
+      jobDataId: jobData.id,
+      hasPhotos: jobData.photos.length > 0,
+      photoCount: jobData.photos.length,
+      customerId: customer?.id
+    });
+    
     try {
       if (currentJobId) {
         // Update existing job with new photos - need to send all fields

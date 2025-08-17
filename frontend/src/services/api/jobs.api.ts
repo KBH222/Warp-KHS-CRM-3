@@ -124,7 +124,11 @@ export const jobsApi = {
   // Update job
   async update(id: string, job: Partial<Job>): Promise<Job> {
     try {
+      console.log('[JobsAPI] Updating job:', id, 'with data:', job);
+      console.log('[JobsAPI] Photos being sent:', job.photos);
       const response = await api.put(`/jobs/${id}`, job);
+      console.log('[JobsAPI] Update response:', response.data);
+      console.log('[JobsAPI] Response photos:', response.data.photos);
       return response.data;
     } catch (error) {
       // If offline, update in localStorage

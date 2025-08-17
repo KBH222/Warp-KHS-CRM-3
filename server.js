@@ -69,10 +69,17 @@ app.get('/api/check-schema', async (req, res) => {
   }
 });
 
-// Test photo save
+// Test photo save and retrieve
 app.get('/api/test-photo-save/:jobId', async (req, res) => {
   try {
     const { jobId } = req.params;
+    
+    // First, let's see what's currently in the database
+    const currentJob = await prisma.job.findUnique({
+      where: { id: jobId }
+    });
+    
+    console.log('Current job photos:', currentJob?.photos);
     
     // Try to update a job with test photo data
     const testPhotos = [{
@@ -81,6 +88,8 @@ app.get('/api/test-photo-save/:jobId', async (req, res) => {
       url: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwABmX/9k='
     }];
     
+    console.log('Updating with test photos:', testPhotos);
+    
     const updatedJob = await prisma.job.update({
       where: { id: jobId },
       data: {
@@ -88,23 +97,50 @@ app.get('/api/test-photo-save/:jobId', async (req, res) => {
       }
     });
     
+    console.log('Updated job photos field:', updatedJob.photos);
+    
     // Read it back
     const readJob = await prisma.job.findUnique({
       where: { id: jobId }
     });
     
+    console.log('Read back job photos:', readJob?.photos);
+    
     res.json({
       status: 'ok',
       message: 'Test photo save successful',
+      currentPhotos: currentJob?.photos,
       savedPhotos: readJob.photos,
-      parsedPhotos: readJob.photos ? JSON.parse(readJob.photos) : null
+      parsedPhotos: readJob.photos ? JSON.parse(readJob.photos) : null,
+      photosLength: readJob.photos ? readJob.photos.length : 0
     });
   } catch (error) {
+    console.error('Test photo save error:', error);
     res.json({
       status: 'error',
       error: error.message,
+      stack: error.stack,
       message: 'Failed to save test photo'
     });
+  }
+});
+
+// Debug endpoint to check job data
+app.get('/api/debug/job/:jobId', async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const job = await prisma.job.findUnique({
+      where: { id: jobId }
+    });
+    
+    res.json({
+      job: job,
+      photosField: job?.photos,
+      photosLength: job?.photos ? job.photos.length : 0,
+      parsedPhotos: job?.photos ? JSON.parse(job.photos) : null
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -319,8 +355,10 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
       priority: req.body.priority || 'medium',
       totalCost: req.body.totalCost || 0,
       depositPaid: req.body.depositPaid || 0,
+      actualCost: req.body.actualCost || 0,
       startDate: req.body.startDate ? new Date(req.body.startDate) : null,
       endDate: req.body.endDate ? new Date(req.body.endDate) : null,
+      completedDate: req.body.completedDate ? new Date(req.body.completedDate) : null,
       notes: req.body.notes
     };
     
