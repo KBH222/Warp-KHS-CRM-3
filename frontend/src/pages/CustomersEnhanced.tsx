@@ -1318,6 +1318,14 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     
+    console.log('[Photo Save] Step 1: Checking job status', { 
+      hasId: !!currentJobId, 
+      currentJobId, 
+      jobDataId: jobData.id,
+      title: jobData.title,
+      existingJob: !!existingJob 
+    });
+    
     // Check if job has a title
     if (!jobData.title && !existingJob) {
       toast.error('Please enter a job title first');
@@ -1329,43 +1337,64 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     const loadingToast = toast.info('Compressing photos...', { autoClose: false });
     
     try {
+      // First, compress and add all photos to local state
+      const newPhotos = [];
       for (const file of files) {
         // Compress image before adding
         const compressedUrl = await compressImage(file, 1920, 1080, 0.7);
-        
-        setJobData(prev => ({
-          ...prev,
-          photos: [...prev.photos, {
-            id: Date.now() + Math.random(),
-            url: compressedUrl,
-            name: file.name
-          }]
-        }));
-        setUnsavedChanges(true); // Mark as having unsaved changes
+        const newPhoto = {
+          id: Date.now() + Math.random(),
+          url: compressedUrl,
+          name: file.name
+        };
+        newPhotos.push(newPhoto);
       }
+      
+      // Update local state with new photos
+      setJobData(prev => ({
+        ...prev,
+        photos: [...prev.photos, ...newPhotos]
+      }));
       
       toast.dismiss(loadingToast);
       toast.success(`${files.length} photo(s) added successfully`);
       
-      // Auto-save the job after adding photos (without closing modal)
+      // Show saving indicator
+      const savingToast = toast.info('Saving photos to database...', { autoClose: false });
+      
+      // Auto-save the job after adding photos
       try {
-        console.log('About to save photos, current jobData:', {
-          id: jobData.id,
+        console.log('[Photo Save] Step 2: About to save photos', {
           currentJobId,
-          photoCount: jobData.photos.length,
-          photos: jobData.photos
+          jobDataId: jobData.id,
+          photoCount: jobData.photos.length + newPhotos.length,
+          newPhotoCount: newPhotos.length
         });
+        
+        // Wait a bit to ensure state is updated
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Call handleSavePhotos with the updated photo data
         await handleSavePhotos();
-        toast.success('Photos saved to database successfully');
+        
+        toast.dismiss(savingToast);
+        toast.success('Photos saved to database successfully', { autoClose: 3000 });
+        setUnsavedChanges(false);
+        
       } catch (saveError: any) {
+        toast.dismiss(savingToast);
+        
         // Show specific error but don't remove photos from UI
-        console.error('Failed to save photos to server:', saveError);
-        console.error('Save error details:', {
+        console.error('[Photo Save] Error:', saveError);
+        console.error('[Photo Save] Error details:', {
           message: saveError.message,
           response: saveError.response,
+          data: saveError.response?.data,
           stack: saveError.stack
         });
-        toast.dismiss(loadingToast);
+        
+        // Mark as having unsaved changes
+        setUnsavedChanges(true);
         
         // More detailed error message
         let errorMsg = 'Photos added to screen but NOT saved to database';
@@ -1379,17 +1408,15 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         
         toast.error(errorMsg, { autoClose: 10000 }); // Show error for 10 seconds
         
-        // Log full error details
-        console.error('Full error details:', {
-          error: saveError,
-          response: saveError.response,
-          data: saveError.response?.data
-        });
+        // If it's a new job without ID, suggest saving the job first
+        if (!currentJobId && !jobData.id) {
+          toast.info('Tip: Save the job first by clicking "Create Job" button', { autoClose: 8000 });
+        }
       }
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error('Failed to process some photos');
-      console.error('Photo upload error:', error);
+      console.error('[Photo Save] Processing error:', error);
     }
   };
 
@@ -1475,17 +1502,19 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
   // Save photos/plans without closing modal
   const handleSavePhotos = async () => {
-    console.log('[handleSavePhotos] Starting save process:', {
+    console.log('[Photo Save] Step 3: handleSavePhotos called', {
       currentJobId,
       jobDataId: jobData.id,
       hasPhotos: jobData.photos.length > 0,
       photoCount: jobData.photos.length,
-      customerId: customer?.id
+      customerId: customer?.id,
+      title: jobData.title
     });
     
     try {
-      if (currentJobId) {
+      if (currentJobId || jobData.id) {
         // Update existing job with new photos - need to send all fields
+        const jobId = currentJobId || jobData.id;
         const updateData = {
           title: jobData.title,
           description: jobData.description || '',
@@ -1500,19 +1529,20 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           plans: jobData.plans || []
         };
         
-        console.log('Updating job with photos:', {
-          jobId: currentJobId,
+        console.log('[Photo Save] Step 4: Updating existing job', {
+          jobId,
           photoCount: updateData.photos.length,
-          photosData: updateData.photos
+          firstPhoto: updateData.photos[0] ? { name: updateData.photos[0].name, hasUrl: !!updateData.photos[0].url } : null
         });
         
-        console.log('About to update job with ID:', currentJobId);
-        const updatedJob = await jobsApi.update(currentJobId, updateData);
-        console.log('Server response - updated job:', updatedJob);
-        console.log('Photos in response:', updatedJob.photos);
-        console.log('Has photos field?', 'photos' in updatedJob);
-        console.log('Photos type:', typeof updatedJob.photos);
-        console.log('Photos length:', Array.isArray(updatedJob.photos) ? updatedJob.photos.length : 'not an array');
+        const updatedJob = await jobsApi.update(jobId, updateData);
+        
+        console.log('[Photo Save] Step 5: Response from server', {
+          jobId: updatedJob?.id,
+          hasPhotos: !!updatedJob?.photos,
+          photoCount: updatedJob?.photos?.length || 0,
+          responsePhotos: updatedJob?.photos
+        });
         
         if (!updatedJob || !updatedJob.id) {
           throw new Error('Server did not return a valid job object');
@@ -1520,8 +1550,16 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         
         // Check if photos were actually saved (only if we expected photos)
         if (jobData.photos.length > 0 && (!updatedJob.photos || updatedJob.photos.length === 0)) {
+          console.error('[Photo Save] ERROR: Photos not in response', {
+            sentPhotos: jobData.photos.length,
+            receivedPhotos: updatedJob.photos?.length || 0
+          });
           throw new Error('Photos were not saved by the server - database migration may be needed');
         }
+        
+        console.log('[Photo Save] Step 6: Photos saved successfully', {
+          savedPhotoCount: updatedJob.photos?.length || 0
+        });
         
         // Update parent component with new job data
         if (onJobUpdate) {
@@ -1531,20 +1569,31 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         // Update local job data with the response from server
         setJobData(prev => ({
           ...prev,
+          id: updatedJob.id,
           photos: updatedJob.photos || [],
           plans: updatedJob.plans || []
         }));
         
+        // Make sure currentJobId is set
+        if (!currentJobId) {
+          setCurrentJobId(updatedJob.id);
+        }
+        
         setUnsavedChanges(false);
       } else {
-        // Create new job first
-        console.log('Creating new job with photos:', {
+        // Create new job first - this only happens for NEW jobs
+        console.log('[Photo Save] Step 4: Creating new job', {
           title: jobData.title,
           photoCount: jobData.photos.length,
-          photos: jobData.photos
+          hasTitle: !!jobData.title
         });
         
-        const newJob = await jobsApi.create({
+        // Ensure we have a title before creating
+        if (!jobData.title) {
+          throw new Error('Job title is required before saving photos');
+        }
+        
+        const createData = {
           title: jobData.title,
           description: jobData.description || '',
           customerId: customer.id,
@@ -1555,24 +1604,22 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           notes: jobData.notes || '',
           photos: jobData.photos || [],
           plans: jobData.plans || []
+        };
+        
+        const newJob = await jobsApi.create(createData);
+        
+        console.log('[Photo Save] Step 5: New job created', {
+          jobId: newJob?.id,
+          hasPhotos: !!newJob?.photos,
+          photoCount: newJob?.photos?.length || 0
         });
         
-        console.log('New job created response:', newJob);
-        console.log('New job photos:', newJob.photos);
-        
-        // Update local state with the new job ID
-        console.log('New job created, updating state with ID:', newJob.id);
-        setCurrentJobId(newJob.id);
-        setJobData(prev => ({ ...prev, id: newJob.id }));
-        console.log('Job created with photos, new ID:', newJob.id);
-        console.log('Current state after update - currentJobId:', newJob.id, 'jobData.id:', newJob.id);
-        
-        // Update parent component with new job data
-        if (onJobUpdate) {
-          onJobUpdate(newJob);
+        if (!newJob || !newJob.id) {
+          throw new Error('Failed to create job - server did not return a valid job');
         }
         
-        // Update local job data with the response from server
+        // Update local state with the new job ID immediately
+        setCurrentJobId(newJob.id);
         setJobData(prev => ({
           ...prev,
           id: newJob.id,
@@ -1580,10 +1627,23 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           plans: newJob.plans || []
         }));
         
+        console.log('[Photo Save] Step 6: State updated with new job', {
+          currentJobId: newJob.id,
+          jobDataId: newJob.id
+        });
+        
+        // Update parent component with new job data
+        if (onJobUpdate) {
+          onJobUpdate(newJob);
+        }
+        
         setUnsavedChanges(false);
+        
+        // Show success message
+        toast.success('Job created successfully with photos');
       }
     } catch (error) {
-      console.error('Failed to save photos:', error);
+      console.error('[Photo Save] ERROR in handleSavePhotos:', error);
       throw error;
     }
   };
@@ -1628,7 +1688,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     padding: '2px 8px',
                     borderRadius: '4px'
                   }}>
-                    Unsaved photos
+                    {currentJobId ? 'Unsaved changes' : 'Save job to persist photos'}
                   </span>
                 )}
               </h2>
@@ -1868,11 +1928,30 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       />
                       <button
                         type="button"
-                        onClick={() => {
+                        onClick={async () => {
                           setJobData(prev => ({
                             ...prev,
                             photos: prev.photos.filter(p => p.id !== photo.id)
                           }));
+                          
+                          // If it's an existing job, auto-save the removal
+                          if (currentJobId) {
+                            try {
+                              const savingToast = toast.info('Removing photo...', { autoClose: false });
+                              // Wait for state update
+                              await new Promise(resolve => setTimeout(resolve, 100));
+                              await handleSavePhotos();
+                              toast.dismiss(savingToast);
+                              toast.success('Photo removed');
+                            } catch (error) {
+                              toast.dismiss();
+                              toast.error('Failed to remove photo from database');
+                              setUnsavedChanges(true);
+                            }
+                          } else {
+                            // For new jobs, just mark as unsaved
+                            setUnsavedChanges(true);
+                          }
                         }}
                         style={{
                           position: 'absolute',
@@ -2035,7 +2114,111 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
             )}
           </div>
 
-          {/* Removed submit buttons - photos save automatically */}
+          {/* Modal Footer with Save/Cancel buttons */}
+          <div style={{
+            padding: '20px',
+            borderTop: '1px solid #E5E7EB',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: '#F9FAFB'
+          }}>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              {/* Delete button for existing jobs */}
+              {existingJob && onDelete && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (confirm('Are you sure you want to delete this job?')) {
+                      onDelete(existingJob.id);
+                      onClose();
+                    }
+                  }}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#DC2626',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '16.1px',
+                    fontWeight: '500'
+                  }}
+                >
+                  Delete Job
+                </button>
+              )}
+            </div>
+            
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                type="button"
+                onClick={onClose}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#E5E7EB',
+                  color: '#374151',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '16.1px',
+                  fontWeight: '500'
+                }}
+              >
+                Cancel
+              </button>
+              
+              {/* Show Create/Update button only for Description tab OR if job doesn't exist yet */}
+              {(activeTab === 'description' || !currentJobId) && (
+                <button
+                  type="submit"
+                  disabled={!jobData.title}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: jobData.title ? '#3B82F6' : '#9CA3AF',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: jobData.title ? 'pointer' : 'not-allowed',
+                    fontSize: '16.1px',
+                    fontWeight: '500'
+                  }}
+                >
+                  {existingJob ? 'Update Job' : 'Create Job'}
+                </button>
+              )}
+              
+              {/* Show Save Changes button on other tabs if there are unsaved changes */}
+              {activeTab !== 'description' && currentJobId && unsavedChanges && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      const savingToast = toast.info('Saving changes...', { autoClose: false });
+                      await handleSavePhotos();
+                      toast.dismiss(savingToast);
+                      toast.success('Changes saved successfully');
+                    } catch (error) {
+                      toast.dismiss();
+                      toast.error('Failed to save changes');
+                    }
+                  }}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#3B82F6',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '16.1px',
+                    fontWeight: '500'
+                  }}
+                >
+                  Save Changes
+                </button>
+              )}
+            </div>
+          </div>
         </form>
       </div>
     </div>
