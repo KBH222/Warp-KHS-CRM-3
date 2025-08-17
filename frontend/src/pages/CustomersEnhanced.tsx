@@ -346,20 +346,23 @@ const CustomersEnhanced = () => {
       } else {
         // Create new job
         console.log('Creating new job');
-        const newJob = await jobsApi.create({
+        const createPayload = {
           title: jobData.title,
           description: jobData.description || '',
           customerId: selectedCustomerForJob.id,
           status: jobData.status || 'QUOTED',
           priority: jobData.priority || 'medium',
-          totalCost: jobData.totalCost || 0,
-          depositPaid: jobData.depositPaid || 0,
+          totalCost: parseFloat(jobData.totalCost) || 0,
+          depositPaid: parseFloat(jobData.depositPaid) || 0,
+          actualCost: parseFloat(jobData.actualCost) || 0,
           startDate: jobData.startDate,
           endDate: jobData.endDate,
           notes: jobData.notes || '',
           photos: jobData.photos || [],
           plans: jobData.plans || []
-        });
+        };
+        console.log('Create payload:', JSON.stringify(createPayload, null, 2));
+        const newJob = await jobsApi.create(createPayload);
         console.log('New job created:', newJob);
         
         // Update local state
@@ -369,9 +372,24 @@ const CustomersEnhanced = () => {
         }));
         toast.success('Job created successfully');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to save job - Full error:', err);
-      toast.error('Failed to save job - check console for details');
+      console.error('Error response:', err.response);
+      console.error('Error message:', err.message);
+      
+      // Show more specific error message
+      let errorMessage = 'Failed to save job';
+      if (err.response?.data?.error) {
+        errorMessage = err.response.data.error;
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.response?.data?.details) {
+        errorMessage = err.response.data.details;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      toast.error(errorMessage);
     }
     
     setShowAddJobModal(false);

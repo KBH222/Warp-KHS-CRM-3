@@ -31,8 +31,21 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  console.log('[JobsAPI] Request:', config.method?.toUpperCase(), config.url, config.data);
   return config;
 });
+
+// Add response error interceptor
+api.interceptors.response.use(
+  (response) => {
+    console.log('[JobsAPI] Response:', response.status, response.data);
+    return response;
+  },
+  (error) => {
+    console.error('[JobsAPI] Error:', error.response?.status, error.response?.data);
+    return Promise.reject(error);
+  }
+);
 
 export const jobsApi = {
   // Get all jobs
