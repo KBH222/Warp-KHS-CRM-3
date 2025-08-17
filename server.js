@@ -175,6 +175,7 @@ app.get('/api/jobs', authMiddleware, async (req, res) => {
 
 app.post('/api/jobs', authMiddleware, async (req, res) => {
   try {
+    console.log('Creating job with data:', req.body);
     const job = await prisma.job.create({
       data: {
         title: req.body.title,
@@ -192,10 +193,61 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
         customer: true
       }
     });
+    console.log('Job created successfully:', job.id);
     res.status(201).json(job);
   } catch (error) {
     console.error('Error creating job:', error);
-    res.status(500).json({ error: 'Failed to create job' });
+    console.error('Request body:', req.body);
+    res.status(500).json({ error: 'Failed to create job', details: error.message });
+  }
+});
+
+// Update job
+app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
+  try {
+    console.log('Updating job:', req.params.id, 'with data:', req.body);
+    const job = await prisma.job.update({
+      where: { id: req.params.id },
+      data: {
+        title: req.body.title,
+        description: req.body.description,
+        customerId: req.body.customerId,
+        status: req.body.status,
+        priority: req.body.priority,
+        totalCost: req.body.totalCost,
+        depositPaid: req.body.depositPaid,
+        actualCost: req.body.actualCost,
+        startDate: req.body.startDate ? new Date(req.body.startDate) : null,
+        endDate: req.body.endDate ? new Date(req.body.endDate) : null,
+        completedDate: req.body.completedDate ? new Date(req.body.completedDate) : null,
+        notes: req.body.notes
+      },
+      include: {
+        customer: true
+      }
+    });
+    console.log('Job updated successfully:', job.id);
+    res.json(job);
+  } catch (error) {
+    console.error('Error updating job:', error);
+    console.error('Request params:', req.params);
+    console.error('Request body:', req.body);
+    res.status(500).json({ error: 'Failed to update job', details: error.message });
+  }
+});
+
+// Delete job
+app.delete('/api/jobs/:id', authMiddleware, async (req, res) => {
+  try {
+    console.log('Deleting job:', req.params.id);
+    await prisma.job.delete({
+      where: { id: req.params.id }
+    });
+    console.log('Job deleted successfully:', req.params.id);
+    res.status(204).send();
+  } catch (error) {
+    console.error('Error deleting job:', error);
+    res.status(500).json({ error: 'Failed to delete job', details: error.message });
   }
 });
 
