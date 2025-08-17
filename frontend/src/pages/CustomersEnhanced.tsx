@@ -1238,8 +1238,18 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
 const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete = null }: any) => {
   const [activeTab, setActiveTab] = useState('description');
   const [jobData, setJobData] = useState({
+    id: existingJob?.id || null,
     title: existingJob?.title || '',
     description: existingJob?.description || '',
+    status: existingJob?.status || 'QUOTED',
+    priority: existingJob?.priority || 'medium',
+    totalCost: existingJob?.totalCost || 0,
+    depositPaid: existingJob?.depositPaid || 0,
+    actualCost: existingJob?.actualCost || 0,
+    startDate: existingJob?.startDate || null,
+    endDate: existingJob?.endDate || null,
+    completedDate: existingJob?.completedDate || null,
+    customerId: existingJob?.customerId || customer?.id,
     photos: existingJob?.photos || [],
     plans: existingJob?.plans || [],
     notes: existingJob?.notes || '',
