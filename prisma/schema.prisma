@@ -99,6 +99,8 @@ model Job {
   endDate       DateTime?
   completedDate DateTime?
   notes         String?
+  photos        String?   @db.Text  // JSON array of photos
+  plans         String?   @db.Text  // JSON array of plans
   customerId    String
   customer      Customer  @relation(fields: [customerId], references: [id])
   createdById   String?
@@ -111,7 +113,6 @@ model Job {
   materials     Material[]
   statusHistory JobStatusHistory[]
   activityLogs  ActivityLog[]
-  photos        JobPhoto[]
   invoices      Invoice[]
 
   @@index([status])
@@ -212,19 +213,6 @@ model SyncQueue {
   @@index([createdAt])
 }
 
-// Job photos model
-model JobPhoto {
-  id          String    @id @default(cuid())
-  jobId       String
-  job         Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  url         String
-  caption     String?
-  uploadedBy  String?
-  createdAt   DateTime  @default(now())
-
-  @@index([jobId])
-  @@index([createdAt])
-}
 
 // Invoice model
 model Invoice {

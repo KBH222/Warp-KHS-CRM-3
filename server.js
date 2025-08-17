@@ -166,7 +166,28 @@ app.get('/api/jobs', authMiddleware, async (req, res) => {
       },
       orderBy: { createdAt: 'desc' }
     });
-    res.json(jobs);
+    
+    // Parse photos and plans from JSON strings to arrays
+    const jobsWithParsedData = jobs.map(job => {
+      const parsed = { ...job };
+      if (job.photos) {
+        try {
+          parsed.photos = JSON.parse(job.photos);
+        } catch (e) {
+          parsed.photos = [];
+        }
+      }
+      if (job.plans) {
+        try {
+          parsed.plans = JSON.parse(job.plans);
+        } catch (e) {
+          parsed.plans = [];
+        }
+      }
+      return parsed;
+    });
+    
+    res.json(jobsWithParsedData);
   } catch (error) {
     console.error('Error fetching jobs:', error);
     res.status(500).json({ error: 'Failed to fetch jobs' });
@@ -176,23 +197,38 @@ app.get('/api/jobs', authMiddleware, async (req, res) => {
 app.post('/api/jobs', authMiddleware, async (req, res) => {
   try {
     console.log('Creating job with data:', req.body);
+    const jobData = {
+      title: req.body.title,
+      description: req.body.description,
+      customerId: req.body.customerId,
+      status: req.body.status || 'QUOTED',
+      priority: req.body.priority || 'medium',
+      totalCost: req.body.totalCost || 0,
+      depositPaid: req.body.depositPaid || 0,
+      startDate: req.body.startDate ? new Date(req.body.startDate) : null,
+      endDate: req.body.endDate ? new Date(req.body.endDate) : null,
+      notes: req.body.notes
+    };
+    
+    // Handle photos and plans - stringify arrays for storage
+    if (req.body.photos && Array.isArray(req.body.photos)) {
+      jobData.photos = JSON.stringify(req.body.photos);
+    }
+    if (req.body.plans && Array.isArray(req.body.plans)) {
+      jobData.plans = JSON.stringify(req.body.plans);
+    }
+    
     const job = await prisma.job.create({
-      data: {
-        title: req.body.title,
-        description: req.body.description,
-        customerId: req.body.customerId,
-        status: req.body.status || 'QUOTED',
-        priority: req.body.priority || 'medium',
-        totalCost: req.body.totalCost || 0,
-        depositPaid: req.body.depositPaid || 0,
-        startDate: req.body.startDate ? new Date(req.body.startDate) : null,
-        endDate: req.body.endDate ? new Date(req.body.endDate) : null,
-        notes: req.body.notes
-      },
+      data: jobData,
       include: {
         customer: true
       }
     });
+    
+    // Parse back to arrays for response
+    if (job.photos) job.photos = JSON.parse(job.photos);
+    if (job.plans) job.plans = JSON.parse(job.plans);
+    
     console.log('Job created successfully:', job.id);
     res.status(201).json(job);
   } catch (error) {
@@ -206,26 +242,41 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
 app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
   try {
     console.log('Updating job:', req.params.id, 'with data:', req.body);
+    const updateData = {
+      title: req.body.title,
+      description: req.body.description,
+      customerId: req.body.customerId,
+      status: req.body.status,
+      priority: req.body.priority,
+      totalCost: req.body.totalCost,
+      depositPaid: req.body.depositPaid,
+      actualCost: req.body.actualCost,
+      startDate: req.body.startDate ? new Date(req.body.startDate) : null,
+      endDate: req.body.endDate ? new Date(req.body.endDate) : null,
+      completedDate: req.body.completedDate ? new Date(req.body.completedDate) : null,
+      notes: req.body.notes
+    };
+    
+    // Handle photos and plans - stringify arrays for storage
+    if (req.body.photos !== undefined) {
+      updateData.photos = Array.isArray(req.body.photos) ? JSON.stringify(req.body.photos) : null;
+    }
+    if (req.body.plans !== undefined) {
+      updateData.plans = Array.isArray(req.body.plans) ? JSON.stringify(req.body.plans) : null;
+    }
+    
     const job = await prisma.job.update({
       where: { id: req.params.id },
-      data: {
-        title: req.body.title,
-        description: req.body.description,
-        customerId: req.body.customerId,
-        status: req.body.status,
-        priority: req.body.priority,
-        totalCost: req.body.totalCost,
-        depositPaid: req.body.depositPaid,
-        actualCost: req.body.actualCost,
-        startDate: req.body.startDate ? new Date(req.body.startDate) : null,
-        endDate: req.body.endDate ? new Date(req.body.endDate) : null,
-        completedDate: req.body.completedDate ? new Date(req.body.completedDate) : null,
-        notes: req.body.notes
-      },
+      data: updateData,
       include: {
         customer: true
       }
     });
+    
+    // Parse back to arrays for response
+    if (job.photos) job.photos = JSON.parse(job.photos);
+    if (job.plans) job.plans = JSON.parse(job.plans);
+    
     console.log('Job updated successfully:', job.id);
     res.json(job);
   } catch (error) {
