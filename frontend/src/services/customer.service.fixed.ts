@@ -99,6 +99,32 @@ class CustomerServiceFixed {
    * Create a new customer
    */
   async createCustomer(data: CreateCustomerRequest): Promise<Customer> {
+    // If online, create directly on server to get real ID
+    if (navigator.onLine) {
+      try {
+        console.log('[CustomerService] Creating customer on server:', data);
+        const serverCustomer = await apiClient.post<Customer>(API_ENDPOINTS.CUSTOMERS, {
+          name: data.name,
+          phone: data.phone || null,
+          email: data.email || null,
+          address: data.address,
+          notes: data.notes || null
+        });
+        
+        console.log('[CustomerService] Customer created with real ID:', serverCustomer.id);
+        
+        // Save to local DB for offline access
+        await offlineDb.saveCustomer(serverCustomer);
+        
+        return serverCustomer;
+      } catch (error) {
+        console.error('[CustomerService] Failed to create customer on server:', error);
+        // Fall through to offline creation
+      }
+    }
+    
+    // Only use temp ID if offline or server creation failed
+    console.warn('[CustomerService] Creating customer offline with temp ID');
     const tempId = `temp_customer_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const now = new Date();
     
@@ -118,9 +144,8 @@ class CustomerServiceFixed {
       modifiedBy: 'current-user'
     };
     
-    // Save locally first
+    // Save locally
     await offlineDb.saveCustomer(customer);
-    console.log('[CustomerService] Created customer locally', customer);
     
     // Queue for sync
     await simpleSyncService.queueOperation({
@@ -135,11 +160,6 @@ class CustomerServiceFixed {
       },
       timestamp: now
     });
-    
-    // Try immediate sync if online
-    if (navigator.onLine) {
-      simpleSyncService.syncAll();
-    }
     
     return customer;
   }

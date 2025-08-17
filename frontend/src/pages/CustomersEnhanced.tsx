@@ -179,12 +179,30 @@ const CustomersEnhanced = () => {
 
   const handleAddCustomer = async (newCustomer: any) => {
     try {
-      const customer = await customersApi.create(newCustomer);
+      // Don't pass any temp ID - let backend generate the ID
+      const customerData = { ...newCustomer };
+      delete customerData.id; // Remove any temp ID if present
+      
+      console.log('[Customer] Creating customer:', customerData);
+      const customer = await customersApi.create(customerData);
+      console.log('[Customer] Created with ID:', customer.id);
+      
+      // Validate that we got a real ID back
+      if (!customer.id || customer.id.includes('temp')) {
+        console.error('[Customer] WARNING: Received temp ID from server:', customer.id);
+        toast.warning('Customer created but may need to refresh for proper ID');
+      }
+      
+      // Use the server response with REAL ID
       setCustomers([customer, ...customers]);
       toast.success('Customer added successfully');
       setShowModal(false);
+      
+      return customer; // Return customer with real ID
     } catch (err) {
+      console.error('[Customer] Failed to create:', err);
       toast.error('Failed to add customer');
+      throw err;
     }
   };
 
@@ -240,6 +258,24 @@ const CustomersEnhanced = () => {
       console.log('handleSaveJob called with:', jobData);
       console.log('editingJob:', editingJob);
       console.log('selectedCustomerForJob:', selectedCustomerForJob);
+      
+      // Validate customer ID first
+      const customerId = jobData.customerId || selectedCustomerForJob?.id;
+      
+      // Check for invalid customer ID (temp IDs)
+      if (!customerId || customerId.toString().includes('temp')) {
+        console.error('[Job Save] Invalid customer ID:', customerId);
+        toast.error('Cannot save job - customer not properly saved. Please refresh and try again.');
+        
+        // If we have a temp customer, try to sync first
+        if (customerId && customerId.includes('temp')) {
+          toast.info('Syncing customer data... Please wait and try again.');
+          await customersApi.sync();
+        }
+        return;
+      }
+      
+      console.log('[Job Save] Using validated customer ID:', customerId);
       
       // Check if we're updating or creating
       if (editingJob && editingJob.id) {
@@ -325,10 +361,16 @@ const CustomersEnhanced = () => {
         console.log('selectedCustomerForJob:', selectedCustomerForJob);
         console.log('jobData.customerId:', jobData.customerId);
         
-        // Ensure we have a customer ID
+        // Ensure we have a valid customer ID (not temp)
         const customerId = jobData.customerId || selectedCustomerForJob?.id;
         if (!customerId) {
           throw new Error('No customer selected for this job');
+        }
+        
+        // Check for temp customer ID
+        if (customerId.toString().includes('temp')) {
+          console.error('[Job Save] Cannot create job with temp customer ID:', customerId);
+          throw new Error('Customer not properly saved - please refresh and try again');
         }
         
         const createPayload = {
@@ -1533,6 +1575,22 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
       customerId: customer?.id,
       title: jobData.title
     });
+    
+    // Validate customer ID first
+    const customerId = customer?.id || jobData.customerId;
+    
+    if (!customerId || customerId.toString().includes('temp')) {
+      console.error('[Photo Save] Invalid customer ID:', customerId);
+      toast.error('Cannot save photos - customer not saved properly. Please refresh the page.');
+      
+      // Show more helpful message for temp IDs
+      if (customerId && customerId.includes('temp')) {
+        toast.info('The customer needs to sync with the server first. Please refresh the page and try again.');
+      }
+      return;
+    }
+    
+    console.log('[Photo Save] Customer ID validated:', customerId);
     
     try {
       if (currentJobId || jobData.id) {

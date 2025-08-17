@@ -151,6 +151,23 @@ class OptimisticUpdatesService {
 
   // Customer operations
   async createCustomer(data: CreateCustomerRequest): Promise<Customer> {
+    // Try server creation first if online to get real ID
+    if (navigator.onLine) {
+      try {
+        console.log('[OptimisticUpdates] Creating customer on server');
+        const serverCustomer = await apiClient.post<Customer>('/api/customers', data);
+        
+        // Save to local DB
+        await offlineDb.saveCustomer(serverCustomer);
+        
+        console.log('[OptimisticUpdates] Customer created with real ID:', serverCustomer.id);
+        return serverCustomer;
+      } catch (error) {
+        console.error('[OptimisticUpdates] Server creation failed, falling back to optimistic:', error);
+      }
+    }
+
+    // Only use temp ID if offline or server failed
     const tempId = this.generateTempId('customer');
     const now = new Date();
 
@@ -165,9 +182,6 @@ class OptimisticUpdatesService {
       createdAt: now,
       updatedAt: now,
     };
-
-    // Always use optimistic updates and sync queue for proper multi-device sync
-    // This ensures changes are propagated to all devices
 
     // Fallback to optimistic update
     return this.applyOptimisticUpdate('customer', 'create', optimisticCustomer, data);
