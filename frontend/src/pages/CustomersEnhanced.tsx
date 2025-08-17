@@ -302,14 +302,18 @@ const CustomersEnhanced = () => {
           console.log('Update successful:', updatedJob);
           
           // Update local state
-          setCustomerJobs(prev => {
-            const customerJobs = [...(prev[updatedJob.customerId] || [])];
-            const index = customerJobs.findIndex(j => j.id === updatedJob.id);
-            if (index !== -1) {
-              customerJobs[index] = updatedJob;
-              return { ...prev, [updatedJob.customerId]: customerJobs };
-            }
-            return prev;
+          setCustomers(prevCustomers => {
+            return prevCustomers.map(customer => {
+              if (customer.id === updatedJob.customerId) {
+                const updatedJobs = customer.jobs ? [...customer.jobs] : [];
+                const index = updatedJobs.findIndex(j => j.id === updatedJob.id);
+                if (index !== -1) {
+                  updatedJobs[index] = updatedJob;
+                }
+                return { ...customer, jobs: updatedJobs };
+              }
+              return customer;
+            });
           });
           toast.success('Job updated successfully');
         } catch (apiError: any) {
@@ -399,14 +403,6 @@ const CustomersEnhanced = () => {
             return customer;
           });
         });
-        
-        // Also update customerJobs state if it exists
-        if (setCustomerJobs) {
-          setCustomerJobs(prev => ({
-            ...prev,
-            [customerId]: [...(prev[customerId] || []), newJob]
-          }));
-        }
         
         toast.success('Job created successfully');
       }
