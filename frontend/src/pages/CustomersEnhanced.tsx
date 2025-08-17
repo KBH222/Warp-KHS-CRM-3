@@ -1294,6 +1294,13 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     
+    // Check if job has a title
+    if (!jobData.title && !existingJob) {
+      toast.error('Please enter a job title first');
+      e.target.value = ''; // Reset file input
+      return;
+    }
+    
     // Show loading toast
     const loadingToast = toast.info('Compressing photos...', { autoClose: false });
     
@@ -1314,6 +1321,9 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
       
       toast.dismiss(loadingToast);
       toast.success(`${files.length} photo(s) added successfully`);
+      
+      // Auto-save the job after adding photos
+      handleSubmit(new Event('submit') as any);
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error('Failed to process some photos');
@@ -1323,6 +1333,13 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
   const handlePlanUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    
+    // Check if job has a title
+    if (!jobData.title && !existingJob) {
+      toast.error('Please enter a job title first');
+      e.target.value = ''; // Reset file input
+      return;
+    }
     
     // Show loading toast
     const loadingToast = toast.info('Processing documents...', { autoClose: false });
@@ -1361,6 +1378,9 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
       
       toast.dismiss(loadingToast);
       toast.success(`${files.length} document(s) added successfully`);
+      
+      // Auto-save the job after adding documents
+      handleSubmit(new Event('submit') as any);
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error('Failed to process some documents');
@@ -1452,7 +1472,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       fontWeight: '500'
                     }}
                   >
-                    + Upload Photos
+                    Add Photos
                   </label>
                 </>
               )}
@@ -1481,10 +1501,28 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       fontWeight: '500'
                     }}
                   >
-                    + Upload Documents
+                    Add Documents
                   </label>
                 </>
               )}
+              
+              {/* Cancel button */}
+              <button
+                type="button"
+                onClick={onClose}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#E5E7EB',
+                  color: '#374151',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '16.1px',
+                  fontWeight: '500',
+                  cursor: 'pointer'
+                }}
+              >
+                Cancel
+              </button>
               
               {/* Delete Job button */}
               {existingJob && onDelete && (
@@ -1808,47 +1846,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
             )}
           </div>
 
-          <div style={{
-            padding: '20px',
-            borderTop: '1px solid #E5E7EB',
-            display: 'flex',
-            gap: '12px'
-          }}>
-            <button
-              type="submit"
-              disabled={!jobData.title}
-              style={{
-                flex: 1,
-                padding: '10px',
-                backgroundColor: jobData.title ? '#3B82F6' : '#9CA3AF',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                fontSize: '18.4px',
-                fontWeight: '500',
-                cursor: jobData.title ? 'pointer' : 'not-allowed'
-              }}
-            >
-              {existingJob ? 'Update Job' : 'Create Job'}
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              style={{
-                flex: 1,
-                padding: '10px',
-                backgroundColor: '#E5E7EB',
-                color: '#374151',
-                border: 'none',
-                borderRadius: '6px',
-                fontSize: '18.4px',
-                fontWeight: '500',
-                cursor: 'pointer'
-              }}
-            >
-              Cancel
-            </button>
-          </div>
+          {/* Removed submit buttons - photos save automatically */}
         </form>
       </div>
     </div>
