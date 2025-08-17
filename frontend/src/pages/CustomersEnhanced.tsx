@@ -1324,6 +1324,13 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
 
 // Add Job Modal Component
 const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete = null, onJobUpdate = null }: any) => {
+  // ADD THESE 5 LINES OF DEBUG CODE:
+  console.log('=== JOB MODAL DEBUG ===');
+  console.log('[Job Modal] Customer ID:', customer?.id);
+  console.log('[Job Modal] Customer Name:', customer?.name);
+  console.log('[Job Modal] Job Customer ID:', existingJob?.customerId);
+  console.log('[Job Modal] IDs Match?', customer?.id === existingJob?.customerId);
+  
   console.log('[AddJobModal] Initialized with customer:', customer);
   console.log('[AddJobModal] Existing job:', existingJob);
   
