@@ -868,6 +868,7 @@ const CustomersEnhanced = () => {
           onSave={handleSaveJob}
           onDelete={handleDeleteJob}
           onJobUpdate={(updatedJob) => {
+            console.log('onJobUpdate called with:', updatedJob);
             // Update the editing job with latest data
             setEditingJob(updatedJob);
             // Also update in the customer jobs list
@@ -875,10 +876,13 @@ const CustomersEnhanced = () => {
               const customerJobs = [...(prev[updatedJob.customerId] || [])];
               const index = customerJobs.findIndex(j => j.id === updatedJob.id);
               if (index !== -1) {
+                // Update existing job
                 customerJobs[index] = updatedJob;
-                return { ...prev, [updatedJob.customerId]: customerJobs };
+              } else {
+                // Add new job if it doesn't exist (created via photo upload)
+                customerJobs.push(updatedJob);
               }
-              return prev;
+              return { ...prev, [updatedJob.customerId]: customerJobs };
             });
           }}
         />
@@ -1499,6 +1503,13 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           onJobUpdate(updatedJob);
         }
         
+        // Update local job data with the response from server
+        setJobData(prev => ({
+          ...prev,
+          photos: updatedJob.photos || [],
+          plans: updatedJob.plans || []
+        }));
+        
         setUnsavedChanges(false);
       } else {
         // Create new job first
@@ -1536,6 +1547,14 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         if (onJobUpdate) {
           onJobUpdate(newJob);
         }
+        
+        // Update local job data with the response from server
+        setJobData(prev => ({
+          ...prev,
+          id: newJob.id,
+          photos: newJob.photos || [],
+          plans: newJob.plans || []
+        }));
         
         setUnsavedChanges(false);
       }
