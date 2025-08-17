@@ -30,6 +30,11 @@ interface PWAProviderProps {
 }
 
 export const PWAProvider: React.FC<PWAProviderProps> = ({ children }) => {
+  // Validate children prop
+  if (!children) {
+    console.error('[PWAProvider] No children provided!');
+    return <div>Error: PWAProvider requires children</div>;
+  }
   const pwa = usePWA();
   const isOnline = useOnlineStatus();
   const [isServiceWorkerRegistered, setIsServiceWorkerRegistered] = useState(false);
@@ -117,15 +122,13 @@ export const PWAProvider: React.FC<PWAProviderProps> = ({ children }) => {
     <PWAContext.Provider value={contextValue}>
       {children}
       
-      {/* PWA Components */}
-      <PWAInstallBanner />
-      <PWAUpdateNotification />
-      <OfflineIndicator />
+      {/* PWA Components - only render if components are available */}
+      {PWAInstallBanner && <PWAInstallBanner />}
+      {PWAUpdateNotification && <PWAUpdateNotification />}
+      {OfflineIndicator && <OfflineIndicator />}
       
       {/* Construction-specific PWA features */}
-      {pwa.isPWA && (
-        <ConstructionPWAFeatures />
-      )}
+      {pwa.isPWA && ConstructionPWAFeatures && <ConstructionPWAFeatures />}
     </PWAContext.Provider>
   );
 };

@@ -104,6 +104,25 @@ function App() {
   }
 
   // Main app
+  console.log('[App] Rendering main app');
+  
+  // Verify all components are defined
+  if (!QueryClientProvider) {
+    console.error('QueryClientProvider is undefined!');
+    return <div>Error: QueryClientProvider not loaded</div>;
+  }
+  if (!PWAProvider) {
+    console.error('PWAProvider is undefined!');
+    return <div>Error: PWAProvider not loaded</div>;
+  }
+  if (!BrowserRouter) {
+    console.error('BrowserRouter is undefined!');
+    return <div>Error: BrowserRouter not loaded</div>;
+  }
+  if (!Router) {
+    console.error('Router is undefined!');
+    return <div>Error: Router not loaded</div>;
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
