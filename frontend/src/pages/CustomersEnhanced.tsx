@@ -1278,6 +1278,7 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
 const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete = null, onJobUpdate = null }: any) => {
   const [activeTab, setActiveTab] = useState('description');
   const [currentJobId, setCurrentJobId] = useState(existingJob?.id || null);
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
   
   const [jobData, setJobData] = useState({
     id: existingJob?.id || null,
@@ -1332,6 +1333,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
             name: file.name
           }]
         }));
+        setUnsavedChanges(true); // Mark as having unsaved changes
       }
       
       toast.dismiss(loadingToast);
@@ -1340,14 +1342,30 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
       // Auto-save the job after adding photos (without closing modal)
       try {
         await handleSavePhotos();
+        toast.success('Photos saved to database successfully');
       } catch (saveError: any) {
         // Show specific error but don't remove photos from UI
         console.error('Failed to save photos to server:', saveError);
+        toast.dismiss(loadingToast);
+        
+        // More detailed error message
+        let errorMsg = 'Photos added to screen but NOT saved to database';
         if (saveError.response?.data?.error) {
-          toast.error(`Failed to save: ${saveError.response.data.error}`);
-        } else {
-          toast.error('Photos added locally but failed to save to server');
+          errorMsg += `: ${saveError.response.data.error}`;
+        } else if (saveError.response?.data?.details) {
+          errorMsg += `: ${saveError.response.data.details}`;
+        } else if (saveError.message) {
+          errorMsg += `: ${saveError.message}`;
         }
+        
+        toast.error(errorMsg, { autoClose: 10000 }); // Show error for 10 seconds
+        
+        // Log full error details
+        console.error('Full error details:', {
+          error: saveError,
+          response: saveError.response,
+          data: saveError.response?.data
+        });
       }
     } catch (error) {
       toast.dismiss(loadingToast);
@@ -1467,11 +1485,21 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         const updatedJob = await jobsApi.update(currentJobId, updateData);
         console.log('Server response - updated job:', updatedJob);
         console.log('Photos in response:', updatedJob.photos);
+        console.log('Has photos field?', 'photos' in updatedJob);
+        console.log('Photos type:', typeof updatedJob.photos);
+        console.log('Photos length:', Array.isArray(updatedJob.photos) ? updatedJob.photos.length : 'not an array');
+        
+        // Check if photos were actually saved
+        if (!updatedJob.photos || updatedJob.photos.length === 0) {
+          throw new Error('Photos were not saved by the server - database migration may be needed');
+        }
         
         // Update parent component with new job data
         if (onJobUpdate) {
           onJobUpdate(updatedJob);
         }
+        
+        setUnsavedChanges(false);
       } else {
         // Create new job first
         const newJob = await jobsApi.create({
@@ -1499,6 +1527,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         if (onJobUpdate) {
           onJobUpdate(newJob);
         }
+        
+        setUnsavedChanges(false);
       }
     } catch (error) {
       console.error('Failed to save photos:', error);
@@ -1535,8 +1565,20 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
             <div>
-              <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '600' }}>
+              <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 {existingJob ? 'Edit Job' : 'Add Job'} for {customer.name}
+                {unsavedChanges && (
+                  <span style={{ 
+                    fontSize: '14px', 
+                    color: '#EF4444', 
+                    fontWeight: 'normal',
+                    backgroundColor: '#FEE2E2',
+                    padding: '2px 8px',
+                    borderRadius: '4px'
+                  }}>
+                    Unsaved photos
+                  </span>
+                )}
               </h2>
               <p style={{ margin: '4px 0 0 0', color: '#6B7280', fontSize: '16.1px' }}>
                 {customer.address}
