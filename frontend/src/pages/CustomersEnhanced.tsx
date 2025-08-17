@@ -775,9 +775,13 @@ const CustomersEnhanced = () => {
                                       customerId: job.customerId,
                                       allFields: Object.keys(job)
                                     });
+                                    console.log('=== OPENING JOB MODAL ===');
+                                    console.log('Customer being set:', customer);
+                                    console.log('Job being edited:', job);
                                     setSelectedCustomerForJob(customer);
                                     setEditingJob(job);  // Make sure this has the full job object with ID
                                     setShowAddJobModal(true);
+                                    console.log('Modal should now be open');
                                   }}
                                   style={{
                                     background: 'none',
@@ -891,6 +895,7 @@ const CustomersEnhanced = () => {
     )}
 
     {/* Add Job Modal */}
+    {console.log('Modal render check:', { showAddJobModal, selectedCustomerForJob, editingJob })}
     {showAddJobModal && selectedCustomerForJob && (
         <AddJobModal
           customer={selectedCustomerForJob}
