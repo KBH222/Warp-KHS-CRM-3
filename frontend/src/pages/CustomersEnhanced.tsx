@@ -2002,6 +2002,18 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   ))}
                 </div>
                 
+                {/* Empty state for photos */}
+                {jobData.photos.length === 0 && (
+                  <div style={{
+                    textAlign: 'center',
+                    color: '#6B7280',
+                    padding: '40px',
+                    fontSize: '16.1px'
+                  }}>
+                    No photos uploaded yet. Click "Add Photos" above to add job photos.
+                  </div>
+                )}
+                
                 {/* Save/Update Job button for Photos tab */}
                 <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
                   <button
@@ -2038,7 +2050,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
             {/* Plans Tab */}
             {activeTab === 'plans' && (
-              <div>
+              <div style={{ minHeight: '400px' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {jobData.plans.map(plan => (
                     <div 
@@ -2081,6 +2093,50 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     </div>
                   ))}
                 </div>
+                
+                {/* Empty state for plans */}
+                {jobData.plans.length === 0 && (
+                  <div style={{
+                    textAlign: 'center',
+                    color: '#6B7280',
+                    padding: '40px',
+                    fontSize: '16.1px'
+                  }}>
+                    No documents uploaded yet. Click "Add Documents" above to add plans or drawings.
+                  </div>
+                )}
+                
+                {/* Save/Update Job button for Plans tab */}
+                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        const savingToast = toast.info('Saving job with documents...', { autoClose: false });
+                        await handleSavePhotos();
+                        toast.dismiss(savingToast);
+                        toast.success('Job saved successfully');
+                      } catch (error) {
+                        toast.dismiss();
+                        toast.error('Failed to save job');
+                        console.error('Save job error:', error);
+                      }
+                    }}
+                    disabled={!jobData.title}
+                    style={{
+                      padding: '10px 24px',
+                      backgroundColor: jobData.title ? '#3B82F6' : '#9CA3AF',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: jobData.title ? 'pointer' : 'not-allowed',
+                      fontSize: '16.1px',
+                      fontWeight: '500'
+                    }}
+                  >
+                    {currentJobId || jobData.id ? 'Update Job' : 'Save Job'}
+                  </button>
+                </div>
               </div>
             )}
 
@@ -2109,7 +2165,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
             {/* Comments Tab */}
             {activeTab === 'comments' && (
-              <div>
+              <div style={{ minHeight: '400px' }}>
                 <div style={{ marginBottom: '20px' }}>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <input
@@ -2171,6 +2227,18 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       <p style={{ margin: 0, fontSize: '16.1px' }}>{comment.text}</p>
                     </div>
                   ))}
+                  
+                  {/* Empty state for comments */}
+                  {jobData.comments.length === 0 && (
+                    <div style={{
+                      textAlign: 'center',
+                      color: '#6B7280',
+                      padding: '40px',
+                      fontSize: '16.1px'
+                    }}>
+                      No comments yet. Add a comment above to start the conversation.
+                    </div>
+                  )}
                 </div>
               </div>
             )}
