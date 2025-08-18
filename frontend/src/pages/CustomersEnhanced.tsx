@@ -1410,7 +1410,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     }
     
     // Show loading toast
-    const loadingToast = toast.info('Compressing photos...', { autoClose: false });
+    const loadingToast = toast.info('Compressing photos...', { autoClose: 3000 });
     
     try {
       // First, compress and add all photos to local state
@@ -1455,7 +1455,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     }
     
     // Show loading toast
-    const loadingToast = toast.info('Processing documents...', { autoClose: false });
+    const loadingToast = toast.info('Processing documents...', { autoClose: 3000 });
     
     try {
       for (const file of files) {
@@ -1808,7 +1808,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 type="button"
                 onClick={async () => {
                   try {
-                    const savingToast = toast.info('Saving job...', { autoClose: false });
+                    const savingToast = toast.info('Saving job...', { autoClose: 3000 });
                     
                     // For Description tab, use form submit
                     if (activeTab === 'description') {
