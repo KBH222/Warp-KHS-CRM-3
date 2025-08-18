@@ -1843,7 +1843,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   borderRadius: '6px',
                   cursor: jobData.title ? 'pointer' : 'not-allowed',
                   fontSize: '16.1px',
-                  fontWeight: '500'
+                  fontWeight: '500',
+                  marginLeft: window.innerWidth <= 640 ? '20px' : '0px'
                 }}
               >
                 Save/Close
