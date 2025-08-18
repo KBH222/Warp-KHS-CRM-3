@@ -764,52 +764,94 @@ const CustomersEnhanced = () => {
                             </p>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                               {customerJobs.map((job: any) => (
-                                <button
+                                <div
                                   key={job.id}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    console.log('Setting editingJob to:', job);
-                                    console.log('Job object structure:', {
-                                      id: job.id,
-                                      title: job.title,
-                                      customerId: job.customerId,
-                                      allFields: Object.keys(job)
-                                    });
-                                    console.log('=== OPENING JOB MODAL ===');
-                                    console.log('Customer being set:', customer);
-                                    console.log('Job being edited:', job);
-                                    setSelectedCustomerForJob(customer);
-                                    setEditingJob(job);  // Make sure this has the full job object with ID
-                                    setShowAddJobModal(true);
-                                    console.log('Modal should now be open');
-                                  }}
                                   style={{
-                                    background: 'none',
-                                    border: '1px solid #D1D5DB',
-                                    borderRadius: '4px',
-                                    padding: '6px 8px',
-                                    textAlign: 'left',
-                                    cursor: 'pointer',
-                                    fontSize: '12.65px',
-                                    color: '#374151',
-                                    transition: 'all 0.2s'
-                                  }}
-                                  onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = '#F3F4F6';
-                                    e.currentTarget.style.borderColor = '#3B82F6';
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'transparent';
-                                    e.currentTarget.style.borderColor = '#D1D5DB';
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
                                   }}
                                 >
-                                  <div style={{ fontWeight: '500' }}>{job.title}</div>
-                                  {job.startDate && (
-                                    <div style={{ color: '#6B7280', fontSize: '11.5px' }}>
-                                      {new Date(job.startDate).toLocaleDateString()}
-                                    </div>
-                                  )}
-                                </button>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      console.log('Setting editingJob to:', job);
+                                      console.log('Job object structure:', {
+                                        id: job.id,
+                                        title: job.title,
+                                        customerId: job.customerId,
+                                        allFields: Object.keys(job)
+                                      });
+                                      console.log('=== OPENING JOB MODAL ===');
+                                      console.log('Customer being set:', customer);
+                                      console.log('Job being edited:', job);
+                                      setSelectedCustomerForJob(customer);
+                                      setEditingJob(job);  // Make sure this has the full job object with ID
+                                      setShowAddJobModal(true);
+                                      console.log('Modal should now be open');
+                                    }}
+                                    style={{
+                                      flex: 1,
+                                      background: 'none',
+                                      border: '1px solid #D1D5DB',
+                                      borderRadius: '4px',
+                                      padding: '6px 8px',
+                                      textAlign: 'left',
+                                      cursor: 'pointer',
+                                      fontSize: '12.65px',
+                                      color: '#374151',
+                                      transition: 'all 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.backgroundColor = '#F3F4F6';
+                                      e.currentTarget.style.borderColor = '#3B82F6';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.backgroundColor = 'transparent';
+                                      e.currentTarget.style.borderColor = '#D1D5DB';
+                                    }}
+                                  >
+                                    <div style={{ fontWeight: '500' }}>{job.title}</div>
+                                    {job.startDate && (
+                                      <div style={{ color: '#6B7280', fontSize: '11.5px' }}>
+                                        {new Date(job.startDate).toLocaleDateString()}
+                                      </div>
+                                    )}
+                                  </button>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      if (window.confirm(`Are you sure you want to delete the job "${job.title}"?`)) {
+                                        handleDeleteJob(job.id);
+                                      }
+                                    }}
+                                    style={{
+                                      background: '#DC2626',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '4px',
+                                      width: '24px',
+                                      height: '24px',
+                                      cursor: 'pointer',
+                                      fontSize: '14px',
+                                      fontWeight: 'bold',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      flexShrink: 0,
+                                      transition: 'background-color 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.backgroundColor = '#B91C1C';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.backgroundColor = '#DC2626';
+                                    }}
+                                    title="Delete job"
+                                  >
+                                    ×
+                                  </button>
+                                </div>
                               ))}
                             </div>
                           </div>
