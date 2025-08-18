@@ -1352,7 +1352,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     photos: existingJob?.photos || [],
     plans: existingJob?.plans || [],
     notes: existingJob?.notes || '',
-    comments: existingJob?.comments || []
+    comments: existingJob?.comments || [],
+    commentsText: existingJob?.commentsText || ''
   });
   
   console.log('[AddJobModal] Initial jobData:', jobData);
@@ -1374,7 +1375,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         photos: existingJob.photos || [],
         plans: existingJob.plans || [],
         notes: existingJob.notes || '',
-        comments: existingJob.comments || []
+        comments: existingJob.comments || [],
+        commentsText: existingJob.commentsText || ''
       });
       setCurrentJobId(existingJob.id);
     }
@@ -1384,7 +1386,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     { id: 'description', label: 'Job Description', icon: '📋' },
     { id: 'photos', label: 'Photos', icon: '📸' },
     { id: 'plans', label: 'Drawings/Plans', icon: '📐' },
-    { id: 'notes', label: 'Notes', icon: '📝' },
+    { id: 'notes', label: 'Job Notes', icon: '📝' },
     { id: 'comments', label: 'Comments', icon: '💬' }
   ];
 
@@ -2050,7 +2052,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
             {/* Plans Tab */}
             {activeTab === 'plans' && (
-              <div style={{ minHeight: '400px' }}>
+              <div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {jobData.plans.map(plan => (
                     <div 
@@ -2165,81 +2167,24 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
             {/* Comments Tab */}
             {activeTab === 'comments' && (
-              <div style={{ minHeight: '400px' }}>
-                <div style={{ marginBottom: '20px' }}>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <input
-                      type="text"
-                      id="new-comment"
-                      placeholder="Add a comment..."
-                      style={{
-                        flex: 1,
-                        padding: '8px 12px',
-                        border: '1px solid #D1D5DB',
-                        borderRadius: '6px',
-                        fontSize: '16.1px'
-                      }}
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault();
-                          const input = e.target as HTMLInputElement;
-                          handleAddComment(input.value);
-                          input.value = '';
-                        }
-                      }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const input = document.getElementById('new-comment') as HTMLInputElement;
-                        handleAddComment(input.value);
-                        input.value = '';
-                      }}
-                      style={{
-                        padding: '8px 16px',
-                        backgroundColor: '#3B82F6',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontSize: '16.1px'
-                      }}
-                    >
-                      Add
-                    </button>
-                  </div>
-                </div>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {jobData.comments.map(comment => (
-                    <div key={comment.id} style={{
-                      padding: '12px',
-                      backgroundColor: '#F9FAFB',
-                      borderRadius: '6px',
-                      border: '1px solid #E5E7EB'
-                    }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                        <span style={{ fontWeight: '500', fontSize: '16.1px' }}>{comment.author}</span>
-                        <span style={{ color: '#6B7280', fontSize: '13.8px' }}>
-                          {new Date(comment.timestamp).toLocaleString()}
-                        </span>
-                      </div>
-                      <p style={{ margin: 0, fontSize: '16.1px' }}>{comment.text}</p>
-                    </div>
-                  ))}
-                  
-                  {/* Empty state for comments */}
-                  {jobData.comments.length === 0 && (
-                    <div style={{
-                      textAlign: 'center',
-                      color: '#6B7280',
-                      padding: '40px',
-                      fontSize: '16.1px'
-                    }}>
-                      No comments yet. Add a comment above to start the conversation.
-                    </div>
-                  )}
-                </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
+                  Comments
+                </label>
+                <textarea
+                  value={jobData.commentsText || ''}
+                  onChange={(e) => setJobData({ ...jobData, commentsText: e.target.value })}
+                  rows={10}
+                  placeholder="Add comments about this job..."
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #D1D5DB',
+                    borderRadius: '6px',
+                    fontSize: '18.4px',
+                    resize: 'vertical'
+                  }}
+                />
               </div>
             )}
           </div>
