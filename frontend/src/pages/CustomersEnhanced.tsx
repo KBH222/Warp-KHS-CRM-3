@@ -1961,7 +1961,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       <img
                         src={photo.url}
                         alt={photo.name}
-                        onDoubleClick={() => window.open(photo.url, '_blank')}
+                        onClick={() => window.open(photo.url, '_blank')}
                         style={{
                           position: 'absolute',
                           top: 0,
@@ -1969,9 +1969,12 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                           width: '100%',
                           height: '100%',
                           objectFit: 'cover',
-                          cursor: 'pointer'
+                          cursor: 'pointer',
+                          transition: 'transform 0.2s'
                         }}
-                        title="Double-click to open"
+                        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                        title="Click to view full size"
                       />
                       <button
                         type="button"
@@ -2057,7 +2060,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   {jobData.plans.map(plan => (
                     <div 
                       key={plan.id} 
-                      onDoubleClick={() => window.open(plan.url, '_blank')}
+                      onClick={() => window.open(plan.url, '_blank')}
                       style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -2065,12 +2068,15 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                         backgroundColor: '#F9FAFB',
                         borderRadius: '6px',
                         border: '1px solid #E5E7EB',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        transition: 'background-color 0.2s'
                       }}
-                      title="Double-click to open"
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F9FAFB'}
+                      title="Click to open"
                     >
                       <span style={{ fontSize: '27.6px', marginRight: '12px' }}>
-                        {plan.type.includes('pdf') ? '📄' : '🖼️'}
+                        {plan.type && plan.type.includes('pdf') ? '📄' : '🖼️'}
                       </span>
                       <span style={{ flex: 1, fontSize: '16.1px' }}>{plan.name}</span>
                       <button
