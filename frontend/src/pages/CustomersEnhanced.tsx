@@ -1726,7 +1726,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
             <div>
               <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {existingJob ? 'Edit Job' : 'Add Job'} for {customer.name} (ID: {customer.id})
+                {existingJob ? 'Edit Job' : 'Add Job'} for {customer.name}
                 {unsavedChanges && (
                   <span style={{ 
                     fontSize: '14px', 
