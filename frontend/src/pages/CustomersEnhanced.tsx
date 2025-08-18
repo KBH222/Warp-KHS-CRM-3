@@ -1338,6 +1338,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
   const [activeTab, setActiveTab] = useState('description');
   const [currentJobId, setCurrentJobId] = useState(existingJob?.id || null);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
   
   const [jobData, setJobData] = useState({
     id: existingJob?.id || null,
@@ -1961,7 +1962,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       <img
                         src={photo.url}
                         alt={photo.name}
-                        onClick={() => window.open(photo.url, '_blank')}
+                        onClick={() => setSelectedPhoto(photo)}
                         style={{
                           position: 'absolute',
                           top: 0,
@@ -2060,7 +2061,31 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   {jobData.plans.map(plan => (
                     <div 
                       key={plan.id} 
-                      onClick={() => window.open(plan.url, '_blank')}
+                      onClick={() => {
+                        // For PDFs and other documents, try to open in new tab
+                        // For images, use the lightbox
+                        if (plan.type && (plan.type.includes('image') || plan.type.includes('jpg') || plan.type.includes('jpeg') || plan.type.includes('png'))) {
+                          setSelectedPhoto(plan);
+                        } else {
+                          // Create a blob URL for better compatibility
+                          try {
+                            const byteCharacters = atob(plan.url.split(',')[1]);
+                            const byteNumbers = new Array(byteCharacters.length);
+                            for (let i = 0; i < byteCharacters.length; i++) {
+                              byteNumbers[i] = byteCharacters.charCodeAt(i);
+                            }
+                            const byteArray = new Uint8Array(byteNumbers);
+                            const blob = new Blob([byteArray], { type: plan.type || 'application/octet-stream' });
+                            const blobUrl = URL.createObjectURL(blob);
+                            window.open(blobUrl, '_blank');
+                            // Clean up blob URL after a delay
+                            setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+                          } catch (error) {
+                            // Fallback to direct opening
+                            window.open(plan.url, '_blank');
+                          }
+                        }
+                      }}
                       style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -2302,6 +2327,59 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           </div>
         </form>
       </div>
+      
+      {/* Photo Lightbox Modal */}
+      {selectedPhoto && (
+        <div
+          onClick={() => setSelectedPhoto(null)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            cursor: 'pointer'
+          }}
+        >
+          <img
+            src={selectedPhoto.url}
+            alt={selectedPhoto.name}
+            style={{
+              maxWidth: '90%',
+              maxHeight: '90vh',
+              objectFit: 'contain',
+              boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button
+            onClick={() => setSelectedPhoto(null)}
+            style={{
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              color: 'white',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              borderRadius: '50%',
+              width: '40px',
+              height: '40px',
+              fontSize: '24px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            ×
+          </button>
+        </div>
+      )}
     </div>
   );
 };
