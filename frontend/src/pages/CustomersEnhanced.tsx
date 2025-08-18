@@ -1821,30 +1821,51 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 Cancel
               </button>
               
-              {/* Delete Job button */}
-              {existingJob && onDelete && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (window.confirm('Are you sure you want to delete this job?')) {
-                      onDelete(existingJob.id);
-                      onClose();
+              {/* Save/Close button */}
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    const savingToast = toast.info('Saving job...', { autoClose: false });
+                    
+                    // For Description tab, use form submit
+                    if (activeTab === 'description') {
+                      const event = new Event('submit', { bubbles: true, cancelable: true });
+                      const form = document.querySelector('form');
+                      if (form) {
+                        form.dispatchEvent(event);
+                      }
+                    } else {
+                      // For other tabs, use handleSavePhotos
+                      await handleSavePhotos();
+                      toast.dismiss(savingToast);
+                      toast.success('Job saved successfully');
+                      
+                      // Close modal after a short delay
+                      setTimeout(() => {
+                        onClose();
+                      }, 1500);
                     }
-                  }}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#FEE2E2',
-                    color: '#DC2626',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '16.1px',
-                    fontWeight: '500'
-                  }}
-                >
-                  Delete Job
-                </button>
-              )}
+                  } catch (error) {
+                    toast.dismiss();
+                    toast.error('Failed to save job');
+                    console.error('Save job error:', error);
+                  }
+                }}
+                disabled={!jobData.title}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: jobData.title ? '#10B981' : '#9CA3AF',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: jobData.title ? 'pointer' : 'not-allowed',
+                  fontSize: '16.1px',
+                  fontWeight: '500'
+                }}
+              >
+                Save/Close
+              </button>
             </div>
           </div>
         </div>
@@ -1940,26 +1961,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     }}
                   />
                 </div>
-                
-                {/* Save/Update button for Description tab */}
-                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-                  <button
-                    type="submit"
-                    disabled={!jobData.title}
-                    style={{
-                      padding: '10px 24px',
-                      backgroundColor: jobData.title ? '#3B82F6' : '#9CA3AF',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '6px',
-                      cursor: jobData.title ? 'pointer' : 'not-allowed',
-                      fontSize: '16.1px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    Save/Close
-                  </button>
-                </div>
               </div>
             )}
 
@@ -2039,42 +2040,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     No photos uploaded yet. Click "Add Photos" above to add job photos.
                   </div>
                 )}
-                
-                {/* Save/Update Job button for Photos tab */}
-                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      try {
-                        const savingToast = toast.info('Saving job with photos...', { autoClose: false });
-                        await handleSavePhotos();
-                        toast.dismiss(savingToast);
-                        toast.success('Job saved successfully');
-                        // Close modal after a short delay
-                        setTimeout(() => {
-                          onClose();
-                        }, 500);
-                      } catch (error) {
-                        toast.dismiss();
-                        toast.error('Failed to save job');
-                        console.error('Save job error:', error);
-                      }
-                    }}
-                    disabled={!jobData.title}
-                    style={{
-                      padding: '10px 24px',
-                      backgroundColor: jobData.title ? '#3B82F6' : '#9CA3AF',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '6px',
-                      cursor: jobData.title ? 'pointer' : 'not-allowed',
-                      fontSize: '16.1px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    Save/Close
-                  </button>
-                </div>
               </div>
             )}
 
@@ -2162,42 +2127,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     No documents uploaded yet. Click "Add Documents" above to add plans or drawings.
                   </div>
                 )}
-                
-                {/* Save/Update Job button for Plans tab */}
-                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      try {
-                        const savingToast = toast.info('Saving job with documents...', { autoClose: false });
-                        await handleSavePhotos();
-                        toast.dismiss(savingToast);
-                        toast.success('Job saved successfully');
-                        // Close modal after a short delay
-                        setTimeout(() => {
-                          onClose();
-                        }, 500);
-                      } catch (error) {
-                        toast.dismiss();
-                        toast.error('Failed to save job');
-                        console.error('Save job error:', error);
-                      }
-                    }}
-                    disabled={!jobData.title}
-                    style={{
-                      padding: '10px 24px',
-                      backgroundColor: jobData.title ? '#3B82F6' : '#9CA3AF',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '6px',
-                      cursor: jobData.title ? 'pointer' : 'not-allowed',
-                      fontSize: '16.1px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    Save/Close
-                  </button>
-                </div>
               </div>
             )}
 
@@ -2221,42 +2150,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     resize: 'vertical'
                   }}
                 />
-                
-                {/* Save button for Notes tab */}
-                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      try {
-                        const savingToast = toast.info('Saving job notes...', { autoClose: false });
-                        await handleSavePhotos();
-                        toast.dismiss(savingToast);
-                        toast.success('Job saved successfully');
-                        // Close modal after a short delay
-                        setTimeout(() => {
-                          onClose();
-                        }, 500);
-                      } catch (error) {
-                        toast.dismiss();
-                        toast.error('Failed to save job');
-                        console.error('Save job error:', error);
-                      }
-                    }}
-                    disabled={!jobData.title}
-                    style={{
-                      padding: '10px 24px',
-                      backgroundColor: jobData.title ? '#3B82F6' : '#9CA3AF',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '6px',
-                      cursor: jobData.title ? 'pointer' : 'not-allowed',
-                      fontSize: '16.1px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    Save/Close
-                  </button>
-                </div>
               </div>
             )}
 
@@ -2280,42 +2173,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     resize: 'vertical'
                   }}
                 />
-                
-                {/* Save button for Comments tab */}
-                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      try {
-                        const savingToast = toast.info('Saving job comments...', { autoClose: false });
-                        await handleSavePhotos();
-                        toast.dismiss(savingToast);
-                        toast.success('Job saved successfully');
-                        // Close modal after a short delay
-                        setTimeout(() => {
-                          onClose();
-                        }, 500);
-                      } catch (error) {
-                        toast.dismiss();
-                        toast.error('Failed to save job');
-                        console.error('Save job error:', error);
-                      }
-                    }}
-                    disabled={!jobData.title}
-                    style={{
-                      padding: '10px 24px',
-                      backgroundColor: jobData.title ? '#3B82F6' : '#9CA3AF',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '6px',
-                      cursor: jobData.title ? 'pointer' : 'not-allowed',
-                      fontSize: '16.1px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    Save/Close
-                  </button>
-                </div>
               </div>
             )}
           </div>
