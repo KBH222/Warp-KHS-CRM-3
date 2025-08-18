@@ -1957,7 +1957,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       fontWeight: '500'
                     }}
                   >
-                    {existingJob ? 'Update Job' : 'Create Job'}
+                    Save/Close
                   </button>
                 </div>
               </div>
@@ -2050,6 +2050,10 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                         await handleSavePhotos();
                         toast.dismiss(savingToast);
                         toast.success('Job saved successfully');
+                        // Close modal after a short delay
+                        setTimeout(() => {
+                          onClose();
+                        }, 500);
                       } catch (error) {
                         toast.dismiss();
                         toast.error('Failed to save job');
@@ -2068,7 +2072,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       fontWeight: '500'
                     }}
                   >
-                    {currentJobId || jobData.id ? 'Update Job' : 'Save Job'}
+                    Save/Close
                   </button>
                 </div>
               </div>
@@ -2169,6 +2173,10 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                         await handleSavePhotos();
                         toast.dismiss(savingToast);
                         toast.success('Job saved successfully');
+                        // Close modal after a short delay
+                        setTimeout(() => {
+                          onClose();
+                        }, 500);
                       } catch (error) {
                         toast.dismiss();
                         toast.error('Failed to save job');
@@ -2187,7 +2195,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       fontWeight: '500'
                     }}
                   >
-                    {currentJobId || jobData.id ? 'Update Job' : 'Save Job'}
+                    Save/Close
                   </button>
                 </div>
               </div>
@@ -2224,6 +2232,10 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                         await handleSavePhotos();
                         toast.dismiss(savingToast);
                         toast.success('Job saved successfully');
+                        // Close modal after a short delay
+                        setTimeout(() => {
+                          onClose();
+                        }, 500);
                       } catch (error) {
                         toast.dismiss();
                         toast.error('Failed to save job');
@@ -2242,7 +2254,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       fontWeight: '500'
                     }}
                   >
-                    {currentJobId || jobData.id ? 'Update Job' : 'Save Job'}
+                    Save/Close
                   </button>
                 </div>
               </div>
@@ -2279,6 +2291,10 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                         await handleSavePhotos();
                         toast.dismiss(savingToast);
                         toast.success('Job saved successfully');
+                        // Close modal after a short delay
+                        setTimeout(() => {
+                          onClose();
+                        }, 500);
                       } catch (error) {
                         toast.dismiss();
                         toast.error('Failed to save job');
@@ -2297,7 +2313,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       fontWeight: '500'
                     }}
                   >
-                    {currentJobId || jobData.id ? 'Update Job' : 'Save Job'}
+                    Save/Close
                   </button>
                 </div>
               </div>
