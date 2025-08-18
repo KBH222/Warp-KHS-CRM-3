@@ -1803,24 +1803,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 </>
               )}
               
-              {/* Cancel button */}
-              <button
-                type="button"
-                onClick={onClose}
-                style={{
-                  padding: '8px 16px',
-                  backgroundColor: '#E5E7EB',
-                  color: '#374151',
-                  border: 'none',
-                  borderRadius: '6px',
-                  fontSize: '16.1px',
-                  fontWeight: '500',
-                  cursor: 'pointer'
-                }}
-              >
-                Cancel
-              </button>
-              
               {/* Save/Close button */}
               <button
                 type="button"
