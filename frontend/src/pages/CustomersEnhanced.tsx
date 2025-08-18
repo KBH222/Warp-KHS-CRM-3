@@ -1940,6 +1940,26 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     }}
                   />
                 </div>
+                
+                {/* Save/Update button for Description tab */}
+                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+                  <button
+                    type="submit"
+                    disabled={!jobData.title}
+                    style={{
+                      padding: '10px 24px',
+                      backgroundColor: jobData.title ? '#3B82F6' : '#9CA3AF',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: jobData.title ? 'pointer' : 'not-allowed',
+                      fontSize: '16.1px',
+                      fontWeight: '500'
+                    }}
+                  >
+                    {existingJob ? 'Update Job' : 'Create Job'}
+                  </button>
+                </div>
               </div>
             )}
 
@@ -2193,6 +2213,38 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     resize: 'vertical'
                   }}
                 />
+                
+                {/* Save button for Notes tab */}
+                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        const savingToast = toast.info('Saving job notes...', { autoClose: false });
+                        await handleSavePhotos();
+                        toast.dismiss(savingToast);
+                        toast.success('Job saved successfully');
+                      } catch (error) {
+                        toast.dismiss();
+                        toast.error('Failed to save job');
+                        console.error('Save job error:', error);
+                      }
+                    }}
+                    disabled={!jobData.title}
+                    style={{
+                      padding: '10px 24px',
+                      backgroundColor: jobData.title ? '#3B82F6' : '#9CA3AF',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: jobData.title ? 'pointer' : 'not-allowed',
+                      fontSize: '16.1px',
+                      fontWeight: '500'
+                    }}
+                  >
+                    {currentJobId || jobData.id ? 'Update Job' : 'Save Job'}
+                  </button>
+                </div>
               </div>
             )}
 
@@ -2216,115 +2268,42 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     resize: 'vertical'
                   }}
                 />
+                
+                {/* Save button for Comments tab */}
+                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        const savingToast = toast.info('Saving job comments...', { autoClose: false });
+                        await handleSavePhotos();
+                        toast.dismiss(savingToast);
+                        toast.success('Job saved successfully');
+                      } catch (error) {
+                        toast.dismiss();
+                        toast.error('Failed to save job');
+                        console.error('Save job error:', error);
+                      }
+                    }}
+                    disabled={!jobData.title}
+                    style={{
+                      padding: '10px 24px',
+                      backgroundColor: jobData.title ? '#3B82F6' : '#9CA3AF',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: jobData.title ? 'pointer' : 'not-allowed',
+                      fontSize: '16.1px',
+                      fontWeight: '500'
+                    }}
+                  >
+                    {currentJobId || jobData.id ? 'Update Job' : 'Save Job'}
+                  </button>
+                </div>
               </div>
             )}
           </div>
 
-          {/* Modal Footer with Save/Cancel buttons */}
-          <div style={{
-            padding: '20px',
-            borderTop: '1px solid #E5E7EB',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            backgroundColor: '#F9FAFB'
-          }}>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              {/* Delete button for existing jobs */}
-              {existingJob && onDelete && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (confirm('Are you sure you want to delete this job?')) {
-                      onDelete(existingJob.id);
-                      onClose();
-                    }
-                  }}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#DC2626',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '16.1px',
-                    fontWeight: '500'
-                  }}
-                >
-                  Delete Job
-                </button>
-              )}
-            </div>
-            
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button
-                type="button"
-                onClick={onClose}
-                style={{
-                  padding: '8px 16px',
-                  backgroundColor: '#E5E7EB',
-                  color: '#374151',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '16.1px',
-                  fontWeight: '500'
-                }}
-              >
-                Cancel
-              </button>
-              
-              {/* Show Create/Update button only for Description tab OR if job doesn't exist yet */}
-              {(activeTab === 'description' || !currentJobId) && (
-                <button
-                  type="submit"
-                  disabled={!jobData.title}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: jobData.title ? '#3B82F6' : '#9CA3AF',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: jobData.title ? 'pointer' : 'not-allowed',
-                    fontSize: '16.1px',
-                    fontWeight: '500'
-                  }}
-                >
-                  {existingJob ? 'Update Job' : 'Create Job'}
-                </button>
-              )}
-              
-              {/* Show Save Changes button on other tabs if there are unsaved changes */}
-              {activeTab !== 'description' && currentJobId && unsavedChanges && (
-                <button
-                  type="button"
-                  onClick={async () => {
-                    try {
-                      const savingToast = toast.info('Saving changes...', { autoClose: false });
-                      await handleSavePhotos();
-                      toast.dismiss(savingToast);
-                      toast.success('Changes saved successfully');
-                    } catch (error) {
-                      toast.dismiss();
-                      toast.error('Failed to save changes');
-                    }
-                  }}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#3B82F6',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '16.1px',
-                    fontWeight: '500'
-                  }}
-                >
-                  Save Changes
-                </button>
-              )}
-            </div>
-          </div>
         </form>
       </div>
       
