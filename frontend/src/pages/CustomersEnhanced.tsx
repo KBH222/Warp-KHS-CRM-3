@@ -1430,7 +1430,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     { id: 'photos', label: 'Photos', icon: '📸' },
     { id: 'plans', label: 'Drawings/Plans', icon: '📐' },
     { id: 'notes', label: 'Job Notes', icon: '📝' },
-    { id: 'comments', label: 'Comments', icon: '💬' }
+    { id: 'comments', label: 'Extra Costs', icon: '💬' }
   ];
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -2182,13 +2182,13 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
             {activeTab === 'comments' && (
               <div>
                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-                  Comments
+                  Extra Costs
                 </label>
                 <textarea
                   value={jobData.commentsText || ''}
                   onChange={(e) => setJobData({ ...jobData, commentsText: e.target.value })}
                   rows={10}
-                  placeholder="Add comments about this job..."
+                  placeholder="Add any additional costs for this job..."
                   style={{
                     width: '100%',
                     padding: '12px',
