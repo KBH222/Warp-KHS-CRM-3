@@ -660,6 +660,83 @@ app.delete('/api/jobs/:id', authMiddleware, async (req, res) => {
   }
 });
 
+// Worker routes
+app.get('/api/workers', authMiddleware, async (req, res) => {
+  try {
+    const workers = await prisma.worker.findMany({
+      orderBy: { name: 'asc' }
+    });
+    
+    // Parse timesheet JSON for each worker
+    const workersWithParsedTimesheet = workers.map(worker => ({
+      ...worker,
+      timesheet: worker.timesheet ? worker.timesheet : null
+    }));
+    
+    res.json(workersWithParsedTimesheet);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch workers' });
+  }
+});
+
+app.post('/api/workers', authMiddleware, async (req, res) => {
+  try {
+    const worker = await prisma.worker.create({
+      data: {
+        name: req.body.name,
+        fullName: req.body.fullName,
+        phone: req.body.phone,
+        email: req.body.email,
+        specialty: req.body.specialty,
+        status: req.body.status || 'Available',
+        currentJob: req.body.currentJob,
+        color: req.body.color,
+        notes: req.body.notes,
+        timesheet: req.body.timesheet || {}
+      }
+    });
+    
+    res.status(201).json(worker);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create worker' });
+  }
+});
+
+app.put('/api/workers/:id', authMiddleware, async (req, res) => {
+  try {
+    const worker = await prisma.worker.update({
+      where: { id: req.params.id },
+      data: {
+        name: req.body.name,
+        fullName: req.body.fullName,
+        phone: req.body.phone,
+        email: req.body.email,
+        specialty: req.body.specialty,
+        status: req.body.status,
+        currentJob: req.body.currentJob,
+        color: req.body.color,
+        notes: req.body.notes,
+        timesheet: req.body.timesheet
+      }
+    });
+    
+    res.json(worker);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update worker' });
+  }
+});
+
+app.delete('/api/workers/:id', authMiddleware, async (req, res) => {
+  try {
+    await prisma.worker.delete({
+      where: { id: req.params.id }
+    });
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete worker' });
+  }
+});
+
 // Serve React app for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));

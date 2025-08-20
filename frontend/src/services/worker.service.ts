@@ -1,30 +1,11 @@
 /**
  * Worker Service
- * Manages worker data with localStorage persistence
+ * Manages worker data with API and localStorage persistence
  */
 
-export interface Worker {
-  id: string;
-  name: string;
-  fullName: string;
-  phone: string;
-  email: string;
-  specialty: string;
-  status: 'Available' | 'On Job' | 'Off Duty';
-  currentJob?: string | null;
-  color: string;
-  notes?: string;
-  timesheet?: {
-    [key: string]: {
-      startTime: string;
-      endTime: string;
-      lunchMinutes: number;
-      job: string;
-      workType: string;
-      totalHours: number;
-    }
-  };
-}
+import { workersApi, Worker } from './api/workers.api';
+
+export { Worker } from './api/workers.api';
 
 const STORAGE_KEY = 'khs-crm-workers';
 
@@ -81,72 +62,136 @@ export const workerColors = [
 
 class WorkerService {
   private workers: Worker[] = [];
+  private initialized = false;
 
   constructor() {
-    this.loadWorkers();
+    this.initialize();
   }
 
-  private loadWorkers() {
+  private async initialize() {
+    try {
+      // Try to load from API first
+      const apiWorkers = await workersApi.getAll();
+      this.workers = apiWorkers;
+      this.initialized = true;
+      
+      // If no workers in database, create defaults
+      if (this.workers.length === 0) {
+        for (const worker of defaultWorkers) {
+          await this.create(worker);
+        }
+      }
+    } catch (error) {
+      // Fallback to localStorage if API fails
+      this.loadFromLocalStorage();
+    }
+  }
+
+  private loadFromLocalStorage() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         this.workers = JSON.parse(stored);
       } else {
         this.workers = defaultWorkers;
-        this.saveWorkers();
       }
+      this.initialized = true;
     } catch (error) {
-      console.error('Failed to load workers:', error);
       this.workers = defaultWorkers;
+      this.initialized = true;
     }
   }
 
-  private saveWorkers() {
+  private async waitForInit() {
+    let attempts = 0;
+    while (!this.initialized && attempts < 50) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      attempts++;
+    }
+  }
+
+  async getAll(): Promise<Worker[]> {
+    await this.waitForInit();
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
+      const workers = await workersApi.getAll();
+      this.workers = workers;
+      return workers;
     } catch (error) {
-      console.error('Failed to save workers:', error);
+      return [...this.workers];
     }
   }
 
-  getAll(): Worker[] {
-    return [...this.workers];
+  async getById(id: string): Promise<Worker | undefined> {
+    await this.waitForInit();
+    try {
+      return await workersApi.getById(id);
+    } catch (error) {
+      return this.workers.find(w => w.id === id);
+    }
   }
 
-  getById(id: string): Worker | undefined {
-    return this.workers.find(w => w.id === id);
+  async getByInitials(initials: string): Promise<Worker | undefined> {
+    await this.waitForInit();
+    const workers = await this.getAll();
+    return workers.find(w => w.name === initials);
   }
 
-  getByInitials(initials: string): Worker | undefined {
-    return this.workers.find(w => w.name === initials);
+  async create(worker: Omit<Worker, 'id'>): Promise<Worker> {
+    await this.waitForInit();
+    try {
+      const newWorker = await workersApi.create(worker);
+      this.workers.push(newWorker);
+      return newWorker;
+    } catch (error) {
+      // Fallback to local creation
+      const newWorker: Worker = {
+        ...worker,
+        id: this.generateId(worker.name)
+      };
+      this.workers.push(newWorker);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
+      return newWorker;
+    }
   }
 
-  create(worker: Omit<Worker, 'id'>): Worker {
-    const newWorker: Worker = {
-      ...worker,
-      id: this.generateId(worker.name)
-    };
-    this.workers.push(newWorker);
-    this.saveWorkers();
-    return newWorker;
+  async update(id: string, updates: Partial<Worker>): Promise<Worker | undefined> {
+    await this.waitForInit();
+    try {
+      const updatedWorker = await workersApi.update(id, updates);
+      const index = this.workers.findIndex(w => w.id === id);
+      if (index !== -1) {
+        this.workers[index] = updatedWorker;
+      }
+      return updatedWorker;
+    } catch (error) {
+      // Fallback to local update
+      const index = this.workers.findIndex(w => w.id === id);
+      if (index === -1) return undefined;
+      
+      this.workers[index] = { ...this.workers[index], ...updates };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
+      return this.workers[index];
+    }
   }
 
-  update(id: string, updates: Partial<Worker>): Worker | undefined {
-    const index = this.workers.findIndex(w => w.id === id);
-    if (index === -1) return undefined;
-
-    this.workers[index] = { ...this.workers[index], ...updates };
-    this.saveWorkers();
-    return this.workers[index];
-  }
-
-  delete(id: string): boolean {
-    const index = this.workers.findIndex(w => w.id === id);
-    if (index === -1) return false;
-
-    this.workers.splice(index, 1);
-    this.saveWorkers();
-    return true;
+  async delete(id: string): Promise<boolean> {
+    await this.waitForInit();
+    try {
+      await workersApi.delete(id);
+      const index = this.workers.findIndex(w => w.id === id);
+      if (index !== -1) {
+        this.workers.splice(index, 1);
+      }
+      return true;
+    } catch (error) {
+      // Fallback to local delete
+      const index = this.workers.findIndex(w => w.id === id);
+      if (index === -1) return false;
+      
+      this.workers.splice(index, 1);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
+      return true;
+    }
   }
 
   private generateId(name: string): string {
@@ -167,10 +212,17 @@ class WorkerService {
   }
 
   // Get next available color
-  getNextColor(): string {
-    const usedColors = this.workers.map(w => w.color);
+  async getNextColor(): Promise<string> {
+    await this.waitForInit();
+    const workers = await this.getAll();
+    const usedColors = workers.map(w => w.color);
     const availableColor = workerColors.find(color => !usedColors.includes(color));
     return availableColor || workerColors[0];
+  }
+
+  // Sync with server
+  async sync(): Promise<void> {
+    await workersApi.sync();
   }
 
   // Utility to format phone number

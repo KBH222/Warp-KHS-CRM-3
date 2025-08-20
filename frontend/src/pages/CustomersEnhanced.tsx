@@ -38,9 +38,8 @@ const CustomersEnhanced = () => {
   }, []);
   
   // State
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   // Load customers from API
   const loadCustomers = async () => {
@@ -48,10 +47,8 @@ const CustomersEnhanced = () => {
       setIsLoading(true);
       const data = await customersApi.getAll();
       setCustomers(data);
-      setError(null);
     } catch (err: any) {
       const errorMessage = err.message || 'Failed to load customers';
-      setError(errorMessage);
       toast.error('Failed to load customers: ' + errorMessage);
       // Will fall back to localStorage in the API
     } finally {
@@ -67,7 +64,6 @@ const CustomersEnhanced = () => {
         await authApi.autoLogin();
         await loadCustomers();
       } catch (error) {
-        console.error('[CustomersPage] Init error:', error);
         // Still try to load customers - might work with cached data
         await loadCustomers();
       }
@@ -102,7 +98,7 @@ const CustomersEnhanced = () => {
         // Reload data after sync
         await loadCustomers();
       } catch (error) {
-        console.error('[CustomersPage] Sync failed:', error);
+        // Sync failed silently
       }
       
       // Trigger storage event for other tabs
@@ -145,12 +141,12 @@ const CustomersEnhanced = () => {
   }, []);
 
   const [showModal, setShowModal] = useState(false);
-  const [editingCustomer, setEditingCustomer] = useState(null);
+  const [editingCustomer, setEditingCustomer] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('name'); // name, reference, recent
   const [showAddJobModal, setShowAddJobModal] = useState(false);
-  const [selectedCustomerForJob, setSelectedCustomerForJob] = useState(null);
-  const [editingJob, setEditingJob] = useState(null);
+  const [selectedCustomerForJob, setSelectedCustomerForJob] = useState<any>(null);
+  const [editingJob, setEditingJob] = useState<any>(null);
 
   // Sort customers
   // Helper function to get jobs for a customer
@@ -209,7 +205,6 @@ const CustomersEnhanced = () => {
       return customer; // Return customer with real ID
     } catch (err: any) {
       const errorMessage = err.message || 'Failed to add customer';
-      console.error('[Customer] Failed to create:', err);
       toast.error('Failed to add customer: ' + errorMessage);
       throw err;
     } finally {
@@ -230,7 +225,6 @@ const CustomersEnhanced = () => {
     } catch (err: any) {
       const errorMessage = err.message || 'Failed to update customer';
       toast.error('Failed to update customer: ' + errorMessage);
-      console.error('Update customer error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -246,7 +240,6 @@ const CustomersEnhanced = () => {
       } catch (err: any) {
         const errorMessage = err.message || 'Failed to delete customer';
         toast.error('Failed to delete customer: ' + errorMessage);
-        console.error('Delete customer error:', err);
       } finally {
         setIsLoading(false);
       }
@@ -340,12 +333,6 @@ const CustomersEnhanced = () => {
             toast.success('Job updated successfully', { autoClose: 2000 });
           }, 100);
         } catch (apiError: any) {
-          console.error('API Error details:', {
-            message: apiError.message,
-            response: apiError.response,
-            data: apiError.response?.data,
-            status: apiError.response?.status
-          });
           throw apiError;
         }
       } else if (jobData.id) {
@@ -442,9 +429,6 @@ const CustomersEnhanced = () => {
         }, 100);
       }
     } catch (err: any) {
-      console.error('Failed to save job - Full error:', err);
-      console.error('Error response:', err.response);
-      console.error('Error message:', err.message);
       
       // Show more specific error message
       let errorMessage = 'Failed to save job';
@@ -483,7 +467,6 @@ const CustomersEnhanced = () => {
     } catch (err: any) {
       const errorMessage = err.message || 'Failed to delete job';
       toast.error('Failed to delete job: ' + errorMessage);
-      console.error('Delete job error:', err);
     }
   };
 
@@ -1003,7 +986,13 @@ const CustomersEnhanced = () => {
 };
 
 // Customer Modal Component
-const CustomerModal = ({ customer, onClose, onSave }: any) => {
+interface CustomerModalProps {
+  customer: any;
+  onClose: () => void;
+  onSave: (customer: any) => void;
+}
+
+const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
   const [formData, setFormData] = useState({
     reference: customer?.reference || '',
     name: customer?.name || '',
@@ -1390,12 +1379,21 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
 };
 
 // Add Job Modal Component
-const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete = null, onJobUpdate = null }: any) => {
+interface AddJobModalProps {
+  customer: any;
+  onClose: () => void;
+  onSave: (job: any) => void;
+  existingJob?: any;
+  onDelete?: (jobId: string) => void;
+  onJobUpdate?: (job: any) => void;
+}
+
+const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete = null, onJobUpdate = null }: AddJobModalProps) => {
   
   const [activeTab, setActiveTab] = useState('description');
   const [currentJobId, setCurrentJobId] = useState(existingJob?.id || null);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<any>(null);
   
   const [jobData, setJobData] = useState({
     id: existingJob?.id || null,
@@ -1546,19 +1544,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     }
   };
 
-  const handleAddComment = (text: string) => {
-    if (text.trim()) {
-      setJobData(prev => ({
-        ...prev,
-        comments: [...prev.comments, {
-          id: Date.now(),
-          text,
-          timestamp: new Date().toISOString(),
-          author: 'Current User'
-        }]
-      }));
-    }
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1569,126 +1554,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     }
   };
 
-  // Save photos/plans without closing modal
-  const handleSavePhotos = async () => {
-    
-    // Validate customer ID first
-    const customerId = customer?.id || jobData.customerId;
-    
-    if (!customerId || customerId.toString().includes('temp')) {
-      toast.error('Cannot save photos - customer not saved properly. Please refresh the page.');
-      
-      // Show more helpful message for temp IDs
-      if (customerId && customerId.includes('temp')) {
-        toast.info('The customer needs to sync with the server first. Please refresh the page and try again.');
-      }
-      return;
-    }
-    
-    
-    try {
-      if (currentJobId || jobData.id) {
-        // Update existing job with new photos - need to send all fields
-        const jobId = currentJobId || jobData.id;
-        const updateData = {
-          title: jobData.title,
-          description: jobData.description || '',
-          status: jobData.status,
-          priority: jobData.priority,
-          startDate: jobData.startDate,
-          endDate: jobData.endDate,
-          completedDate: jobData.completedDate,
-          notes: jobData.notes || '',
-          customerId: jobData.customerId || customer.id,
-          photos: jobData.photos || [],
-          plans: jobData.plans || [],
-          commentsText: jobData.commentsText || ''
-        };
-        
-        
-        const updatedJob = await jobsApi.update(jobId, updateData);
-        
-        
-        if (!updatedJob || !updatedJob.id) {
-          throw new Error('Server did not return a valid job object');
-        }
-        
-        // Check if photos were actually saved (only if we expected photos)
-        if (jobData.photos.length > 0 && (!updatedJob.photos || updatedJob.photos.length === 0)) {
-          throw new Error('Photos were not saved by the server - database migration may be needed');
-        }
-        
-        
-        // Update parent component with new job data
-        if (onJobUpdate) {
-          onJobUpdate(updatedJob);
-        }
-        
-        // Update local job data with the response from server
-        setJobData(prev => ({
-          ...prev,
-          id: updatedJob.id,
-          photos: updatedJob.photos || [],
-          plans: updatedJob.plans || []
-        }));
-        
-        // Make sure currentJobId is set
-        if (!currentJobId) {
-          setCurrentJobId(updatedJob.id);
-        }
-        
-        setUnsavedChanges(false);
-      } else {
-        // Create new job first - this only happens for NEW jobs
-        
-        // Ensure we have a title before creating
-        if (!jobData.title) {
-          throw new Error('Job title is required before saving photos');
-        }
-        
-        const createData = {
-          title: jobData.title,
-          description: jobData.description || '',
-          customerId: customer.id,
-          status: jobData.status || 'QUOTED',
-          priority: jobData.priority || 'medium',
-          startDate: jobData.startDate,
-          endDate: jobData.endDate,
-          notes: jobData.notes || '',
-          photos: jobData.photos || [],
-          plans: jobData.plans || [],
-          commentsText: jobData.commentsText || ''
-        };
-        
-        const newJob = await jobsApi.create(createData);
-        
-        
-        if (!newJob || !newJob.id) {
-          throw new Error('Failed to create job - server did not return a valid job');
-        }
-        
-        // Update local state with the new job ID immediately
-        setCurrentJobId(newJob.id);
-        setJobData(prev => ({
-          ...prev,
-          id: newJob.id,
-          photos: newJob.photos || [],
-          plans: newJob.plans || []
-        }));
-        
-        
-        // Update parent component with new job data
-        if (onJobUpdate) {
-          onJobUpdate(newJob);
-        }
-        
-        setUnsavedChanges(false);
-      }
-    } catch (error) {
-      console.error('[Photo Save] ERROR in handleSavePhotos:', error);
-      throw error;
-    }
-  };
 
   // Safety check - ensure we have a customer
   if (!customer || !customer.id) {
@@ -1817,7 +1682,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     }
                   } catch (error) {
                     toast.error('Failed to save job');
-                    console.error('Save job error:', error);
                   }
                 }}
                 disabled={!jobData.title}

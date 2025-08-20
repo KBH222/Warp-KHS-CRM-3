@@ -43,13 +43,19 @@ const Workers = () => {
     loadWorkers();
   }, []);
 
-  const loadWorkers = () => {
-    setWorkers(workerService.getAll());
+  const loadWorkers = async () => {
+    try {
+      const data = await workerService.getAll();
+      setWorkers(data);
+    } catch (error) {
+      // Will use cached data from localStorage
+    }
   };
 
-  const handleAddWorker = () => {
+  const handleAddWorker = async () => {
     setEditingWorker(null);
     setActiveTab('info');
+    const nextColor = await workerService.getNextColor();
     setFormData({
       name: '',
       fullName: '',
@@ -57,7 +63,7 @@ const Workers = () => {
       email: '',
       specialty: '',
       status: 'Available',
-      color: workerService.getNextColor(),
+      color: nextColor,
       notes: ''
     });
     setShowAddModal(true);
@@ -79,33 +85,37 @@ const Workers = () => {
     setShowAddModal(true);
   };
 
-  const handleDeleteWorker = (id: string) => {
+  const handleDeleteWorker = async (id: string) => {
     if (confirm('Are you sure you want to delete this worker?')) {
-      workerService.delete(id);
-      loadWorkers();
+      await workerService.delete(id);
+      await loadWorkers();
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (editingWorker) {
-      // Update existing worker with timesheet
-      workerService.update(editingWorker.id, {
-        ...formData,
-        timesheet
-      });
-    } else {
-      // Create new worker with timesheet
-      workerService.create({
-        ...formData,
-        currentJob: null,
-        timesheet
-      });
+    try {
+      if (editingWorker) {
+        // Update existing worker with timesheet
+        await workerService.update(editingWorker.id, {
+          ...formData,
+          timesheet
+        });
+      } else {
+        // Create new worker with timesheet
+        await workerService.create({
+          ...formData,
+          currentJob: null,
+          timesheet
+        });
+      }
+      
+      setShowAddModal(false);
+      await loadWorkers();
+    } catch (error) {
+      alert('Failed to save worker. Please try again.');
     }
-    
-    setShowAddModal(false);
-    loadWorkers();
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -256,7 +266,7 @@ const Workers = () => {
             Add Worker
           </button>
           <button
-            onClick={() => {
+            onClick={async () => {
               const hamBurger = {
                 name: 'Ham',
                 fullName: 'Ham Burger',
@@ -267,7 +277,7 @@ const Workers = () => {
                 color: workerColors[Math.floor(Math.random() * workerColors.length)],
                 notes: 'Test worker created to verify deployment'
               };
-              const newWorker = workerService.create(hamBurger);
+              const newWorker = await workerService.create(hamBurger);
               setWorkers([...workers, newWorker]);
               alert('Ham Burger worker created successfully! 🍔');
             }}

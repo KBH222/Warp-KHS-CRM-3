@@ -190,12 +190,32 @@ model ActivityLog {
   @@index([createdAt])
 }
 
+// Worker model
+model Worker {
+  id          String    @id @default(cuid())
+  name        String    // Initials/short name like "KBH"
+  fullName    String
+  phone       String
+  email       String
+  specialty   String
+  status      String    @default("Available") // "Available", "On Job", "Off Duty"
+  currentJob  String?
+  color       String
+  notes       String?   @db.Text
+  timesheet   Json?     // Stores the weekly timesheet data
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([name])
+  @@index([status])
+}
+
 // Sync queue for offline changes
 model SyncQueue {
   id          String    @id @default(cuid())
   userId      String
   operation   String    // "create", "update", "delete"
-  entityType  String    // "customer", "job", "material"
+  entityType  String    // "customer", "job", "material", "worker"
   entityId    String?
   payload     Json
   retryCount  Int       @default(0)
