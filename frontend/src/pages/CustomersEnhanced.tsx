@@ -1469,7 +1469,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error('Failed to process some photos');
-      console.error('[Photo Save] Processing error:', error);
     }
   };
 
@@ -1526,7 +1525,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error('Failed to process some documents');
-      console.error('Document upload error:', error);
     }
   };
 
@@ -1793,22 +1791,11 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 type="button"
                 onClick={async () => {
                   try {
-                    // For Description tab, use form submit
-                    if (activeTab === 'description') {
-                      const event = new Event('submit', { bubbles: true, cancelable: true });
-                      const form = document.querySelector('form');
-                      if (form) {
-                        form.dispatchEvent(event);
-                      }
-                    } else {
-                      // For other tabs, use handleSavePhotos
-                      await handleSavePhotos();
-                      // Close modal immediately after save
-                      onClose();
-                      // Show success message after modal closes
-                      setTimeout(() => {
-                        toast.success('Job saved successfully', { autoClose: 2000 });
-                      }, 100);
+                    // Always use form submit for all tabs to ensure consistent save behavior
+                    const event = new Event('submit', { bubbles: true, cancelable: true });
+                    const form = document.querySelector('form');
+                    if (form) {
+                      form.dispatchEvent(event);
                     }
                   } catch (error) {
                     toast.error('Failed to save job');
