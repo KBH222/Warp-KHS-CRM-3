@@ -10,12 +10,26 @@ const CustomersEnhanced = () => {
   console.log('[CustomersEnhanced] Component rendering...');
   const navigate = useNavigate();
   
-  // Add CSS to hide scrollbars on tabs container
+  // Add CSS to hide scrollbars on tabs container and style photos scrollbar
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = `
       .tabs-container::-webkit-scrollbar {
         display: none;
+      }
+      .photos-scroll-container::-webkit-scrollbar {
+        width: 6px;
+      }
+      .photos-scroll-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+      }
+      .photos-scroll-container::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+      }
+      .photos-scroll-container::-webkit-scrollbar-thumb:hover {
+        background: #555;
       }
     `;
     document.head.appendChild(style);
@@ -1991,7 +2005,14 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
             {/* Photos Tab */}
             {activeTab === 'photos' && (
-              <div>
+              <div 
+                className="photos-scroll-container"
+                style={{
+                maxHeight: '400px',
+                overflowY: 'auto',
+                overflowX: 'hidden',
+                paddingRight: '8px'
+              }}>
                 <div style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
