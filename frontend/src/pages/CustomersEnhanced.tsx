@@ -329,7 +329,16 @@ const CustomersEnhanced = () => {
               return customer;
             });
           });
-          toast.success('Job updated successfully');
+          
+          // Close modal immediately for better UX
+          setShowAddJobModal(false);
+          setSelectedCustomerForJob(null);
+          setEditingJob(null);
+          
+          // Show success toast after modal closes
+          setTimeout(() => {
+            toast.success('Job updated successfully', { autoClose: 2000 });
+          }, 100);
         } catch (apiError: any) {
           console.error('API Error details:', {
             message: apiError.message,
@@ -372,7 +381,16 @@ const CustomersEnhanced = () => {
             return customer;
           });
         });
-        toast.success('Job updated successfully');
+        
+        // Close modal immediately
+        setShowAddJobModal(false);
+        setSelectedCustomerForJob(null);
+        setEditingJob(null);
+        
+        // Show success toast after modal closes
+        setTimeout(() => {
+          toast.success('Job updated successfully', { autoClose: 2000 });
+        }, 100);
       } else {
         // Create new job
         console.log('Creating new job');
@@ -418,7 +436,15 @@ const CustomersEnhanced = () => {
           });
         });
         
-        toast.success('Job created successfully');
+        // Close modal immediately
+        setShowAddJobModal(false);
+        setSelectedCustomerForJob(null);
+        setEditingJob(null);
+        
+        // Show success toast after modal closes
+        setTimeout(() => {
+          toast.success('Job created successfully', { autoClose: 2000 });
+        }, 100);
       }
     } catch (err: any) {
       console.error('Failed to save job - Full error:', err);
@@ -438,11 +464,11 @@ const CustomersEnhanced = () => {
       }
       
       toast.error(errorMessage);
+      // Still close modal on error
+      setShowAddJobModal(false);
+      setSelectedCustomerForJob(null);
+      setEditingJob(null);
     }
-    
-    setShowAddJobModal(false);
-    setSelectedCustomerForJob(null);
-    setEditingJob(null);
   };
 
   const handleDeleteJob = async (jobId: string) => {
@@ -1734,9 +1760,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         }
         
         setUnsavedChanges(false);
-        
-        // Show success message
-        toast.success('Job created successfully with photos');
       }
     } catch (error) {
       console.error('[Photo Save] ERROR in handleSavePhotos:', error);
@@ -1864,8 +1887,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 type="button"
                 onClick={async () => {
                   try {
-                    const savingToast = toast.info('Saving job...', { autoClose: 3000 });
-                    
                     // For Description tab, use form submit
                     if (activeTab === 'description') {
                       const event = new Event('submit', { bubbles: true, cancelable: true });
@@ -1876,16 +1897,14 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     } else {
                       // For other tabs, use handleSavePhotos
                       await handleSavePhotos();
-                      toast.dismiss(savingToast);
-                      toast.success('Job saved successfully');
-                      
-                      // Close modal after a short delay
+                      // Close modal immediately after save
+                      onClose();
+                      // Show success message after modal closes
                       setTimeout(() => {
-                        onClose();
-                      }, 1500);
+                        toast.success('Job saved successfully', { autoClose: 2000 });
+                      }, 100);
                     }
                   } catch (error) {
-                    toast.dismiss();
                     toast.error('Failed to save job');
                     console.error('Save job error:', error);
                   }
