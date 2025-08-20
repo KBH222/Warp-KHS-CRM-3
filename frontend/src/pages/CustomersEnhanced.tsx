@@ -305,7 +305,8 @@ const CustomersEnhanced = () => {
           notes: jobData.notes || '',
           customerId: jobData.customerId || editingJob.customerId,
           photos: jobData.photos || [],
-          plans: jobData.plans || []
+          plans: jobData.plans || [],
+          commentsText: jobData.commentsText || ''
         };
         
         console.log('Updating job ID:', editingJob.id);
@@ -362,7 +363,8 @@ const CustomersEnhanced = () => {
           notes: jobData.notes || '',
           customerId: jobData.customerId,
           photos: jobData.photos || [],
-          plans: jobData.plans || []
+          plans: jobData.plans || [],
+          commentsText: jobData.commentsText || ''
         };
         
         const updatedJob = await jobsApi.update(jobData.id, updateData);
@@ -419,7 +421,8 @@ const CustomersEnhanced = () => {
           endDate: jobData.endDate,
           notes: jobData.notes || '',
           photos: jobData.photos || [],
-          plans: jobData.plans || []
+          plans: jobData.plans || [],
+          commentsText: jobData.commentsText || ''
         };
         console.log('Create payload:', JSON.stringify(createPayload, null, 2));
         const newJob = await jobsApi.create(createPayload);
@@ -1648,7 +1651,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           notes: jobData.notes || '',
           customerId: jobData.customerId || customer.id,
           photos: jobData.photos || [],
-          plans: jobData.plans || []
+          plans: jobData.plans || [],
+          commentsText: jobData.commentsText || ''
         };
         
         console.log('[Photo Save] Step 4: Updating existing job', {
@@ -1725,7 +1729,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           endDate: jobData.endDate,
           notes: jobData.notes || '',
           photos: jobData.photos || [],
-          plans: jobData.plans || []
+          plans: jobData.plans || [],
+          commentsText: jobData.commentsText || ''
         };
         
         const newJob = await jobsApi.create(createData);
