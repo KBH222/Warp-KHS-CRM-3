@@ -5,7 +5,6 @@ export const authApi = {
   // Auto-login for now
   async autoLogin(): Promise<{ token: string; user: any }> {
     try {
-      console.log('[AuthAPI] Attempting auto-login...');
       // Try to login with default credentials using fetch
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
@@ -19,11 +18,11 @@ export const authApi = {
       });
 
       if (!response.ok) {
-        throw new Error('Login failed');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || errorData.message || `Login failed: ${response.status}`);
       }
 
       const { token, refreshToken, user } = await response.json();
-      console.log('[AuthAPI] Login successful, storing token...');
       
       // Store tokens
       localStorage.setItem('khs-crm-token', token);
@@ -32,7 +31,6 @@ export const authApi = {
       
       return { token, user };
     } catch (error) {
-      console.error('[AuthAPI] Auto-login failed:', error);
       // If login fails, create a mock token for development
       const mockToken = 'dev-token-' + Date.now();
       const mockUser = {
@@ -42,7 +40,6 @@ export const authApi = {
         role: 'OWNER'
       };
       
-      console.log('[AuthAPI] Using mock token:', mockToken);
       localStorage.setItem('khs-crm-token', mockToken);
       localStorage.setItem('khs-crm-user', JSON.stringify(mockUser));
       

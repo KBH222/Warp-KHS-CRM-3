@@ -42,7 +42,7 @@ export function SyncDiagnostics() {
         const response = await apiClient.get('/api/health');
         setDiagnostics(prev => ({ ...prev, lastError: null }));
       } catch (error) {
-        console.error('[SyncDiagnostics] Backend connection failed:', error);
+        // Backend connection failed
         setDiagnostics(prev => ({ ...prev, lastError: error }));
       }
     };
@@ -52,8 +52,6 @@ export function SyncDiagnostics() {
 
   const testCustomerFetch = async () => {
     try {
-      );
-
       const customers = await apiClient.get('/api/customers');
       if (!Array.isArray(customers)) {
         alert(`Unexpected response format. Check console for details.`);
@@ -62,7 +60,6 @@ export function SyncDiagnostics() {
 
       alert(`Fetched ${customers.length} customers from backend`);
     } catch (error) {
-      console.error('[SyncDiagnostics] Customer fetch failed:', error);
       const errorMessage = error?.response?.data?.error || error?.message || String(error);
       const status = error?.response?.status;
       alert(`Failed to fetch customers:\nStatus: ${status}\nError: ${errorMessage}\n\nAPI URL: ${diagnostics.apiUrl}`);
@@ -78,7 +75,7 @@ export function SyncDiagnostics() {
       });
       alert(`Created customer: ${customer.name} (ID: ${customer.id})`);
     } catch (error) {
-      console.error('[SyncDiagnostics] Customer create failed:', error);
+      // Customer create failed
       alert(`Failed to create customer: ${error}`);
     }
   };
@@ -100,7 +97,7 @@ export function SyncDiagnostics() {
       const data = await response.json();
       alert(`Direct fetch successful! Backend is reachable.\nResponse: ${JSON.stringify(data)}`);
     } catch (error) {
-      console.error('[SyncDiagnostics] Direct fetch failed:', error);
+      // Direct fetch failed
       alert(`Direct fetch failed: ${error}\n\nThis means CORS is still blocking requests.\nCheck if Render has restarted with the new FRONTEND_URL.`);
     }
   };

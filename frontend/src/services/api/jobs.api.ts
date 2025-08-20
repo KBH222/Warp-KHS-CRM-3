@@ -33,19 +33,28 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  console.log('[JobsAPI] Request:', config.method?.toUpperCase(), config.url, config.data);
   return config;
 });
 
 // Add response error interceptor
 api.interceptors.response.use(
   (response) => {
-    console.log('[JobsAPI] Response:', response.status, response.data);
     return response;
   },
   (error) => {
-    console.error('[JobsAPI] Error:', error.response?.status, error.response?.data);
-    return Promise.reject(error);
+    // Extract meaningful error message
+    let errorMessage = 'Operation failed';
+    if (error.response) {
+      // Server responded with error
+      errorMessage = error.response.data?.error || error.response.data?.message || `HTTP error! status: ${error.response.status}`;
+    } else if (error.request) {
+      // No response received
+      errorMessage = 'No response from server';
+    } else {
+      // Request setup error
+      errorMessage = error.message;
+    }
+    return Promise.reject(new Error(errorMessage));
   }
 );
 
@@ -126,11 +135,7 @@ export const jobsApi = {
   // Update job
   async update(id: string, job: Partial<Job>): Promise<Job> {
     try {
-      console.log('[JobsAPI] Updating job:', id, 'with data:', job);
-      console.log('[JobsAPI] Photos being sent:', job.photos);
       const response = await api.put(`/jobs/${id}`, job);
-      console.log('[JobsAPI] Update response:', response.data);
-      console.log('[JobsAPI] Response photos:', response.data.photos);
       return response.data;
     } catch (error) {
       // If offline, update in localStorage

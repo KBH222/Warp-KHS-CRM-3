@@ -55,7 +55,7 @@ export const compressImage = async (
         const originalSize = file.size;
         const compressedSize = Math.round((compressedBase64.length * 3) / 4); // Approximate base64 to bytes
         const compressionRatio = ((1 - compressedSize / originalSize) * 100).toFixed(1);
-        console.log(`Image compressed: ${file.name} - ${formatBytes(originalSize)} → ${formatBytes(compressedSize)} (${compressionRatio}% reduction)`);
+        // Image compressed: reduction achieved
         
         resolve(compressedBase64);
       };

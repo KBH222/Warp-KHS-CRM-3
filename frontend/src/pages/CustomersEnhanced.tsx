@@ -49,8 +49,10 @@ const CustomersEnhanced = () => {
       const data = await customersApi.getAll();
       setCustomers(data);
       setError(null);
-    } catch (err) {
-      setError('Failed to load customers');
+    } catch (err: any) {
+      const errorMessage = err.message || 'Failed to load customers';
+      setError(errorMessage);
+      toast.error('Failed to load customers: ' + errorMessage);
       // Will fall back to localStorage in the API
     } finally {
       setIsLoading(false);
@@ -187,6 +189,7 @@ const CustomersEnhanced = () => {
 
   const handleAddCustomer = async (newCustomer: any) => {
     try {
+      setIsLoading(true);
       // Don't pass any temp ID - let backend generate the ID
       const customerData = { ...newCustomer };
       delete customerData.id; // Remove any temp ID if present
@@ -204,15 +207,19 @@ const CustomersEnhanced = () => {
       setShowModal(false);
       
       return customer; // Return customer with real ID
-    } catch (err) {
+    } catch (err: any) {
+      const errorMessage = err.message || 'Failed to add customer';
       console.error('[Customer] Failed to create:', err);
-      toast.error('Failed to add customer');
+      toast.error('Failed to add customer: ' + errorMessage);
       throw err;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleEditCustomer = async (updatedCustomer: any) => {
     try {
+      setIsLoading(true);
       const customer = await customersApi.update(editingCustomer.id, updatedCustomer);
       setCustomers(customers.map(c => 
         c.id === customer.id ? customer : c
@@ -220,19 +227,28 @@ const CustomersEnhanced = () => {
       toast.success('Customer updated successfully');
       setEditingCustomer(null);
       setShowModal(false);
-    } catch (err) {
-      toast.error('Failed to update customer');
+    } catch (err: any) {
+      const errorMessage = err.message || 'Failed to update customer';
+      toast.error('Failed to update customer: ' + errorMessage);
+      console.error('Update customer error:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleDeleteCustomer = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this customer?')) {
       try {
+        setIsLoading(true);
         await customersApi.delete(id);
         setCustomers(customers.filter(c => c.id !== id));
         toast.success('Customer deleted successfully');
-      } catch (err) {
-        toast.error('Failed to delete customer');
+      } catch (err: any) {
+        const errorMessage = err.message || 'Failed to delete customer';
+        toast.error('Failed to delete customer: ' + errorMessage);
+        console.error('Delete customer error:', err);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -464,8 +480,10 @@ const CustomersEnhanced = () => {
         });
       });
       toast.success('Job deleted successfully');
-    } catch (err) {
-      toast.error('Failed to delete job');
+    } catch (err: any) {
+      const errorMessage = err.message || 'Failed to delete job';
+      toast.error('Failed to delete job: ' + errorMessage);
+      console.error('Delete job error:', err);
     }
   };
 
