@@ -3,11 +3,6 @@ const path = require('path');
 const { PrismaClient } = require('@prisma/client');
 require('dotenv').config();
 
-// Debug environment variables
-console.log('Environment check:');
-console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
-console.log('PORT:', process.env.PORT);
-console.log('NODE_ENV:', process.env.NODE_ENV);
 
 const app = express();
 const prisma = new PrismaClient();
@@ -23,12 +18,10 @@ const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
   
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    console.log('No auth token provided');
     // For now, allow requests without auth to make testing easier
     // In production, you would return 401 here
     // return res.status(401).json({ error: 'No authorization token provided' });
   } else {
-    console.log('Auth token received:', authHeader.substring(0, 20) + '...');
   }
   
   // For now, accept any token
@@ -152,16 +145,12 @@ app.get('/api/test-photo-save/:jobId', async (req, res) => {
       where: { id: jobId }
     });
     
-    console.log('Current job photos:', currentJob?.photos);
-    
     // Try to update a job with test photo data
     const testPhotos = [{
       id: Date.now(),
       name: 'test-photo.jpg',
       url: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwABmX/9k='
     }];
-    
-    console.log('Updating with test photos:', testPhotos);
     
     const updatedJob = await prisma.job.update({
       where: { id: jobId },
@@ -170,14 +159,10 @@ app.get('/api/test-photo-save/:jobId', async (req, res) => {
       }
     });
     
-    console.log('Updated job photos field:', updatedJob.photos);
-    
     // Read it back
     const readJob = await prisma.job.findUnique({
       where: { id: jobId }
     });
-    
-    console.log('Read back job photos:', readJob?.photos);
     
     res.json({
       status: 'ok',
@@ -342,7 +327,6 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Customer routes
 app.get('/api/customers', authMiddleware, async (req, res) => {
-  console.log('GET /api/customers - Request received');
   try {
     const customers = await prisma.customer.findMany({
       where: { isArchived: false },
@@ -366,7 +350,6 @@ app.get('/api/customers', authMiddleware, async (req, res) => {
       },
       orderBy: { createdAt: 'desc' }
     });
-    console.log(`Found ${customers.length} customers`);
     
     // Parse photos and plans for each job
     const customersWithParsedJobs = customers.map(customer => {
@@ -519,7 +502,6 @@ app.get('/api/jobs', authMiddleware, async (req, res) => {
 
 app.post('/api/jobs', authMiddleware, async (req, res) => {
   try {
-    console.log('Creating job with data:', req.body);
     const jobData = {
       title: req.body.title,
       description: req.body.description,
@@ -535,25 +517,10 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
     // Handle photos and plans - stringify arrays for storage
     if (req.body.photos && Array.isArray(req.body.photos)) {
       jobData.photos = JSON.stringify(req.body.photos);
-      console.log('=== PHOTO CREATION DEBUG ===');
-      console.log('Creating job with photos count:', req.body.photos.length);
-      console.log('Photos array size in bytes:', JSON.stringify(req.body.photos).length);
-      console.log('Photos stringified length:', jobData.photos.length);
-      console.log('First photo sample:', req.body.photos[0] ? {
-        id: req.body.photos[0].id,
-        name: req.body.photos[0].name,
-        urlLength: req.body.photos[0].url ? req.body.photos[0].url.length : 0,
-        urlFirst100: req.body.photos[0].url ? req.body.photos[0].url.substring(0, 100) : null
-      } : 'No photos');
     }
     if (req.body.plans && Array.isArray(req.body.plans)) {
       jobData.plans = JSON.stringify(req.body.plans);
     }
-    
-    console.log('Job data before create (without photos for brevity):', {
-      ...jobData,
-      photos: jobData.photos ? `[${jobData.photos.length} chars]` : undefined
-    });
     
     const job = await prisma.job.create({
       data: jobData,
@@ -562,14 +529,10 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
       }
     });
     
-    console.log('Raw job from DB after create:', job);
-    console.log('Photos field from DB:', job.photos);
-    
     // Parse back to arrays for response
     if (job.photos) {
       try {
         job.photos = JSON.parse(job.photos);
-        console.log('Parsed photos after create:', job.photos);
       } catch (e) {
         console.error('Failed to parse photos:', e);
         job.photos = [];
@@ -589,27 +552,10 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
       job.plans = [];
     }
     
-    console.log('Job created successfully:', job.id);
-    console.log('Created job photos field length:', job.photos ? job.photos.length : 0);
-    
     // Immediately verify what was saved in database
     const verification = await prisma.job.findUnique({
       where: { id: job.id }
     });
-    
-    console.log('=== VERIFICATION AFTER CREATE ===');
-    console.log('Verification - job found:', !!verification);
-    console.log('Verification - photos field exists:', 'photos' in verification);
-    console.log('Verification - photos field length:', verification?.photos?.length);
-    console.log('Verification - photos field first 100 chars:', verification?.photos?.substring(0, 100));
-    console.log('Verification - photos field last 100 chars:', verification?.photos ? verification.photos.substring(verification.photos.length - 100) : null);
-    
-    // Check if photos were truncated
-    if (jobData.photos && verification?.photos && jobData.photos.length !== verification.photos.length) {
-      console.error('WARNING: Photos field was truncated!');
-      console.error('Expected length:', jobData.photos.length);
-      console.error('Actual length:', verification.photos.length);
-    }
     
     res.status(201).json(job);
   } catch (error) {
@@ -622,7 +568,6 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
 // Update job
 app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
   try {
-    console.log('Updating job:', req.params.id, 'with data:', req.body);
     const updateData = {
       title: req.body.title,
       description: req.body.description,
@@ -638,28 +583,11 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
     // Handle photos and plans - stringify arrays for storage
     if (req.body.photos !== undefined) {
       updateData.photos = Array.isArray(req.body.photos) ? JSON.stringify(req.body.photos) : null;
-      console.log('=== PHOTO UPDATE DEBUG ===');
-      console.log('Updating job:', req.params.id);
-      console.log('Photos to save count:', Array.isArray(req.body.photos) ? req.body.photos.length : 'not array');
-      console.log('Photos array size in bytes:', Array.isArray(req.body.photos) ? JSON.stringify(req.body.photos).length : 0);
-      console.log('Photos stringified length:', updateData.photos ? updateData.photos.length : 0);
-      if (Array.isArray(req.body.photos) && req.body.photos[0]) {
-        console.log('First photo sample:', {
-          id: req.body.photos[0].id,
-          name: req.body.photos[0].name,
-          urlLength: req.body.photos[0].url ? req.body.photos[0].url.length : 0,
-          urlFirst100: req.body.photos[0].url ? req.body.photos[0].url.substring(0, 100) : null
-        });
-      }
     }
     if (req.body.plans !== undefined) {
       updateData.plans = Array.isArray(req.body.plans) ? JSON.stringify(req.body.plans) : null;
     }
     
-    console.log('Update data before save (without photos for brevity):', {
-      ...updateData,
-      photos: updateData.photos ? `[${updateData.photos.length} chars]` : undefined
-    });
     
     const job = await prisma.job.update({
       where: { id: req.params.id },
@@ -669,14 +597,11 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
       }
     });
     
-    console.log('Raw job from DB:', job);
-    console.log('Photos field from DB:', job.photos);
     
     // Parse back to arrays for response
     if (job.photos) {
       try {
         job.photos = JSON.parse(job.photos);
-        console.log('Parsed photos:', job.photos);
       } catch (e) {
         console.error('Failed to parse photos:', e);
         job.photos = [];
@@ -696,27 +621,10 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
       job.plans = [];
     }
     
-    console.log('Job updated successfully:', job.id);
-    console.log('Updated job photos field length:', job.photos ? job.photos.length : 0);
-    
     // Immediately verify what was saved in database
     const verification = await prisma.job.findUnique({
       where: { id: req.params.id }
     });
-    
-    console.log('=== VERIFICATION AFTER UPDATE ===');
-    console.log('Verification - job found:', !!verification);
-    console.log('Verification - photos field exists:', 'photos' in verification);
-    console.log('Verification - photos field length:', verification?.photos?.length);
-    console.log('Verification - photos field first 100 chars:', verification?.photos?.substring(0, 100));
-    console.log('Verification - photos field last 100 chars:', verification?.photos ? verification.photos.substring(verification.photos.length - 100) : null);
-    
-    // Check if photos were truncated
-    if (updateData.photos && verification?.photos && updateData.photos.length !== verification.photos.length) {
-      console.error('WARNING: Photos field was truncated!');
-      console.error('Expected length:', updateData.photos.length);
-      console.error('Actual length:', verification.photos.length);
-    }
     
     res.json(job);
   } catch (error) {
@@ -730,11 +638,9 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
 // Delete job
 app.delete('/api/jobs/:id', authMiddleware, async (req, res) => {
   try {
-    console.log('Deleting job:', req.params.id);
     await prisma.job.delete({
       where: { id: req.params.id }
     });
-    console.log('Job deleted successfully:', req.params.id);
     res.status(204).send();
   } catch (error) {
     console.error('Error deleting job:', error);
@@ -749,5 +655,4 @@ app.get('*', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`KHS CRM running on Railway port ${PORT}`);
 });

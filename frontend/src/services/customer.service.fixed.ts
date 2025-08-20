@@ -58,18 +58,18 @@ class CustomerServiceFixed {
     if (navigator.onLine) {
       try {
         const customers = await apiClient.get<Customer[]>(API_ENDPOINTS.CUSTOMERS);
-        
+
         // Save to IndexedDB for offline access
         for (const customer of customers) {
           await offlineDb.saveCustomer(customer);
         }
-        
+
         return customers;
       } catch (error) {
         console.error('[CustomerService] API fetch failed, falling back to local', error);
       }
     }
-    
+
     // Offline or API failed - use local data
     return offlineDb.getCustomers(filters);
   }
@@ -80,7 +80,7 @@ class CustomerServiceFixed {
   async getCustomer(id: string): Promise<Customer | null> {
     // Try local first for speed
     const local = await offlineDb.getCustomer(id);
-    
+
     // If online, also fetch from API to ensure freshness
     if (navigator.onLine && !id.startsWith('temp_')) {
       try {
@@ -91,7 +91,7 @@ class CustomerServiceFixed {
         console.error('[CustomerService] API fetch failed for customer', id, error);
       }
     }
-    
+
     return local;
   }
 
@@ -102,7 +102,6 @@ class CustomerServiceFixed {
     // If online, create directly on server to get real ID
     if (navigator.onLine) {
       try {
-        console.log('[CustomerService] Creating customer on server:', data);
         const serverCustomer = await apiClient.post<Customer>(API_ENDPOINTS.CUSTOMERS, {
           name: data.name,
           phone: data.phone || null,
@@ -110,24 +109,21 @@ class CustomerServiceFixed {
           address: data.address,
           notes: data.notes || null
         });
-        
-        console.log('[CustomerService] Customer created with real ID:', serverCustomer.id);
-        
+
         // Save to local DB for offline access
         await offlineDb.saveCustomer(serverCustomer);
-        
+
         return serverCustomer;
       } catch (error) {
         console.error('[CustomerService] Failed to create customer on server:', error);
         // Fall through to offline creation
       }
     }
-    
+
     // Only use temp ID if offline or server creation failed
-    console.warn('[CustomerService] Creating customer offline with temp ID');
     const tempId = `temp_customer_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const now = new Date();
-    
+
     // Create customer object
     const customer: Customer = {
       id: tempId,
@@ -140,13 +136,12 @@ class CustomerServiceFixed {
       isArchived: false,
       createdAt: now,
       updatedAt: now,
-      createdBy: 'current-user', // TODO: Get from auth
-      modifiedBy: 'current-user'
+      createdBy: 'current-user',       modifiedBy: 'current-user'
     };
-    
+
     // Save locally
     await offlineDb.saveCustomer(customer);
-    
+
     // Queue for sync
     await simpleSyncService.queueOperation({
       operation: 'create',
@@ -160,7 +155,7 @@ class CustomerServiceFixed {
       },
       timestamp: now
     });
-    
+
     return customer;
   }
 
@@ -172,19 +167,16 @@ class CustomerServiceFixed {
     if (!existing) {
       throw new Error('Customer not found');
     }
-    
+
     // Update customer
     const updated: Customer = {
       ...existing,
       ...data,
       updatedAt: new Date(),
-      modifiedBy: 'current-user' // TODO: Get from auth
-    };
-    
+      modifiedBy: 'current-user'     };
+
     // Save locally
     await offlineDb.saveCustomer(updated);
-    console.log('[CustomerService] Updated customer locally', updated);
-    
     // Queue for sync if not a temp ID
     if (!id.startsWith('temp_')) {
       await simpleSyncService.queueOperation({
@@ -194,13 +186,13 @@ class CustomerServiceFixed {
         payload: data,
         timestamp: new Date()
       });
-      
+
       // Try immediate sync if online
       if (navigator.onLine) {
         simpleSyncService.syncAll();
       }
     }
-    
+
     return updated;
   }
 
@@ -210,8 +202,6 @@ class CustomerServiceFixed {
   async deleteCustomer(id: string): Promise<void> {
     // Delete locally
     await offlineDb.deleteCustomer(id);
-    console.log('[CustomerService] Deleted customer locally', id);
-    
     // Queue for sync if not a temp ID
     if (!id.startsWith('temp_')) {
       await simpleSyncService.queueOperation({
@@ -221,7 +211,7 @@ class CustomerServiceFixed {
         payload: {},
         timestamp: new Date()
       });
-      
+
       // Try immediate sync if online
       if (navigator.onLine) {
         simpleSyncService.syncAll();
@@ -236,10 +226,10 @@ class CustomerServiceFixed {
     if (!navigator.onLine) {
       throw new Error('Cannot refresh - device is offline');
     }
-    
+
     try {
       const customers = await apiClient.get<Customer[]>(API_ENDPOINTS.CUSTOMERS);
-      
+
       // Clear local data
       const localCustomers = await offlineDb.getCustomers();
       for (const customer of localCustomers) {
@@ -247,14 +237,13 @@ class CustomerServiceFixed {
           await offlineDb.deleteCustomer(customer.id);
         }
       }
-      
+
       // Save fresh data
       for (const customer of customers) {
         await offlineDb.saveCustomer(customer);
       }
-      
-      console.log('[CustomerService] Refreshed from server', customers.length, 'customers');
-    } catch (error) {
+
+      } catch (error) {
       console.error('[CustomerService] Failed to refresh from server', error);
       throw error;
     }

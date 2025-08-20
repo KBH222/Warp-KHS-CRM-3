@@ -89,7 +89,7 @@ function App() {
   // Show auth setup if needed
   if (needsAuthSetup) {
     return (
-      <AuthSetup 
+      <AuthSetup
         onComplete={() => {
           setNeedsAuthSetup(false);
           setNeedsLogin(true);
@@ -104,8 +104,6 @@ function App() {
   }
 
   // Main app
-  console.log('[App] Rendering main app');
-  
   // Verify all components are defined
   if (!QueryClientProvider) {
     console.error('QueryClientProvider is undefined!');

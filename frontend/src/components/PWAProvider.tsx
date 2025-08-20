@@ -121,12 +121,12 @@ export const PWAProvider: React.FC<PWAProviderProps> = ({ children }) => {
   return (
     <PWAContext.Provider value={contextValue}>
       {children}
-      
+
       {/* PWA Components - only render if components are available */}
       {PWAInstallBanner && <PWAInstallBanner />}
       {PWAUpdateNotification && <PWAUpdateNotification />}
       {OfflineIndicator && <OfflineIndicator />}
-      
+
       {/* Construction-specific PWA features */}
       {pwa.isPWA && ConstructionPWAFeatures && <ConstructionPWAFeatures />}
     </PWAContext.Provider>

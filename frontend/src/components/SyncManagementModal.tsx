@@ -295,7 +295,7 @@ const SyncManagementModal: React.FC<SyncManagementModalProps> = ({ isOpen, onClo
                             onChange={() => toggleSelectItem(item.id)}
                             className="rounded border-gray-300"
                           />
-                          
+
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center space-x-2">
@@ -314,7 +314,7 @@ const SyncManagementModal: React.FC<SyncManagementModalProps> = ({ isOpen, onClo
                                 {formatTime(item.timestamp)}
                               </div>
                             </div>
-                            
+
                             <div className="mt-1 text-sm text-gray-600">
                               ID: {item.entityId || 'new'}
                               {item._lastAttempt && (
@@ -323,7 +323,7 @@ const SyncManagementModal: React.FC<SyncManagementModalProps> = ({ isOpen, onClo
                                 </span>
                               )}
                             </div>
-                            
+
                             {/* Payload Preview */}
                             <div className="mt-2 text-xs text-gray-500 bg-gray-100 p-2 rounded">
                               <pre className="whitespace-pre-wrap overflow-hidden">

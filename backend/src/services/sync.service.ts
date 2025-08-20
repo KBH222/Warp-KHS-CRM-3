@@ -24,8 +24,7 @@ export function stopSyncProcessor(): void {
 }
 
 async function processSyncQueue(): Promise<void> {
-  // TODO: Implement sync queue processing
-  // This will:
+    // This will:
   // 1. Fetch pending sync operations from the database
   // 2. Process each operation
   // 3. Update sync status

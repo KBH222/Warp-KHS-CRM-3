@@ -33,14 +33,13 @@ export const usePWA = () => {
           backgroundSyncService.initialize(),
           offlineCacheService.initialize()
         ]);
-        
+
         // Check PWA capabilities
         const pwaCaps = await checkPWACapabilities();
         setCapabilities(pwaCaps);
-        
+
         setIsInitialized(true);
-        console.log('PWA services initialized successfully');
-      } catch (error) {
+        } catch (error) {
         console.error('Failed to initialize PWA services:', error);
       }
     };
@@ -54,7 +53,7 @@ export const usePWA = () => {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
       const isInWebAppiOS = (window.navigator as any).standalone === true;
       const isMinimalUI = window.matchMedia('(display-mode: minimal-ui)').matches;
-      
+
       setIsPWA(isStandalone || isInWebAppiOS || isMinimalUI);
     };
 
@@ -65,7 +64,7 @@ export const usePWA = () => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       setIsInstallable(true);
-      
+
       // Track install prompt availability
       if (typeof gtag !== 'undefined') {
         gtag('event', 'pwa_install_prompt_available', {
@@ -79,14 +78,14 @@ export const usePWA = () => {
       setIsInstallable(false);
       setDeferredPrompt(null);
       setIsPWA(true);
-      
+
       // Track successful installation
       if (typeof gtag !== 'undefined') {
         gtag('event', 'pwa_installed', {
           device_type: capabilities?.deviceType || 'unknown'
         });
       }
-      
+
       // Initialize post-install features
       initializePostInstall();
     };
@@ -123,7 +122,7 @@ export const usePWA = () => {
 
   const getDeviceType = (): 'mobile' | 'desktop' | 'tablet' => {
     const userAgent = navigator.userAgent.toLowerCase();
-    
+
     if (/tablet|ipad/.test(userAgent)) {
       return 'tablet';
     } else if (/mobile|iphone|ipod|android|blackberry|opera|mini|windows\sce|palm|smartphone|iemobile/.test(userAgent)) {
@@ -146,8 +145,7 @@ export const usePWA = () => {
       if ('Notification' in window) {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
-          console.log('Notification permissions granted');
-        }
+          }
       }
 
       // Setup push notifications if supported
@@ -157,7 +155,7 @@ export const usePWA = () => {
 
       // Preload critical data for offline use
       await preloadCriticalData();
-      
+
     } catch (error) {
       console.error('Post-install initialization failed:', error);
     }
@@ -166,7 +164,7 @@ export const usePWA = () => {
   const setupPushNotifications = async () => {
     try {
       const registration = await navigator.serviceWorker.ready;
-      
+
       // Subscribe to push notifications for job updates
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
@@ -174,9 +172,7 @@ export const usePWA = () => {
       });
 
       // Send subscription to your server
-      console.log('Push notification subscription:', subscription);
-      
-    } catch (error) {
+      } catch (error) {
       console.error('Failed to setup push notifications:', error);
     }
   };
@@ -200,11 +196,11 @@ export const usePWA = () => {
     try {
       await deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      
+
       if (outcome === 'accepted') {
         setIsInstallable(false);
         setDeferredPrompt(null);
-        
+
         // Track successful installation
         if (typeof gtag !== 'undefined') {
           gtag('event', 'pwa_install_completed', {
@@ -212,7 +208,7 @@ export const usePWA = () => {
             connection_type: capabilities?.connectionType || 'unknown'
           });
         }
-        
+
         return true;
       } else {
         // Track dismissal
@@ -222,7 +218,7 @@ export const usePWA = () => {
           });
         }
       }
-      
+
       return false;
     } catch (error) {
       console.error('Error installing PWA:', error);
@@ -235,8 +231,7 @@ export const usePWA = () => {
       if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.ready;
         await registration.update();
-        console.log('Checked for service worker updates');
-      }
+        }
     } catch (error) {
       console.error('Failed to check for updates:', error);
     }
@@ -245,7 +240,7 @@ export const usePWA = () => {
   const getInstallationInstructions = () => {
     const deviceType = capabilities?.deviceType || 'unknown';
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    
+
     if (isIOS) {
       return {
         title: 'Install KHS CRM on iOS',

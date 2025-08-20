@@ -10,15 +10,12 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then(function(registrations) {
       for(let registration of registrations) {
         registration.unregister();
-        console.log('[ServiceWorker] Unregistered:', registration.scope);
-      }
+        }
     });
   });
 }
 
 // Add global error logging
-console.log('[KHS-CRM] App starting...');
-
 window.addEventListener('error', (event) => {
   console.error('[KHS-CRM] Global error:', event.error);
 });

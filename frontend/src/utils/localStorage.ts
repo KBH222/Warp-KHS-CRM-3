@@ -30,20 +30,18 @@ export const storage = {
       if (!item) {
         return defaultValue;
       }
-      
+
       const parsed = JSON.parse(item);
       // Handle legacy data without metadata
       if (!parsed.metadata) {
         return parsed as T;
       }
-      
+
       // Check if data is encrypted
       if (parsed.metadata.encrypted && encryptionService.isReady()) {
         // For now, return encrypted data as-is
-        // TODO: Make storage operations async to support decryption
-        console.warn(`Data for ${key} is encrypted but using sync storage`);
-      }
-      
+                }
+
       return parsed.data as T;
     } catch (error) {
       console.error(`Error reading from localStorage for key ${key}:`, error);
@@ -54,23 +52,21 @@ export const storage = {
   set: <T>(key: string, value: T): void => {
     try {
       const classification = DATA_CLASSIFICATIONS[key] || DataClassification.INTERNAL;
-      
+
       // Encrypt if needed and encryption is ready
       let dataToStore = value;
       let isEncrypted = false;
-      
+
       if (needsEncryption(classification) && encryptionService.isReady()) {
         // Use async encryption wrapped in a promise
         const encryptAsync = async () => {
           dataToStore = await encryptionService.encrypt(value, classification);
           isEncrypted = true;
         };
-        
+
         // For now, we'll skip encryption in sync context
-        // TODO: Make storage operations async
-        console.warn(`Data for ${key} should be encrypted but using sync storage`);
-      }
-      
+                }
+
       const storageData = {
         data: dataToStore,
         metadata: {

@@ -6,8 +6,7 @@ export const PWAUpdateNotification = () => {
     updateServiceWorker,
   } = useRegisterSW({
     onRegistered() {
-      console.log('Service Worker registered');
-    },
+      },
     onRegisterError(error) {
       console.error('Service Worker registration failed:', error);
     },

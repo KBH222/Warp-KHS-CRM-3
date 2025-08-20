@@ -26,7 +26,6 @@ const SyncDebug = lazy(() => import('../pages/SyncDebug'));
 
 // Loading component
 const PageLoader = () => {
-  console.log('[PageLoader] Rendering');
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -37,18 +36,16 @@ const PageLoader = () => {
 // Protected Route wrapper - TEMPORARILY DISABLED
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   // const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  
-  // TEMPORARILY DISABLED - Always allow access
-  // if (!isAuthenticated) {
+
+    // if (!isAuthenticated) {
   //   return <Navigate to="/login" replace />;
   // }
-  
-  console.log('[ProtectedRoute] Rendering with children:', children);
+
   if (!children) {
     console.error('[ProtectedRoute] No children provided!');
     return <div>Error: No content to display</div>;
   }
-  
+
   return <>{children}</>;
 };
 
@@ -60,7 +57,7 @@ export const Router = () => {
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
         </Route>
-        
+
         {/* Protected app routes */}
         <Route
           element={
@@ -88,7 +85,7 @@ export const Router = () => {
           <Route path="/security" element={<PracticalSecurity />} />
           <Route path="/sync-debug" element={<SyncDebug />} />
         </Route>
-        
+
         {/* Catch all */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>

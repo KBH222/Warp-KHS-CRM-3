@@ -17,7 +17,7 @@ export const ServerSyncPanel = () => {
     // Load settings
     const savedTime = localStorage.getItem('khs-crm-last-sync');
     const savedAutoSync = localStorage.getItem('khs-crm-auto-sync') === 'true';
-    
+
     if (savedTime) {
       setLastSync(new Date(savedTime));
     }
@@ -29,7 +29,7 @@ export const ServerSyncPanel = () => {
     // Check online status
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
-    
+
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
@@ -65,11 +65,11 @@ export const ServerSyncPanel = () => {
 
   const handleAutoSync = async () => {
     if (isSyncing) return;
-    
+
     setIsSyncing(true);
     try {
       const hasUpdates = await autoSyncService.checkForUpdates();
-      
+
       if (hasUpdates) {
         const serverData = await autoSyncService.downloadLatestSync();
         if (serverData) {
@@ -77,7 +77,7 @@ export const ServerSyncPanel = () => {
           setLastSync(new Date(serverData.timestamp));
           updateStats();
           toast.success('✅ Auto-sync complete! Data updated.');
-          
+
           // Reload after a short delay
           setTimeout(() => window.location.reload(), 1500);
         }
@@ -99,7 +99,7 @@ export const ServerSyncPanel = () => {
     try {
       const data = autoSyncService.prepareLocalData();
       const success = await autoSyncService.uploadSync(data);
-      
+
       if (success) {
         const now = new Date();
         setLastSync(now);
@@ -123,7 +123,7 @@ export const ServerSyncPanel = () => {
     setIsSyncing(true);
     try {
       const serverData = await autoSyncService.downloadLatestSync();
-      
+
       if (!serverData) {
         toast.info('No sync data available on server');
         return;
@@ -139,7 +139,7 @@ export const ServerSyncPanel = () => {
       autoSyncService.applySyncData(serverData);
       setLastSync(serverTime);
       updateStats();
-      
+
       toast.success('✅ Data synced from server!');
       setTimeout(() => window.location.reload(), 1500);
     } catch (error) {
@@ -153,7 +153,7 @@ export const ServerSyncPanel = () => {
     const newState = !autoSyncEnabled;
     setAutoSyncEnabled(newState);
     localStorage.setItem('khs-crm-auto-sync', newState.toString());
-    
+
     if (newState) {
       toast.info('🔄 Auto-sync enabled! Data will sync automatically.');
       handleAutoSync();
@@ -170,9 +170,9 @@ export const ServerSyncPanel = () => {
       padding: '20px',
       marginBottom: '20px'
     }}>
-      <h2 style={{ 
-        fontSize: '20.7px', 
-        fontWeight: '600', 
+      <h2 style={{
+        fontSize: '20.7px',
+        fontWeight: '600',
         marginBottom: '16px',
         display: 'flex',
         alignItems: 'center',

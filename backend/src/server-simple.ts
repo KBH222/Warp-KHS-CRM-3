@@ -29,7 +29,7 @@ app.get('/api/health', (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     // For now, return a mock token
     if (email === 'admin@khscrm.com' && password === 'admin123') {
       res.json({
@@ -78,7 +78,7 @@ app.get('/api/customers', async (req, res) => {
 app.post('/api/customers', async (req, res) => {
   try {
     const { reference, name, phone, email, address, notes } = req.body;
-    
+
     let customerReference = reference;
     if (!customerReference) {
       const count = await prisma.customer.count();
@@ -109,12 +109,12 @@ app.post('/api/customers', async (req, res) => {
 app.put('/api/customers/:id', async (req, res) => {
   try {
     const { name, phone, email, address, notes } = req.body;
-    
+
     const customer = await prisma.customer.update({
       where: { id: req.params.id },
       data: { name, phone, email, address, notes }
     });
-    
+
     res.json(customer);
   } catch (error) {
     console.error('Error updating customer:', error);
@@ -129,7 +129,7 @@ app.delete('/api/customers/:id', async (req, res) => {
       where: { id: req.params.id },
       data: { isArchived: true }
     });
-    
+
     res.status(204).send();
   } catch (error) {
     console.error('Error deleting customer:', error);
@@ -190,6 +190,4 @@ app.use((req, res) => {
 // Start server
 const HOST = '0.0.0.0'; // Important for Render!
 app.listen(PORT, HOST, () => {
-  console.log(`Simple server running on ${HOST}:${PORT}`);
-  console.log(`Health check: http://${HOST}:${PORT}/api/health`);
-});
+  });

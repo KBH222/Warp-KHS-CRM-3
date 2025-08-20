@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function main() {
   // Create default admin user
   const hashedPassword = await bcrypt.hash("admin123", 10);
-  
+
   const adminUser = await prisma.user.upsert({
     where: { email: "admin@khscrm.com" },
     update: {},
@@ -18,8 +18,6 @@ async function main() {
       isActive: true
     }
   });
-
-  console.log("Created admin user:", adminUser.email);
 
   // Create some sample data
   const customer1 = await prisma.customer.upsert({
@@ -47,8 +45,6 @@ async function main() {
       notes: "Has two dogs"
     }
   });
-
-  console.log("Created sample customers");
 
   // Create sample jobs
   const job1 = await prisma.job.create({
@@ -78,8 +74,7 @@ async function main() {
     }
   });
 
-  console.log("Created sample jobs");
-}
+  }
 
 main()
   .catch((e) => {

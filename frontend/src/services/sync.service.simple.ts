@@ -55,32 +55,26 @@ class SimpleSyncService {
   private syncing = false;
 
   constructor() {
-    console.log('[SyncService] Initializing sync service...');
-    
     // Load queue from localStorage on startup
     this.loadQueue();
-    
+
     // Start sync when online
     window.addEventListener('online', () => {
-      console.log('[SyncService] Device is online, starting sync...');
       this.syncAll();
     });
-    
+
     window.addEventListener('offline', () => {
-      console.log('[SyncService] Device went offline');
-    });
-    
+      });
+
     // Auto-sync every 30 seconds if online
     setInterval(() => {
       if (navigator.onLine && !this.syncing) {
-        console.log('[SyncService] Auto-sync timer triggered');
         this.syncAll();
       }
     }, 30000);
-    
+
     // Initial sync on startup if online
     if (navigator.onLine) {
-      console.log('[SyncService] Online at startup, syncing in 2 seconds...');
       setTimeout(() => this.syncAll(), 2000);
     }
   }
@@ -90,8 +84,7 @@ class SimpleSyncService {
       const saved = localStorage.getItem('khs_sync_queue');
       if (saved) {
         this.syncQueue = JSON.parse(saved);
-        console.log('[SyncService] Loaded sync queue', this.syncQueue);
-      }
+        }
     } catch (error) {
       console.error('[SyncService] Failed to load queue', error);
     }
@@ -117,11 +110,9 @@ class SimpleSyncService {
       ...params,
       retryCount: 0
     };
-    
+
     this.syncQueue.push(op);
     this.saveQueue();
-    console.log('[SyncService] Queued operation', op);
-    
     // Try to sync immediately if online
     if (navigator.onLine) {
       this.syncAll();
@@ -137,8 +128,6 @@ class SimpleSyncService {
     let synced = 0;
     let failed = 0;
 
-    console.log('[SyncService] Starting sync, queue size:', this.syncQueue.length);
-
     // Process queue in order
     const queue = [...this.syncQueue];
     for (const op of queue) {
@@ -147,12 +136,11 @@ class SimpleSyncService {
         // Remove from queue on success
         this.syncQueue = this.syncQueue.filter(q => q.id !== op.id);
         synced++;
-        console.log('[SyncService] Synced operation', op);
-      } catch (error) {
+        } catch (error) {
         console.error('[SyncService] Failed to sync operation', op, error);
         op.retryCount++;
         failed++;
-        
+
         // Remove if too many retries
         if (op.retryCount > 5) {
           this.syncQueue = this.syncQueue.filter(q => q.id !== op.id);
@@ -169,7 +157,6 @@ class SimpleSyncService {
       await this.refreshDataFromServer();
     }
 
-    console.log(`[SyncService] Sync complete. Synced: ${synced}, Failed: ${failed}`);
     return { success: true, synced, failed };
   }
 
@@ -240,36 +227,25 @@ class SimpleSyncService {
 
   private async refreshDataFromServer() {
     try {
-      console.log('[SyncService] Refreshing data from server...');
-      
       // Fetch all customers
-      console.log('[SyncService] Fetching customers from:', API_ENDPOINTS.CUSTOMERS);
       const customers = await apiClient.get<Customer[]>(API_ENDPOINTS.CUSTOMERS);
-      console.log('[SyncService] Fetched customers:', customers);
-      
       if (Array.isArray(customers)) {
         for (const customer of customers) {
           await offlineDb.saveCustomer(customer);
         }
       } else {
-        console.warn('[SyncService] Customers response is not an array:', customers);
-      }
-      
+        }
+
       // Fetch all jobs
-      console.log('[SyncService] Fetching jobs from:', API_ENDPOINTS.JOBS);
       const jobs = await apiClient.get<Job[]>(API_ENDPOINTS.JOBS);
-      console.log('[SyncService] Fetched jobs:', jobs);
-      
       if (Array.isArray(jobs)) {
         for (const job of jobs) {
           await offlineDb.saveJob(job);
         }
       } else {
-        console.warn('[SyncService] Jobs response is not an array:', jobs);
-      }
-      
-      console.log('[SyncService] Data refresh complete');
-    } catch (error) {
+        }
+
+      } catch (error) {
       console.error('[SyncService] Failed to refresh data:', error);
       console.error('[SyncService] Error details:', {
         message: error?.message,
@@ -291,15 +267,13 @@ class SimpleSyncService {
       queueSize: this.syncQueue.length,
       syncing: this.syncing,
       online: navigator.onLine,
-      lastSyncTime: new Date() // TODO: Track this properly
-    };
+      lastSyncTime: new Date()     };
   }
 
   clearQueue() {
     this.syncQueue = [];
     this.saveQueue();
-    console.log('[SyncService] Queue cleared');
-  }
+    }
 }
 
 export const simpleSyncService = new SimpleSyncService();

@@ -6,11 +6,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
+
   try {
     if (req.method === 'GET') {
       // Get all customers
@@ -29,11 +29,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         orderBy: { createdAt: 'desc' }
       });
       return res.status(200).json(customers);
-      
+
     } else if (req.method === 'POST') {
       // Create customer
       const { reference, name, phone, email, address, notes } = req.body;
-      
+
       let customerReference = reference;
       if (!customerReference) {
         const count = await prisma.customer.count();
@@ -54,7 +54,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
 
       return res.status(201).json(customer);
-      
+
     } else {
       return res.status(405).json({ error: 'Method not allowed' });
     }

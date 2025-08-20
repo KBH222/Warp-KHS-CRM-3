@@ -7,7 +7,6 @@ import { ScrollablePageContainer } from '../components/ScrollablePageContainer';
 import { compressImage } from '../utils/imageCompression';
 
 const CustomersEnhanced = () => {
-  console.log('[CustomersEnhanced] Component rendering...');
   const navigate = useNavigate();
   
   // Add CSS to hide scrollbars on tabs container and style photos scrollbar
@@ -42,8 +41,6 @@ const CustomersEnhanced = () => {
   const [customers, setCustomers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  console.log('[CustomersEnhanced] State initialized');
 
   // Load customers from API
   const loadCustomers = async () => {
@@ -92,7 +89,6 @@ const CustomersEnhanced = () => {
 
     // Auto-sync every 15 minutes
     const autoSync = async () => {
-      console.log('[CustomersPage] Running auto-sync...');
       
       // Save current data with timestamp
       customerStorage.save(customers);
@@ -101,7 +97,6 @@ const CustomersEnhanced = () => {
       // Trigger actual sync with backend
       try {
         await customersApi.sync();
-        console.log('[CustomersPage] Sync completed');
         // Reload data after sync
         await loadCustomers();
       } catch (error) {
@@ -127,7 +122,6 @@ const CustomersEnhanced = () => {
     
     // Sync when coming online
     const handleOnline = () => {
-      console.log('[CustomersPage] Device came online, syncing...');
       autoSync();
     };
     
@@ -197,13 +191,10 @@ const CustomersEnhanced = () => {
       const customerData = { ...newCustomer };
       delete customerData.id; // Remove any temp ID if present
       
-      console.log('[Customer] Creating customer:', customerData);
       const customer = await customersApi.create(customerData);
-      console.log('[Customer] Created with ID:', customer.id);
       
       // Validate that we got a real ID back
       if (!customer.id || customer.id.includes('temp')) {
-        console.error('[Customer] WARNING: Received temp ID from server:', customer.id);
         toast.warning('Customer created but may need to refresh for proper ID');
       }
       
@@ -269,16 +260,12 @@ const CustomersEnhanced = () => {
 
   const handleSaveJob = async (jobData: any) => {
     try {
-      console.log('handleSaveJob called with:', jobData);
-      console.log('editingJob:', editingJob);
-      console.log('selectedCustomerForJob:', selectedCustomerForJob);
       
       // Validate customer ID first
       const customerId = jobData.customerId || selectedCustomerForJob?.id;
       
       // Check for invalid customer ID (temp IDs)
       if (!customerId || customerId.toString().includes('temp')) {
-        console.error('[Job Save] Invalid customer ID:', customerId);
         toast.error('Cannot save job - customer not properly saved. Please refresh and try again.');
         
         // If we have a temp customer, try to sync first
@@ -289,7 +276,6 @@ const CustomersEnhanced = () => {
         return;
       }
       
-      console.log('[Job Save] Using validated customer ID:', customerId);
       
       // Check if we're updating or creating
       if (editingJob && editingJob.id) {
@@ -309,12 +295,9 @@ const CustomersEnhanced = () => {
           commentsText: jobData.commentsText || ''
         };
         
-        console.log('Updating job ID:', editingJob.id);
-        console.log('Update payload:', updateData);
         
         try {
           const updatedJob = await jobsApi.update(editingJob.id, updateData);
-          console.log('Update successful:', updatedJob);
           
           // Update local state
           setCustomers(prevCustomers => {
@@ -351,7 +334,6 @@ const CustomersEnhanced = () => {
         }
       } else if (jobData.id) {
         // Legacy path - update using jobData.id
-        console.warn('Using legacy update path with jobData.id:', jobData.id);
         const updateData = {
           title: jobData.title,
           description: jobData.description || '',
@@ -395,9 +377,6 @@ const CustomersEnhanced = () => {
         }, 100);
       } else {
         // Create new job
-        console.log('Creating new job');
-        console.log('selectedCustomerForJob:', selectedCustomerForJob);
-        console.log('jobData.customerId:', jobData.customerId);
         
         // Ensure we have a valid customer ID (not temp)
         const customerId = jobData.customerId || selectedCustomerForJob?.id;
@@ -407,7 +386,6 @@ const CustomersEnhanced = () => {
         
         // Check for temp customer ID
         if (customerId.toString().includes('temp')) {
-          console.error('[Job Save] Cannot create job with temp customer ID:', customerId);
           throw new Error('Customer not properly saved - please refresh and try again');
         }
         
@@ -424,9 +402,7 @@ const CustomersEnhanced = () => {
           plans: jobData.plans || [],
           commentsText: jobData.commentsText || ''
         };
-        console.log('Create payload:', JSON.stringify(createPayload, null, 2));
         const newJob = await jobsApi.create(createPayload);
-        console.log('New job created:', newJob);
         
         // Update local state - add the new job to the customer's jobs array
         setCustomers(prevCustomers => {
@@ -818,20 +794,9 @@ const CustomersEnhanced = () => {
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      console.log('Setting editingJob to:', job);
-                                      console.log('Job object structure:', {
-                                        id: job.id,
-                                        title: job.title,
-                                        customerId: job.customerId,
-                                        allFields: Object.keys(job)
-                                      });
-                                      console.log('=== OPENING JOB MODAL ===');
-                                      console.log('Customer being set:', customer);
-                                      console.log('Job being edited:', job);
                                       setSelectedCustomerForJob(customer);
                                       setEditingJob(job);  // Make sure this has the full job object with ID
                                       setShowAddJobModal(true);
-                                      console.log('Modal should now be open');
                                     }}
                                     style={{
                                       flex: 1,
@@ -980,7 +945,6 @@ const CustomersEnhanced = () => {
     )}
 
     {/* Add Job Modal */}
-    {console.log('Modal render check:', { showAddJobModal, selectedCustomerForJob, editingJob })}
     {showAddJobModal && selectedCustomerForJob && (
         <AddJobModal
           customer={selectedCustomerForJob}
@@ -993,7 +957,6 @@ const CustomersEnhanced = () => {
           onSave={handleSaveJob}
           onDelete={handleDeleteJob}
           onJobUpdate={(updatedJob) => {
-            console.log('onJobUpdate called with:', updatedJob);
             // Update the editing job with latest data
             setEditingJob(updatedJob);
             // Also update in the customer jobs list
@@ -1410,15 +1373,6 @@ const CustomerModal = ({ customer, onClose, onSave }: any) => {
 
 // Add Job Modal Component
 const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete = null, onJobUpdate = null }: any) => {
-  // ADD THESE 5 LINES OF DEBUG CODE:
-  console.log('=== JOB MODAL DEBUG ===');
-  console.log('[Job Modal] Customer ID:', customer?.id);
-  console.log('[Job Modal] Customer Name:', customer?.name);
-  console.log('[Job Modal] Job Customer ID:', existingJob?.customerId);
-  console.log('[Job Modal] IDs Match?', customer?.id === existingJob?.customerId);
-  
-  console.log('[AddJobModal] Initialized with customer:', customer);
-  console.log('[AddJobModal] Existing job:', existingJob);
   
   const [activeTab, setActiveTab] = useState('description');
   const [currentJobId, setCurrentJobId] = useState(existingJob?.id || null);
@@ -1442,12 +1396,10 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     commentsText: existingJob?.commentsText || ''
   });
   
-  console.log('[AddJobModal] Initial jobData:', jobData);
 
   // Update job data when existingJob changes (e.g., after save)
   useEffect(() => {
     if (existingJob) {
-      console.log('Updating job data from existingJob:', existingJob);
       setJobData({
         id: existingJob.id,
         title: existingJob.title || '',
@@ -1478,14 +1430,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    
-    console.log('[Photo Save] Step 1: Checking job status', { 
-      hasId: !!currentJobId, 
-      currentJobId, 
-      jobDataId: jobData.id,
-      title: jobData.title,
-      existingJob: !!existingJob 
-    });
     
     // Check if job has a title
     if (!jobData.title && !existingJob) {
@@ -1611,20 +1555,11 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
   // Save photos/plans without closing modal
   const handleSavePhotos = async () => {
-    console.log('[Photo Save] Step 3: handleSavePhotos called', {
-      currentJobId,
-      jobDataId: jobData.id,
-      hasPhotos: jobData.photos.length > 0,
-      photoCount: jobData.photos.length,
-      customerId: customer?.id,
-      title: jobData.title
-    });
     
     // Validate customer ID first
     const customerId = customer?.id || jobData.customerId;
     
     if (!customerId || customerId.toString().includes('temp')) {
-      console.error('[Photo Save] Invalid customer ID:', customerId);
       toast.error('Cannot save photos - customer not saved properly. Please refresh the page.');
       
       // Show more helpful message for temp IDs
@@ -1634,7 +1569,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
       return;
     }
     
-    console.log('[Photo Save] Customer ID validated:', customerId);
     
     try {
       if (currentJobId || jobData.id) {
@@ -1655,20 +1589,9 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           commentsText: jobData.commentsText || ''
         };
         
-        console.log('[Photo Save] Step 4: Updating existing job', {
-          jobId,
-          photoCount: updateData.photos.length,
-          firstPhoto: updateData.photos[0] ? { name: updateData.photos[0].name, hasUrl: !!updateData.photos[0].url } : null
-        });
         
         const updatedJob = await jobsApi.update(jobId, updateData);
         
-        console.log('[Photo Save] Step 5: Response from server', {
-          jobId: updatedJob?.id,
-          hasPhotos: !!updatedJob?.photos,
-          photoCount: updatedJob?.photos?.length || 0,
-          responsePhotos: updatedJob?.photos
-        });
         
         if (!updatedJob || !updatedJob.id) {
           throw new Error('Server did not return a valid job object');
@@ -1676,16 +1599,9 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         
         // Check if photos were actually saved (only if we expected photos)
         if (jobData.photos.length > 0 && (!updatedJob.photos || updatedJob.photos.length === 0)) {
-          console.error('[Photo Save] ERROR: Photos not in response', {
-            sentPhotos: jobData.photos.length,
-            receivedPhotos: updatedJob.photos?.length || 0
-          });
           throw new Error('Photos were not saved by the server - database migration may be needed');
         }
         
-        console.log('[Photo Save] Step 6: Photos saved successfully', {
-          savedPhotoCount: updatedJob.photos?.length || 0
-        });
         
         // Update parent component with new job data
         if (onJobUpdate) {
@@ -1708,11 +1624,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         setUnsavedChanges(false);
       } else {
         // Create new job first - this only happens for NEW jobs
-        console.log('[Photo Save] Step 4: Creating new job', {
-          title: jobData.title,
-          photoCount: jobData.photos.length,
-          hasTitle: !!jobData.title
-        });
         
         // Ensure we have a title before creating
         if (!jobData.title) {
@@ -1735,11 +1646,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         
         const newJob = await jobsApi.create(createData);
         
-        console.log('[Photo Save] Step 5: New job created', {
-          jobId: newJob?.id,
-          hasPhotos: !!newJob?.photos,
-          photoCount: newJob?.photos?.length || 0
-        });
         
         if (!newJob || !newJob.id) {
           throw new Error('Failed to create job - server did not return a valid job');
@@ -1754,10 +1660,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           plans: newJob.plans || []
         }));
         
-        console.log('[Photo Save] Step 6: State updated with new job', {
-          currentJobId: newJob.id,
-          jobDataId: newJob.id
-        });
         
         // Update parent component with new job data
         if (onJobUpdate) {
@@ -1774,7 +1676,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
   // Safety check - ensure we have a customer
   if (!customer || !customer.id) {
-    console.error('[AddJobModal] ERROR: No customer provided or customer has no ID');
     toast.error('Error: No customer selected');
     onClose();
     return null;
