@@ -38,6 +38,9 @@ const Workers = () => {
     Sat: { startTime: '', endTime: '', lunchMinutes: 0, job: '', workType: '', totalHours: 0 },
     Sun: { startTime: '', endTime: '', lunchMinutes: 0, job: '', workType: '', totalHours: 0 },
   });
+  
+  // Track which days have been modified
+  const [modifiedDays, setModifiedDays] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     loadWorkers();
@@ -55,6 +58,7 @@ const Workers = () => {
   const handleAddWorker = async () => {
     setEditingWorker(null);
     setActiveTab('info');
+    setModifiedDays(new Set()); // Clear modified days
     const nextColor = await workerService.getNextColor();
     setFormData({
       name: '',
@@ -72,6 +76,7 @@ const Workers = () => {
   const handleEditWorker = (worker: Worker) => {
     setEditingWorker(worker);
     setActiveTab('info');
+    setModifiedDays(new Set()); // Clear modified days
     setFormData({
       name: worker.name,
       fullName: worker.fullName,
@@ -97,13 +102,21 @@ const Workers = () => {
     
     try {
       if (editingWorker) {
-        // Update existing worker with timesheet
+        // Only send modified timesheet data
+        const modifiedTimesheet: any = {};
+        Array.from(modifiedDays).forEach(day => {
+          if (timesheet[day]) {
+            modifiedTimesheet[day] = timesheet[day];
+          }
+        });
+        
+        // Update existing worker with only modified timesheet data
         await workerService.update(editingWorker.id, {
           ...formData,
-          timesheet
+          timesheet: modifiedDays.size > 0 ? modifiedTimesheet : undefined
         });
       } else {
-        // Create new worker with timesheet
+        // Create new worker with full timesheet
         await workerService.create({
           ...formData,
           currentJob: null,
@@ -112,6 +125,7 @@ const Workers = () => {
       }
       
       setShowAddModal(false);
+      setModifiedDays(new Set()); // Clear modified days
       await loadWorkers();
     } catch (error) {
       alert('Failed to save worker. Please try again.');
@@ -155,6 +169,9 @@ const Workers = () => {
 
   // Handle timesheet changes
   const handleTimesheetChange = (day: string, field: string, value: string | number) => {
+    // Mark this day as modified
+    setModifiedDays(prev => new Set([...prev, day]));
+    
     setTimesheet(prev => {
       // Ensure the day exists in the timesheet
       if (!prev[day]) {

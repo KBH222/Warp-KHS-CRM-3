@@ -4,6 +4,7 @@
  */
 
 import { workersApi, Worker } from './api/workers.api';
+import { mergeTimesheets, getModifiedDays, addTimesheetMetadata, stripTimesheetMetadata } from '../utils/timesheetMerge';
 
 export { Worker } from './api/workers.api';
 
@@ -156,6 +157,19 @@ class WorkerService {
 
   async update(id: string, updates: Partial<Worker>): Promise<Worker | undefined> {
     await this.waitForInit();
+    
+    // Special handling for timesheet updates
+    if (updates.timesheet) {
+      const currentWorker = await this.getById(id);
+      if (currentWorker && currentWorker.timesheet) {
+        // Merge timesheets instead of replacing
+        updates.timesheet = mergeTimesheets(
+          currentWorker.timesheet,
+          updates.timesheet
+        );
+      }
+    }
+    
     try {
       const updatedWorker = await workersApi.update(id, updates);
       const index = this.workers.findIndex(w => w.id === id);
