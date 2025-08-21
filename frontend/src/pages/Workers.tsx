@@ -412,6 +412,28 @@ const Workers = () => {
           >
             💾 Manual Save Test
           </button>
+          <button
+            onClick={() => {
+              // Reset workers to defaults with timesheet
+              if (confirm('Reset all workers to defaults? This will clear all data!')) {
+                localStorage.removeItem('khs-crm-workers');
+                window.location.reload();
+              }
+            }}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#DC2626',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '18.4px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              marginLeft: '10px'
+            }}
+          >
+            🔄 Reset Workers
+          </button>
         </div>
 
         {/* Workers Grid */}

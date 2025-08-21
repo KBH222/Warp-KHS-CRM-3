@@ -21,7 +21,8 @@ const defaultWorkers: Worker[] = [
     specialty: 'General Construction',
     status: 'Available',
     currentJob: null,
-    color: '#3B82F6'
+    color: '#3B82F6',
+    timesheet: {}
   },
   {
     id: 'ISA',
@@ -32,7 +33,8 @@ const defaultWorkers: Worker[] = [
     specialty: 'Finish Work',
     status: 'On Job',
     currentJob: 'Kitchen Remodel - Sarah Johnson',
-    color: '#10B981'
+    color: '#10B981',
+    timesheet: {}
   },
   {
     id: 'TYL',
@@ -43,7 +45,8 @@ const defaultWorkers: Worker[] = [
     specialty: 'Carpentry',
     status: 'On Job',
     currentJob: 'Deck Installation - Mike Davis',
-    color: '#F59E0B'
+    color: '#F59E0B',
+    timesheet: {}
   }
 ];
 
@@ -93,8 +96,26 @@ class WorkerService {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         this.workers = JSON.parse(stored);
+        
+        // Migrate existing workers to ensure they have timesheet field
+        let needsUpdate = false;
+        this.workers = this.workers.map(worker => {
+          if (!worker.timesheet) {
+            needsUpdate = true;
+            return { ...worker, timesheet: {} };
+          }
+          return worker;
+        });
+        
+        // Save back if we added timesheet to any workers
+        if (needsUpdate) {
+          console.log('Migrating workers to add timesheet field');
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
+        }
       } else {
         this.workers = defaultWorkers;
+        // Save default workers to localStorage
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
       }
       this.initialized = true;
     } catch (error) {
@@ -175,6 +196,8 @@ class WorkerService {
     console.log('=== WorkerService.update ===');
     console.log('ID:', id);
     console.log('Updates:', updates);
+    console.log('Timesheet specifically:', updates.timesheet);
+    console.log('Has timesheet?', 'timesheet' in updates);
     
     try {
       // Just pass through to API - no complex merging
