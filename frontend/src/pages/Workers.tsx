@@ -49,6 +49,14 @@ const Workers = () => {
   const loadWorkers = async () => {
     try {
       const data = await workerService.getAll();
+      console.log('=== LOADED WORKERS ===');
+      console.log('All workers:', data);
+      const tyler = data.find(w => w.name === 'TYL' || w.fullName.includes('Tyler'));
+      if (tyler) {
+        console.log('Tyler Mitchell data:', tyler);
+        console.log('Tyler timesheet:', tyler.timesheet);
+        console.log('Tyler Monday:', tyler.timesheet?.Mon);
+      }
       setWorkers(data);
     } catch (error) {
       // Will use cached data from localStorage
@@ -74,6 +82,10 @@ const Workers = () => {
   };
 
   const handleEditWorker = (worker: Worker) => {
+    console.log('=== EDITING WORKER ===');
+    console.log('Worker being edited:', worker);
+    console.log('Worker timesheet:', worker.timesheet);
+    
     setEditingWorker(worker);
     setActiveTab('info');
     setModifiedDays(new Set()); // Clear modified days
@@ -106,15 +118,26 @@ const Workers = () => {
         console.log('Modified days:', Array.from(modifiedDays));
         console.log('Current full timesheet:', timesheet);
         
-        // Update existing worker - always send full timesheet if any modifications
+        // Update existing worker - send cleaned timesheet
         const updateData: any = { ...formData };
         if (modifiedDays.size > 0) {
-          // Send the full timesheet - the service will handle merging
-          updateData.timesheet = timesheet;
-          updateData._modifiedDays = Array.from(modifiedDays); // Track which days were actually modified
+          // Clean the timesheet - only include days with actual data
+          const cleanedTimesheet: any = {};
+          Object.entries(timesheet).forEach(([day, data]) => {
+            // Only include days that have some actual data (not just defaults)
+            if (data.startTime || data.endTime || data.job || data.workType || data.totalHours > 0) {
+              cleanedTimesheet[day] = data;
+            }
+          });
+          
+          console.log('Cleaned timesheet (only days with data):', cleanedTimesheet);
+          updateData.timesheet = cleanedTimesheet;
+          updateData._modifiedDays = Array.from(modifiedDays);
         }
         console.log('Update data being sent:', updateData);
-        await workerService.update(editingWorker.id, updateData);
+        const result = await workerService.update(editingWorker.id, updateData);
+        console.log('Update result:', result);
+        console.log('Result timesheet:', result?.timesheet);
       } else {
         // Create new worker with full timesheet
         await workerService.create({
@@ -169,8 +192,17 @@ const Workers = () => {
 
   // Handle timesheet changes
   const handleTimesheetChange = (day: string, field: string, value: string | number) => {
-    // Mark this day as modified
-    setModifiedDays(prev => new Set([...prev, day]));
+    console.log(`Timesheet change: ${day} - ${field} = ${value}`);
+    
+    // Only mark as modified if the value actually changed from original
+    const originalValue = originalTimesheet?.[day]?.[field];
+    const currentValue = timesheet[day]?.[field];
+    
+    // Check if this is a real change
+    if (value !== originalValue && value !== currentValue) {
+      console.log(`Marking ${day} as modified (original: ${originalValue}, new: ${value})`);
+      setModifiedDays(prev => new Set([...prev, day]));
+    }
     
     setTimesheet(prev => {
       // Ensure the day exists in the timesheet
@@ -216,6 +248,10 @@ const Workers = () => {
   
   // Load timesheet data when editing worker
   useEffect(() => {
+    console.log('=== LOADING TIMESHEET DATA ===');
+    console.log('editingWorker:', editingWorker);
+    console.log('editingWorker.timesheet:', editingWorker?.timesheet);
+    
     if (editingWorker && editingWorker.timesheet && typeof editingWorker.timesheet === 'object') {
       // Store the original timesheet
       setOriginalTimesheet(editingWorker.timesheet);
@@ -231,8 +267,11 @@ const Workers = () => {
         Sat: editingWorker.timesheet.Sat || { ...defaultDay, lunchMinutes: 0 },
         Sun: editingWorker.timesheet.Sun || { ...defaultDay, lunchMinutes: 0 },
       };
+      console.log('Complete timesheet being set:', completeTimesheet);
+      console.log('Monday data specifically:', completeTimesheet.Mon);
       setTimesheet(completeTimesheet);
     } else {
+      console.log('No timesheet data, using defaults');
       // Reset to default timesheet
       setOriginalTimesheet(null);
       setTimesheet({

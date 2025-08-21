@@ -116,6 +116,20 @@ class WorkerService {
     try {
       const workers = await workersApi.getAll();
       this.workers = workers;
+      
+      // Debug localStorage
+      const localData = localStorage.getItem(STORAGE_KEY);
+      if (localData) {
+        const parsed = JSON.parse(localData);
+        const tyler = parsed.find((w: Worker) => w.name === 'TYL' || w.fullName?.includes('Tyler'));
+        if (tyler) {
+          console.log('=== TYLER IN LOCALSTORAGE ===');
+          console.log('Full data:', tyler);
+          console.log('Timesheet:', tyler.timesheet);
+          console.log('Monday:', tyler.timesheet?.Mon);
+        }
+      }
+      
       return workers;
     } catch (error) {
       return [...this.workers];
@@ -167,49 +181,20 @@ class WorkerService {
     console.log('Current worker:', currentWorker);
     console.log('Current worker timesheet:', currentWorker.timesheet);
     
-    // Special handling for timesheet updates - create a new updates object with merged timesheet
+    // Special handling for timesheet updates
     let mergedUpdates = { ...updates };
     const modifiedDays = (updates as any)._modifiedDays;
     delete (mergedUpdates as any)._modifiedDays; // Remove meta field
     
-    if ('timesheet' in updates) {
+    if ('timesheet' in updates && updates.timesheet) {
       console.log('Timesheet update detected');
-      console.log('Modified days:', modifiedDays);
+      console.log('Incoming timesheet:', updates.timesheet);
+      console.log('Current timesheet:', currentWorker.timesheet);
       
-      if (updates.timesheet && currentWorker.timesheet) {
-        // Smart merge - only update modified days
-        if (modifiedDays && modifiedDays.length > 0) {
-          console.log('Smart merging - only updating modified days');
-          const mergedTimesheet = { ...currentWorker.timesheet };
-          
-          // Only update the days that were actually modified
-          modifiedDays.forEach((day: string) => {
-            if (updates.timesheet![day]) {
-              mergedTimesheet[day] = updates.timesheet![day];
-              console.log(`Updated ${day}:`, updates.timesheet![day]);
-            }
-          });
-          
-          mergedUpdates.timesheet = mergedTimesheet;
-          console.log('Smart merged result:', mergedUpdates.timesheet);
-        } else {
-          // Fallback to full merge if no modified days info
-          console.log('Full merge (no modified days info)');
-          mergedUpdates.timesheet = mergeTimesheets(
-            currentWorker.timesheet,
-            updates.timesheet
-          );
-        }
-      } else if (updates.timesheet && !currentWorker.timesheet) {
-        // If current has no timesheet, use incoming
-        console.log('No current timesheet, using incoming');
-        mergedUpdates.timesheet = updates.timesheet;
-      }
-      // If updates.timesheet is undefined but key exists, keep current timesheet
-      else if (!updates.timesheet && currentWorker.timesheet) {
-        console.log('No timesheet in update, keeping current');
-        delete mergedUpdates.timesheet; // Don't update timesheet
-      }
+      // Always use the incoming timesheet as-is since it contains the full state
+      // The Workers component already sends the complete timesheet with all days
+      mergedUpdates.timesheet = updates.timesheet;
+      console.log('Using complete timesheet from update:', mergedUpdates.timesheet);
     }
     
     try {
