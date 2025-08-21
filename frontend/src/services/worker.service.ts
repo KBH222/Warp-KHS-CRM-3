@@ -158,25 +158,56 @@ class WorkerService {
   async update(id: string, updates: Partial<Worker>): Promise<Worker | undefined> {
     await this.waitForInit();
     
+    console.log('WorkerService.update called with:', { id, updates });
+    
     // Get current worker first
     const currentWorker = await this.getById(id);
     if (!currentWorker) return undefined;
     
+    console.log('Current worker:', currentWorker);
+    console.log('Current worker timesheet:', currentWorker.timesheet);
+    
     // Special handling for timesheet updates - create a new updates object with merged timesheet
     let mergedUpdates = { ...updates };
+    const modifiedDays = (updates as any)._modifiedDays;
+    delete (mergedUpdates as any)._modifiedDays; // Remove meta field
+    
     if ('timesheet' in updates) {
+      console.log('Timesheet update detected');
+      console.log('Modified days:', modifiedDays);
+      
       if (updates.timesheet && currentWorker.timesheet) {
-        // Merge timesheets instead of replacing
-        mergedUpdates.timesheet = mergeTimesheets(
-          currentWorker.timesheet,
-          updates.timesheet
-        );
+        // Smart merge - only update modified days
+        if (modifiedDays && modifiedDays.length > 0) {
+          console.log('Smart merging - only updating modified days');
+          const mergedTimesheet = { ...currentWorker.timesheet };
+          
+          // Only update the days that were actually modified
+          modifiedDays.forEach((day: string) => {
+            if (updates.timesheet![day]) {
+              mergedTimesheet[day] = updates.timesheet![day];
+              console.log(`Updated ${day}:`, updates.timesheet![day]);
+            }
+          });
+          
+          mergedUpdates.timesheet = mergedTimesheet;
+          console.log('Smart merged result:', mergedUpdates.timesheet);
+        } else {
+          // Fallback to full merge if no modified days info
+          console.log('Full merge (no modified days info)');
+          mergedUpdates.timesheet = mergeTimesheets(
+            currentWorker.timesheet,
+            updates.timesheet
+          );
+        }
       } else if (updates.timesheet && !currentWorker.timesheet) {
         // If current has no timesheet, use incoming
+        console.log('No current timesheet, using incoming');
         mergedUpdates.timesheet = updates.timesheet;
       }
       // If updates.timesheet is undefined but key exists, keep current timesheet
       else if (!updates.timesheet && currentWorker.timesheet) {
+        console.log('No timesheet in update, keeping current');
         delete mergedUpdates.timesheet; // Don't update timesheet
       }
     }

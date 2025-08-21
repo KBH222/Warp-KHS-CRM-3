@@ -132,18 +132,32 @@ export const workersApi = {
 
   // Update worker
   async update(id: string, worker: Partial<Worker>): Promise<Worker> {
+    console.log('WorkersAPI.update called with:', { id, worker });
+    
     // Always work with localStorage for workers since there's no backend
     const localWorkers = localStorage.getItem('khs-crm-workers');
     if (localWorkers) {
       const workers = JSON.parse(localWorkers);
       const index = workers.findIndex((w: Worker) => w.id === id);
       if (index !== -1) {
+        console.log('Current worker in localStorage:', workers[index]);
+        console.log('Applying update:', worker);
+        
         // Apply the update (merge is already handled by worker.service.ts)
-        workers[index] = { 
+        // Special handling for timesheet to ensure proper merge
+        const updatedWorker = { 
           ...workers[index], 
           ...worker, 
           updatedAt: new Date().toISOString() 
         };
+        
+        // If timesheet is in the update, ensure it's properly merged
+        if ('timesheet' in worker && worker.timesheet) {
+          updatedWorker.timesheet = worker.timesheet;
+        }
+        
+        workers[index] = updatedWorker;
+        console.log('Updated worker:', workers[index]);
         localStorage.setItem('khs-crm-workers', JSON.stringify(workers));
         
         // Return the updated worker

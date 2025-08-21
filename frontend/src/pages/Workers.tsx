@@ -102,20 +102,18 @@ const Workers = () => {
     
     try {
       if (editingWorker) {
-        // Only send modified timesheet data
-        const modifiedTimesheet: any = {};
-        Array.from(modifiedDays).forEach(day => {
-          if (timesheet[day]) {
-            modifiedTimesheet[day] = timesheet[day];
-          }
-        });
+        // Send full timesheet but mark which days were modified
+        console.log('Modified days:', Array.from(modifiedDays));
+        console.log('Current full timesheet:', timesheet);
         
-        // Update existing worker with only modified timesheet data
-        // If no timesheet modifications, don't send timesheet at all
+        // Update existing worker - always send full timesheet if any modifications
         const updateData: any = { ...formData };
         if (modifiedDays.size > 0) {
-          updateData.timesheet = modifiedTimesheet;
+          // Send the full timesheet - the service will handle merging
+          updateData.timesheet = timesheet;
+          updateData._modifiedDays = Array.from(modifiedDays); // Track which days were actually modified
         }
+        console.log('Update data being sent:', updateData);
         await workerService.update(editingWorker.id, updateData);
       } else {
         // Create new worker with full timesheet
@@ -213,9 +211,15 @@ const Workers = () => {
     }, 0);
   };
 
+  // Store original timesheet for comparison
+  const [originalTimesheet, setOriginalTimesheet] = useState<any>(null);
+  
   // Load timesheet data when editing worker
   useEffect(() => {
     if (editingWorker && editingWorker.timesheet && typeof editingWorker.timesheet === 'object') {
+      // Store the original timesheet
+      setOriginalTimesheet(editingWorker.timesheet);
+      
       // Ensure all required days exist in the timesheet
       const defaultDay = { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 };
       const completeTimesheet = {
@@ -230,6 +234,7 @@ const Workers = () => {
       setTimesheet(completeTimesheet);
     } else {
       // Reset to default timesheet
+      setOriginalTimesheet(null);
       setTimesheet({
         Mon: { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 },
         Tue: { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 },
