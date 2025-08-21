@@ -132,50 +132,26 @@ export const workersApi = {
 
   // Update worker
   async update(id: string, worker: Partial<Worker>): Promise<Worker> {
-    try {
-      const response = await api.put(`/workers/${id}`, worker);
-      
-      // Also update localStorage
-      const localWorkers = localStorage.getItem('khs-crm-workers');
-      if (localWorkers) {
-        const workers = JSON.parse(localWorkers);
-        const index = workers.findIndex((w: Worker) => w.id === id);
-        if (index !== -1) {
-          workers[index] = response.data;
-          localStorage.setItem('khs-crm-workers', JSON.stringify(workers));
-        }
+    // Always work with localStorage for workers since there's no backend
+    const localWorkers = localStorage.getItem('khs-crm-workers');
+    if (localWorkers) {
+      const workers = JSON.parse(localWorkers);
+      const index = workers.findIndex((w: Worker) => w.id === id);
+      if (index !== -1) {
+        // Apply the update (merge is already handled by worker.service.ts)
+        workers[index] = { 
+          ...workers[index], 
+          ...worker, 
+          updatedAt: new Date().toISOString() 
+        };
+        localStorage.setItem('khs-crm-workers', JSON.stringify(workers));
+        
+        // Return the updated worker
+        return workers[index];
       }
-      
-      return response.data;
-    } catch (error) {
-      // If offline, update in localStorage
-      if (!navigator.onLine) {
-        const localWorkers = localStorage.getItem('khs-crm-workers');
-        if (localWorkers) {
-          const workers = JSON.parse(localWorkers);
-          const index = workers.findIndex((w: Worker) => w.id === id);
-          if (index !== -1) {
-            workers[index] = { ...workers[index], ...worker, updatedAt: new Date().toISOString() };
-            localStorage.setItem('khs-crm-workers', JSON.stringify(workers));
-            
-            // Queue for sync
-            const syncQueue = localStorage.getItem('khs-crm-sync-queue') || '[]';
-            const queue = JSON.parse(syncQueue);
-            queue.push({
-              type: 'worker',
-              action: 'update',
-              id,
-              data: worker,
-              timestamp: Date.now(),
-            });
-            localStorage.setItem('khs-crm-sync-queue', JSON.stringify(queue));
-            
-            return workers[index];
-          }
-        }
-      }
-      throw error;
     }
+    
+    throw new Error('Worker not found');
   },
 
   // Delete worker

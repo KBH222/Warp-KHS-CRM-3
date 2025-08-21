@@ -111,10 +111,12 @@ const Workers = () => {
         });
         
         // Update existing worker with only modified timesheet data
-        await workerService.update(editingWorker.id, {
-          ...formData,
-          timesheet: modifiedDays.size > 0 ? modifiedTimesheet : undefined
-        });
+        // If no timesheet modifications, don't send timesheet at all
+        const updateData: any = { ...formData };
+        if (modifiedDays.size > 0) {
+          updateData.timesheet = modifiedTimesheet;
+        }
+        await workerService.update(editingWorker.id, updateData);
       } else {
         // Create new worker with full timesheet
         await workerService.create({

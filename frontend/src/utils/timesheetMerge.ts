@@ -30,6 +30,8 @@ export function mergeTimesheets(
   currentMeta?: { [key: string]: string },
   incomingMeta?: { [key: string]: string }
 ): Timesheet {
+  console.log('Merging timesheets:', { current, incoming });
+  
   // If no current timesheet, return incoming
   if (!current) return incoming || {};
   
@@ -48,8 +50,10 @@ export function mergeTimesheets(
     
     // If only one side has data for this day, use it
     if (!currentDay && incomingDay) {
+      console.log(`Day ${day}: Using incoming (no current)`);
       merged[day] = incomingDay;
     } else if (currentDay && !incomingDay) {
+      console.log(`Day ${day}: Using current (no incoming)`);
       merged[day] = currentDay;
     } else if (currentDay && incomingDay) {
       // Both have data - check if they're different
@@ -61,15 +65,18 @@ export function mergeTimesheets(
           merged[day] = incomingTime > currentTime ? incomingDay : currentDay;
         } else {
           // Default to incoming (last write wins)
+          console.log(`Day ${day}: Using incoming (modified)`);
           merged[day] = incomingDay;
         }
       } else {
         // Same data, use either
+        console.log(`Day ${day}: Using current (unchanged)`);
         merged[day] = currentDay;
       }
     }
   });
   
+  console.log('Merged result:', merged);
   return merged;
 }
 

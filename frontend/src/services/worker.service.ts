@@ -158,31 +158,42 @@ class WorkerService {
   async update(id: string, updates: Partial<Worker>): Promise<Worker | undefined> {
     await this.waitForInit();
     
-    // Special handling for timesheet updates
-    if (updates.timesheet) {
-      const currentWorker = await this.getById(id);
-      if (currentWorker && currentWorker.timesheet) {
+    // Get current worker first
+    const currentWorker = await this.getById(id);
+    if (!currentWorker) return undefined;
+    
+    // Special handling for timesheet updates - create a new updates object with merged timesheet
+    let mergedUpdates = { ...updates };
+    if ('timesheet' in updates) {
+      if (updates.timesheet && currentWorker.timesheet) {
         // Merge timesheets instead of replacing
-        updates.timesheet = mergeTimesheets(
+        mergedUpdates.timesheet = mergeTimesheets(
           currentWorker.timesheet,
           updates.timesheet
         );
+      } else if (updates.timesheet && !currentWorker.timesheet) {
+        // If current has no timesheet, use incoming
+        mergedUpdates.timesheet = updates.timesheet;
+      }
+      // If updates.timesheet is undefined but key exists, keep current timesheet
+      else if (!updates.timesheet && currentWorker.timesheet) {
+        delete mergedUpdates.timesheet; // Don't update timesheet
       }
     }
     
     try {
-      const updatedWorker = await workersApi.update(id, updates);
+      const updatedWorker = await workersApi.update(id, mergedUpdates);
       const index = this.workers.findIndex(w => w.id === id);
       if (index !== -1) {
         this.workers[index] = updatedWorker;
       }
       return updatedWorker;
     } catch (error) {
-      // Fallback to local update
+      // Fallback to local update with merged data
       const index = this.workers.findIndex(w => w.id === id);
       if (index === -1) return undefined;
       
-      this.workers[index] = { ...this.workers[index], ...updates };
+      this.workers[index] = { ...this.workers[index], ...mergedUpdates };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
       return this.workers[index];
     }
