@@ -156,6 +156,11 @@ const Workers = () => {
   // Handle timesheet changes
   const handleTimesheetChange = (day: string, field: string, value: string | number) => {
     setTimesheet(prev => {
+      // Ensure the day exists in the timesheet
+      if (!prev[day]) {
+        prev[day] = { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 };
+      }
+      
       const updated = {
         ...prev,
         [day]: {
@@ -180,13 +185,30 @@ const Workers = () => {
 
   // Get total weekly hours
   const getTotalWeeklyHours = (): number => {
-    return Object.values(timesheet).reduce((sum, day) => sum + day.totalHours, 0);
+    return Object.values(timesheet).reduce((sum, day) => {
+      // Ensure day object exists and has totalHours
+      if (day && typeof day.totalHours === 'number') {
+        return sum + day.totalHours;
+      }
+      return sum;
+    }, 0);
   };
 
   // Load timesheet data when editing worker
   useEffect(() => {
-    if (editingWorker && editingWorker.timesheet) {
-      setTimesheet(editingWorker.timesheet);
+    if (editingWorker && editingWorker.timesheet && typeof editingWorker.timesheet === 'object') {
+      // Ensure all required days exist in the timesheet
+      const defaultDay = { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 };
+      const completeTimesheet = {
+        Mon: editingWorker.timesheet.Mon || defaultDay,
+        Tue: editingWorker.timesheet.Tue || defaultDay,
+        Wed: editingWorker.timesheet.Wed || defaultDay,
+        Thu: editingWorker.timesheet.Thu || defaultDay,
+        Fri: editingWorker.timesheet.Fri || defaultDay,
+        Sat: editingWorker.timesheet.Sat || { ...defaultDay, lunchMinutes: 0 },
+        Sun: editingWorker.timesheet.Sun || { ...defaultDay, lunchMinutes: 0 },
+      };
+      setTimesheet(completeTimesheet);
     } else {
       // Reset to default timesheet
       setTimesheet({
