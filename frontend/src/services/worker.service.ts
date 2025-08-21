@@ -4,9 +4,8 @@
  */
 
 import { workersApi, Worker } from './api/workers.api';
-import { mergeTimesheets, getModifiedDays, addTimesheetMetadata, stripTimesheetMetadata } from '../utils/timesheetMerge';
 
-export { Worker } from './api/workers.api';
+export type { Worker } from './api/workers.api';
 
 const STORAGE_KEY = 'khs-crm-workers';
 
@@ -73,29 +72,43 @@ class WorkerService {
   }
 
   private async initialize() {
+    console.log('=== WorkerService.initialize ===');
     try {
       // Try to load from API first
       const apiWorkers = await workersApi.getAll();
+      console.log('API returned workers:', apiWorkers.length);
       this.workers = apiWorkers;
-      this.initialized = true;
       
       // If no workers in database, create defaults
       if (this.workers.length === 0) {
+        console.log('No workers found, creating defaults...');
+        // Create all default workers
+        const createdWorkers = [];
         for (const worker of defaultWorkers) {
-          await this.create(worker);
+          console.log('Creating default worker:', worker.name);
+          const created = await workersApi.create(worker);
+          createdWorkers.push(created);
         }
+        this.workers = createdWorkers;
+        console.log('Created default workers:', this.workers.length);
       }
+      
+      this.initialized = true;
     } catch (error) {
+      console.log('API failed, loading from localStorage:', error);
       // Fallback to localStorage if API fails
       this.loadFromLocalStorage();
     }
   }
 
   private loadFromLocalStorage() {
+    console.log('=== WorkerService.loadFromLocalStorage ===');
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
+      console.log('localStorage has data:', !!stored);
       if (stored) {
         this.workers = JSON.parse(stored);
+        console.log('Loaded workers from localStorage:', this.workers.length);
         
         // Migrate existing workers to ensure they have timesheet field
         let needsUpdate = false;
@@ -113,13 +126,28 @@ class WorkerService {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
         }
       } else {
-        this.workers = defaultWorkers;
+        console.log('No data in localStorage, creating defaults');
+        // Make sure we have valid timestamps for default workers
+        const workersWithTimestamps = defaultWorkers.map(worker => ({
+          ...worker,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }));
+        this.workers = workersWithTimestamps;
         // Save default workers to localStorage
+        console.log('Saving default workers to localStorage');
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
       }
       this.initialized = true;
     } catch (error) {
-      this.workers = defaultWorkers;
+      console.log('Error in loadFromLocalStorage:', error);
+      const workersWithTimestamps = defaultWorkers.map(worker => ({
+        ...worker,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }));
+      this.workers = workersWithTimestamps;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
       this.initialized = true;
     }
   }
@@ -267,6 +295,37 @@ class WorkerService {
     await workersApi.sync();
   }
 
+  // Reset to default workers
+  async resetToDefaults(): Promise<void> {
+    console.log('=== WorkerService.resetToDefaults ===');
+    
+    // Clear localStorage
+    localStorage.removeItem(STORAGE_KEY);
+    console.log('Cleared localStorage');
+    
+    // Create fresh default workers with timestamps
+    const freshWorkers = defaultWorkers.map(worker => ({
+      ...worker,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }));
+    
+    // Save to localStorage
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(freshWorkers));
+    console.log('Saved fresh default workers:', freshWorkers.length);
+    
+    // Update internal state
+    this.workers = freshWorkers;
+    
+    // Verify save
+    const verification = localStorage.getItem(STORAGE_KEY);
+    console.log('Verification - localStorage has data:', !!verification);
+    if (verification) {
+      const parsed = JSON.parse(verification);
+      console.log('Verification - worker count:', parsed.length);
+    }
+  }
+  
   // Utility to format phone number
   formatPhone(phone: string): string {
     const cleaned = phone.replace(/\D/g, '');

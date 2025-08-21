@@ -413,11 +413,18 @@ const Workers = () => {
             💾 Manual Save Test
           </button>
           <button
-            onClick={() => {
+            onClick={async () => {
               // Reset workers to defaults with timesheet
               if (confirm('Reset all workers to defaults? This will clear all data!')) {
-                localStorage.removeItem('khs-crm-workers');
-                window.location.reload();
+                console.log('=== RESETTING WORKERS ===');
+                
+                // Use the service's reset method
+                await workerService.resetToDefaults();
+                console.log('Reset complete');
+                
+                // Reload the workers list
+                await loadWorkers();
+                console.log('Workers reloaded');
               }
             }}
             style={{
