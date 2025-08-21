@@ -65,69 +65,52 @@ api.interceptors.response.use(
 );
 
 export const workersApi = {
-  // Get all workers
+  // Get all workers - directly from localStorage since no backend
   async getAll(): Promise<Worker[]> {
-    try {
-      const response = await api.get('/workers');
-      return response.data;
-    } catch (error) {
-      // Fallback to localStorage if API fails
-      const localWorkers = localStorage.getItem('khs-crm-workers');
-      if (localWorkers) {
-        return JSON.parse(localWorkers);
-      }
-      throw error;
+    const localWorkers = localStorage.getItem('khs-crm-workers');
+    if (localWorkers) {
+      const workers = JSON.parse(localWorkers);
+      console.log('WorkersAPI.getAll - found workers:', workers.length);
+      return workers;
     }
+    console.log('WorkersAPI.getAll - no workers in localStorage');
+    return []; // Return empty array if no workers
   },
 
   // Get single worker
   async getById(id: string): Promise<Worker> {
-    const response = await api.get(`/workers/${id}`);
-    return response.data;
+    const localWorkers = localStorage.getItem('khs-crm-workers');
+    if (localWorkers) {
+      const workers = JSON.parse(localWorkers);
+      const worker = workers.find((w: Worker) => w.id === id);
+      if (worker) {
+        return worker;
+      }
+    }
+    throw new Error('Worker not found');
   },
 
-  // Create worker
+  // Create worker - directly in localStorage
   async create(worker: Omit<Worker, 'id' | 'createdAt' | 'updatedAt'>): Promise<Worker> {
-    try {
-      const response = await api.post('/workers', worker);
-      
-      // Also update localStorage for offline access
-      const localWorkers = localStorage.getItem('khs-crm-workers');
-      const workers = localWorkers ? JSON.parse(localWorkers) : [];
-      workers.push(response.data);
-      localStorage.setItem('khs-crm-workers', JSON.stringify(workers));
-      
-      return response.data;
-    } catch (error) {
-      // If offline, save to localStorage with temp ID
-      if (!navigator.onLine) {
-        const tempWorker = {
-          ...worker,
-          id: `temp_${Date.now()}`,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        
-        const localWorkers = localStorage.getItem('khs-crm-workers');
-        const workers = localWorkers ? JSON.parse(localWorkers) : [];
-        workers.push(tempWorker);
-        localStorage.setItem('khs-crm-workers', JSON.stringify(workers));
-        
-        // Queue for sync
-        const syncQueue = localStorage.getItem('khs-crm-sync-queue') || '[]';
-        const queue = JSON.parse(syncQueue);
-        queue.push({
-          type: 'worker',
-          action: 'create',
-          data: tempWorker,
-          timestamp: Date.now(),
-        });
-        localStorage.setItem('khs-crm-sync-queue', JSON.stringify(queue));
-        
-        return tempWorker as Worker;
-      }
-      throw error;
+    const newWorker: Worker = {
+      ...worker,
+      id: worker.name, // Use name as ID for simplicity
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    
+    // Ensure timesheet exists
+    if (!newWorker.timesheet) {
+      newWorker.timesheet = {};
     }
+    
+    const localWorkers = localStorage.getItem('khs-crm-workers');
+    const workers = localWorkers ? JSON.parse(localWorkers) : [];
+    workers.push(newWorker);
+    localStorage.setItem('khs-crm-workers', JSON.stringify(workers));
+    
+    console.log('WorkersAPI.create - created worker:', newWorker);
+    return newWorker;
   },
 
   // Update worker
@@ -175,41 +158,14 @@ export const workersApi = {
     return workers[index];
   },
 
-  // Delete worker
+  // Delete worker - directly from localStorage
   async delete(id: string): Promise<void> {
-    try {
-      await api.delete(`/workers/${id}`);
-      
-      // Also remove from localStorage
-      const localWorkers = localStorage.getItem('khs-crm-workers');
-      if (localWorkers) {
-        const workers = JSON.parse(localWorkers);
-        const filtered = workers.filter((w: Worker) => w.id !== id);
-        localStorage.setItem('khs-crm-workers', JSON.stringify(filtered));
-      }
-    } catch (error) {
-      // If offline, remove from localStorage
-      if (!navigator.onLine) {
-        const localWorkers = localStorage.getItem('khs-crm-workers');
-        if (localWorkers) {
-          const workers = JSON.parse(localWorkers);
-          const filtered = workers.filter((w: Worker) => w.id !== id);
-          localStorage.setItem('khs-crm-workers', JSON.stringify(filtered));
-          
-          // Queue for sync
-          const syncQueue = localStorage.getItem('khs-crm-sync-queue') || '[]';
-          const queue = JSON.parse(syncQueue);
-          queue.push({
-            type: 'worker',
-            action: 'delete',
-            id,
-            timestamp: Date.now(),
-          });
-          localStorage.setItem('khs-crm-sync-queue', JSON.stringify(queue));
-        }
-      } else {
-        throw error;
-      }
+    const localWorkers = localStorage.getItem('khs-crm-workers');
+    if (localWorkers) {
+      const workers = JSON.parse(localWorkers);
+      const filtered = workers.filter((w: Worker) => w.id !== id);
+      localStorage.setItem('khs-crm-workers', JSON.stringify(filtered));
+      console.log('WorkersAPI.delete - deleted worker:', id);
     }
   },
 
