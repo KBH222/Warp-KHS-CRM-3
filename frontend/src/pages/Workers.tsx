@@ -111,6 +111,10 @@ const Workers = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('=== FORM SUBMITTED ===');
+    console.log('Active tab:', activeTab);
+    console.log('Editing worker:', editingWorker);
+    console.log('Current timesheet state:', timesheet);
     
     try {
       if (editingWorker) {
@@ -118,20 +122,18 @@ const Workers = () => {
         console.log('Modified days:', Array.from(modifiedDays));
         console.log('Current full timesheet:', timesheet);
         
-        // Update existing worker - send timesheet if modified
+        // Update existing worker - ALWAYS include timesheet
         const updateData: any = { ...formData };
         
-        // Always include timesheet if we're on the hours tab and have modifications
-        if (activeTab === 'hours' || modifiedDays.size > 0) {
-          console.log('=== SAVING TIMESHEET ===');
-          console.log('Full timesheet being saved:', timesheet);
-          updateData.timesheet = timesheet;
-        }
+        // ALWAYS include timesheet to ensure it's saved
+        console.log('=== SAVING TIMESHEET ===');
+        console.log('Full timesheet being saved:', JSON.stringify(timesheet, null, 2));
+        updateData.timesheet = timesheet;
         
-        console.log('Update data being sent:', updateData);
+        console.log('Update data being sent:', JSON.stringify(updateData, null, 2));
         const result = await workerService.update(editingWorker.id, updateData);
         console.log('Update result:', result);
-        console.log('Result timesheet:', result?.timesheet);
+        console.log('Result timesheet:', JSON.stringify(result?.timesheet, null, 2));
       } else {
         // Create new worker with full timesheet
         await workerService.create({
@@ -354,7 +356,14 @@ const Workers = () => {
                 console.log('=== DIRECT LOCALSTORAGE CHECK ===');
                 console.log('Tyler data:', tyler);
                 console.log('Tyler timesheet:', tyler?.timesheet);
-                alert(`Tyler's timesheet: ${JSON.stringify(tyler?.timesheet, null, 2)}`);
+                
+                // Also check what's in the current state
+                const tylerState = workers.find((w: Worker) => w.name === 'TYL');
+                console.log('Tyler in state:', tylerState);
+                
+                alert(`Tyler in localStorage:\n${JSON.stringify(tyler, null, 2)}`);
+              } else {
+                alert('No workers in localStorage!');
               }
             }}
             style={{
@@ -370,6 +379,38 @@ const Workers = () => {
             }}
           >
             🔍 Check Tyler's Data
+          </button>
+          <button
+            onClick={() => {
+              // Manual test save
+              const data = localStorage.getItem('khs-crm-workers');
+              if (data) {
+                const workers = JSON.parse(data);
+                const tylerIndex = workers.findIndex((w: any) => w.name === 'TYL');
+                if (tylerIndex !== -1) {
+                  // Manually add timesheet data
+                  workers[tylerIndex].timesheet = {
+                    Mon: { startTime: '08:00', endTime: '17:00', lunchMinutes: 30, job: 'Test Job', workType: 'carpentry', totalHours: 8.5 }
+                  };
+                  localStorage.setItem('khs-crm-workers', JSON.stringify(workers));
+                  alert('Manually saved Monday hours for Tyler. Refresh to test loading.');
+                  console.log('Manually saved:', workers[tylerIndex]);
+                }
+              }
+            }}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#F59E0B',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '18.4px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              marginLeft: '10px'
+            }}
+          >
+            💾 Manual Save Test
           </button>
         </div>
 
@@ -1071,6 +1112,7 @@ const Workers = () => {
               <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
                 <button
                   type="submit"
+                  onClick={() => console.log('SAVE BUTTON CLICKED - Current timesheet:', timesheet)}
                   style={{
                     flex: 1,
                     padding: '10px',
