@@ -118,22 +118,16 @@ const Workers = () => {
         console.log('Modified days:', Array.from(modifiedDays));
         console.log('Current full timesheet:', timesheet);
         
-        // Update existing worker - send cleaned timesheet
+        // Update existing worker - send timesheet if modified
         const updateData: any = { ...formData };
-        if (modifiedDays.size > 0) {
-          // Clean the timesheet - only include days with actual data
-          const cleanedTimesheet: any = {};
-          Object.entries(timesheet).forEach(([day, data]) => {
-            // Only include days that have some actual data (not just defaults)
-            if (data.startTime || data.endTime || data.job || data.workType || data.totalHours > 0) {
-              cleanedTimesheet[day] = data;
-            }
-          });
-          
-          console.log('Cleaned timesheet (only days with data):', cleanedTimesheet);
-          updateData.timesheet = cleanedTimesheet;
-          updateData._modifiedDays = Array.from(modifiedDays);
+        
+        // Always include timesheet if we're on the hours tab and have modifications
+        if (activeTab === 'hours' || modifiedDays.size > 0) {
+          console.log('=== SAVING TIMESHEET ===');
+          console.log('Full timesheet being saved:', timesheet);
+          updateData.timesheet = timesheet;
         }
+        
         console.log('Update data being sent:', updateData);
         const result = await workerService.update(editingWorker.id, updateData);
         console.log('Update result:', result);
@@ -351,33 +345,31 @@ const Workers = () => {
             Add Worker
           </button>
           <button
-            onClick={async () => {
-              const hamBurger = {
-                name: 'Ham',
-                fullName: 'Ham Burger',
-                phone: '555-0123',
-                email: 'ham.burger@test.com',
-                specialty: 'Test Worker',
-                status: 'Available' as const,
-                color: workerColors[Math.floor(Math.random() * workerColors.length)],
-                notes: 'Test worker created to verify deployment'
-              };
-              const newWorker = await workerService.create(hamBurger);
-              setWorkers([...workers, newWorker]);
-              alert('Ham Burger worker created successfully! 🍔');
+            onClick={() => {
+              // Direct localStorage check
+              const data = localStorage.getItem('khs-crm-workers');
+              if (data) {
+                const workers = JSON.parse(data);
+                const tyler = workers.find((w: any) => w.name === 'TYL');
+                console.log('=== DIRECT LOCALSTORAGE CHECK ===');
+                console.log('Tyler data:', tyler);
+                console.log('Tyler timesheet:', tyler?.timesheet);
+                alert(`Tyler's timesheet: ${JSON.stringify(tyler?.timesheet, null, 2)}`);
+              }
             }}
             style={{
               padding: '10px 20px',
-              backgroundColor: '#10B981',
+              backgroundColor: '#9333EA',
               color: 'white',
               border: 'none',
               borderRadius: '8px',
               fontSize: '18.4px',
               fontWeight: '500',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              marginLeft: '10px'
             }}
           >
-            🍔 Create Ham Burger
+            🔍 Check Tyler's Data
           </button>
         </div>
 

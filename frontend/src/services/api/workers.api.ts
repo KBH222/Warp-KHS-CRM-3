@@ -132,40 +132,47 @@ export const workersApi = {
 
   // Update worker
   async update(id: string, worker: Partial<Worker>): Promise<Worker> {
-    console.log('WorkersAPI.update called with:', { id, worker });
+    console.log('=== WorkersAPI.update ===');
+    console.log('ID:', id);
+    console.log('Updates:', worker);
+    console.log('Timesheet in update:', worker.timesheet);
     
-    // Always work with localStorage for workers since there's no backend
+    // Get current data from localStorage
     const localWorkers = localStorage.getItem('khs-crm-workers');
-    if (localWorkers) {
-      const workers = JSON.parse(localWorkers);
-      const index = workers.findIndex((w: Worker) => w.id === id);
-      if (index !== -1) {
-        console.log('Current worker in localStorage:', workers[index]);
-        console.log('Applying update:', worker);
-        
-        // Apply the update (merge is already handled by worker.service.ts)
-        // Special handling for timesheet to ensure proper merge
-        const updatedWorker = { 
-          ...workers[index], 
-          ...worker, 
-          updatedAt: new Date().toISOString() 
-        };
-        
-        // If timesheet is in the update, ensure it's properly merged
-        if ('timesheet' in worker && worker.timesheet) {
-          updatedWorker.timesheet = worker.timesheet;
-        }
-        
-        workers[index] = updatedWorker;
-        console.log('Updated worker:', workers[index]);
-        localStorage.setItem('khs-crm-workers', JSON.stringify(workers));
-        
-        // Return the updated worker
-        return workers[index];
-      }
+    if (!localWorkers) {
+      throw new Error('No workers in localStorage');
     }
     
-    throw new Error('Worker not found');
+    const workers = JSON.parse(localWorkers);
+    const index = workers.findIndex((w: Worker) => w.id === id);
+    
+    if (index === -1) {
+      throw new Error('Worker not found');
+    }
+    
+    console.log('Current worker before update:', JSON.parse(JSON.stringify(workers[index])));
+    
+    // Simple update - just merge the objects
+    workers[index] = { 
+      ...workers[index], 
+      ...worker, 
+      updatedAt: new Date().toISOString() 
+    };
+    
+    console.log('Worker after update:', JSON.parse(JSON.stringify(workers[index])));
+    console.log('Timesheet after update:', workers[index].timesheet);
+    
+    // Save back to localStorage
+    localStorage.setItem('khs-crm-workers', JSON.stringify(workers));
+    
+    // Verify it saved
+    const verification = localStorage.getItem('khs-crm-workers');
+    const verifyWorkers = JSON.parse(verification!);
+    const verifyWorker = verifyWorkers.find((w: Worker) => w.id === id);
+    console.log('Verification - saved worker:', verifyWorker);
+    console.log('Verification - saved timesheet:', verifyWorker?.timesheet);
+    
+    return workers[index];
   },
 
   // Delete worker

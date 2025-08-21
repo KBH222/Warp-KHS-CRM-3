@@ -172,46 +172,24 @@ class WorkerService {
   async update(id: string, updates: Partial<Worker>): Promise<Worker | undefined> {
     await this.waitForInit();
     
-    console.log('WorkerService.update called with:', { id, updates });
-    
-    // Get current worker first
-    const currentWorker = await this.getById(id);
-    if (!currentWorker) return undefined;
-    
-    console.log('Current worker:', currentWorker);
-    console.log('Current worker timesheet:', currentWorker.timesheet);
-    
-    // Special handling for timesheet updates
-    let mergedUpdates = { ...updates };
-    const modifiedDays = (updates as any)._modifiedDays;
-    delete (mergedUpdates as any)._modifiedDays; // Remove meta field
-    
-    if ('timesheet' in updates && updates.timesheet) {
-      console.log('Timesheet update detected');
-      console.log('Incoming timesheet:', updates.timesheet);
-      console.log('Current timesheet:', currentWorker.timesheet);
-      
-      // Always use the incoming timesheet as-is since it contains the full state
-      // The Workers component already sends the complete timesheet with all days
-      mergedUpdates.timesheet = updates.timesheet;
-      console.log('Using complete timesheet from update:', mergedUpdates.timesheet);
-    }
+    console.log('=== WorkerService.update ===');
+    console.log('ID:', id);
+    console.log('Updates:', updates);
     
     try {
-      const updatedWorker = await workersApi.update(id, mergedUpdates);
+      // Just pass through to API - no complex merging
+      const updatedWorker = await workersApi.update(id, updates);
+      
+      // Update local cache
       const index = this.workers.findIndex(w => w.id === id);
       if (index !== -1) {
         this.workers[index] = updatedWorker;
       }
+      
       return updatedWorker;
     } catch (error) {
-      // Fallback to local update with merged data
-      const index = this.workers.findIndex(w => w.id === id);
-      if (index === -1) return undefined;
-      
-      this.workers[index] = { ...this.workers[index], ...mergedUpdates };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
-      return this.workers[index];
+      console.error('Worker update failed:', error);
+      throw error;
     }
   }
 
