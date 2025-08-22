@@ -414,11 +414,11 @@ const Workers = () => {
           </button>
           <button
             onClick={() => {
-              if (confirm('Reset all workers to defaults? This will delete all current workers and their hours.')) {
+              if (confirm('Clear all workers? This will permanently delete all workers and their hours.')) {
                 // Clear localStorage
                 localStorage.removeItem('khs-crm-workers');
                 
-                // Reload the page to get fresh defaults
+                // Reload the page to start fresh
                 window.location.reload();
               }
             }}
@@ -434,7 +434,7 @@ const Workers = () => {
               marginLeft: '10px'
             }}
           >
-            🔄 Reset Workers
+            🗑️ Clear All Workers
           </button>
         </div>
 

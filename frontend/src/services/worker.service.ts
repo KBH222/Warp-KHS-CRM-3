@@ -9,45 +9,8 @@ export type { Worker } from './api/workers.api';
 
 const STORAGE_KEY = 'khs-crm-workers';
 
-// Default workers
-const defaultWorkers: Worker[] = [
-  {
-    id: 'KBH',
-    name: 'KBH',
-    fullName: 'Keith B. Henderson',
-    phone: '(555) 111-2222',
-    email: 'kbh@khsconstruction.com',
-    specialty: 'General Construction',
-    status: 'Available',
-    currentJob: null,
-    color: '#3B82F6',
-    timesheet: {}
-  },
-  {
-    id: 'ISA',
-    name: 'ISA',
-    fullName: 'Isabella A. Rodriguez',
-    phone: '(555) 333-4444',
-    email: 'isa@khsconstruction.com',
-    specialty: 'Finish Work',
-    status: 'On Job',
-    currentJob: 'Kitchen Remodel - Sarah Johnson',
-    color: '#10B981',
-    timesheet: {}
-  },
-  {
-    id: 'TYL',
-    name: 'TYL',
-    fullName: 'Tyler L. Mitchell',
-    phone: '(555) 555-6666',
-    email: 'tyl@khsconstruction.com',
-    specialty: 'Carpentry',
-    status: 'On Job',
-    currentJob: 'Deck Installation - Mike Davis',
-    color: '#F59E0B',
-    timesheet: {}
-  }
-];
+// No default workers - start with empty list
+const defaultWorkers: Worker[] = [];
 
 // Available colors for workers
 export const workerColors = [
@@ -79,18 +42,9 @@ class WorkerService {
       console.log('API returned workers:', apiWorkers.length);
       this.workers = apiWorkers;
       
-      // If no workers in database, create defaults
+      // If no workers in database, that's fine - start with empty list
       if (this.workers.length === 0) {
-        console.log('No workers found, creating defaults...');
-        // Create all default workers
-        const createdWorkers = [];
-        for (const worker of defaultWorkers) {
-          console.log('Creating default worker:', worker.name);
-          const created = await workersApi.create(worker);
-          createdWorkers.push(created);
-        }
-        this.workers = createdWorkers;
-        console.log('Created default workers:', this.workers.length);
+        console.log('No workers found in database, starting with empty list');
       }
       
       this.initialized = true;
@@ -126,27 +80,16 @@ class WorkerService {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
         }
       } else {
-        console.log('No data in localStorage, creating defaults');
-        // Make sure we have valid timestamps for default workers
-        const workersWithTimestamps = defaultWorkers.map(worker => ({
-          ...worker,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }));
-        this.workers = workersWithTimestamps;
-        // Save default workers to localStorage
-        console.log('Saving default workers to localStorage');
+        console.log('No data in localStorage, starting with empty list');
+        this.workers = [];
+        // Save empty array to localStorage
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
       }
       this.initialized = true;
     } catch (error) {
       console.log('Error in loadFromLocalStorage:', error);
-      const workersWithTimestamps = defaultWorkers.map(worker => ({
-        ...worker,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }));
-      this.workers = workersWithTimestamps;
+      // Start with empty array on error
+      this.workers = [];
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
       this.initialized = true;
     }
@@ -295,35 +238,20 @@ class WorkerService {
     await workersApi.sync();
   }
 
-  // Reset to default workers
-  async resetToDefaults(): Promise<void> {
-    console.log('=== WorkerService.resetToDefaults ===');
+  // Clear all workers
+  async clearAllWorkers(): Promise<void> {
+    console.log('=== WorkerService.clearAllWorkers ===');
     
     // Clear localStorage
     localStorage.removeItem(STORAGE_KEY);
     console.log('Cleared localStorage');
     
-    // Create fresh default workers with timestamps
-    const freshWorkers = defaultWorkers.map(worker => ({
-      ...worker,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }));
+    // Reset to empty array
+    this.workers = [];
     
-    // Save to localStorage
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(freshWorkers));
-    console.log('Saved fresh default workers:', freshWorkers.length);
-    
-    // Update internal state
-    this.workers = freshWorkers;
-    
-    // Verify save
-    const verification = localStorage.getItem(STORAGE_KEY);
-    console.log('Verification - localStorage has data:', !!verification);
-    if (verification) {
-      const parsed = JSON.parse(verification);
-      console.log('Verification - worker count:', parsed.length);
-    }
+    // Save empty array to localStorage
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.workers));
+    console.log('Reset to empty workers list');
   }
   
   // Utility to format phone number
