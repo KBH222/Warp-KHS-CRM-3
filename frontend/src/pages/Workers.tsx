@@ -9,7 +9,7 @@ const Workers = () => {
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
-  const [activeTab, setActiveTab] = useState<'info' | 'notes' | 'hours'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'notes' | 'hours'>('hours');
   const [formData, setFormData] = useState({
     name: '',
     fullName: '',
@@ -65,7 +65,7 @@ const Workers = () => {
 
   const handleAddWorker = async () => {
     setEditingWorker(null);
-    setActiveTab('info');
+    setActiveTab('hours');
     setModifiedDays(new Set()); // Clear modified days
     const nextColor = await workerService.getNextColor();
     setFormData({
@@ -87,7 +87,7 @@ const Workers = () => {
     console.log('Worker timesheet:', worker.timesheet);
     
     setEditingWorker(worker);
-    setActiveTab('info');
+    setActiveTab('hours');
     setModifiedDays(new Set()); // Clear modified days
     setFormData({
       name: worker.name,
@@ -643,6 +643,23 @@ const Workers = () => {
             }}>
               <button
                 type="button"
+                onClick={() => setActiveTab('hours')}
+                style={{
+                  padding: '10px 20px',
+                  background: 'none',
+                  border: 'none',
+                  borderBottom: activeTab === 'hours' ? '2px solid #3B82F6' : '2px solid transparent',
+                  color: activeTab === 'hours' ? '#3B82F6' : '#6B7280',
+                  fontWeight: activeTab === 'hours' ? '600' : '400',
+                  cursor: 'pointer',
+                  marginBottom: '-2px',
+                  transition: 'all 0.2s'
+                }}
+              >
+                Hours
+              </button>
+              <button
+                type="button"
                 onClick={() => setActiveTab('info')}
                 style={{
                   padding: '10px 20px',
@@ -674,23 +691,6 @@ const Workers = () => {
                 }}
               >
                 Notes
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('hours')}
-                style={{
-                  padding: '10px 20px',
-                  background: 'none',
-                  border: 'none',
-                  borderBottom: activeTab === 'hours' ? '2px solid #3B82F6' : '2px solid transparent',
-                  color: activeTab === 'hours' ? '#3B82F6' : '#6B7280',
-                  fontWeight: activeTab === 'hours' ? '600' : '400',
-                  cursor: 'pointer',
-                  marginBottom: '-2px',
-                  transition: 'all 0.2s'
-                }}
-              >
-                Hours
               </button>
             </div>
 
