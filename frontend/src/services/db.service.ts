@@ -22,18 +22,22 @@ interface Job {
   completedDate?: string;
   estimatedHours?: number;
   actualHours?: number;
+  assignments?: Array<{ userId: string }>;
   createdAt: string;
   updatedAt: string;
 }
 
 interface Material {
   id: string;
+  jobId?: string;
   name: string;
   description?: string;
   unit: string;
   cost: number;
   supplier?: string;
   isArchived?: boolean;
+  isDeleted?: boolean;
+  purchased?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -757,7 +761,7 @@ class OfflineDatabase {
   async setCachedData(
     key: string, 
     data: any, 
-    ttlMs: number = CACHE_CONFIG.MAX_CACHE_AGE,
+    ttlMs: number = CACHE_CONFIG.MAX_AGE,
     compress = false
   ): Promise<void> {
     const db = await this.ensureDb();
@@ -810,36 +814,6 @@ class OfflineDatabase {
     return allJobs.filter(j => !j._synced);
   }
 
-  async markAsSynced(entityType: 'customer' | 'job' | 'material', entityId: string): Promise<void> {
-    const db = await this.ensureDb();
-    
-    switch (entityType) {
-      case 'customer': {
-        const customer = await db.get('customers', entityId);
-        if (customer) {
-          customer._synced = true;
-          await db.put('customers', customer);
-        }
-        break;
-      }
-      case 'job': {
-        const job = await db.get('jobs', entityId);
-        if (job) {
-          job._synced = true;
-          await db.put('jobs', job);
-        }
-        break;
-      }
-      case 'material': {
-        const material = await db.get('materials', entityId);
-        if (material) {
-          material._synced = true;
-          await db.put('materials', material);
-        }
-        break;
-      }
-    }
-  }
 }
 
 export const offlineDb = new OfflineDatabase();

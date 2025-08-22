@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const { PrismaClient } = require('@prisma/client');
 require('dotenv').config();
 
@@ -740,9 +741,14 @@ app.delete('/api/workers/:id', authMiddleware, async (req, res) => {
 // Sync Routes
 app.post('/api/sync/push', authMiddleware, async (req, res) => {
   try {
-    const { customers, jobs, workers, timestamp } = req.body;
+    const { deviceId, customers, jobs, workers, timestamp } = req.body;
     
-    console.log(`[Sync Push] Received sync data at ${new Date().toISOString()}`);
+    if (!deviceId) {
+      return res.status(400).json({ error: 'Device ID required for sync' });
+    }
+    
+    console.log(`[Sync Push] Received sync data from device ${deviceId} at ${new Date().toISOString()}`);
+    console.log(`[Sync Push] Data size: ${customers?.length || 0} customers, ${jobs?.length || 0} jobs, ${workers?.length || 0} workers`);
     
     // Process customers
     if (customers && Array.isArray(customers)) {
@@ -814,8 +820,25 @@ app.post('/api/sync/push', authMiddleware, async (req, res) => {
       }
     }
     
+    // Also save to file for backup/debugging
+    const filename = path.join(__dirname, 'data', `sync-${deviceId}.json`);
+    try {
+      fs.writeFileSync(filename, JSON.stringify({
+        deviceId,
+        customers: customers || [],
+        jobs: jobs || [],
+        workers: workers || [],
+        timestamp: new Date().toISOString(),
+        lastPush: new Date().toISOString()
+      }, null, 2));
+      console.log(`[Sync Push] Saved sync data to file: ${filename}`);
+    } catch (fileError) {
+      console.error(`[Sync Push] Failed to save to file: ${fileError.message}`);
+    }
+    
     res.json({ 
       success: true, 
+      deviceId,
       timestamp: new Date().toISOString(),
       message: 'Data synced successfully'
     });
@@ -827,9 +850,13 @@ app.post('/api/sync/push', authMiddleware, async (req, res) => {
 
 app.post('/api/sync/pull', authMiddleware, async (req, res) => {
   try {
-    const { lastSyncTime } = req.body;
+    const { deviceId, lastSyncTime } = req.body;
     
-    console.log(`[Sync Pull] Client requesting data since: ${lastSyncTime || 'beginning'}`);
+    if (!deviceId) {
+      return res.status(400).json({ error: 'Device ID required for sync' });
+    }
+    
+    console.log(`[Sync Pull] Device ${deviceId} requesting data since: ${lastSyncTime || 'beginning'}`);
     
     let whereClause = {};
     if (lastSyncTime) {

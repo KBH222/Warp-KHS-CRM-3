@@ -20,13 +20,29 @@ interface SyncResult {
 class EnhancedSyncService {
   private lastSyncTime: string | null = null;
   private syncing = false;
+  private deviceId: string;
 
   constructor() {
+    // Generate or get existing device ID
+    this.deviceId = this.getOrCreateDeviceId();
+    console.log('[EnhancedSync] Device ID:', this.deviceId);
+    
     // Load last sync time from localStorage
     this.lastSyncTime = localStorage.getItem('khs-crm-last-sync-time');
     
     // Set up auto-sync
     this.setupAutoSync();
+  }
+
+  private getOrCreateDeviceId(): string {
+    let deviceId = localStorage.getItem('khs-crm-device-id');
+    if (!deviceId) {
+      // Generate a unique device ID
+      deviceId = `device-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem('khs-crm-device-id', deviceId);
+      console.log('[EnhancedSync] Generated new device ID:', deviceId);
+    }
+    return deviceId;
   }
 
   private setupAutoSync() {
@@ -103,8 +119,11 @@ class EnhancedSyncService {
       console.log('[EnhancedSync] Pulling from server, last sync:', this.lastSyncTime);
 
       const response = await apiClient.post('/api/sync/pull', {
+        deviceId: this.deviceId,
         lastSyncTime: this.lastSyncTime
       });
+
+      console.log('[EnhancedSync] Pull request with device ID:', this.deviceId);
 
       const { customers, jobs, workers, timestamp } = response;
 
@@ -177,7 +196,10 @@ class EnhancedSyncService {
 
       console.log(`[EnhancedSync] Pushing: ${customersToSync.length} customers, ${jobsToSync.length} jobs, ${workersToSync.length} workers`);
 
+      console.log(`[EnhancedSync] Push request with device ID: ${this.deviceId}, data: ${customersToSync.length} customers, ${jobsToSync.length} jobs, ${workersToSync.length} workers`);
+
       const response = await apiClient.post('/api/sync/push', {
+        deviceId: this.deviceId,
         customers: customersToSync,
         jobs: jobsToSync,
         workers: workersToSync,
