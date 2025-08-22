@@ -1,0 +1,50 @@
+{
+  "backupDate": "2025-08-21T22:52:00Z",
+  "projectName": "KHS-CRM",
+  "workingFeatures": [
+    "Customer management",
+    "Job management with CRUD operations",
+    "Photo uploads with compression",
+    "Worker hours tracking (fixed)",
+    "Manual sync button added",
+    "PWA offline support",
+    "Authentication system",
+    "Local storage fallback"
+  ],
+  "knownIssues": [
+    "Sync between devices requires backend server running",
+    "TypeScript compilation has multiple warnings",
+    "Path separator issues from Windows development",
+    "Some components have duplicate implementations"
+  ],
+  "recentFixes": [
+    "Worker timesheet persistence fixed",
+    "Reset workers button now working",
+    "Hours tab now shows first on Workers page",
+    "PWA update notification removed"
+  ],
+  "lastCommit": {
+    "hash": "325375bba867ad21da225d7fa019d83f6b144b5d",
+    "message": "Change Workers page to show Hours tab first",
+    "branch": "master"
+  },
+  "branches": {
+    "current": "master",
+    "backups": ["before-cleanup", "working-version-before-cleanup"]
+  },
+  "environment": {
+    "node": "Node.js required",
+    "database": "PostgreSQL with Prisma ORM",
+    "frontend": "React 18 + TypeScript + Vite",
+    "backend": "Express.js",
+    "deployment": {
+      "backend": "Railway (https://khs-crm-2-production.up.railway.app)",
+      "frontend": "Vercel or local"
+    }
+  },
+  "backupInstructions": {
+    "windows": "Run backup.bat to create timestamped backup",
+    "unix": "Run ./backup.sh to create timestamped backup",
+    "restore": "Use the generated restore script in ../backups/ directory"
+  }
+}
