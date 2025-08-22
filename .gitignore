@@ -85,3 +85,9 @@ pnpm-lock.yaml
 *.seed
 *.pid.lock
 .vercel
+
+# Zip and archive files (too large for GitHub)
+*.zip
+*.tar.gz
+*.rar
+*.7z
