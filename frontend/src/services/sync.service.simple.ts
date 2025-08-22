@@ -276,4 +276,5 @@ class SimpleSyncService {
     }
 }
 
+// Export singleton instance
 export const simpleSyncService = new SimpleSyncService();
