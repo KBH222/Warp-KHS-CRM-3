@@ -124,7 +124,7 @@ export const PWAProvider: React.FC<PWAProviderProps> = ({ children }) => {
 
       {/* PWA Components - only render if components are available */}
       {PWAInstallBanner && <PWAInstallBanner />}
-      {PWAUpdateNotification && <PWAUpdateNotification />}
+      {/* Update notification disabled - {PWAUpdateNotification && <PWAUpdateNotification />} */}
       {OfflineIndicator && <OfflineIndicator />}
 
       {/* Construction-specific PWA features */}
