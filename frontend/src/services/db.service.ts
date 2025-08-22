@@ -796,6 +796,50 @@ class OfflineDatabase {
     const db = await this.ensureDb();
     return db.getAll('users');
   }
+
+  // Sync tracking methods
+  async getUnsyncedCustomers(): Promise<Customer[]> {
+    const db = await this.ensureDb();
+    const allCustomers = await db.getAll('customers');
+    return allCustomers.filter(c => !c._synced);
+  }
+
+  async getUnsyncedJobs(): Promise<Job[]> {
+    const db = await this.ensureDb();
+    const allJobs = await db.getAll('jobs');
+    return allJobs.filter(j => !j._synced);
+  }
+
+  async markAsSynced(entityType: 'customer' | 'job' | 'material', entityId: string): Promise<void> {
+    const db = await this.ensureDb();
+    
+    switch (entityType) {
+      case 'customer': {
+        const customer = await db.get('customers', entityId);
+        if (customer) {
+          customer._synced = true;
+          await db.put('customers', customer);
+        }
+        break;
+      }
+      case 'job': {
+        const job = await db.get('jobs', entityId);
+        if (job) {
+          job._synced = true;
+          await db.put('jobs', job);
+        }
+        break;
+      }
+      case 'material': {
+        const material = await db.get('materials', entityId);
+        if (material) {
+          material._synced = true;
+          await db.put('materials', material);
+        }
+        break;
+      }
+    }
+  }
 }
 
 export const offlineDb = new OfflineDatabase();

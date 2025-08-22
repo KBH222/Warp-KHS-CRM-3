@@ -737,6 +737,140 @@ app.delete('/api/workers/:id', authMiddleware, async (req, res) => {
   }
 });
 
+// Sync Routes
+app.post('/api/sync/push', authMiddleware, async (req, res) => {
+  try {
+    const { customers, jobs, workers, timestamp } = req.body;
+    
+    console.log(`[Sync Push] Received sync data at ${new Date().toISOString()}`);
+    
+    // Process customers
+    if (customers && Array.isArray(customers)) {
+      for (const customer of customers) {
+        if (customer.id && customer.id.startsWith('temp_')) {
+          // Create new customer
+          const { id, ...customerData } = customer;
+          await prisma.customer.create({
+            data: customerData
+          });
+        } else if (customer.id) {
+          // Update existing customer
+          const { id, ...customerData } = customer;
+          await prisma.customer.update({
+            where: { id },
+            data: customerData
+          });
+        }
+      }
+    }
+    
+    // Process jobs
+    if (jobs && Array.isArray(jobs)) {
+      for (const job of jobs) {
+        if (job.id && job.id.startsWith('temp_')) {
+          // Create new job
+          const { id, ...jobData } = job;
+          // Handle date conversions
+          if (jobData.startDate) jobData.startDate = new Date(jobData.startDate);
+          if (jobData.endDate) jobData.endDate = new Date(jobData.endDate);
+          if (jobData.completedDate) jobData.completedDate = new Date(jobData.completedDate);
+          
+          await prisma.job.create({
+            data: jobData
+          });
+        } else if (job.id) {
+          // Update existing job
+          const { id, ...jobData } = job;
+          // Handle date conversions
+          if (jobData.startDate) jobData.startDate = new Date(jobData.startDate);
+          if (jobData.endDate) jobData.endDate = new Date(jobData.endDate);
+          if (jobData.completedDate) jobData.completedDate = new Date(jobData.completedDate);
+          
+          await prisma.job.update({
+            where: { id },
+            data: jobData
+          });
+        }
+      }
+    }
+    
+    // Process workers
+    if (workers && Array.isArray(workers)) {
+      for (const worker of workers) {
+        if (worker.id && worker.id.startsWith('temp_')) {
+          // Create new worker
+          const { id, ...workerData } = worker;
+          await prisma.worker.create({
+            data: workerData
+          });
+        } else if (worker.id) {
+          // Update existing worker
+          const { id, ...workerData } = worker;
+          await prisma.worker.update({
+            where: { id },
+            data: workerData
+          });
+        }
+      }
+    }
+    
+    res.json({ 
+      success: true, 
+      timestamp: new Date().toISOString(),
+      message: 'Data synced successfully'
+    });
+  } catch (error) {
+    console.error('[Sync Push] Error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/sync/pull', authMiddleware, async (req, res) => {
+  try {
+    const { lastSyncTime } = req.body;
+    
+    console.log(`[Sync Pull] Client requesting data since: ${lastSyncTime || 'beginning'}`);
+    
+    let whereClause = {};
+    if (lastSyncTime) {
+      const syncDate = new Date(lastSyncTime);
+      whereClause = {
+        updatedAt: {
+          gt: syncDate
+        }
+      };
+    }
+    
+    // Get all data modified since lastSyncTime
+    const [customers, jobs, workers] = await Promise.all([
+      prisma.customer.findMany({
+        where: whereClause,
+        include: {
+          jobs: true
+        }
+      }),
+      prisma.job.findMany({
+        where: whereClause
+      }),
+      prisma.worker.findMany({
+        where: whereClause
+      })
+    ]);
+    
+    console.log(`[Sync Pull] Sending ${customers.length} customers, ${jobs.length} jobs, ${workers.length} workers`);
+    
+    res.json({
+      customers,
+      jobs,
+      workers,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('[Sync Pull] Error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Serve React app for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));

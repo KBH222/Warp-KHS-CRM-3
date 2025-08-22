@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { customerStorage } from '../services/localStorageService';
 import { ScrollablePageContainer } from '../components/ScrollablePageContainer';
 import { compressImage } from '../utils/imageCompression';
-import { simpleSyncService } from '../services/sync.service.simple';
+import { enhancedSyncService } from '../services/sync.service.enhanced';
 
 const CustomersEnhanced = () => {
   const navigate = useNavigate();
@@ -66,10 +66,15 @@ const CustomersEnhanced = () => {
     toast.info('Syncing data with server...');
     
     try {
-      await simpleSyncService.syncAll();
-      toast.success('Data synced successfully!');
-      // Reload customers to show updated data
-      await loadCustomers();
+      const result = await enhancedSyncService.performFullSync();
+      if (result.success) {
+        const message = `Synced successfully! Pulled: ${result.pulled?.customers || 0} customers, ${result.pulled?.jobs || 0} jobs. Pushed: ${result.pushed?.customers || 0} customers, ${result.pushed?.jobs || 0} jobs.`;
+        toast.success(message);
+        // Reload customers to show updated data
+        await loadCustomers();
+      } else {
+        toast.error('Sync failed: ' + (result.errors?.join(', ') || 'Unknown error'));
+      }
     } catch (error) {
       console.error('Sync failed:', error);
       toast.error('Sync failed. Will retry automatically when online.');
