@@ -1,34 +1,15 @@
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth, useBiometric } from '../stores/auth.store';
-import { offlineAuthService } from '../services/offline-auth.service';
-import { useOnlineStatus } from '../hooks/useOnlineStatus';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
-  const { isBiometricEnabled, biometricLogin } = useBiometric();
-  const isOnline = useOnlineStatus();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [biometricSupported, setBiometricSupported] = useState(false);
-  const [enableBiometricOption, setEnableBiometricOption] = useState(false);
   
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: false,
   });
-
-  useEffect(() => {
-    // Check if biometric authentication is supported
-    const checkBiometricSupport = async () => {
-      const supported = await offlineAuthService.isBiometricSupported();
-      setBiometricSupported(supported);
-    };
-    
-    checkBiometricSupport();
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,179 +17,168 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      await login(
-        {
-          email: formData.email,
-          password: formData.password,
-          rememberMe: formData.rememberMe,
+      const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        enableBiometricOption && biometricSupported
-      );
-      navigate('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Invalid email or password');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        body: JSON.stringify(formData)
+      });
 
-  const handleBiometricLogin = async () => {
-    if (!isBiometricEnabled) return;
-    
-    setError('');
-    setIsLoading(true);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Invalid email or password');
+      }
 
-    try {
-      await biometricLogin();
-      navigate('/dashboard');
+      const { token, refreshToken, user } = await response.json();
+      
+      // Store tokens and user data
+      localStorage.setItem('khs-crm-token', token);
+      localStorage.setItem('khs-crm-refresh-token', refreshToken);
+      localStorage.setItem('khs-crm-user', JSON.stringify(user));
+      
+      // Navigate to dashboard
+      navigate('/');
     } catch (err: any) {
-      setError(err.message || 'Biometric authentication failed');
+      setError(err.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="max-w-md w-full space-y-8">
-        {/* Logo/Title */}
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">KHS CRM</h1>
-          <p className="mt-2 text-gray-600">Sign in to your account</p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#F3F4F6' }}>
+      <div className="max-w-md w-full">
+        <div style={{
+          backgroundColor: 'white',
+          padding: '48px',
+          borderRadius: '8px',
+          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+        }}>
+          {/* Logo/Title */}
+          <div className="text-center" style={{ marginBottom: '32px' }}>
+            <h1 style={{
+              fontSize: '30px',
+              fontWeight: 'bold',
+              color: '#111827',
+              margin: '0 0 8px 0'
+            }}>KHS CRM</h1>
+            <p style={{ color: '#6B7280', fontSize: '16px' }}>Sign in to your account</p>
+          </div>
 
-        {/* Connection Status */}
-        <div className={`border rounded-lg p-4 ${
-          isOnline 
-            ? 'bg-green-50 border-green-200' 
-            : 'bg-yellow-50 border-yellow-200'
-        }`}>
-          <div className="flex items-center">
-            <div className={`w-2 h-2 rounded-full mr-2 ${
-              isOnline ? 'bg-green-400' : 'bg-yellow-400'
-            }`}></div>
-            <p className={`text-sm font-medium ${
-              isOnline ? 'text-green-900' : 'text-yellow-900'
-            }`}>
-              {isOnline ? 'Online' : 'Offline Mode'}
-            </p>
-          </div>
-          {!isOnline && (
-            <p className="text-xs text-yellow-700 mt-1">
-              You can still sign in with stored credentials
-            </p>
-          )}
-        </div>
-        
-        {/* Demo Credentials */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <p className="text-sm font-medium text-blue-900 mb-2">Demo Credentials:</p>
-          <div className="space-y-1 text-sm text-blue-800">
-            <p>Owner: owner@khs.com / password123</p>
-            <p>Worker: worker@khs.com / password123</p>
-          </div>
-        </div>
-        
-        {/* Biometric Login Option */}
-        {isBiometricEnabled && biometricSupported && (
-          <div className="text-center">
-            <button
-              onClick={handleBiometricLogin}
-              disabled={isLoading}
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-              {isLoading ? 'Authenticating...' : 'Sign in with Biometric'}
-            </button>
-            <p className="text-xs text-gray-500 mt-2">Or sign in with your password below</p>
-          </div>
-        )}
-
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <p className="text-sm text-red-600">{error}</p>
+            <div style={{
+              backgroundColor: '#FEE2E2',
+              border: '1px solid #FECACA',
+              color: '#DC2626',
+              padding: '12px',
+              borderRadius: '6px',
+              marginBottom: '16px',
+              fontSize: '14px'
+            }}>
+              {error}
             </div>
           )}
 
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '20px' }}>
+              <label htmlFor="email" style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: '500',
+                color: '#374151',
+                marginBottom: '8px'
+              }}>
+                Email
               </label>
               <input
                 id="email"
-                name="email"
                 type="email"
-                autoComplete="email"
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: '1px solid #D1D5DB',
+                  borderRadius: '6px',
+                  fontSize: '16px',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
                 placeholder="Enter your email"
               />
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <div style={{ marginBottom: '24px' }}>
+              <label htmlFor="password" style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: '500',
+                color: '#374151',
+                marginBottom: '8px'
+              }}>
                 Password
               </label>
               <input
                 id="password"
-                name="password"
                 type="password"
-                autoComplete="current-password"
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: '1px solid #D1D5DB',
+                  borderRadius: '6px',
+                  fontSize: '16px',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
                 placeholder="Enter your password"
               />
             </div>
-          </div>
 
-          <div className="space-y-3">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                checked={formData.rememberMe}
-                onChange={(e) => setFormData({ ...formData, rememberMe: e.target.checked })}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                Remember me for 30 days
-              </label>
-            </div>
-            
-            {biometricSupported && !isBiometricEnabled && (
-              <div className="flex items-center">
-                <input
-                  id="enable-biometric"
-                  name="enable-biometric"
-                  type="checkbox"
-                  checked={enableBiometricOption}
-                  onChange={(e) => setEnableBiometricOption(e.target.checked)}
-                  className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                />
-                <label htmlFor="enable-biometric" className="ml-2 block text-sm text-gray-900">
-                  Enable biometric login (fingerprint/face ID)
-                </label>
-              </div>
-            )}
-          </div>
+            <button
+              type="submit"
+              disabled={isLoading}
+              style={{
+                width: '100%',
+                padding: '12px',
+                backgroundColor: isLoading ? '#9CA3AF' : '#3B82F6',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                fontSize: '16px',
+                fontWeight: '500',
+                cursor: isLoading ? 'not-allowed' : 'pointer'
+              }}
+            >
+              {isLoading ? 'Signing in...' : 'Sign in'}
+            </button>
+          </form>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? 'Signing in...' : 'Sign in'}
-          </button>
-        </form>
+          <div style={{
+            marginTop: '24px',
+            paddingTop: '24px',
+            borderTop: '1px solid #E5E7EB',
+            color: '#6B7280',
+            fontSize: '14px',
+            textAlign: 'center'
+          }}>
+            <p style={{ margin: '0 0 8px 0' }}>Default credentials:</p>
+            <code style={{
+              backgroundColor: '#F3F4F6',
+              padding: '8px 12px',
+              borderRadius: '4px',
+              fontSize: '12px',
+              display: 'block',
+              fontFamily: 'monospace'
+            }}>
+              Email: admin@khscrm.com<br />
+              Password: admin123
+            </code>
+        </div>
       </div>
     </div>
   );

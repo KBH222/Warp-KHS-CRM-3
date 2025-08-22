@@ -26,18 +26,23 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname, 'frontend/dist')));
 
-// Simple auth middleware - accepts any token for now
+// Auth middleware - enforces authentication
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
   
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    // For now, allow requests without auth to make testing easier
-    // In production, you would return 401 here
-    // return res.status(401).json({ error: 'No authorization token provided' });
-  } else {
+    return res.status(401).json({ error: 'No authorization token provided' });
   }
   
-  // For now, accept any token
+  const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+  
+  // For now, just check if token exists and starts with our prefix
+  // In production, you would verify JWT signature
+  if (!token || !token.startsWith('railway-token-')) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+  
+  // Token is valid, continue
   next();
 };
 
@@ -319,22 +324,42 @@ app.get('/api/debug/jobs', async (req, res) => {
 });
 
 // Auth routes
+app.get('/api/auth/check', authMiddleware, (req, res) => {
+  // If we get here, the token is valid
+  const userStr = req.headers['x-user-data'];
+  const user = userStr ? JSON.parse(userStr) : null;
+  res.json({ 
+    authenticated: true,
+    user: user || { id: 'admin-id', email: 'admin@khscrm.com', name: 'Admin User', role: 'OWNER' }
+  });
+});
+
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
   
-  if (email === 'admin@khscrm.com' && password === 'admin123') {
-    res.json({
-      token: 'railway-token-' + Date.now(),
-      refreshToken: 'railway-refresh-' + Date.now(),
-      user: {
-        id: 'admin-id',
-        email: 'admin@khscrm.com',
-        name: 'Admin User',
-        role: 'OWNER'
-      }
-    });
-  } else {
-    res.status(401).json({ error: 'Invalid credentials' });
+  try {
+    // For now, still use hardcoded credentials
+    // In production, you would check against database with bcrypt
+    if (email === 'admin@khscrm.com' && password === 'admin123') {
+      const token = 'railway-token-' + Date.now();
+      const refreshToken = 'railway-refresh-' + Date.now();
+      
+      res.json({
+        token,
+        refreshToken,
+        user: {
+          id: 'admin-id',
+          email: 'admin@khscrm.com',
+          name: 'Admin User',
+          role: 'OWNER'
+        }
+      });
+    } else {
+      res.status(401).json({ error: 'Invalid email or password' });
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Login failed' });
   }
 });
 

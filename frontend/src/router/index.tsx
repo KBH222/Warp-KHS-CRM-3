@@ -5,6 +5,9 @@ import { Suspense, lazy } from 'react';
 import { AppLayout } from '../layouts/AppLayout';
 import { AuthLayout } from '../layouts/AuthLayout';
 
+// Auth Guard
+import { AuthGuard } from '../components/AuthGuard';
+
 // Pages - Lazy loaded for better performance
 const Login = lazy(() => import('../pages/Login'));
 const Dashboard = lazy(() => import('../pages/DashboardEnhanced'));
@@ -33,21 +36,6 @@ const PageLoader = () => {
   );
 };
 
-// Protected Route wrapper - TEMPORARILY DISABLED
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  // const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-
-    // if (!isAuthenticated) {
-  //   return <Navigate to="/login" replace />;
-  // }
-
-  if (!children) {
-    console.error('[ProtectedRoute] No children provided!');
-    return <div>Error: No content to display</div>;
-  }
-
-  return <>{children}</>;
-};
 
 export const Router = () => {
   return (
@@ -61,9 +49,9 @@ export const Router = () => {
         {/* Protected app routes */}
         <Route
           element={
-            <ProtectedRoute>
+            <AuthGuard>
               <AppLayout />
-            </ProtectedRoute>
+            </AuthGuard>
           }
         >
           <Route path="/" element={<Navigate to="/dashboard" replace />} />

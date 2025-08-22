@@ -24,10 +24,23 @@ export const AppLayout = () => {
 
   const handleLogout = async () => {
     try {
-      await logout();
+      // Clear all authentication data
+      localStorage.removeItem('khs-crm-token');
+      localStorage.removeItem('khs-crm-refresh-token');
+      localStorage.removeItem('khs-crm-user');
+      
+      // Call logout if available
+      if (logout) {
+        await logout();
+      }
+      
+      // Navigate to login
       navigate('/login');
     } catch (error) {
       // Logout failed - force navigation
+      localStorage.removeItem('khs-crm-token');
+      localStorage.removeItem('khs-crm-refresh-token');
+      localStorage.removeItem('khs-crm-user');
       navigate('/login');
     }
   };
