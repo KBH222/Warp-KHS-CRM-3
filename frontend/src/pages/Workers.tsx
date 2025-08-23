@@ -841,8 +841,8 @@ const Workers = () => {
                     <h4 style={{ margin: '0 0 16px 0', fontSize: '18.4px', fontWeight: '600' }}>
                       Weekly Timesheet
                     </h4>
-                    <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
-                      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
+                    <div style={{ overflowX: 'auto', overflowY: 'visible', paddingBottom: '8px' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '900px' }}>
                         <thead>
                           <tr>
                             <th style={{ 
@@ -913,12 +913,13 @@ const Workers = () => {
                             </th>
                             <th style={{ 
                               textAlign: 'center', 
-                              padding: '8px',
+                              padding: '8px 12px',
                               borderBottom: '2px solid #E5E7EB',
                               fontSize: '16.1px',
                               fontWeight: '600',
                               color: '#374151',
-                              minWidth: '80px'
+                              minWidth: '110px',
+                              whiteSpace: 'nowrap'
                             }}>
                               Total Hours
                             </th>
@@ -1028,12 +1029,14 @@ const Workers = () => {
                                 </select>
                               </td>
                               <td style={{ 
-                                padding: '8px',
+                                padding: '8px 12px',
                                 borderBottom: '1px solid #E5E7EB',
                                 textAlign: 'center',
                                 fontSize: '16.1px',
                                 fontWeight: '500',
-                                color: timesheet[day].totalHours > 0 ? '#059669' : '#6B7280'
+                                color: timesheet[day].totalHours > 0 ? '#059669' : '#6B7280',
+                                minWidth: '110px',
+                                whiteSpace: 'nowrap'
                               }}>
                                 {timesheet[day].totalHours.toFixed(1)}
                               </td>
@@ -1053,12 +1056,14 @@ const Workers = () => {
                               Weekly Total:
                             </td>
                             <td style={{ 
-                              padding: '8px',
+                              padding: '8px 12px',
                               borderTop: '2px solid #E5E7EB',
                               textAlign: 'center',
                               fontSize: '18.4px',
                               fontWeight: '700',
-                              color: getTotalWeeklyHours() > 40 ? '#DC2626' : '#059669'
+                              color: getTotalWeeklyHours() > 40 ? '#DC2626' : '#059669',
+                              minWidth: '110px',
+                              whiteSpace: 'nowrap'
                             }}>
                               {getTotalWeeklyHours().toFixed(1)}
                             </td>
