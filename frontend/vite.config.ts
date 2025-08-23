@@ -68,6 +68,27 @@ VitePWA({
               }
             }
           },
+          {
+            urlPattern: /^https:\/\/khs-crm-3-production\.up\.railway\.app\/api\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'api-cache-railway',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 5 * 60 // 5 minutes
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              },
+              networkTimeoutSeconds: 8,
+              backgroundSync: {
+                name: 'api-sync',
+                options: {
+                  maxRetentionTime: 24 * 60 // 24 hours in minutes
+                }
+              }
+            }
+          },
           // Images - Cache First for performance
           {
             urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|ico)$/i,

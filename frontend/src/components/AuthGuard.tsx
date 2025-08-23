@@ -82,3 +82,5 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   // Authenticated, render children
   return <>{children}</>;
 };
+
+export default AuthGuard;

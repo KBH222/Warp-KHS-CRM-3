@@ -30,8 +30,23 @@ const CACHE_NAMES = {
 // Background sync will be handled manually in the sync event listener
 
 // API caching strategy - Network First for real-time construction data
+// Handle both same-origin and cross-origin API calls
 registerRoute(
-  ({ url }) => url.pathname.startsWith('/api/'),
+  ({ url }) => {
+    // Handle same-origin API calls (for local development)
+    if (url.pathname.startsWith('/api/')) {
+      return true;
+    }
+    // Handle cross-origin API calls to Railway server
+    if (url.origin === 'https://khs-crm-3-production.up.railway.app' && url.pathname.startsWith('/api/')) {
+      return true;
+    }
+    // Handle other production API domains
+    if (url.origin === 'https://api.khscrm.com' && url.pathname.startsWith('/api/')) {
+      return true;
+    }
+    return false;
+  },
   new NetworkFirst({
     cacheName: CACHE_NAMES.API,
     plugins: [
@@ -52,9 +67,16 @@ registerRoute(
 registerRoute(
   ({ url }) => {
     const pathname = url.pathname;
-    return pathname.includes('/api/jobs') || 
-           pathname.includes('/api/customers') || 
-           pathname.includes('/api/materials');
+    const isApiCall = pathname.includes('/api/jobs') || 
+                     pathname.includes('/api/customers') || 
+                     pathname.includes('/api/materials');
+    
+    // Check if it's a valid API origin
+    const isValidOrigin = url.origin === self.location.origin || 
+                         url.origin === 'https://khs-crm-3-production.up.railway.app' ||
+                         url.origin === 'https://api.khscrm.com';
+    
+    return isApiCall && isValidOrigin;
   },
   new StaleWhileRevalidate({
     cacheName: CACHE_NAMES.OFFLINE_DATA,
@@ -130,7 +152,7 @@ const navigationRoute = new NavigationRoute(navigationHandler, {
 registerRoute(navigationRoute);
 
 // Handle background sync for construction data
-self.addEventListener('sync', (event: SyncEvent) => {
+self.addEventListener('sync', (event: any) => {
   if (event.tag === 'construction-data-sync') {
     event.waitUntil(syncConstructionData());
   }
@@ -167,23 +189,28 @@ async function processSyncOperation(operation: any) {
   const { entityType, operation: op, entityId, payload } = operation;
   
   try {
+    // Get API base URL - fallback to Railway URL if environment variable not available
+    const apiBaseUrl = self.location.origin.includes('localhost') 
+      ? 'http://localhost:3001'
+      : 'https://khs-crm-3-production.up.railway.app';
+    
     let url = '';
     let method = 'GET';
     let body = null;
 
     switch (entityType) {
       case 'customer':
-        url = op === 'create' ? '/api/customers' : `/api/customers/${entityId}`;
+        url = op === 'create' ? `${apiBaseUrl}/api/customers` : `${apiBaseUrl}/api/customers/${entityId}`;
         method = op === 'create' ? 'POST' : op === 'update' ? 'PUT' : 'DELETE';
         body = op !== 'delete' ? JSON.stringify(payload) : null;
         break;
       case 'job':
-        url = op === 'create' ? '/api/jobs' : `/api/jobs/${entityId}`;
+        url = op === 'create' ? `${apiBaseUrl}/api/jobs` : `${apiBaseUrl}/api/jobs/${entityId}`;
         method = op === 'create' ? 'POST' : op === 'update' ? 'PUT' : 'DELETE';
         body = op !== 'delete' ? JSON.stringify(payload) : null;
         break;
       case 'material':
-        url = op === 'create' ? `/api/jobs/${payload.jobId}/materials` : `/api/materials/${entityId}`;
+        url = op === 'create' ? `${apiBaseUrl}/api/jobs/${payload.jobId}/materials` : `${apiBaseUrl}/api/materials/${entityId}`;
         method = op === 'create' ? 'POST' : op === 'update' ? 'PUT' : 'DELETE';
         body = op !== 'delete' ? JSON.stringify(payload) : null;
         break;
@@ -335,11 +362,16 @@ self.addEventListener('periodicsync', (event: any) => {
 // Refresh critical construction data in background
 async function refreshConstructionData() {
   try {
+    // Get API base URL - fallback to Railway URL if environment variable not available
+    const apiBaseUrl = self.location.origin.includes('localhost') 
+      ? 'http://localhost:3001'
+      : 'https://khs-crm-3-production.up.railway.app';
+    
     // Refresh critical data for field workers
     const criticalEndpoints = [
-      '/api/jobs?status=active',
-      '/api/customers?active=true',
-      '/api/materials?needed=true'
+      `${apiBaseUrl}/api/jobs?status=active`,
+      `${apiBaseUrl}/api/customers?active=true`,
+      `${apiBaseUrl}/api/materials?needed=true`
     ];
 
     await Promise.allSettled(

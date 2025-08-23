@@ -64,14 +64,14 @@ vercel --prod
 ## Important API Endpoints
 
 ### Debug Endpoints (Production)
-- `https://khs-crm-2-production.up.railway.app/api/health` - Check if API is running
-- `https://khs-crm-2-production.up.railway.app/api/check-schema` - Check if photos/plans columns exist
-- `https://khs-crm-2-production.up.railway.app/api/debug/jobs` - List all jobs with photo status
-- `https://khs-crm-2-production.up.railway.app/api/debug/job/:jobId` - Check specific job data
-- `https://khs-crm-2-production.up.railway.app/api/test-photo-save/:jobId` - Test photo save functionality
-- `https://khs-crm-2-production.up.railway.app/api/debug/field-limits` - Check database field size limits
-- `https://khs-crm-2-production.up.railway.app/api/debug/express-config` - Check Express configuration and limits
-- `POST https://khs-crm-2-production.up.railway.app/api/test-photo-size-limit` - Test photo size limits (requires customerId in body)
+- `https://khs-crm-3-production.up.railway.app/api/health` - Check if API is running
+- `https://khs-crm-3-production.up.railway.app/api/check-schema` - Check if photos/plans columns exist
+- `https://khs-crm-3-production.up.railway.app/api/debug/jobs` - List all jobs with photo status
+- `https://khs-crm-3-production.up.railway.app/api/debug/job/:jobId` - Check specific job data
+- `https://khs-crm-3-production.up.railway.app/api/test-photo-save/:jobId` - Test photo save functionality
+- `https://khs-crm-3-production.up.railway.app/api/debug/field-limits` - Check database field size limits
+- `https://khs-crm-3-production.up.railway.app/api/debug/express-config` - Check Express configuration and limits
+- `POST https://khs-crm-3-production.up.railway.app/api/test-photo-size-limit` - Test photo size limits (requires customerId in body)
 
 ## Common Issues and Solutions
 
@@ -110,7 +110,7 @@ NODE_ENV=production
 
 ### Frontend (.env)
 ```
-VITE_API_URL=https://khs-crm-2-production.up.railway.app
+VITE_API_URL=https://khs-crm-3-production.up.railway.app
 ```
 
 ## Testing Photo Persistence
