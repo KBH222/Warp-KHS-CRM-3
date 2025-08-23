@@ -926,7 +926,7 @@ const Workers = () => {
                               minWidth: '110px',
                               whiteSpace: 'nowrap'
                             }}>
-                              Total Hours
+                              Hours
                             </th>
                           </tr>
                         </thead>
