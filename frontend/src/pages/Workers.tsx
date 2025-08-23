@@ -305,6 +305,40 @@ const Workers = () => {
     }));
   };
 
+  const handleClearTab = () => {
+    if (activeTab === 'hours') {
+      // Clear all timesheet data
+      setTimesheet({
+        Mon: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+        Tue: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+        Wed: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+        Thu: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+        Fri: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+        Sat: { startTime: '', endTime: '', eatMinutes: 0, job: '', workType: '', totalHours: 0 },
+        Sun: { startTime: '', endTime: '', eatMinutes: 0, job: '', workType: '', totalHours: 0 },
+      });
+      setModifiedDays(new Set());
+    } else if (activeTab === 'info') {
+      // Clear all info fields except color (keep the assigned color)
+      setFormData(prev => ({
+        name: '',
+        fullName: '',
+        phone: '',
+        email: '',
+        specialty: '',
+        status: 'Available',
+        color: prev.color,
+        notes: prev.notes // Keep notes when clearing info
+      }));
+    } else if (activeTab === 'notes') {
+      // Clear notes
+      setFormData(prev => ({
+        ...prev,
+        notes: ''
+      }));
+    }
+  };
+
   return (
     <ScrollablePageContainer customPaddingBottom={100}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
@@ -573,9 +607,12 @@ const Workers = () => {
             {/* Tab Navigation */}
             <div style={{
               display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
               borderBottom: '2px solid #E5E7EB',
               marginBottom: '20px'
             }}>
+              <div style={{ display: 'flex' }}>
               <button
                 type="button"
                 onClick={() => setActiveTab('hours')}
@@ -626,6 +663,24 @@ const Workers = () => {
                 }}
               >
                 Notes
+              </button>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleClearTab()}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#EF4444',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  marginBottom: '-2px'
+                }}
+              >
+                Clear
               </button>
             </div>
 
