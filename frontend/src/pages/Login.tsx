@@ -178,6 +178,7 @@ const Login = () => {
               Email: admin@khscrm.com<br />
               Password: admin123
             </code>
+          </div>
         </div>
       </div>
     </div>
