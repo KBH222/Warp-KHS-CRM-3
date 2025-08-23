@@ -6,7 +6,7 @@ import { syncStore } from '@stores/sync.store';
 interface SyncOperation {
   id: string;
   operation: 'create' | 'update' | 'delete';
-  entityType: 'customer' | 'job' | 'material';
+  entityType: 'customer' | 'job' | 'material' | 'worker';
   entityId?: string;
   payload: any;
   timestamp: Date;
@@ -64,6 +64,22 @@ interface Material {
   updatedAt: Date;
 }
 
+interface Worker {
+  id: string;
+  name: string;
+  fullName: string;
+  phone: string;
+  email: string;
+  specialty: string;
+  status: string;
+  currentJob?: string | null;
+  color: string;
+  notes?: string;
+  timesheet?: any;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 interface SyncError {
   operation: SyncOperation;
   error: string;
@@ -85,7 +101,9 @@ const API_ENDPOINTS = {
   JOB_BY_ID: (id: string) => `/api/jobs/${id}`,
   JOB_MATERIALS: (jobId: string) => `/api/jobs/${jobId}/materials`,
   MATERIAL_BY_ID: (id: string) => `/api/materials/${id}`,
-  MATERIALS_BULK_UPDATE: '/api/materials/bulk-update'
+  MATERIALS_BULK_UPDATE: '/api/materials/bulk-update',
+  WORKERS: '/api/workers',
+  WORKER_BY_ID: (id: string) => `/api/workers/${id}`
 };
 
 const ERROR_CODES = {
@@ -297,6 +315,9 @@ class SyncService {
         case 'material':
           conflict = await this.syncMaterialOperation(op, entityId, payload);
           break;
+        case 'worker':
+          conflict = await this.syncWorkerOperation(op, entityId, payload);
+          break;
         default:
           throw new Error(`Unknown entity type: ${entityType}`);
       }
@@ -479,6 +500,57 @@ class SyncService {
     return hasConflict;
   }
 
+  private async syncWorkerOperation(
+    operation: string,
+    entityId: string | undefined,
+    payload: any,
+  ): Promise<boolean> {
+    let hasConflict = false;
+
+    try {
+      switch (operation) {
+        case 'create': {
+          const created = await apiClient.post<Worker>(API_ENDPOINTS.WORKERS, payload);
+          // Update local ID with server ID and mark as synced
+          await offlineDb.deleteWorker?.(payload.id);
+          await offlineDb.saveWorker?.(created);
+          await offlineDb.markAsSynced('worker', created.id);
+          break;
+        }
+        case 'update':
+          if (entityId) {
+            try {
+              const updated = await apiClient.put<Worker>(
+                API_ENDPOINTS.WORKER_BY_ID(entityId),
+                payload,
+              );
+              await offlineDb.saveWorker?.(updated);
+              await offlineDb.markAsSynced('worker', entityId);
+            } catch (error) {
+              if (error instanceof Error && error.message.includes('409')) {
+                hasConflict = await this.handleConflict('worker', entityId, payload);
+              } else {
+                throw error;
+              }
+            }
+          }
+          break;
+        case 'delete':
+          if (entityId) {
+            await apiClient.delete(API_ENDPOINTS.WORKER_BY_ID(entityId));
+            await offlineDb.deleteWorker?.(entityId);
+          }
+          break;
+      }
+    } catch (error) {
+      if (!hasConflict) {
+        throw error;
+      }
+    }
+
+    return hasConflict;
+  }
+
   private async pullData(): Promise<SyncResult> {
     const result: SyncResult = {
       success: true,
@@ -529,6 +601,10 @@ class SyncService {
       );
       await offlineDb.bulkSaveMaterials(materials);
     }
+    
+    // Pull all workers
+    const workers = await apiClient.get<Worker[]>(API_ENDPOINTS.WORKERS);
+    await offlineDb.bulkSaveWorkers?.(workers);
   }
 
   private async pullChanges(since: Date): Promise<SyncResult> {
@@ -582,6 +658,18 @@ class SyncService {
           await offlineDb.markAsSynced('material', material.id);
           result.processed++;
         }
+      }
+      
+      // Pull changed workers
+      const workers = await apiClient.get<Worker[]>(API_ENDPOINTS.WORKERS, { params });
+      for (const worker of workers) {
+        const conflictResolved = await this.resolveServerConflict('worker', worker);
+        if (conflictResolved) {
+          result.conflicts++;
+        }
+        await offlineDb.saveWorker?.(worker);
+        await offlineDb.markAsSynced('worker', worker.id);
+        result.processed++;
       }
     } catch (error) {
       result.success = false;

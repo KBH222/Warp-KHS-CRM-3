@@ -29,18 +29,34 @@ interface Material {
   // Add other material fields as needed
 }
 
+interface Worker {
+  id: string;
+  name: string;
+  fullName: string;
+  phone: string;
+  email: string;
+  specialty: string;
+  status: string;
+  currentJob?: string | null;
+  color: string;
+  notes?: string;
+  timesheet?: any;
+}
+
 // API endpoints
 const API_ENDPOINTS = {
   CUSTOMERS: '/api/customers',
   CUSTOMER_BY_ID: (id: string) => `/api/customers/${id}`,
   JOBS: '/api/jobs',
-  JOB_BY_ID: (id: string) => `/api/jobs/${id}`
+  JOB_BY_ID: (id: string) => `/api/jobs/${id}`,
+  WORKERS: '/api/workers',
+  WORKER_BY_ID: (id: string) => `/api/workers/${id}`
 };
 
 interface SyncOperation {
   id: string;
   operation: 'create' | 'update' | 'delete';
-  entityType: 'customer' | 'job' | 'material';
+  entityType: 'customer' | 'job' | 'material' | 'worker';
   entityId?: string;
   payload: any;
   timestamp: Date;
@@ -171,6 +187,9 @@ class SimpleSyncService {
       case 'material':
         await this.syncMaterial(op);
         break;
+      case 'worker':
+        await this.syncWorker(op);
+        break;
     }
   }
 
@@ -225,6 +244,36 @@ class SimpleSyncService {
     // Similar implementation for materials
   }
 
+  private async syncWorker(op: SyncOperation) {
+    switch (op.operation) {
+      case 'create': {
+        const created = await apiClient.post<Worker>(API_ENDPOINTS.WORKERS, op.payload);
+        if (op.payload.id && op.payload.id.startsWith('temp_')) {
+          await offlineDb.deleteWorker?.(op.payload.id);
+        }
+        await offlineDb.saveWorker?.(created);
+        break;
+      }
+      case 'update': {
+        if (op.entityId && !op.entityId.startsWith('temp_')) {
+          const updated = await apiClient.put<Worker>(
+            API_ENDPOINTS.WORKER_BY_ID(op.entityId),
+            op.payload
+          );
+          await offlineDb.saveWorker?.(updated);
+        }
+        break;
+      }
+      case 'delete': {
+        if (op.entityId && !op.entityId.startsWith('temp_')) {
+          await apiClient.delete(API_ENDPOINTS.WORKER_BY_ID(op.entityId));
+          await offlineDb.deleteWorker?.(op.entityId);
+        }
+        break;
+      }
+    }
+  }
+
   private async refreshDataFromServer() {
     try {
       // Fetch all customers
@@ -244,6 +293,14 @@ class SimpleSyncService {
         }
       } else {
         }
+      
+      // Fetch all workers
+      const workers = await apiClient.get<Worker[]>(API_ENDPOINTS.WORKERS);
+      if (Array.isArray(workers)) {
+        for (const worker of workers) {
+          await offlineDb.saveWorker?.(worker);
+        }
+      }
 
       } catch (error) {
       console.error('[SyncService] Failed to refresh data:', error);
