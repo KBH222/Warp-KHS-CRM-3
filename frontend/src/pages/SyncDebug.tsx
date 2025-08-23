@@ -10,6 +10,7 @@ export default function SyncDebug() {
   const [syncStatus, setSyncStatus] = useState<any>({});
   const [localData, setLocalData] = useState<any[]>([]);
   const [logs, setLogs] = useState<string[]>([]);
+  const [autoRefresh, setAutoRefresh] = useState(false);
 
   const addLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
@@ -49,11 +50,14 @@ export default function SyncDebug() {
 
   useEffect(() => {
     loadData();
-    
-    // Refresh every 2 seconds
-    const interval = setInterval(loadData, 2000);
-    return () => clearInterval(interval);
   }, []);
+  
+  useEffect(() => {
+    if (autoRefresh) {
+      const interval = setInterval(loadData, 2000);
+      return () => clearInterval(interval);
+    }
+  }, [autoRefresh]);
 
   const createTestCustomer = async () => {
     try {
@@ -132,7 +136,18 @@ export default function SyncDebug() {
 
   return (
     <div className="max-w-6xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Sync Debug Dashboard</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Sync Debug Dashboard</h1>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={autoRefresh}
+            onChange={(e) => setAutoRefresh(e.target.checked)}
+            className="w-4 h-4"
+          />
+          <span className="text-sm font-medium">Auto-refresh (2s)</span>
+        </label>
+      </div>
       
       {/* Status Overview */}
       <div className="bg-white rounded-lg shadow p-4 mb-4">
