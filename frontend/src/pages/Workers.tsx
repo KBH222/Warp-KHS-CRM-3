@@ -835,21 +835,21 @@ const Workers = () => {
                   <div style={{ 
                     backgroundColor: '#F9FAFB',
                     borderRadius: '8px',
-                    padding: '16px',
-                    marginBottom: '20px'
+                    padding: '12px',
+                    marginBottom: '12px'
                   }}>
-                    <h4 style={{ margin: '0 0 16px 0', fontSize: '18.4px', fontWeight: '600' }}>
+                    <h4 style={{ margin: '0 0 8px 0', fontSize: '17px', fontWeight: '600' }}>
                       Weekly Timesheet
                     </h4>
-                    <div style={{ overflowX: 'auto', overflowY: 'visible', paddingBottom: '8px' }}>
+                    <div style={{ overflowX: 'auto', overflowY: 'visible' }}>
                       <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '900px' }}>
                         <thead>
                           <tr>
                             <th style={{ 
                               textAlign: 'left', 
-                              padding: '8px',
+                              padding: '4px 6px',
                               borderBottom: '2px solid #E5E7EB',
-                              fontSize: '16.1px',
+                              fontSize: '14px',
                               fontWeight: '600',
                               color: '#374151',
                               minWidth: '50px'
@@ -858,9 +858,9 @@ const Workers = () => {
                             </th>
                             <th style={{ 
                               textAlign: 'center', 
-                              padding: '8px',
+                              padding: '4px 6px',
                               borderBottom: '2px solid #E5E7EB',
-                              fontSize: '16.1px',
+                              fontSize: '14px',
                               fontWeight: '600',
                               color: '#374151',
                               minWidth: '80px'
@@ -869,9 +869,9 @@ const Workers = () => {
                             </th>
                             <th style={{ 
                               textAlign: 'center', 
-                              padding: '8px',
+                              padding: '4px 6px',
                               borderBottom: '2px solid #E5E7EB',
-                              fontSize: '16.1px',
+                              fontSize: '14px',
                               fontWeight: '600',
                               color: '#374151',
                               minWidth: '80px'
@@ -880,9 +880,9 @@ const Workers = () => {
                             </th>
                             <th style={{ 
                               textAlign: 'center', 
-                              padding: '8px',
+                              padding: '4px 6px',
                               borderBottom: '2px solid #E5E7EB',
-                              fontSize: '16.1px',
+                              fontSize: '14px',
                               fontWeight: '600',
                               color: '#374151',
                               minWidth: '60px'
@@ -891,9 +891,9 @@ const Workers = () => {
                             </th>
                             <th style={{ 
                               textAlign: 'left', 
-                              padding: '8px',
+                              padding: '4px 6px',
                               borderBottom: '2px solid #E5E7EB',
-                              fontSize: '16.1px',
+                              fontSize: '14px',
                               fontWeight: '600',
                               color: '#374151',
                               minWidth: '180px'
@@ -902,9 +902,9 @@ const Workers = () => {
                             </th>
                             <th style={{ 
                               textAlign: 'left', 
-                              padding: '8px',
+                              padding: '4px 6px',
                               borderBottom: '2px solid #E5E7EB',
-                              fontSize: '16.1px',
+                              fontSize: '14px',
                               fontWeight: '600',
                               color: '#374151',
                               minWidth: '140px'
@@ -913,9 +913,9 @@ const Workers = () => {
                             </th>
                             <th style={{ 
                               textAlign: 'center', 
-                              padding: '8px 12px',
+                              padding: '4px 8px',
                               borderBottom: '2px solid #E5E7EB',
-                              fontSize: '16.1px',
+                              fontSize: '14px',
                               fontWeight: '600',
                               color: '#374151',
                               minWidth: '110px',
@@ -929,14 +929,14 @@ const Workers = () => {
                           {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
                             <tr key={day}>
                               <td style={{ 
-                                padding: '8px',
+                                padding: '4px 6px',
                                 borderBottom: '1px solid #E5E7EB',
-                                fontSize: '16.1px',
+                                fontSize: '14px',
                                 color: '#374151'
                               }}>
                                 {day}
                               </td>
-                              <td style={{ padding: '8px', borderBottom: '1px solid #E5E7EB' }}>
+                              <td style={{ padding: '4px', borderBottom: '1px solid #E5E7EB' }}>
                                 <input
                                   type="time"
                                   step="300"
@@ -946,14 +946,14 @@ const Workers = () => {
                                   title="Time will round to nearest 5 minutes"
                                   style={{
                                     width: '100%',
-                                    padding: '4px 8px',
+                                    padding: '2px 4px',
                                     border: '1px solid #D1D5DB',
                                     borderRadius: '4px',
-                                    fontSize: '16.1px'
+                                    fontSize: '14px'
                                   }}
                                 />
                               </td>
-                              <td style={{ padding: '8px', borderBottom: '1px solid #E5E7EB' }}>
+                              <td style={{ padding: '4px', borderBottom: '1px solid #E5E7EB' }}>
                                 <input
                                   type="time"
                                   step="300"
@@ -963,14 +963,14 @@ const Workers = () => {
                                   title="Time will round to nearest 5 minutes"
                                   style={{
                                     width: '100%',
-                                    padding: '4px 8px',
+                                    padding: '2px 4px',
                                     border: '1px solid #D1D5DB',
                                     borderRadius: '4px',
-                                    fontSize: '16.1px'
+                                    fontSize: '14px'
                                   }}
                                 />
                               </td>
-                              <td style={{ padding: '8px', borderBottom: '1px solid #E5E7EB' }}>
+                              <td style={{ padding: '4px', borderBottom: '1px solid #E5E7EB' }}>
                                 <input
                                   type="number"
                                   min="0"
@@ -983,12 +983,12 @@ const Workers = () => {
                                     padding: '4px 6px',
                                     border: '1px solid #D1D5DB',
                                     borderRadius: '4px',
-                                    fontSize: '16.1px',
+                                    fontSize: '14px',
                                     textAlign: 'center'
                                   }}
                                 />
                               </td>
-                              <td style={{ padding: '8px', borderBottom: '1px solid #E5E7EB' }}>
+                              <td style={{ padding: '4px', borderBottom: '1px solid #E5E7EB' }}>
                                 <input
                                   type="text"
                                   value={timesheet[day].job}
@@ -996,14 +996,14 @@ const Workers = () => {
                                   placeholder="Select job..."
                                   style={{
                                     width: '100%',
-                                    padding: '4px 8px',
+                                    padding: '2px 4px',
                                     border: '1px solid #D1D5DB',
                                     borderRadius: '4px',
-                                    fontSize: '16.1px'
+                                    fontSize: '14px'
                                   }}
                                 />
                               </td>
-                              <td style={{ padding: '8px', borderBottom: '1px solid #E5E7EB' }}>
+                              <td style={{ padding: '4px', borderBottom: '1px solid #E5E7EB' }}>
                                 <select
                                   value={timesheet[day].workType}
                                   onChange={(e) => handleTimesheetChange(day, 'workType', e.target.value)}
@@ -1012,7 +1012,7 @@ const Workers = () => {
                                     padding: '4px 8px',
                                     border: '1px solid #D1D5DB',
                                     borderRadius: '4px',
-                                    fontSize: '16.1px',
+                                    fontSize: '14px',
                                     backgroundColor: 'white'
                                   }}
                                 >
@@ -1029,10 +1029,10 @@ const Workers = () => {
                                 </select>
                               </td>
                               <td style={{ 
-                                padding: '8px 12px',
+                                padding: '4px 8px',
                                 borderBottom: '1px solid #E5E7EB',
                                 textAlign: 'center',
-                                fontSize: '16.1px',
+                                fontSize: '14px',
                                 fontWeight: '500',
                                 color: timesheet[day].totalHours > 0 ? '#059669' : '#6B7280',
                                 minWidth: '110px',
@@ -1046,9 +1046,9 @@ const Workers = () => {
                         <tfoot>
                           <tr>
                             <td colSpan={6} style={{ 
-                              padding: '8px',
+                              padding: '4px 6px',
                               borderTop: '2px solid #E5E7EB',
-                              fontSize: '16.1px',
+                              fontSize: '14px',
                               fontWeight: '600',
                               color: '#374151',
                               textAlign: 'right'
@@ -1056,10 +1056,10 @@ const Workers = () => {
                               Weekly Total:
                             </td>
                             <td style={{ 
-                              padding: '8px 12px',
+                              padding: '4px 8px',
                               borderTop: '2px solid #E5E7EB',
                               textAlign: 'center',
-                              fontSize: '18.4px',
+                              fontSize: '16px',
                               fontWeight: '700',
                               color: getTotalWeeklyHours() > 40 ? '#DC2626' : '#059669',
                               minWidth: '110px',
