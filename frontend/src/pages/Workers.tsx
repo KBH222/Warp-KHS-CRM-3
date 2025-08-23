@@ -25,18 +25,18 @@ const Workers = () => {
   const [timesheet, setTimesheet] = useState<{[key: string]: {
     startTime: string;
     endTime: string;
-    lunchMinutes: number;
+    eatMinutes: number;
     job: string;
     workType: string;
     totalHours: number;
   }}>({
-    Mon: { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 },
-    Tue: { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 },
-    Wed: { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 },
-    Thu: { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 },
-    Fri: { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 },
-    Sat: { startTime: '', endTime: '', lunchMinutes: 0, job: '', workType: '', totalHours: 0 },
-    Sun: { startTime: '', endTime: '', lunchMinutes: 0, job: '', workType: '', totalHours: 0 },
+    Mon: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+    Tue: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+    Wed: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+    Thu: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+    Fri: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+    Sat: { startTime: '', endTime: '', eatMinutes: 0, job: '', workType: '', totalHours: 0 },
+    Sun: { startTime: '', endTime: '', eatMinutes: 0, job: '', workType: '', totalHours: 0 },
   });
   
   // Track which days have been modified
@@ -168,7 +168,7 @@ const Workers = () => {
   };
 
   // Calculate hours between two times
-  const calculateHours = (startTime: string, endTime: string, lunchMinutes: number): number => {
+  const calculateHours = (startTime: string, endTime: string, eatMinutes: number): number => {
     if (!startTime || !endTime) return 0;
     
     const start = new Date(`2000-01-01T${startTime}`);
@@ -181,9 +181,9 @@ const Workers = () => {
     
     const diffMs = end.getTime() - start.getTime();
     const diffHours = diffMs / (1000 * 60 * 60);
-    const lunchHours = lunchMinutes / 60;
+    const eatHours = eatMinutes / 60;
     
-    return Math.max(0, diffHours - lunchHours);
+    return Math.max(0, diffHours - eatHours);
   };
 
   // Round time to nearest 5 minutes
@@ -218,7 +218,7 @@ const Workers = () => {
     setTimesheet(prev => {
       // Ensure the day exists in the timesheet
       if (!prev[day]) {
-        prev[day] = { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 };
+        prev[day] = { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 };
       }
       
       const updated = {
@@ -230,12 +230,12 @@ const Workers = () => {
       };
       
       // Recalculate hours if time fields changed
-      if (field === 'startTime' || field === 'endTime' || field === 'lunchMinutes') {
+      if (field === 'startTime' || field === 'endTime' || field === 'eatMinutes') {
         const dayData = updated[day];
         updated[day].totalHours = calculateHours(
           dayData.startTime,
           dayData.endTime,
-          dayData.lunchMinutes
+          dayData.eatMinutes
         );
       }
       
@@ -268,15 +268,15 @@ const Workers = () => {
       setOriginalTimesheet(editingWorker.timesheet);
       
       // Ensure all required days exist in the timesheet
-      const defaultDay = { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 };
+      const defaultDay = { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 };
       const completeTimesheet = {
         Mon: editingWorker.timesheet.Mon || defaultDay,
         Tue: editingWorker.timesheet.Tue || defaultDay,
         Wed: editingWorker.timesheet.Wed || defaultDay,
         Thu: editingWorker.timesheet.Thu || defaultDay,
         Fri: editingWorker.timesheet.Fri || defaultDay,
-        Sat: editingWorker.timesheet.Sat || { ...defaultDay, lunchMinutes: 0 },
-        Sun: editingWorker.timesheet.Sun || { ...defaultDay, lunchMinutes: 0 },
+        Sat: editingWorker.timesheet.Sat || { ...defaultDay, eatMinutes: 0 },
+        Sun: editingWorker.timesheet.Sun || { ...defaultDay, eatMinutes: 0 },
       };
       console.log('Complete timesheet being set:', completeTimesheet);
       console.log('Monday data specifically:', completeTimesheet.Mon);
@@ -286,13 +286,13 @@ const Workers = () => {
       // Reset to default timesheet
       setOriginalTimesheet(null);
       setTimesheet({
-        Mon: { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 },
-        Tue: { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 },
-        Wed: { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 },
-        Thu: { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 },
-        Fri: { startTime: '', endTime: '', lunchMinutes: 30, job: '', workType: '', totalHours: 0 },
-        Sat: { startTime: '', endTime: '', lunchMinutes: 0, job: '', workType: '', totalHours: 0 },
-        Sun: { startTime: '', endTime: '', lunchMinutes: 0, job: '', workType: '', totalHours: 0 },
+        Mon: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+        Tue: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+        Wed: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+        Thu: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+        Fri: { startTime: '', endTime: '', eatMinutes: 30, job: '', workType: '', totalHours: 0 },
+        Sat: { startTime: '', endTime: '', eatMinutes: 0, job: '', workType: '', totalHours: 0 },
+        Sun: { startTime: '', endTime: '', eatMinutes: 0, job: '', workType: '', totalHours: 0 },
       });
     }
   }, [editingWorker]);
@@ -981,8 +981,8 @@ const Workers = () => {
                                   min="0"
                                   max="120"
                                   step="15"
-                                  value={timesheet[day].lunchMinutes}
-                                  onChange={(e) => handleTimesheetChange(day, 'lunchMinutes', parseInt(e.target.value) || 0)}
+                                  value={timesheet[day].eatMinutes}
+                                  onChange={(e) => handleTimesheetChange(day, 'eatMinutes', parseInt(e.target.value) || 0)}
                                   style={{
                                     width: '40px',
                                     padding: '2px',
