@@ -16,8 +16,18 @@ const Login = () => {
     setError('');
     setIsLoading(true);
 
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const loginUrl = `${apiUrl || ''}/api/auth/login`;
+    
+    console.log('Login attempt:', {
+      apiUrl,
+      loginUrl,
+      email: formData.email,
+      allEnvVars: import.meta.env
+    });
+
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/auth/login`, {
+      const response = await fetch(loginUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,8 +35,12 @@ const Login = () => {
         body: JSON.stringify(formData)
       });
 
+      console.log('Login response status:', response.status);
+      console.log('Login response ok:', response.ok);
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        console.error('Login error response:', errorData);
         throw new Error(errorData.error || 'Invalid email or password');
       }
 
@@ -40,7 +54,21 @@ const Login = () => {
       // Navigate to dashboard
       navigate('/');
     } catch (err: any) {
-      setError(err.message || 'Login failed. Please try again.');
+      console.error('Login error:', err);
+      console.error('Error details:', {
+        message: err.message,
+        stack: err.stack,
+        name: err.name,
+        type: err.constructor.name
+      });
+      
+      // Check if it's a network error
+      if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
+        console.error('Network error - possible CORS issue or server down');
+        setError('Network error. Please check your connection and try again.');
+      } else {
+        setError(err.message || 'Login failed. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }

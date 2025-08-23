@@ -135,7 +135,7 @@ VitePWA({
         ]
       },
       devOptions: {
-        enabled: true,
+        enabled: false, // Disabled to prevent refresh issues
         type: 'module',
         navigateFallback: 'index.html'
       },
@@ -158,12 +158,11 @@ VitePWA({
   server: {
     port: 5173,
     host: true,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true
-      }
-    }
+    hmr: {
+      overlay: false,
+      timeout: 60000
+    },
+    // No proxy needed - using direct Railway URL
   },
   build: {
     sourcemap: true,

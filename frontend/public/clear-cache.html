@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear KHS CRM Cache</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .success { color: green; }
+        .error { color: red; }
+        pre { background: #f4f4f4; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Clear KHS CRM Cache & Service Worker</h1>
+    <div id="status"></div>
+    
+    <button onclick="clearEverything()">Clear Everything</button>
+    <button onclick="checkStatus()">Check Status</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        const statusDiv = document.getElementById('status');
+        const resultDiv = document.getElementById('result');
+        
+        async function clearEverything() {
+            resultDiv.innerHTML = '<h3>Clearing...</h3>';
+            let messages = [];
+            
+            try {
+                // 1. Unregister all service workers
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    for (let registration of registrations) {
+                        await registration.unregister();
+                        messages.push('✅ Service Worker unregistered');
+                    }
+                    if (registrations.length === 0) {
+                        messages.push('ℹ️ No service workers found');
+                    }
+                }
+                
+                // 2. Clear all caches
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    for (let name of cacheNames) {
+                        await caches.delete(name);
+                        messages.push(`✅ Cache deleted: ${name}`);
+                    }
+                    if (cacheNames.length === 0) {
+                        messages.push('ℹ️ No caches found');
+                    }
+                }
+                
+                // 3. Clear localStorage
+                const localStorageKeys = Object.keys(localStorage);
+                localStorageKeys.forEach(key => {
+                    localStorage.removeItem(key);
+                });
+                messages.push(`✅ Cleared ${localStorageKeys.length} localStorage items`);
+                
+                // 4. Clear sessionStorage
+                const sessionStorageKeys = Object.keys(sessionStorage);
+                sessionStorageKeys.forEach(key => {
+                    sessionStorage.removeItem(key);
+                });
+                messages.push(`✅ Cleared ${sessionStorageKeys.length} sessionStorage items`);
+                
+                // 5. Clear IndexedDB
+                if ('indexedDB' in window) {
+                    const databases = await indexedDB.databases();
+                    for (let db of databases) {
+                        indexedDB.deleteDatabase(db.name);
+                        messages.push(`✅ Deleted IndexedDB: ${db.name}`);
+                    }
+                }
+                
+                resultDiv.innerHTML = '<h3 class="success">Everything Cleared!</h3>' + 
+                    '<ul>' + messages.map(m => `<li>${m}</li>`).join('') + '</ul>' +
+                    '<p><strong>Now refresh the main app (Ctrl+Shift+R)</strong></p>';
+                    
+            } catch (error) {
+                resultDiv.innerHTML = '<h3 class="error">Error:</h3><pre>' + error.message + '</pre>';
+            }
+        }
+        
+        async function checkStatus() {
+            let status = [];
+            
+            // Check service workers
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                status.push(`Service Workers: ${registrations.length}`);
+            }
+            
+            // Check caches
+            if ('caches' in window) {
+                const cacheNames = await caches.keys();
+                status.push(`Caches: ${cacheNames.length}`);
+                if (cacheNames.length > 0) {
+                    status.push('Cache names: ' + cacheNames.join(', '));
+                }
+            }
+            
+            // Check localStorage
+            status.push(`localStorage items: ${Object.keys(localStorage).length}`);
+            
+            // Check current API URL from env
+            status.push(`Current origin: ${window.location.origin}`);
+            
+            statusDiv.innerHTML = '<h3>Current Status:</h3><ul>' + 
+                status.map(s => `<li>${s}</li>`).join('') + '</ul>';
+        }
+        
+        // Check status on load
+        checkStatus();
+    </script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Refresh Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        #log {
+            background: #f5f5f5;
+            padding: 10px;
+            margin-top: 20px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>KHS CRM - Refresh & Login Test</h1>
+    
+    <div class="status info">
+        <p>Page loaded at: <span id="loadTime"></span></p>
+        <p>Current time: <span id="currentTime"></span></p>
+        <p>API URL: <span id="apiUrl"></span></p>
+    </div>
+
+    <h2>Test Controls</h2>
+    <button onclick="checkAPI()">Check API Health</button>
+    <button onclick="testLogin()">Test Login</button>
+    <button onclick="clearLog()">Clear Log</button>
+    <button onclick="unregisterSW()">Unregister Service Workers</button>
+
+    <h2>Activity Log</h2>
+    <div id="log"></div>
+
+    <script>
+        const API_URL = 'https://khs-crm-3-production.up.railway.app';
+        const logDiv = document.getElementById('log');
+        const loadTime = new Date();
+        
+        // Display load time
+        document.getElementById('loadTime').textContent = loadTime.toLocaleTimeString();
+        document.getElementById('apiUrl').textContent = API_URL;
+        
+        // Update current time every second
+        setInterval(() => {
+            document.getElementById('currentTime').textContent = new Date().toLocaleTimeString();
+        }, 1000);
+        
+        // Log function
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.style.color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'black';
+            entry.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        // Initial log
+        log('Page loaded - monitoring for refreshes...');
+        
+        // Monitor page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            log(`Page visibility changed: ${document.visibilityState}`);
+        });
+        
+        // Monitor online/offline
+        window.addEventListener('online', () => log('Network: Online', 'success'));
+        window.addEventListener('offline', () => log('Network: Offline', 'error'));
+        
+        // Check API health
+        async function checkAPI() {
+            log('Checking API health...');
+            try {
+                const response = await fetch(`${API_URL}/api/health`);
+                const data = await response.json();
+                log(`API Health: ${data.status}`, 'success');
+                log(`Database: ${data.database}`, 'success');
+            } catch (error) {
+                log(`API Health Check Failed: ${error.message}`, 'error');
+            }
+        }
+        
+        // Test login
+        async function testLogin() {
+            log('Testing login...');
+            try {
+                const response = await fetch(`${API_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@khscrm.com',
+                        password: 'admin123'
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log('Login successful!', 'success');
+                    log(`User: ${data.user.email}`, 'success');
+                } else {
+                    const error = await response.text();
+                    log(`Login failed: ${response.status} - ${error}`, 'error');
+                }
+            } catch (error) {
+                log(`Login error: ${error.message}`, 'error');
+                log(`Error type: ${error.name}`, 'error');
+            }
+        }
+        
+        // Clear log
+        function clearLog() {
+            logDiv.innerHTML = '';
+            log('Log cleared');
+        }
+        
+        // Unregister service workers
+        async function unregisterSW() {
+            log('Unregistering service workers...');
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for (let registration of registrations) {
+                    await registration.unregister();
+                    log(`Unregistered SW: ${registration.scope}`, 'success');
+                }
+            }
+        }
+        
+        // Check for service workers
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                log(`Found ${registrations.length} service worker(s)`);
+                registrations.forEach(reg => {
+                    log(`SW Scope: ${reg.scope}`);
+                });
+            });
+        }
+        
+        // Detect page refresh/reload
+        window.addEventListener('beforeunload', () => {
+            log('Page is unloading!', 'error');
+        });
+    </script>
+</body>
+</html>

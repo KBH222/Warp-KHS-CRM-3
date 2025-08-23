@@ -9,8 +9,10 @@ import { AuthSetup } from './components/AuthSetup';
 import { LoginForm } from './components/LoginForm';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// Initialize sync service
-import './services/init';
+// Initialize sync service - DISABLED in dev to fix 2-second refresh
+if (import.meta.env.PROD) {
+  import('./services/init');
+}
 
 // Create a client optimized for construction field work
 const queryClient = new QueryClient({
@@ -124,7 +126,24 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <PWAProvider>
+      {import.meta.env.PROD ? (
+        <PWAProvider>
+          <BrowserRouter>
+            <Router />
+            <ToastContainer
+              position="bottom-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+            />
+          </BrowserRouter>
+        </PWAProvider>
+      ) : (
         <BrowserRouter>
           <Router />
           <ToastContainer
@@ -139,7 +158,7 @@ function App() {
             pauseOnHover
           />
         </BrowserRouter>
-      </PWAProvider>
+      )}
       {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );

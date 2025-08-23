@@ -26,6 +26,7 @@ const InvoiceDetail = lazy(() => import('../pages/InvoiceDetail'));
 const OfflineDataDashboard = lazy(() => import('../components/OfflineDataDashboard'));
 const PracticalSecurity = lazy(() => import('../pages/PracticalSecurity'));
 const SyncDebug = lazy(() => import('../pages/SyncDebug'));
+const DebugEnv = lazy(() => import('../pages/DebugEnv'));
 
 // Loading component
 const PageLoader = () => {
@@ -72,6 +73,7 @@ export const Router = () => {
           <Route path="/offline-dashboard" element={<OfflineDataDashboard />} />
           <Route path="/security" element={<PracticalSecurity />} />
           <Route path="/sync-debug" element={<SyncDebug />} />
+          <Route path="/debug-env" element={<DebugEnv />} />
         </Route>
 
         {/* Catch all */}

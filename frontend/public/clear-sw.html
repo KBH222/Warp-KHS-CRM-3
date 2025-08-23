@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Service Workers</title>
+</head>
+<body>
+    <h1>Clearing Service Workers...</h1>
+    <div id="status"></div>
+    
+    <script>
+        async function clearAll() {
+            const status = document.getElementById('status');
+            
+            // Unregister all service workers
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for (let registration of registrations) {
+                    await registration.unregister();
+                    status.innerHTML += `<p>Unregistered: ${registration.scope}</p>`;
+                }
+            }
+            
+            // Clear all caches
+            if ('caches' in window) {
+                const names = await caches.keys();
+                for (let name of names) {
+                    await caches.delete(name);
+                    status.innerHTML += `<p>Deleted cache: ${name}</p>`;
+                }
+            }
+            
+            // Clear storage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            status.innerHTML += '<p style="color: green; font-weight: bold;">All cleared! Redirecting to login...</p>';
+            
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 2000);
+        }
+        
+        clearAll();
+    </script>
+</body>
+</html>

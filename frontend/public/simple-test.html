@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Test - No React</title>
+</head>
+<body>
+    <h1>Simple Test Page</h1>
+    <p>This page has no React, no service workers, just plain HTML.</p>
+    <p>Current time: <span id="time"></span></p>
+    <p>Page loaded at: <span id="loaded"></span></p>
+    
+    <hr>
+    <h2>If this page refreshes, it's a browser/system issue, not the app.</h2>
+    
+    <script>
+        document.getElementById('loaded').textContent = new Date().toLocaleTimeString();
+        
+        // Update time every second to show page is not refreshing
+        setInterval(() => {
+            document.getElementById('time').textContent = new Date().toLocaleTimeString();
+        }, 1000);
+        
+        // Log to console if page reloads
+        console.log('Page loaded at:', new Date().toLocaleTimeString());
+    </script>
+</body>
+</html>
