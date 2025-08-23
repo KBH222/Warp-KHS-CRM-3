@@ -912,18 +912,18 @@ const Workers = () => {
                               fontSize: '14px',
                               fontWeight: '600',
                               color: '#374151',
-                              minWidth: '140px'
+                              minWidth: '120px'
                             }}>
                               Type of Work
                             </th>
                             <th style={{ 
                               textAlign: 'center', 
-                              padding: '4px 8px',
+                              padding: '4px 4px',
                               borderBottom: '2px solid #E5E7EB',
                               fontSize: '14px',
                               fontWeight: '600',
                               color: '#374151',
-                              minWidth: '110px',
+                              minWidth: '70px',
                               whiteSpace: 'nowrap'
                             }}>
                               Hours
@@ -1034,13 +1034,13 @@ const Workers = () => {
                                 </select>
                               </td>
                               <td style={{ 
-                                padding: '4px 8px',
+                                padding: '4px 4px',
                                 borderBottom: '1px solid #E5E7EB',
                                 textAlign: 'center',
                                 fontSize: '14px',
                                 fontWeight: '500',
                                 color: timesheet[day].totalHours > 0 ? '#059669' : '#6B7280',
-                                minWidth: '110px',
+                                minWidth: '70px',
                                 whiteSpace: 'nowrap'
                               }}>
                                 {timesheet[day].totalHours.toFixed(1)}
@@ -1061,13 +1061,13 @@ const Workers = () => {
                               Weekly Total:
                             </td>
                             <td style={{ 
-                              padding: '4px 8px',
+                              padding: '4px 4px',
                               borderTop: '2px solid #E5E7EB',
                               textAlign: 'center',
                               fontSize: '16px',
                               fontWeight: '700',
                               color: getTotalWeeklyHours() > 40 ? '#DC2626' : '#059669',
-                              minWidth: '110px',
+                              minWidth: '70px',
                               whiteSpace: 'nowrap'
                             }}>
                               {getTotalWeeklyHours().toFixed(1)}
