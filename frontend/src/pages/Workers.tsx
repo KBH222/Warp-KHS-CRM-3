@@ -557,10 +557,14 @@ const Workers = () => {
             paddingBottom: '100px', // Extra padding for iOS safe area
             width: '100%',
             maxWidth: '900px',
-            maxHeight: '85vh', // Reduced from 90vh for better mobile
+            maxHeight: '80vh', // Better for both desktop and mobile
+            height: '80vh', // Fixed height for consistent scrolling
             overflowY: 'auto',
+            overflowX: 'hidden',
             WebkitOverflowScrolling: 'touch', // Smooth scrolling on iOS
-            position: 'relative'
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column'
           }}>
             <h2 style={{ marginTop: 0, marginBottom: '20px' }}>
               {editingWorker ? 'Edit Worker' : 'Add New Worker'}
@@ -625,7 +629,8 @@ const Workers = () => {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+              <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', paddingRight: '8px' }}>
               {/* Tab Content */}
               {activeTab === 'info' && (
                 <div>
@@ -841,8 +846,8 @@ const Workers = () => {
                     <h4 style={{ margin: '0 0 8px 0', fontSize: '17px', fontWeight: '600' }}>
                       Weekly Timesheet
                     </h4>
-                    <div style={{ overflowX: 'auto', overflowY: 'visible' }}>
-                      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '900px' }}>
+                    <div style={{ overflowX: 'auto', overflowY: 'visible', maxWidth: '100%' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '850px' }}>
                         <thead>
                           <tr>
                             <th style={{ 
@@ -887,7 +892,7 @@ const Workers = () => {
                               color: '#374151',
                               minWidth: '60px'
                             }}>
-                              Lunch (min)
+                              Lunch
                             </th>
                             <th style={{ 
                               textAlign: 'left', 
@@ -1074,6 +1079,7 @@ const Workers = () => {
                   </div>
                 </div>
               )}
+              </div>
 
               <div style={{ 
                 position: 'sticky',
