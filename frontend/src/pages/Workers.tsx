@@ -632,19 +632,25 @@ const Workers = () => {
           bottom: 0,
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-start', // Changed from center for better mobile
           justifyContent: 'center',
           zIndex: 1000,
-          padding: '20px'
+          padding: '20px',
+          paddingTop: '40px', // More top padding for mobile
+          overflowY: 'auto',
+          WebkitOverflowScrolling: 'touch'
         }}>
           <div style={{
             backgroundColor: 'white',
             borderRadius: '12px',
             padding: '24px',
+            paddingBottom: '100px', // Extra padding for iOS safe area
             width: '100%',
             maxWidth: '900px',
-            maxHeight: '90vh',
-            overflowY: 'auto'
+            maxHeight: '85vh', // Reduced from 90vh for better mobile
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch', // Smooth scrolling on iOS
+            position: 'relative'
           }}>
             <h2 style={{ marginTop: 0, marginBottom: '20px' }}>
               {editingWorker ? 'Edit Worker' : 'Add New Worker'}
@@ -1154,13 +1160,27 @@ const Workers = () => {
                 </div>
               )}
 
-              <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
+              <div style={{ 
+                position: 'sticky',
+                bottom: '-24px', // Compensate for parent padding
+                left: '-24px',
+                right: '-24px',
+                backgroundColor: 'white',
+                padding: '20px 24px',
+                borderTop: '1px solid #E5E7EB',
+                marginTop: '20px',
+                marginLeft: '-24px',
+                marginRight: '-24px',
+                marginBottom: '-100px', // Compensate for extra bottom padding
+                display: 'flex',
+                gap: '12px'
+              }}>
                 <button
                   type="submit"
                   onClick={() => console.log('SAVE BUTTON CLICKED - Current timesheet:', timesheet)}
                   style={{
                     flex: 1,
-                    padding: '10px',
+                    padding: '12px',
                     backgroundColor: '#3B82F6',
                     color: 'white',
                     border: 'none',
@@ -1177,7 +1197,7 @@ const Workers = () => {
                   onClick={() => setShowAddModal(false)}
                   style={{
                     flex: 1,
-                    padding: '10px',
+                    padding: '12px',
                     backgroundColor: '#E5E7EB',
                     color: '#374151',
                     border: 'none',
