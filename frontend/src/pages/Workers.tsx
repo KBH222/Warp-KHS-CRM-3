@@ -1007,6 +1007,7 @@ const Workers = () => {
                               <td style={{ padding: '8px', borderBottom: '1px solid #E5E7EB' }}>
                                 <input
                                   type="time"
+                                  step="300"
                                   value={timesheet[day].startTime}
                                   onChange={(e) => handleTimesheetChange(day, 'startTime', e.target.value)}
                                   style={{
@@ -1021,6 +1022,7 @@ const Workers = () => {
                               <td style={{ padding: '8px', borderBottom: '1px solid #E5E7EB' }}>
                                 <input
                                   type="time"
+                                  step="300"
                                   value={timesheet[day].endTime}
                                   onChange={(e) => handleTimesheetChange(day, 'endTime', e.target.value)}
                                   style={{
