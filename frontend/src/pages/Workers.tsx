@@ -890,9 +890,9 @@ const Workers = () => {
                               fontSize: '14px',
                               fontWeight: '600',
                               color: '#374151',
-                              minWidth: '60px'
+                              minWidth: '45px'
                             }}>
-                              Lunch
+                              Eat
                             </th>
                             <th style={{ 
                               textAlign: 'left', 
@@ -984,11 +984,11 @@ const Workers = () => {
                                   value={timesheet[day].lunchMinutes}
                                   onChange={(e) => handleTimesheetChange(day, 'lunchMinutes', parseInt(e.target.value) || 0)}
                                   style={{
-                                    width: '60px',
-                                    padding: '4px 6px',
+                                    width: '40px',
+                                    padding: '2px',
                                     border: '1px solid #D1D5DB',
                                     borderRadius: '4px',
-                                    fontSize: '14px',
+                                    fontSize: '13px',
                                     textAlign: 'center'
                                   }}
                                 />
