@@ -186,9 +186,24 @@ const Workers = () => {
     return Math.max(0, diffHours - lunchHours);
   };
 
+  // Round time to nearest 5 minutes
+  const roundToFiveMinutes = (time: string): string => {
+    if (!time) return time;
+    const [hours, minutes] = time.split(':').map(Number);
+    const roundedMinutes = Math.round(minutes / 5) * 5;
+    const adjustedMinutes = roundedMinutes === 60 ? 0 : roundedMinutes;
+    const adjustedHours = roundedMinutes === 60 ? hours + 1 : hours;
+    return `${adjustedHours.toString().padStart(2, '0')}:${adjustedMinutes.toString().padStart(2, '0')}`;
+  };
+
   // Handle timesheet changes
   const handleTimesheetChange = (day: string, field: string, value: string | number) => {
     console.log(`Timesheet change: ${day} - ${field} = ${value}`);
+    
+    // Round time inputs to 5-minute increments
+    if (field === 'startTime' || field === 'endTime') {
+      value = roundToFiveMinutes(value as string);
+    }
     
     // Only mark as modified if the value actually changed from original
     const originalValue = originalTimesheet?.[day]?.[field];
@@ -1010,6 +1025,8 @@ const Workers = () => {
                                   step="300"
                                   value={timesheet[day].startTime}
                                   onChange={(e) => handleTimesheetChange(day, 'startTime', e.target.value)}
+                                  onBlur={(e) => handleTimesheetChange(day, 'startTime', e.target.value)}
+                                  title="Time will round to nearest 5 minutes"
                                   style={{
                                     width: '100%',
                                     padding: '4px 8px',
@@ -1025,6 +1042,8 @@ const Workers = () => {
                                   step="300"
                                   value={timesheet[day].endTime}
                                   onChange={(e) => handleTimesheetChange(day, 'endTime', e.target.value)}
+                                  onBlur={(e) => handleTimesheetChange(day, 'endTime', e.target.value)}
+                                  title="Time will round to nearest 5 minutes"
                                   style={{
                                     width: '100%',
                                     padding: '4px 8px',
