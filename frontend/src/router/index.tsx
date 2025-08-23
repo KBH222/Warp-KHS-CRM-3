@@ -6,7 +6,7 @@ import { AppLayout } from '../layouts/AppLayout';
 import { AuthLayout } from '../layouts/AuthLayout';
 
 // Auth Guard
-import AuthGuard from '../components/AuthGuard';
+import { AuthGuard } from '../components/AuthGuard';
 
 // Pages - Lazy loaded for better performance
 const Login = lazy(() => import('../pages/Login'));

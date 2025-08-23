@@ -38,7 +38,7 @@
     "frontend": "React 18 + TypeScript + Vite",
     "backend": "Express.js",
     "deployment": {
-      "backend": "Railway (https://khs-crm-3-production.up.railway.app)",
+      "backend": "Railway (https://khs-crm-2-production.up.railway.app)",
       "frontend": "Vercel or local"
     }
   },
