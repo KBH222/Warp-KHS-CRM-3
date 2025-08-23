@@ -305,6 +305,71 @@ const Workers = () => {
     }));
   };
 
+  // Export timesheet to CSV
+  const exportToCSV = () => {
+    if (!editingWorker || activeTab !== 'hours') return;
+
+    const csvRows = [];
+    
+    // Add headers
+    csvRows.push(['Worker', 'Day', 'Date', 'Start Time', 'End Time', 'Eat (min)', 'Total Hours', 'Job/Customer', 'Type of Work']);
+    
+    // Get current date and calculate week dates
+    const today = new Date();
+    const currentDay = today.getDay();
+    const weekStart = new Date(today);
+    weekStart.setDate(today.getDate() - currentDay + 1); // Monday
+    
+    // Add data rows
+    ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].forEach((day, index) => {
+      const dayData = timesheet[day];
+      if (dayData.startTime || dayData.endTime || dayData.job) {
+        const date = new Date(weekStart);
+        date.setDate(weekStart.getDate() + index);
+        
+        csvRows.push([
+          editingWorker.fullName,
+          day,
+          date.toLocaleDateString(),
+          dayData.startTime || '',
+          dayData.endTime || '',
+          dayData.eatMinutes.toString(),
+          dayData.totalHours.toFixed(1),
+          dayData.job || '',
+          dayData.workType || ''
+        ]);
+      }
+    });
+    
+    // Add total row
+    csvRows.push([]);
+    csvRows.push(['', '', '', '', '', '', 'Weekly Total:', getTotalWeeklyHours().toFixed(1), '', '']);
+    
+    // Convert to CSV string
+    const csvContent = csvRows.map(row => 
+      row.map(cell => {
+        // Escape quotes and wrap in quotes if contains comma
+        const escaped = String(cell).replace(/"/g, '""');
+        return escaped.includes(',') ? `"${escaped}"` : escaped;
+      }).join(',')
+    ).join('\n');
+    
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    const fileName = `${editingWorker.name}-hours-${new Date().toISOString().split('T')[0]}.csv`;
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', fileName);
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const handleClearTab = () => {
     if (activeTab === 'hours') {
       // Clear all timesheet data
@@ -898,9 +963,40 @@ const Workers = () => {
                     padding: '12px',
                     marginBottom: '12px'
                   }}>
-                    <h4 style={{ margin: '0 0 8px 0', fontSize: '17px', fontWeight: '600' }}>
-                      Weekly Timesheet
-                    </h4>
+                    <div style={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center',
+                      marginBottom: '8px'
+                    }}>
+                      <h4 style={{ margin: 0, fontSize: '17px', fontWeight: '600' }}>
+                        Weekly Timesheet
+                      </h4>
+                      {editingWorker && (
+                        <button
+                          type="button"
+                          onClick={exportToCSV}
+                          style={{
+                            padding: '6px 12px',
+                            backgroundColor: '#10B981',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '6px',
+                            fontSize: '13px',
+                            fontWeight: '500',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                          }}
+                        >
+                          <svg style={{ width: '16px', height: '16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          Export CSV
+                        </button>
+                      )}
+                    </div>
                     <div style={{ overflowX: 'auto', overflowY: 'visible', maxWidth: '100%' }}>
                       <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '850px' }}>
                         <thead>
