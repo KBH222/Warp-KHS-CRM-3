@@ -112,6 +112,23 @@ export default function SyncDebug() {
     addLog('Sync queue cleared');
     loadData();
   };
+  
+  const clearAllWorkerData = async () => {
+    try {
+      addLog('Clearing all worker data...');
+      
+      // Clear localStorage
+      localStorage.removeItem('khs-crm-workers');
+      addLog('Cleared worker localStorage');
+      
+      // Force refresh from server
+      await refreshWorkers();
+      
+    } catch (error) {
+      console.error('Clear worker data failed', error);
+      addLog(`Clear worker data error: ${error}`);
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-4">
@@ -172,6 +189,12 @@ export default function SyncDebug() {
             disabled={!navigator.onLine}
           >
             Refresh Workers
+          </button>
+          <button
+            onClick={clearAllWorkerData}
+            className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+          >
+            Clear & Refresh Workers
           </button>
           <button
             onClick={clearSyncQueue}

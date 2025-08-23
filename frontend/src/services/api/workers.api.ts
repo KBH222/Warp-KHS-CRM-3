@@ -68,11 +68,26 @@ export const workersApi = {
   // Get all workers from server
   async getAll(): Promise<Worker[]> {
     try {
+      console.log('WorkersAPI.getAll - attempting to fetch from server...');
+      console.log('API Base URL:', api.defaults.baseURL);
+      console.log('Auth token present:', !!localStorage.getItem('khs-crm-token'));
+      
       const response = await api.get('/workers');
       console.log('WorkersAPI.getAll - fetched from server:', response.data.length);
+      
+      // Update localStorage with server data for offline access
+      localStorage.setItem('khs-crm-workers', JSON.stringify(response.data));
+      
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('WorkersAPI.getAll - server error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        url: error.config?.url
+      });
+      
       // Fallback to localStorage if server fails
       const localWorkers = localStorage.getItem('khs-crm-workers');
       if (localWorkers) {
