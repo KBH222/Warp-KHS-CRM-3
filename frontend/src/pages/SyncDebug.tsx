@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { customerServiceFixed } from '../services/customer.service.fixed';
 import { simpleSyncService } from '../services/sync.service.simple';
 import { offlineDb } from '../services/db.service';
+import { workerService } from '../services/worker.service';
 
 export default function SyncDebug() {
   const [customers, setCustomers] = useState<any[]>([]);
+  const [workers, setWorkers] = useState<any[]>([]);
   const [syncStatus, setSyncStatus] = useState<any>({});
   const [localData, setLocalData] = useState<any[]>([]);
   const [logs, setLogs] = useState<string[]>([]);
@@ -25,6 +27,11 @@ export default function SyncDebug() {
       const dbCustomers = await offlineDb.getCustomers();
       setLocalData(dbCustomers);
       addLog(`Found ${dbCustomers.length} customers in IndexedDB`);
+      
+      // Load workers
+      const serviceWorkers = await workerService.getAll();
+      setWorkers(serviceWorkers);
+      addLog(`Loaded ${serviceWorkers.length} workers`);
 
       // Get sync status
       const status = simpleSyncService.getSyncStatus();
@@ -85,6 +92,18 @@ export default function SyncDebug() {
     } catch (error) {
       console.error('Refresh failed', error);
       addLog(`Refresh error: ${error}`);
+    }
+  };
+  
+  const refreshWorkers = async () => {
+    try {
+      addLog('Refreshing workers from server...');
+      const freshWorkers = await workerService.forceRefresh();
+      addLog(`Workers refresh complete: ${freshWorkers.length} workers loaded`);
+      await loadData();
+    } catch (error) {
+      console.error('Workers refresh failed', error);
+      addLog(`Workers refresh error: ${error}`);
     }
   };
 
@@ -148,6 +167,13 @@ export default function SyncDebug() {
             Refresh from Server
           </button>
           <button
+            onClick={refreshWorkers}
+            className="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600"
+            disabled={!navigator.onLine}
+          >
+            Refresh Workers
+          </button>
+          <button
             onClick={clearSyncQueue}
             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
           >
@@ -192,6 +218,20 @@ export default function SyncDebug() {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+      
+      {/* Workers Info */}
+      <div className="bg-white rounded-lg shadow p-4 mb-4">
+        <h2 className="text-lg font-semibold mb-2">
+          Workers ({workers.length})
+        </h2>
+        <div className="max-h-40 overflow-auto">
+          {workers.map((w: any) => (
+            <div key={w.id} className="text-sm py-1 border-b">
+              <span className="font-medium">{w.name}</span> - {w.fullName} ({w.status})
+            </div>
+          ))}
         </div>
       </div>
 

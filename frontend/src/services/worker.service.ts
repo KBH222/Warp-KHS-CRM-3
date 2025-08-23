@@ -254,6 +254,33 @@ class WorkerService {
     console.log('Reset to empty workers list');
   }
   
+  // Force refresh from server
+  async forceRefresh(): Promise<Worker[]> {
+    console.log('=== WorkerService.forceRefresh ===');
+    
+    try {
+      // Clear localStorage first
+      localStorage.removeItem(STORAGE_KEY);
+      console.log('Cleared localStorage for fresh fetch');
+      
+      // Fetch fresh data from server
+      const workers = await workersApi.getAll();
+      console.log('Fetched fresh workers from server:', workers.length);
+      
+      // Update local cache
+      this.workers = workers;
+      
+      // Save to localStorage for offline access
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(workers));
+      console.log('Saved fresh data to localStorage');
+      
+      return workers;
+    } catch (error) {
+      console.error('Force refresh failed:', error);
+      throw error;
+    }
+  }
+  
   // Utility to format phone number
   formatPhone(phone: string): string {
     const cleaned = phone.replace(/\D/g, '');

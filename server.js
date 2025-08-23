@@ -705,6 +705,22 @@ app.get('/api/workers', authMiddleware, async (req, res) => {
   }
 });
 
+app.get('/api/workers/:id', authMiddleware, async (req, res) => {
+  try {
+    const worker = await prisma.worker.findUnique({
+      where: { id: req.params.id }
+    });
+    
+    if (!worker) {
+      return res.status(404).json({ error: 'Worker not found' });
+    }
+    
+    res.json(worker);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch worker' });
+  }
+});
+
 app.post('/api/workers', authMiddleware, async (req, res) => {
   try {
     const worker = await prisma.worker.create({
