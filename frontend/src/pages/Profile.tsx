@@ -459,7 +459,7 @@ const Profile = () => {
                   <input
                     type="range"
                     min="20"
-                    max="48"
+                    max="80"
                     value={profile.businessLogoSize || 32}
                     onChange={(e) => setProfile({ ...profile, businessLogoSize: parseInt(e.target.value) })}
                     disabled={!editMode}
