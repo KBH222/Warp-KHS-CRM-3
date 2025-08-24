@@ -740,6 +740,10 @@ const CustomersEnhanced = () => {
                         e.currentTarget.style.color = '#666';
                         e.currentTarget.style.textDecoration = 'none';
                       }}
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        e.currentTarget.style.color = '#3B82F6';
+                      }}
                     >
                       {customer.email}
                     </button>
@@ -808,6 +812,10 @@ const CustomersEnhanced = () => {
                       onMouseLeave={(e) => {
                         e.currentTarget.style.color = '#6B7280';
                         e.currentTarget.style.textDecoration = 'none';
+                      }}
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        e.currentTarget.style.color = '#3B82F6';
                       }}
                     >
                       {customer.address}

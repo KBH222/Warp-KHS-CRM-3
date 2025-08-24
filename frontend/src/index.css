@@ -317,6 +317,22 @@ table, thead, tbody, tfoot, tr, td, th {
     overflow-y: auto;
     padding-bottom: 80px; /* Space for bottom navigation */
   }
+  
+  /* Fix for clickable links - prevent red on active */
+  button:active,
+  button:focus,
+  a:active,
+  a:focus,
+  a:visited {
+    color: inherit !important;
+    outline: none !important;
+  }
+  
+  /* Specific fix for blue interactive elements */
+  button[style*="color: rgb(59, 130, 246)"]:active,
+  button[style*="color: #3B82F6"]:active {
+    color: #3B82F6 !important;
+  }
 
   /* Pull to refresh styles */
   .ptr-element {
