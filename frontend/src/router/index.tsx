@@ -28,6 +28,7 @@ const PracticalSecurity = lazy(() => import('../pages/PracticalSecurity'));
 const SyncDebug = lazy(() => import('../pages/SyncDebug'));
 const DebugEnv = lazy(() => import('../pages/DebugEnv'));
 const KHSInfo = lazy(() => import('../pages/KHSInfoSync'));
+const TestConnection = lazy(() => import('../pages/TestConnection'));
 
 // Loading component
 const PageLoader = () => {
@@ -76,6 +77,7 @@ export const Router = () => {
           <Route path="/sync-debug" element={<SyncDebug />} />
           <Route path="/debug-env" element={<DebugEnv />} />
           <Route path="/khs-info" element={<KHSInfo />} />
+          <Route path="/test-connection" element={<TestConnection />} />
         </Route>
 
         {/* Catch all */}
