@@ -268,10 +268,10 @@ const KHSInfoSimple = () => {
 
   const renderToolsList = () => {
     return (
-      <div style={{ padding: '20px' }}>
+      <div style={{ padding: '16px' }}>
         {/* Category Selection */}
-        <div style={{ marginBottom: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '40px', marginBottom: '16px' }}>
+        <div style={{ marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '40px', marginBottom: '12px' }}>
             <label style={{
               display: 'flex',
               alignItems: 'center',
@@ -319,21 +319,22 @@ const KHSInfoSimple = () => {
           {toolsData.showDemo && (
             <div style={{
               backgroundColor: '#FEF3C7',
-              padding: '12px',
-              borderRadius: '8px',
-              marginBottom: '12px',
+              padding: '8px',
+              borderRadius: '6px',
+              marginBottom: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#92400E', margin: 0 }}>
-                  Demo
-                </h4>
-              </div>
+              <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#92400E', margin: 0, minWidth: '45px' }}>
+                Demo:
+              </h4>
               <div style={{
                 display: 'flex',
-                gap: '12px',
+                gap: '8px',
                 overflowX: 'auto',
-                paddingBottom: '8px',
                 WebkitOverflowScrolling: 'touch',
+                flex: 1,
               }}>
                 {demoCategories.map(category => (
                   <label
@@ -345,10 +346,10 @@ const KHSInfoSimple = () => {
                       opacity: toolsData.isLocked ? 0.6 : 1,
                       whiteSpace: 'nowrap',
                       backgroundColor: toolsData.selectedCategories.includes(category) ? '#FDE68A' : 'white',
-                      padding: '6px 10px',
-                      borderRadius: '6px',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
                       border: '1px solid #FCD34D',
-                      fontSize: '14px',
+                      fontSize: '13px',
                     }}
                   >
                     <input
@@ -357,13 +358,13 @@ const KHSInfoSimple = () => {
                       onChange={() => handleCategoryToggle(category)}
                       disabled={toolsData.isLocked}
                       style={{
-                        marginRight: '8px',
-                        width: '16px',
-                        height: '16px',
+                        marginRight: '6px',
+                        width: '14px',
+                        height: '14px',
                         cursor: toolsData.isLocked ? 'not-allowed' : 'pointer',
                       }}
                     />
-                    <span style={{ fontSize: '16px', color: '#78350F' }}>{category}</span>
+                    <span style={{ fontSize: '13px', color: '#78350F' }}>{category}</span>
                   </label>
                 ))}
               </div>
@@ -374,21 +375,22 @@ const KHSInfoSimple = () => {
           {toolsData.showInstall && (
             <div style={{
               backgroundColor: '#DBEAFE',
-              padding: '12px',
-              borderRadius: '8px',
-              marginBottom: '12px',
+              padding: '8px',
+              borderRadius: '6px',
+              marginBottom: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#1E40AF', margin: 0 }}>
-                  Install
-                </h4>
-              </div>
+              <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#1E40AF', margin: 0, minWidth: '45px' }}>
+                Install:
+              </h4>
               <div style={{
                 display: 'flex',
-                gap: '12px',
+                gap: '8px',
                 overflowX: 'auto',
-                paddingBottom: '8px',
                 WebkitOverflowScrolling: 'touch',
+                flex: 1,
               }}>
                 {installCategories.map(category => (
                   <label
@@ -400,10 +402,10 @@ const KHSInfoSimple = () => {
                       opacity: toolsData.isLocked ? 0.6 : 1,
                       whiteSpace: 'nowrap',
                       backgroundColor: toolsData.selectedCategories.includes(category) ? '#BFDBFE' : 'white',
-                      padding: '6px 10px',
-                      borderRadius: '6px',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
                       border: '1px solid #93C5FD',
-                      fontSize: '14px',
+                      fontSize: '13px',
                     }}
                   >
                     <input
@@ -412,13 +414,13 @@ const KHSInfoSimple = () => {
                       onChange={() => handleCategoryToggle(category)}
                       disabled={toolsData.isLocked}
                       style={{
-                        marginRight: '8px',
-                        width: '16px',
-                        height: '16px',
+                        marginRight: '6px',
+                        width: '14px',
+                        height: '14px',
                         cursor: toolsData.isLocked ? 'not-allowed' : 'pointer',
                       }}
                     />
-                    <span style={{ fontSize: '16px', color: '#1E3A8A' }}>{category}</span>
+                    <span style={{ fontSize: '13px', color: '#1E3A8A' }}>{category}</span>
                   </label>
                 ))}
               </div>
@@ -428,7 +430,7 @@ const KHSInfoSimple = () => {
 
         {/* Lock/Unlock Button */}
         {(toolsData.showDemo || toolsData.showInstall) && (
-          <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '16px' }}>
             <button
               onClick={() => updateToolsData({ isLocked: !toolsData.isLocked })}
               style={{
