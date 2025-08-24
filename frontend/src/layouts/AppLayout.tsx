@@ -7,6 +7,7 @@ export const AppLayout = () => {
   const user = useUser();
   const [isMobile, setIsMobile] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string>('');
+  const [logoSize, setLogoSize] = useState<number>(32);
   const [companyAbbreviation, setCompanyAbbreviation] = useState<string>('KHS');
 
   useEffect(() => {
@@ -21,23 +22,29 @@ export const AppLayout = () => {
   }, []);
 
   useEffect(() => {
-    // Load logo and abbreviation from profile
+    // Load logo, size, and abbreviation from profile
     const profile = profileStorage.get();
     if (profile) {
       if (profile.businessLogo) {
         setLogoUrl(profile.businessLogo);
+      }
+      if (profile.businessLogoSize) {
+        setLogoSize(profile.businessLogoSize);
       }
       if (profile.businessAbbreviation) {
         setCompanyAbbreviation(profile.businessAbbreviation);
       }
     }
 
-    // Listen for storage changes to update logo and abbreviation
+    // Listen for storage changes to update logo, size, and abbreviation
     const handleStorageChange = () => {
       const updatedProfile = profileStorage.get();
       if (updatedProfile) {
         if (updatedProfile.businessLogo) {
           setLogoUrl(updatedProfile.businessLogo);
+        }
+        if (updatedProfile.businessLogoSize) {
+          setLogoSize(updatedProfile.businessLogoSize);
         }
         if (updatedProfile.businessAbbreviation) {
           setCompanyAbbreviation(updatedProfile.businessAbbreviation);
@@ -73,12 +80,22 @@ export const AppLayout = () => {
                 <img 
                   src={logoUrl} 
                   alt="KHS Logo" 
-                  className="w-8 h-8 object-contain flex-shrink-0"
-                  style={{ maxWidth: '32px', maxHeight: '32px' }}
+                  className="object-contain flex-shrink-0"
+                  style={{ 
+                    width: `${logoSize}px`, 
+                    height: `${logoSize}px`,
+                    maxWidth: `${logoSize}px`, 
+                    maxHeight: `${logoSize}px` 
+                  }}
                 />
               ) : (
                 <div 
-                  className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center text-white font-bold"
+                  className="bg-blue-500 rounded flex items-center justify-center text-white font-bold"
+                  style={{ 
+                    width: `${logoSize}px`, 
+                    height: `${logoSize}px`,
+                    fontSize: `${Math.floor(logoSize * 0.5)}px`
+                  }}
                 >
                   {companyAbbreviation.charAt(0)}
                 </div>

@@ -17,6 +17,7 @@ const Profile = () => {
     businessName: 'KHS Construction & Remodeling',
     businessAbbreviation: 'KHS',
     businessLogo: '', // Logo URL or base64 data
+    businessLogoSize: 32, // Logo display size in pixels
     businessPhone: '(555) 100-2000',
     businessEmail: 'info@khsconstruction.com',
     businessAddress: '123 Construction Way, Springfield, IL 62701',
@@ -448,6 +449,29 @@ const Profile = () => {
                     </div>
                   )}
                 </div>
+                {/* Logo Size Slider */}
+                {profile.businessLogo && (
+                  <div style={{ marginTop: '12px' }}>
+                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', color: '#6B7280' }}>
+                      Logo Size: {profile.businessLogoSize}px
+                    </label>
+                    <input
+                      type="range"
+                      min="20"
+                      max="48"
+                      value={profile.businessLogoSize}
+                      onChange={(e) => setProfile({ ...profile, businessLogoSize: parseInt(e.target.value) })}
+                      disabled={!editMode}
+                      style={{
+                        width: '150px',
+                        cursor: editMode ? 'pointer' : 'default'
+                      }}
+                    />
+                    <div style={{ fontSize: '12px', color: '#9CA3AF', marginTop: '4px' }}>
+                      Adjust how large the logo appears in the header
+                    </div>
+                  </div>
+                )}
               </div>
               <div>
                 <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
