@@ -14,13 +14,6 @@ const DashboardEnhanced = () => {
       color: '#3B82F6'
     },
     {
-      title: 'Jobs',
-      description: 'View and manage all jobs',
-      icon: '🔨',
-      path: '/jobs',
-      color: '#EF4444'
-    },
-    {
       title: 'Schedule',
       description: 'View calendar and timeline of all jobs',
       icon: '📅',
@@ -33,20 +26,6 @@ const DashboardEnhanced = () => {
       icon: '👷',
       path: '/workers',
       color: '#F59E0B'
-    },
-    {
-      title: 'Invoices',
-      description: 'Create and manage invoices',
-      icon: '💰',
-      path: '/invoices',
-      color: '#06B6D4'
-    },
-    {
-      title: 'Reports',
-      description: 'View business analytics and reports',
-      icon: '📊',
-      path: '/reports',
-      color: '#EC4899'
     },
     {
       title: 'Materials',
