@@ -107,8 +107,10 @@ export const storage = {
 export const customerStorage = {
   getAll: () => {
     const data = storage.get(STORAGE_KEYS.CUSTOMERS, []);
-    auditService.logAccess('read', 'customers', DataClassification.PUBLIC, { count: data.length });
-    return data;
+    // Ensure data is an array
+    const customers = Array.isArray(data) ? data : [];
+    auditService.logAccess('read', 'customers', DataClassification.PUBLIC, { count: customers.length });
+    return customers;
   },
   save: (customers: unknown[]) => {
     storage.set(STORAGE_KEYS.CUSTOMERS, customers);
@@ -176,6 +178,10 @@ export const profileStorage = {
 export const calendarJobStorage = {
   getAll: () => {
     const jobs = storage.get(STORAGE_KEYS.CALENDAR_JOBS, []);
+    // Ensure jobs is an array
+    if (!Array.isArray(jobs)) {
+      return [];
+    }
     // Convert date strings back to Date objects
     return jobs.map((job: Record<string, unknown>) => ({
       ...job,
