@@ -598,17 +598,18 @@ const KHSInfoSimple = () => {
                       <button
                         onClick={() => handleDeleteTool(category, tool.id)}
                         style={{
-                          padding: '4px 8px',
+                          padding: '4px 6px',
                           backgroundColor: '#FEE2E2',
                           color: '#DC2626',
                           border: 'none',
                           borderRadius: '4px',
                           cursor: 'pointer',
-                          fontSize: '14px',
+                          fontSize: '12px',
                           fontWeight: '500',
+                          minWidth: '35px',
                         }}
                       >
-                        Delete
+                        Del
                       </button>
                     )}
                   </div>
@@ -617,7 +618,7 @@ const KHSInfoSimple = () => {
 
               {/* Add new tool and Lock/Edit button */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px' }}>
-                {!toolsData.isLocked && (
+                {!toolsData.isLocked ? (
                   <>
                     <input
                       type="text"
@@ -653,6 +654,8 @@ const KHSInfoSimple = () => {
                       Add
                     </button>
                   </>
+                ) : (
+                  <div style={{ width: '200px' }}></div>
                 )}
                 <button
                   onClick={() => updateToolsData({ isLocked: !toolsData.isLocked })}
@@ -665,7 +668,6 @@ const KHSInfoSimple = () => {
                     cursor: 'pointer',
                     fontSize: '16px',
                     fontWeight: '500',
-                    marginLeft: !toolsData.isLocked ? '0' : 'auto',
                   }}
                 >
                   Lock/Edit
