@@ -269,21 +269,6 @@ const KHSInfoSimple = () => {
   const renderToolsList = () => {
     return (
       <div style={{ padding: '20px' }}>
-        {/* Sync Status Indicator */}
-        <div style={{
-          marginBottom: '16px',
-          padding: '8px 12px',
-          backgroundColor: '#D1FAE5',
-          color: '#065F46',
-          borderRadius: '6px',
-          fontSize: '14px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px'
-        }}>
-          ✓ Syncing with all users
-        </div>
-
         {/* Category Selection */}
         <div style={{ marginBottom: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '40px', marginBottom: '16px' }}>
@@ -334,13 +319,15 @@ const KHSInfoSimple = () => {
           {toolsData.showDemo && (
             <div style={{
               backgroundColor: '#FEF3C7',
-              padding: '16px',
+              padding: '12px',
               borderRadius: '8px',
-              marginBottom: '16px',
+              marginBottom: '12px',
             }}>
-              <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#92400E', marginBottom: '12px' }}>
-                Demo
-              </h4>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+                <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#92400E', margin: 0 }}>
+                  Demo
+                </h4>
+              </div>
               <div style={{
                 display: 'flex',
                 gap: '12px',
@@ -358,9 +345,10 @@ const KHSInfoSimple = () => {
                       opacity: toolsData.isLocked ? 0.6 : 1,
                       whiteSpace: 'nowrap',
                       backgroundColor: toolsData.selectedCategories.includes(category) ? '#FDE68A' : 'white',
-                      padding: '8px 12px',
-                      borderRadius: '8px',
+                      padding: '6px 10px',
+                      borderRadius: '6px',
                       border: '1px solid #FCD34D',
+                      fontSize: '14px',
                     }}
                   >
                     <input
@@ -386,13 +374,15 @@ const KHSInfoSimple = () => {
           {toolsData.showInstall && (
             <div style={{
               backgroundColor: '#DBEAFE',
-              padding: '16px',
+              padding: '12px',
               borderRadius: '8px',
-              marginBottom: '16px',
+              marginBottom: '12px',
             }}>
-              <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#1E40AF', marginBottom: '12px' }}>
-                Install
-              </h4>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+                <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#1E40AF', margin: 0 }}>
+                  Install
+                </h4>
+              </div>
               <div style={{
                 display: 'flex',
                 gap: '12px',
@@ -410,9 +400,10 @@ const KHSInfoSimple = () => {
                       opacity: toolsData.isLocked ? 0.6 : 1,
                       whiteSpace: 'nowrap',
                       backgroundColor: toolsData.selectedCategories.includes(category) ? '#BFDBFE' : 'white',
-                      padding: '8px 12px',
-                      borderRadius: '8px',
+                      padding: '6px 10px',
+                      borderRadius: '6px',
                       border: '1px solid #93C5FD',
+                      fontSize: '14px',
                     }}
                   >
                     <input
