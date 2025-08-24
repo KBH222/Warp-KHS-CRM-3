@@ -449,29 +449,36 @@ const Profile = () => {
                     </div>
                   )}
                 </div>
-                {/* Logo Size Slider */}
-                {profile.businessLogo && (
-                  <div style={{ marginTop: '12px' }}>
-                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', color: '#6B7280' }}>
-                      Logo Size: {profile.businessLogoSize}px
-                    </label>
-                    <input
-                      type="range"
-                      min="20"
-                      max="48"
-                      value={profile.businessLogoSize}
-                      onChange={(e) => setProfile({ ...profile, businessLogoSize: parseInt(e.target.value) })}
-                      disabled={!editMode}
-                      style={{
-                        width: '150px',
-                        cursor: editMode ? 'pointer' : 'default'
-                      }}
-                    />
-                    <div style={{ fontSize: '12px', color: '#9CA3AF', marginTop: '4px' }}>
-                      Adjust how large the logo appears in the header
-                    </div>
-                  </div>
-                )}
+              </div>
+              {/* Logo Size Slider - Always visible */}
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '16.1px', fontWeight: '500' }}>
+                  Logo Display Size
+                </label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <input
+                    type="range"
+                    min="20"
+                    max="48"
+                    value={profile.businessLogoSize || 32}
+                    onChange={(e) => setProfile({ ...profile, businessLogoSize: parseInt(e.target.value) })}
+                    disabled={!editMode}
+                    style={{
+                      width: '200px',
+                      cursor: editMode ? 'pointer' : 'default'
+                    }}
+                  />
+                  <span style={{ 
+                    fontSize: '14px', 
+                    color: '#6B7280',
+                    minWidth: '45px'
+                  }}>
+                    {profile.businessLogoSize || 32}px
+                  </span>
+                </div>
+                <p style={{ fontSize: '12px', color: '#9CA3AF', marginTop: '4px' }}>
+                  Adjust how large the logo appears in the header
+                </p>
               </div>
               <div>
                 <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
