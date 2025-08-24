@@ -496,7 +496,7 @@ const KHSInfoSimple = () => {
                   color: '#111827',
                   margin: 0,
                 }}>
-                  {category}
+                  {category} {!toolsData.isLocked && <span style={{ fontSize: '14px', color: '#10B981' }}>(Edit Mode)</span>}
                 </h4>
                 <button
                   onClick={() => handleClearCategory(category)}
@@ -594,7 +594,7 @@ const KHSInfoSimple = () => {
                         </span>
                       )}
                     </label>
-                    {tool.custom && !toolsData.isLocked && (
+                    {!toolsData.isLocked && (
                       <button
                         onClick={() => handleDeleteTool(category, tool.id)}
                         style={{
@@ -658,7 +658,7 @@ const KHSInfoSimple = () => {
                   onClick={() => updateToolsData({ isLocked: !toolsData.isLocked })}
                   style={{
                     padding: '6px 12px',
-                    backgroundColor: toolsData.isLocked ? '#10B981' : '#EF4444',
+                    backgroundColor: toolsData.isLocked ? '#EF4444' : '#10B981',
                     color: 'white',
                     border: 'none',
                     borderRadius: '6px',
@@ -668,7 +668,7 @@ const KHSInfoSimple = () => {
                     marginLeft: !toolsData.isLocked ? '0' : 'auto',
                   }}
                 >
-                  {toolsData.isLocked ? 'Edit' : 'Lock'}
+                  Lock/Edit
                 </button>
               </div>
             </div>
