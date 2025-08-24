@@ -355,7 +355,7 @@ const Profile = () => {
                     )}
                   </div>
                   {editMode && (
-                    <div>
+                    <div style={{ display: 'flex', gap: '8px', flexDirection: 'column' }}>
                       <input
                         type="file"
                         accept="image/*"
@@ -364,10 +364,53 @@ const Profile = () => {
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           if (file) {
+                            // Check file size (limit to 2MB)
+                            if (file.size > 2 * 1024 * 1024) {
+                              alert('Logo file size must be less than 2MB');
+                              return;
+                            }
+
+                            // Create image to check dimensions
+                            const img = new Image();
                             const reader = new FileReader();
+                            
                             reader.onloadend = () => {
-                              setProfile({ ...profile, businessLogo: reader.result });
+                              img.onload = () => {
+                                // Create canvas to resize image
+                                const canvas = document.createElement('canvas');
+                                const ctx = canvas.getContext('2d');
+                                
+                                // Set maximum dimensions
+                                const maxSize = 200;
+                                let width = img.width;
+                                let height = img.height;
+                                
+                                // Calculate new dimensions
+                                if (width > height) {
+                                  if (width > maxSize) {
+                                    height = (height * maxSize) / width;
+                                    width = maxSize;
+                                  }
+                                } else {
+                                  if (height > maxSize) {
+                                    width = (width * maxSize) / height;
+                                    height = maxSize;
+                                  }
+                                }
+                                
+                                // Resize image
+                                canvas.width = width;
+                                canvas.height = height;
+                                ctx.drawImage(img, 0, 0, width, height);
+                                
+                                // Convert to base64 with compression
+                                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                                setProfile({ ...profile, businessLogo: compressedDataUrl });
+                              };
+                              
+                              img.src = reader.result as string;
                             };
+                            
                             reader.readAsDataURL(file);
                           }
                         }}
@@ -386,6 +429,22 @@ const Profile = () => {
                       >
                         Upload Logo
                       </label>
+                      {profile.businessLogo && (
+                        <button
+                          onClick={() => setProfile({ ...profile, businessLogo: '' })}
+                          style={{
+                            padding: '6px 12px',
+                            backgroundColor: '#EF4444',
+                            color: 'white',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            border: 'none'
+                          }}
+                        >
+                          Remove Logo
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
