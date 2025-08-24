@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface Tool {
   id: string;
@@ -140,6 +141,7 @@ const predefinedTools: CategoryTools = {
 };
 
 const KHSInfoSimple = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Tools List');
   const [toolsData, setToolsData] = useState<ToolsData>(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -721,11 +723,59 @@ const KHSInfoSimple = () => {
       <div style={{
         backgroundColor: 'white',
         borderBottom: '1px solid #E5E7EB',
-        padding: '16px 20px'
+        padding: '16px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '16px'
       }}>
-        <h1 style={{ fontSize: '26px', fontWeight: '700', color: '#111827' }}>
-          KHS Info
-        </h1>
+        <button
+          onClick={() => navigate('/dashboard')}
+          style={{
+            padding: '8px',
+            backgroundColor: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '8px',
+            transition: 'background-color 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#F3F4F6';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
+        >
+          <svg 
+            width="24" 
+            height="24" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2"
+          >
+            <path d="M19 12H5M5 12L12 19M5 12L12 5" />
+          </svg>
+        </button>
+        <div>
+          <h1 style={{ 
+            fontSize: '24px', 
+            fontWeight: '700', 
+            color: '#111827',
+            margin: 0 
+          }}>
+            KHS Info
+          </h1>
+          <p style={{ 
+            fontSize: '14px', 
+            color: '#6B7280',
+            margin: '4px 0 0 0'
+          }}>
+            Tools, SOPs, office docs and specs
+          </p>
+        </div>
       </div>
 
       {/* Tabs */}
