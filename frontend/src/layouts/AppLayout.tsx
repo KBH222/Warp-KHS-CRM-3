@@ -54,22 +54,24 @@ export const AppLayout = () => {
     <div className="app-layout">
       {/* Header */}
       <header className="app-header bg-white shadow-sm">
-        <div className="px-4 h-14 flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-900">KHS CRM</h1>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">{user?.name}</span>
-            <button
-              onClick={() => setShowMenu(!showMenu)}
-              className="p-2 -mr-2 rounded-lg hover:bg-gray-100"
-            >
-              <MenuIcon />
-            </button>
+        <div className="h-14 flex items-center">
+          <div className="w-full max-w-[1200px] mx-auto px-5 flex items-center justify-between">
+            <h1 className="text-lg font-semibold text-gray-900">KHS CRM</h1>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-600">{user?.name}</span>
+              <button
+                onClick={() => setShowMenu(!showMenu)}
+                className="p-2 -mr-2 rounded-lg hover:bg-gray-100"
+              >
+                <MenuIcon />
+              </button>
+            </div>
           </div>
         </div>
         
         {/* Dropdown Menu */}
         {showMenu && (
-          <div className="absolute right-4 top-14 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-40">
+          <div className="absolute right-5 top-14 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-40" style={{ maxWidth: 'calc(100vw - 40px)' }}>
             <div className="px-4 py-2 border-b border-gray-200">
               <p className="text-sm font-medium text-gray-900">{user?.name}</p>
               <p className="text-xs text-gray-500">{user?.email}</p>
