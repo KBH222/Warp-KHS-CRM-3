@@ -155,6 +155,20 @@ const KHSInfo = () => {
     }
   }, []);
 
+  // Clear invalid categories when Demo/Install changes
+  useEffect(() => {
+    if (!showDemo && !showInstall) {
+      setSelectedCategories([]);
+    } else {
+      // Remove categories that are no longer available
+      const availableCategories = [
+        ...(showDemo ? demoCategories : []),
+        ...(showInstall ? installCategories : [])
+      ];
+      setSelectedCategories(prev => prev.filter(cat => availableCategories.includes(cat)));
+    }
+  }, [showDemo, showInstall, demoCategories, installCategories]);
+
   // Save data whenever it changes
   useEffect(() => {
     const dataToSave = {
