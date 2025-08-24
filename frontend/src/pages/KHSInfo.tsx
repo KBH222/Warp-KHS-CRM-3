@@ -186,7 +186,7 @@ return;
         {/* Category Selection */}
         <div style={{ marginBottom: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#111827' }}>
               Select Categories
             </h3>
             <button
@@ -199,7 +199,7 @@ return;
                 border: 'none',
                 borderRadius: '6px',
                 cursor: isLocked ? 'not-allowed' : 'pointer',
-                fontSize: '14px',
+                fontSize: '18px',
                 fontWeight: '500',
               }}
             >
@@ -237,7 +237,7 @@ return;
                       cursor: isLocked ? 'not-allowed' : 'pointer',
                     }}
                   />
-                  <span style={{ fontSize: '16px', color: '#374151' }}>{category}</span>
+                  <span style={{ fontSize: '18px', color: '#374151' }}>{category}</span>
                 </label>
               ))}
             </div>
@@ -272,7 +272,7 @@ return;
             textAlign: 'center',
             padding: '40px',
             color: '#6B7280',
-            fontSize: '16px',
+            fontSize: '18px',
           }}>
             Select categories above to view tool lists
           </div>
@@ -288,7 +288,7 @@ return;
                 borderBottom: '2px solid #E5E7EB',
               }}>
                 <h4 style={{
-                  fontSize: '18px',
+                  fontSize: '20px',
                   fontWeight: '600',
                   color: '#111827',
                   margin: 0,
@@ -304,7 +304,7 @@ return;
                     border: 'none',
                     borderRadius: '4px',
                     cursor: 'pointer',
-                    fontSize: '14px',
+                    fontSize: '18px',
                     fontWeight: '500',
                     transition: 'background-color 0.2s',
                   }}
@@ -351,7 +351,7 @@ return;
                         }}
                       />
                       <span style={{
-                        fontSize: '16px',
+                        fontSize: '18px',
                         color: '#374151',
                         textDecoration: tool.checked ? 'line-through' : 'none',
                         opacity: tool.checked ? 0.6 : 1,
@@ -369,7 +369,7 @@ return;
                           border: 'none',
                           borderRadius: '4px',
                           cursor: 'pointer',
-                          fontSize: '12px',
+                          fontSize: '14px',
                           fontWeight: '500',
                         }}
                       >
@@ -394,11 +394,11 @@ return;
                     }}
                     placeholder="Add new tool..."
                     style={{
-                      width: '150px',
+                      width: '200px',
                       padding: '6px 10px',
                       border: '1px solid #D1D5DB',
                       borderRadius: '6px',
-                      fontSize: '14px',
+                      fontSize: '18px',
                     }}
                   />
                   <button
@@ -410,7 +410,7 @@ return;
                       border: 'none',
                       borderRadius: '6px',
                       cursor: 'pointer',
-                      fontSize: '14px',
+                      fontSize: '18px',
                       fontWeight: '500',
                     }}
                   >
@@ -432,19 +432,19 @@ return;
       case 'SOP':
         return (
           <div style={{ padding: '20px', textAlign: 'center', color: '#6B7280' }}>
-            <p style={{ fontSize: '16px' }}>Standard Operating Procedures - Coming Soon</p>
+            <p style={{ fontSize: '18px' }}>Standard Operating Procedures - Coming Soon</p>
           </div>
         );
       case 'Office Docs':
         return (
           <div style={{ padding: '20px', textAlign: 'center', color: '#6B7280' }}>
-            <p style={{ fontSize: '16px' }}>Office Documents - Coming Soon</p>
+            <p style={{ fontSize: '18px' }}>Office Documents - Coming Soon</p>
           </div>
         );
       case 'Specs':
         return (
           <div style={{ padding: '20px', textAlign: 'center', color: '#6B7280' }}>
-            <p style={{ fontSize: '16px' }}>Specifications - Coming Soon</p>
+            <p style={{ fontSize: '18px' }}>Specifications - Coming Soon</p>
           </div>
         );
       default:
@@ -460,7 +460,7 @@ return;
         borderBottom: '1px solid #E5E7EB',
         padding: '16px 20px',
       }}>
-        <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#111827' }}>
+        <h1 style={{ fontSize: '26px', fontWeight: '700', color: '#111827' }}>
           KHS Info
         </h1>
       </div>
@@ -483,7 +483,7 @@ return;
               border: 'none',
               backgroundColor: 'transparent',
               color: activeTab === tab ? '#3B82F6' : '#6B7280',
-              fontSize: '16px',
+              fontSize: '18px',
               fontWeight: activeTab === tab ? '600' : '400',
               cursor: 'pointer',
               borderBottom: activeTab === tab ? '2px solid #3B82F6' : '2px solid transparent',
