@@ -72,7 +72,6 @@ const DashboardEnhanced = () => {
       minute: '2-digit',
       second: '2-digit'
     });
-    console.log('Dashboard time formatting - Date:', date, 'Time:', time);
     return { date, time };
   };
 
@@ -98,11 +97,15 @@ const DashboardEnhanced = () => {
           }}>
             {formatDateTime().date}
           </div>
-          <div style={{ 
-            fontSize: '29px', 
-            color: '#10B981',
-            fontFamily: 'monospace'
-          }}>
+          <div 
+            className="dashboard-time"
+            style={{ 
+              fontSize: '36px', 
+              color: '#10B981',
+              fontFamily: 'monospace',
+              fontWeight: '500',
+              letterSpacing: '0.5px'
+            }}>
             {formatDateTime().time}
           </div>
         </div>
