@@ -139,7 +139,7 @@ const ScheduleCalendar = () => {
   };
 
   const getJobsForDate = (date) => {
-    return allJobs.filter(job => {
+    return (allJobs || []).filter(job => {
       const jobStart = new Date(job.startDate);
       const jobEnd = new Date(job.endDate);
       const checkDate = new Date(date);
@@ -261,7 +261,7 @@ const ScheduleCalendar = () => {
       const newEndDate = new Date(targetDate);
       newEndDate.setDate(newEndDate.getDate() + jobDuration);
 
-      setAllJobs(allJobs.map(job => 
+      setAllJobs((allJobs || []).map(job => 
         job.id === draggedJob.id 
           ? {
               ...job,
@@ -343,7 +343,7 @@ const ScheduleCalendar = () => {
     
     if (editingJob) {
       // Update existing job
-      setAllJobs(allJobs.map(job => 
+      setAllJobs((allJobs || []).map(job => 
         job.id === editingJob.id 
           ? {
               ...job,
@@ -458,7 +458,7 @@ const ScheduleCalendar = () => {
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-      const dayJobs = getJobsForDate(date);
+      const dayJobs = getJobsForDate(date) || [];
       const isToday = new Date().toDateString() === date.toDateString();
 
       days.push(
@@ -783,7 +783,7 @@ const ScheduleCalendar = () => {
               {hour > 12 ? `${hour - 12} PM` : hour === 12 ? '12 PM' : `${hour} AM`}
             </div>
             {weekDays.map(day => {
-              const dayJobs = getJobsForDate(day);
+              const dayJobs = getJobsForDate(day) || [];
               const isToday = new Date().toDateString() === day.toDateString();
               
               return (
@@ -984,7 +984,7 @@ const ScheduleCalendar = () => {
   };
 
   const renderDayView = () => {
-    const dayJobs = getJobsForDate(currentDate);
+    const dayJobs = getJobsForDate(currentDate) || [];
     const hours = Array.from({ length: 13 }, (_, i) => i + 6); // 6 AM to 6 PM
     const isToday = new Date().toDateString() === currentDate.toDateString();
 
@@ -1188,7 +1188,7 @@ const ScheduleCalendar = () => {
     };
     
     // Filter jobs that occur in current month
-    const monthJobs = allJobs.filter(job => {
+    const monthJobs = (allJobs || []).filter(job => {
       const jobStart = new Date(job.startDate);
       const jobEnd = new Date(job.endDate);
       return (jobStart <= endOfMonth && jobEnd >= startOfMonth);
