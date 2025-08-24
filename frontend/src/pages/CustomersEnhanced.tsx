@@ -518,35 +518,47 @@ const CustomersEnhanced = () => {
 
   return (
     <>
-      <ScrollablePageContainer>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        {/* Fixed Header */}
-        <div className="bg-white pb-4">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px', paddingTop: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+      <div style={{ 
+        height: '100%',
+        overflowY: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        paddingBottom: '100px' // Extra padding for iOS scrolling
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+          {/* Header */}
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center',
+            marginBottom: '20px',
+            flexWrap: 'wrap',
+            gap: '12px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <button
+                onClick={() => navigate('/dashboard')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: '8px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: '#6B7280',
+                  borderRadius: '6px'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                <svg style={{ width: '28px', height: '28px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: 0 }}>
+                Customers
+              </h1>
+            </div>
             <button
-              onClick={() => navigate('/dashboard')}
-              style={{
-                background: 'none',
-                border: 'none',
-                padding: '8px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                color: '#6B7280',
-                borderRadius: '6px',
-                marginTop: '-4px'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-            >
-              <svg style={{ width: '28px', height: '28px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: 0 }}>Customers</h1>
-          </div>
-          <button
               onClick={() => {
                 setEditingCustomer(null);
                 setShowModal(true);
@@ -564,7 +576,7 @@ const CustomersEnhanced = () => {
             >
               + Add Customer
             </button>
-        </div>
+          </div>
 
         {/* Customer Type Selector */}
         <div style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
@@ -680,11 +692,7 @@ const CustomersEnhanced = () => {
             Recent
           </button>
         </div>
-        </div>
-        </div>
 
-        {/* Customer List Container */}
-        <div style={{ paddingBottom: '20px' }}>
         {/* Customer Cards */}
         {isLoading ? (
           <div style={{
@@ -1035,9 +1043,9 @@ const CustomersEnhanced = () => {
           </div>
         )}
         </div>
-    </ScrollablePageContainer>
+      </div>
 
-    {/* Customer Modal */}
+      {/* Customer Modal */}
     {showModal && (
         <CustomerModal
           customer={editingCustomer}
