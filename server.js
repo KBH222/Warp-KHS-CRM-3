@@ -939,6 +939,170 @@ app.post('/api/sync/pull', authMiddleware, async (req, res) => {
   }
 });
 
+// Tool Lists API endpoints
+app.get('/api/tools/settings', authMiddleware, async (req, res) => {
+  try {
+    // Get or create the single settings record
+    let settings = await prisma.toolSettings.findFirst();
+    
+    if (!settings) {
+      // Create default settings if none exist
+      settings = await prisma.toolSettings.create({
+        data: {
+          selectedCategories: [],
+          isLocked: false,
+          showDemo: false,
+          showInstall: false
+        }
+      });
+    }
+    
+    res.json(settings);
+  } catch (error) {
+    console.error('[Tools] Error fetching settings:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put('/api/tools/settings', authMiddleware, async (req, res) => {
+  try {
+    const { selectedCategories, isLocked, showDemo, showInstall } = req.body;
+    
+    // Get existing settings
+    let settings = await prisma.toolSettings.findFirst();
+    
+    if (settings) {
+      // Update existing settings
+      settings = await prisma.toolSettings.update({
+        where: { id: settings.id },
+        data: {
+          selectedCategories,
+          isLocked,
+          showDemo,
+          showInstall
+        }
+      });
+    } else {
+      // Create new settings
+      settings = await prisma.toolSettings.create({
+        data: {
+          selectedCategories,
+          isLocked,
+          showDemo,
+          showInstall
+        }
+      });
+    }
+    
+    res.json(settings);
+  } catch (error) {
+    console.error('[Tools] Error updating settings:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/api/tools/items', authMiddleware, async (req, res) => {
+  try {
+    // Get all tool items with their lists and categories
+    const toolItems = await prisma.toolItem.findMany({
+      include: {
+        list: {
+          include: {
+            category: true
+          }
+        }
+      },
+      orderBy: [
+        { list: { category: { sortOrder: 'asc' } } },
+        { list: { sortOrder: 'asc' } },
+        { sortOrder: 'asc' }
+      ]
+    });
+    
+    res.json(toolItems);
+  } catch (error) {
+    console.error('[Tools] Error fetching tool items:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put('/api/tools/items/:id', authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isChecked } = req.body;
+    
+    const updatedItem = await prisma.toolItem.update({
+      where: { id },
+      data: { isChecked }
+    });
+    
+    res.json(updatedItem);
+  } catch (error) {
+    console.error('[Tools] Error updating tool item:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/tools/items', authMiddleware, async (req, res) => {
+  try {
+    const { listId, name, quantity, notes } = req.body;
+    
+    // Get the highest sort order for this list
+    const maxSortOrder = await prisma.toolItem.findFirst({
+      where: { listId },
+      orderBy: { sortOrder: 'desc' },
+      select: { sortOrder: true }
+    });
+    
+    const newItem = await prisma.toolItem.create({
+      data: {
+        listId,
+        name,
+        quantity,
+        notes,
+        sortOrder: (maxSortOrder?.sortOrder || 0) + 1
+      }
+    });
+    
+    res.json(newItem);
+  } catch (error) {
+    console.error('[Tools] Error creating tool item:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete('/api/tools/items/:id', authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    await prisma.toolItem.delete({
+      where: { id }
+    });
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[Tools] Error deleting tool item:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put('/api/tools/lists/:listId/clear', authMiddleware, async (req, res) => {
+  try {
+    const { listId } = req.params;
+    
+    // Uncheck all items in this list
+    await prisma.toolItem.updateMany({
+      where: { listId },
+      data: { isChecked: false }
+    });
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[Tools] Error clearing tool list:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Serve React app for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));

@@ -229,4 +229,87 @@ model SyncQueue {
   @@index([createdAt])
 }
 
+// Tool Categories (Demo, Installs, etc.)
+model ToolCategory {
+  id          String    @id @default(cuid())
+  name        String    @unique // "Demo", "Installs", etc.
+  description String?
+  sortOrder   Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  toolLists   ToolList[]
+
+  @@index([name])
+  @@index([sortOrder])
+}
+
+// Tool Lists (Kitchen, Bathroom, etc.)
+model ToolList {
+  id          String    @id @default(cuid())
+  categoryId  String
+  category    ToolCategory @relation(fields: [categoryId], references: [id])
+  name        String    // "Kitchen", "Bathroom", "Flooring", etc.
+  description String?
+  isProtected Boolean   @default(false) // Cannot be deleted when true
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  items       ToolItem[]
+
+  @@unique([categoryId, name])
+  @@index([categoryId])
+  @@index([sortOrder])
+}
+
+// Individual Tool Items
+model ToolItem {
+  id          String    @id @default(cuid())
+  listId      String
+  list        ToolList  @relation(fields: [listId], references: [id], onDelete: Cascade)
+  name        String
+  quantity    String?   // "1", "2-3", "As needed", etc.
+  isChecked   Boolean   @default(false)
+  notes       String?
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([listId])
+  @@index([sortOrder])
+}
+
+// Standard Operating Procedures
+model SOP {
+  id          String    @id @default(cuid())
+  title       String
+  category    String    // "Safety", "Installation", "Demo", etc.
+  content     String    @db.Text
+  version     String    @default("1.0")
+  isActive    Boolean   @default(true)
+  createdBy   String
+  approvedBy  String?
+  approvedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([category])
+  @@index([title])
+}
+
+// Tool Settings (single record for global settings)
+model ToolSettings {
+  id                String    @id @default(cuid())
+  selectedCategories Json     @default("[]") // Array of selected category names
+  isLocked          Boolean   @default(false)
+  showDemo          Boolean   @default(false)
+  showInstall       Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
 
