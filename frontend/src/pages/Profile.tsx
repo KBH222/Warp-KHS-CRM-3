@@ -380,8 +380,8 @@ const Profile = () => {
                                 const canvas = document.createElement('canvas');
                                 const ctx = canvas.getContext('2d');
                                 
-                                // Set maximum dimensions
-                                const maxSize = 200;
+                                // Set maximum dimensions (50% smaller = 100px instead of 200px)
+                                const maxSize = 100;
                                 let width = img.width;
                                 let height = img.height;
                                 
@@ -403,8 +403,8 @@ const Profile = () => {
                                 canvas.height = height;
                                 ctx.drawImage(img, 0, 0, width, height);
                                 
-                                // Convert to base64 with compression
-                                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                                // Convert to base64 with higher quality (0.9 instead of 0.7)
+                                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
                                 setProfile({ ...profile, businessLogo: compressedDataUrl });
                               };
                               

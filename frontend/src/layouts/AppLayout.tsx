@@ -73,7 +73,8 @@ export const AppLayout = () => {
                 <img 
                   src={logoUrl} 
                   alt="KHS Logo" 
-                  className="w-8 h-8 object-contain"
+                  className="w-8 h-8 object-contain flex-shrink-0"
+                  style={{ maxWidth: '32px', maxHeight: '32px' }}
                 />
               ) : (
                 <div 
