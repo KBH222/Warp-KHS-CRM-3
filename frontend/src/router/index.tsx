@@ -20,14 +20,9 @@ const Materials = lazy(() => import('../pages/Materials'));
 const Workers = lazy(() => import('../pages/Workers'));
 const ScheduleCalendar = lazy(() => import('../pages/ScheduleCalendar'));
 const JobPhotos = lazy(() => import('../pages/JobPhotos'));
-const Reports = lazy(() => import('../pages/Reports'));
-const Invoices = lazy(() => import('../pages/Invoices'));
-const InvoiceDetail = lazy(() => import('../pages/InvoiceDetail'));
-const OfflineDataDashboard = lazy(() => import('../components/OfflineDataDashboard'));
 const PracticalSecurity = lazy(() => import('../pages/PracticalSecurity'));
 const SyncDebug = lazy(() => import('../pages/SyncDebug'));
 const DebugEnv = lazy(() => import('../pages/DebugEnv'));
-const KHSInfo = lazy(() => import('../pages/KHSInfoSimple'));
 const TestConnection = lazy(() => import('../pages/TestConnection'));
 
 // Loading component
@@ -69,14 +64,9 @@ export const Router = () => {
           <Route path="/workers" element={<Workers />} />
           <Route path="/schedule" element={<ScheduleCalendar />} />
           <Route path="/jobs/:id/photos" element={<JobPhotos />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/invoices" element={<Invoices />} />
-          <Route path="/invoices/:id" element={<InvoiceDetail />} />
-          <Route path="/offline-dashboard" element={<OfflineDataDashboard />} />
           <Route path="/security" element={<PracticalSecurity />} />
           <Route path="/sync-debug" element={<SyncDebug />} />
           <Route path="/debug-env" element={<DebugEnv />} />
-          <Route path="/khs-info" element={<KHSInfo />} />
           <Route path="/test-connection" element={<TestConnection />} />
         </Route>
 

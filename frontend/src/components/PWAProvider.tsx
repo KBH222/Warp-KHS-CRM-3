@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { PWAInstallBanner } from './PWAInstallBanner';
-import { PWAUpdateNotification } from './PWAUpdateNotification';
 import { OfflineIndicator } from './OfflineIndicator';
 import { usePWA } from '../hooks/usePWA';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
@@ -128,7 +127,7 @@ export const PWAProvider: React.FC<PWAProviderProps> = ({ children }) => {
       {OfflineIndicator && <OfflineIndicator />}
 
       {/* Construction-specific PWA features */}
-      {pwa.isPWA && ConstructionPWAFeatures && <ConstructionPWAFeatures />}
+      {pwa.isPWA && <ConstructionPWAFeatures />}
     </PWAContext.Provider>
   );
 };

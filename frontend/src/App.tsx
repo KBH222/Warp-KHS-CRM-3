@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Router } from './router';
 import { initializeServices, cleanupServices } from './services';
-import { PWAProvider } from './components/PWAProvider';
 import { AuthSetup } from './components/AuthSetup';
 import { LoginForm } from './components/LoginForm';
 import { ToastContainer } from 'react-toastify';
@@ -20,7 +19,7 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes - keep data fresh for field workers
       gcTime: 30 * 60 * 1000, // 30 minutes - longer cache for offline scenarios
-      retry: (failureCount, error) => {
+      retry: (failureCount, error: any) => {
         // Don't retry on authentication errors
         if (error?.status === 401 || error?.status === 403) {
           return false;
@@ -111,10 +110,6 @@ function App() {
     console.error('QueryClientProvider is undefined!');
     return <div>Error: QueryClientProvider not loaded</div>;
   }
-  if (!PWAProvider) {
-    console.error('PWAProvider is undefined!');
-    return <div>Error: PWAProvider not loaded</div>;
-  }
   if (!BrowserRouter) {
     console.error('BrowserRouter is undefined!');
     return <div>Error: BrowserRouter not loaded</div>;
@@ -126,39 +121,20 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {import.meta.env.PROD ? (
-        <PWAProvider>
-          <BrowserRouter>
-            <Router />
-            <ToastContainer
-              position="bottom-right"
-              autoClose={3000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-            />
-          </BrowserRouter>
-        </PWAProvider>
-      ) : (
-        <BrowserRouter>
-          <Router />
-          <ToastContainer
-            position="bottom-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
-        </BrowserRouter>
-      )}
+      <BrowserRouter>
+        <Router />
+        <ToastContainer
+          position="bottom-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </BrowserRouter>
       {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );
