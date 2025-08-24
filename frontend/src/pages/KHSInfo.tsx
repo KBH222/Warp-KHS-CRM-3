@@ -12,47 +12,33 @@ interface CategoryTools {
 }
 
 const predefinedTools: CategoryTools = {
-  'Kitchen Demo': [
-    { id: 'kd1', name: 'Sledgehammer (20lb)', checked: false },
-    { id: 'kd2', name: 'Crowbar (36")', checked: false },
-    { id: 'kd3', name: 'Reciprocating saw', checked: false },
-    { id: 'kd4', name: 'Utility knife', checked: false },
-    { id: 'kd5', name: 'Safety glasses', checked: false },
-    { id: 'kd6', name: 'Work gloves', checked: false },
-    { id: 'kd7', name: 'Dust masks', checked: false },
-    { id: 'kd8', name: 'Drop cloths', checked: false },
-    { id: 'kd9', name: 'Trash bags (heavy duty)', checked: false },
-    { id: 'kd10', name: 'Shop vacuum', checked: false },
-    { id: 'kd11', name: 'Extension cords', checked: false },
-    { id: 'kd12', name: 'Work lights', checked: false },
+  'Kitchen': [
+    { id: 'k1', name: 'Sledgehammer (20lb)', checked: false },
+    { id: 'k2', name: 'Crowbar (36")', checked: false },
+    { id: 'k3', name: 'Reciprocating saw', checked: false },
+    { id: 'k4', name: 'Utility knife', checked: false },
+    { id: 'k5', name: 'Safety glasses', checked: false },
+    { id: 'k6', name: 'Work gloves', checked: false },
+    { id: 'k7', name: 'Dust masks', checked: false },
+    { id: 'k8', name: 'Drop cloths', checked: false },
+    { id: 'k9', name: 'Trash bags (heavy duty)', checked: false },
+    { id: 'k10', name: 'Shop vacuum', checked: false },
+    { id: 'k11', name: 'Extension cords', checked: false },
+    { id: 'k12', name: 'Work lights', checked: false },
   ],
-  'Bathroom Demo': [
-    { id: 'bd1', name: 'Sledgehammer (10lb)', checked: false },
-    { id: 'bd2', name: 'Pry bar', checked: false },
-    { id: 'bd3', name: 'Pipe wrench', checked: false },
-    { id: 'bd4', name: 'Adjustable wrench', checked: false },
-    { id: 'bd5', name: 'Safety glasses', checked: false },
-    { id: 'bd6', name: 'Work gloves', checked: false },
-    { id: 'bd7', name: 'Dust masks', checked: false },
-    { id: 'bd8', name: 'Plastic sheeting', checked: false },
-    { id: 'bd9', name: 'Trash bags', checked: false },
-    { id: 'bd10', name: 'Bucket', checked: false },
-    { id: 'bd11', name: 'Utility knife', checked: false },
-    { id: 'bd12', name: 'Screwdriver set', checked: false },
-  ],
-  'Decks': [
-    { id: 'd1', name: 'Circular saw', checked: false },
-    { id: 'd2', name: 'Miter saw', checked: false },
-    { id: 'd3', name: 'Drill/Driver set', checked: false },
-    { id: 'd4', name: 'Level (4ft)', checked: false },
-    { id: 'd5', name: 'Tape measure (25ft)', checked: false },
-    { id: 'd6', name: 'Chalk line', checked: false },
-    { id: 'd7', name: 'Speed square', checked: false },
-    { id: 'd8', name: 'Post hole digger', checked: false },
-    { id: 'd9', name: 'String line', checked: false },
-    { id: 'd10', name: 'Safety glasses', checked: false },
-    { id: 'd11', name: 'Work gloves', checked: false },
-    { id: 'd12', name: 'Extension cords', checked: false },
+  'Bathroom': [
+    { id: 'b1', name: 'Sledgehammer (10lb)', checked: false },
+    { id: 'b2', name: 'Pry bar', checked: false },
+    { id: 'b3', name: 'Pipe wrench', checked: false },
+    { id: 'b4', name: 'Adjustable wrench', checked: false },
+    { id: 'b5', name: 'Safety glasses', checked: false },
+    { id: 'b6', name: 'Work gloves', checked: false },
+    { id: 'b7', name: 'Dust masks', checked: false },
+    { id: 'b8', name: 'Plastic sheeting', checked: false },
+    { id: 'b9', name: 'Trash bags', checked: false },
+    { id: 'b10', name: 'Bucket', checked: false },
+    { id: 'b11', name: 'Utility knife', checked: false },
+    { id: 'b12', name: 'Screwdriver set', checked: false },
   ],
   'Flooring': [
     { id: 'f1', name: 'Flooring nailer', checked: false },
@@ -68,6 +54,20 @@ const predefinedTools: CategoryTools = {
     { id: 'f11', name: 'Level', checked: false },
     { id: 'f12', name: 'Underlayment', checked: false },
   ],
+  'Framing': [
+    { id: 'fr1', name: 'Framing hammer', checked: false },
+    { id: 'fr2', name: 'Circular saw', checked: false },
+    { id: 'fr3', name: 'Speed square', checked: false },
+    { id: 'fr4', name: 'Level (4ft)', checked: false },
+    { id: 'fr5', name: 'Tape measure (25ft)', checked: false },
+    { id: 'fr6', name: 'Chalk line', checked: false },
+    { id: 'fr7', name: 'Nail gun', checked: false },
+    { id: 'fr8', name: 'Sawhorses', checked: false },
+    { id: 'fr9', name: 'String line', checked: false },
+    { id: 'fr10', name: 'Safety glasses', checked: false },
+    { id: 'fr11', name: 'Tool belt', checked: false },
+    { id: 'fr12', name: 'Extension cords', checked: false },
+  ],
   'Drywall': [
     { id: 'dw1', name: 'Drywall lift', checked: false },
     { id: 'dw2', name: 'Screw gun', checked: false },
@@ -82,6 +82,48 @@ const predefinedTools: CategoryTools = {
     { id: 'dw11', name: 'Dust masks', checked: false },
     { id: 'dw12', name: 'Work lights', checked: false },
   ],
+  'Cabinets': [
+    { id: 'c1', name: 'Drill/Driver set', checked: false },
+    { id: 'c2', name: 'Level (4ft)', checked: false },
+    { id: 'c3', name: 'Stud finder', checked: false },
+    { id: 'c4', name: 'Tape measure', checked: false },
+    { id: 'c5', name: 'Cabinet jacks', checked: false },
+    { id: 'c6', name: 'Clamps', checked: false },
+    { id: 'c7', name: 'Hole saw kit', checked: false },
+    { id: 'c8', name: 'Jigsaw', checked: false },
+    { id: 'c9', name: 'Cabinet hardware jig', checked: false },
+    { id: 'c10', name: 'Shims', checked: false },
+    { id: 'c11', name: 'Safety glasses', checked: false },
+    { id: 'c12', name: 'Touch-up markers', checked: false },
+  ],
+  'Decking': [
+    { id: 'dk1', name: 'Circular saw', checked: false },
+    { id: 'dk2', name: 'Miter saw', checked: false },
+    { id: 'dk3', name: 'Drill/Driver set', checked: false },
+    { id: 'dk4', name: 'Level (4ft)', checked: false },
+    { id: 'dk5', name: 'Tape measure (25ft)', checked: false },
+    { id: 'dk6', name: 'Chalk line', checked: false },
+    { id: 'dk7', name: 'Speed square', checked: false },
+    { id: 'dk8', name: 'Post hole digger', checked: false },
+    { id: 'dk9', name: 'String line', checked: false },
+    { id: 'dk10', name: 'Deck board spacers', checked: false },
+    { id: 'dk11', name: 'Work gloves', checked: false },
+    { id: 'dk12', name: 'Hidden fastener tool', checked: false },
+  ],
+  'Painting': [
+    { id: 'p1', name: 'Drop cloths', checked: false },
+    { id: 'p2', name: 'Painters tape', checked: false },
+    { id: 'p3', name: 'Brushes (various sizes)', checked: false },
+    { id: 'p4', name: 'Rollers and covers', checked: false },
+    { id: 'p5', name: 'Paint trays', checked: false },
+    { id: 'p6', name: 'Extension pole', checked: false },
+    { id: 'p7', name: 'Putty knife', checked: false },
+    { id: 'p8', name: 'Sandpaper', checked: false },
+    { id: 'p9', name: 'Primer', checked: false },
+    { id: 'p10', name: 'Ladder', checked: false },
+    { id: 'p11', name: 'Paint can opener', checked: false },
+    { id: 'p12', name: 'Rags', checked: false },
+  ],
 };
 
 const KHSInfo = () => {
@@ -90,10 +132,12 @@ const KHSInfo = () => {
   const [tools, setTools] = useState<CategoryTools>({});
   const [isLocked, setIsLocked] = useState(false);
   const [newToolName, setNewToolName] = useState('');
-  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [showDemo, setShowDemo] = useState(false);
+  const [showInstall, setShowInstall] = useState(false);
 
   const tabs = ['Tools List', 'SOP', 'Office Docs', 'Specs'];
-  const categories = ['Kitchen Demo', 'Bathroom Demo', 'Decks', 'Flooring', 'Drywall'];
+  const demoCategories = ['Kitchen', 'Bathroom', 'Flooring', 'Framing', 'Drywall'];
+  const installCategories = ['Cabinets', 'Drywall', 'Flooring', 'Framing', 'Decking', 'Painting'];
 
   // Load saved data on mount
   useEffect(() => {
@@ -103,6 +147,8 @@ const KHSInfo = () => {
       setTools(parsed.tools || {});
       setSelectedCategories(parsed.selectedCategories || []);
       setIsLocked(parsed.isLocked || false);
+      setShowDemo(parsed.showDemo || false);
+      setShowInstall(parsed.showInstall || false);
     } else {
       // Initialize with predefined tools
       setTools(predefinedTools);
@@ -115,9 +161,11 @@ const KHSInfo = () => {
       tools,
       selectedCategories,
       isLocked,
+      showDemo,
+      showInstall,
     };
     localStorage.setItem('khs-tools-data', JSON.stringify(dataToSave));
-  }, [tools, selectedCategories, isLocked]);
+  }, [tools, selectedCategories, isLocked, showDemo, showInstall]);
 
   const handleCategoryToggle = (category: string) => {
     if (isLocked) {
@@ -185,36 +233,102 @@ return;
       <div style={{ padding: '20px' }}>
         {/* Category Selection */}
         <div style={{ marginBottom: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-            <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#111827' }}>
-              Select Categories
-            </h3>
-            <button
-              onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-              disabled={isLocked}
-              style={{
-                padding: '6px 12px',
-                backgroundColor: isLocked ? '#E5E7EB' : '#3B82F6',
-                color: isLocked ? '#9CA3AF' : 'white',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: isLocked ? 'not-allowed' : 'pointer',
-                fontSize: '18px',
-                fontWeight: '500',
-              }}
-            >
-              {showCategoryDropdown ? 'Hide Categories' : 'Show Categories'}
-            </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '40px', marginBottom: '16px' }}>
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              cursor: isLocked ? 'not-allowed' : 'pointer',
+              opacity: isLocked ? 0.6 : 1,
+            }}>
+              <input
+                type="checkbox"
+                checked={showDemo}
+                onChange={(e) => setShowDemo(e.target.checked)}
+                disabled={isLocked}
+                style={{
+                  marginRight: '8px',
+                  width: '18px',
+                  height: '18px',
+                  cursor: isLocked ? 'not-allowed' : 'pointer',
+                }}
+              />
+              <span style={{ fontSize: '18px', fontWeight: '600', color: '#111827' }}>Demo</span>
+            </label>
+
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              cursor: isLocked ? 'not-allowed' : 'pointer',
+              opacity: isLocked ? 0.6 : 1,
+            }}>
+              <input
+                type="checkbox"
+                checked={showInstall}
+                onChange={(e) => setShowInstall(e.target.checked)}
+                disabled={isLocked}
+                style={{
+                  marginRight: '8px',
+                  width: '18px',
+                  height: '18px',
+                  cursor: isLocked ? 'not-allowed' : 'pointer',
+                }}
+              />
+              <span style={{ fontSize: '18px', fontWeight: '600', color: '#111827' }}>Install</span>
+            </label>
           </div>
 
-          {showCategoryDropdown && (
+          {/* Demo Categories */}
+          {showDemo && (
             <div style={{
-              backgroundColor: '#F9FAFB',
+              backgroundColor: '#FEF3C7',
               padding: '16px',
               borderRadius: '8px',
               marginBottom: '16px',
             }}>
-              {categories.map(category => (
+              <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#92400E', marginBottom: '12px' }}>
+                Demo Categories
+              </h4>
+              {demoCategories.map(category => (
+                <label
+                  key={category}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '8px',
+                    cursor: isLocked ? 'not-allowed' : 'pointer',
+                    opacity: isLocked ? 0.6 : 1,
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedCategories.includes(category)}
+                    onChange={() => handleCategoryToggle(category)}
+                    disabled={isLocked}
+                    style={{
+                      marginRight: '8px',
+                      width: '16px',
+                      height: '16px',
+                      cursor: isLocked ? 'not-allowed' : 'pointer',
+                    }}
+                  />
+                  <span style={{ fontSize: '18px', color: '#374151' }}>{category}</span>
+                </label>
+              ))}
+            </div>
+          )}
+
+          {/* Install Categories */}
+          {showInstall && (
+            <div style={{
+              backgroundColor: '#DBEAFE',
+              padding: '16px',
+              borderRadius: '8px',
+              marginBottom: '16px',
+            }}>
+              <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#1E40AF', marginBottom: '12px' }}>
+                Install Categories
+              </h4>
+              {installCategories.map(category => (
                 <label
                   key={category}
                   style={{
