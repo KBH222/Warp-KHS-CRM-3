@@ -19,7 +19,7 @@ const ScheduleCalendar = () => {
   // Load jobs from localStorage or use defaults
   const [allJobs, setAllJobs] = useState(() => {
     const savedJobs = calendarJobStorage.getAll();
-    if (savedJobs.length > 0) {
+    if (savedJobs && savedJobs.length > 0) {
       return savedJobs;
     }
     // Default jobs for first time
@@ -92,7 +92,7 @@ const ScheduleCalendar = () => {
 
   // Load customers on component mount
   useEffect(() => {
-    const savedCustomers = customerStorage.getAll();
+    const savedCustomers = customerStorage.getAll() || [];
     setCustomers(savedCustomers.map(c => ({ id: c.id, name: c.name })));
   }, []);
 
@@ -101,7 +101,7 @@ const ScheduleCalendar = () => {
   const [workerColors, setWorkerColors] = useState({});
 
   useEffect(() => {
-    const loadedWorkers = workerService.getAll();
+    const loadedWorkers = workerService.getAll() || [];
     setWorkers(loadedWorkers.map(w => w.name));
     
     const colors = {};
