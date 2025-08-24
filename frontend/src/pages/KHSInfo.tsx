@@ -286,34 +286,46 @@ return;
               marginBottom: '16px',
             }}>
               <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#92400E', marginBottom: '12px' }}>
-                Demo Categories
+                Demo
               </h4>
-              {demoCategories.map(category => (
-                <label
-                  key={category}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginBottom: '8px',
-                    cursor: isLocked ? 'not-allowed' : 'pointer',
-                    opacity: isLocked ? 0.6 : 1,
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedCategories.includes(category)}
-                    onChange={() => handleCategoryToggle(category)}
-                    disabled={isLocked}
+              <div style={{
+                display: 'flex',
+                gap: '12px',
+                overflowX: 'auto',
+                paddingBottom: '8px',
+                WebkitOverflowScrolling: 'touch',
+              }}>
+                {demoCategories.map(category => (
+                  <label
+                    key={category}
                     style={{
-                      marginRight: '8px',
-                      width: '16px',
-                      height: '16px',
+                      display: 'flex',
+                      alignItems: 'center',
                       cursor: isLocked ? 'not-allowed' : 'pointer',
+                      opacity: isLocked ? 0.6 : 1,
+                      whiteSpace: 'nowrap',
+                      backgroundColor: selectedCategories.includes(category) ? '#FDE68A' : 'white',
+                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      border: '1px solid #FCD34D',
                     }}
-                  />
-                  <span style={{ fontSize: '18px', color: '#374151' }}>{category}</span>
-                </label>
-              ))}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedCategories.includes(category)}
+                      onChange={() => handleCategoryToggle(category)}
+                      disabled={isLocked}
+                      style={{
+                        marginRight: '8px',
+                        width: '16px',
+                        height: '16px',
+                        cursor: isLocked ? 'not-allowed' : 'pointer',
+                      }}
+                    />
+                    <span style={{ fontSize: '16px', color: '#78350F' }}>{category}</span>
+                  </label>
+                ))}
+              </div>
             </div>
           )}
 
@@ -326,34 +338,46 @@ return;
               marginBottom: '16px',
             }}>
               <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#1E40AF', marginBottom: '12px' }}>
-                Install Categories
+                Install
               </h4>
-              {installCategories.map(category => (
-                <label
-                  key={category}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginBottom: '8px',
-                    cursor: isLocked ? 'not-allowed' : 'pointer',
-                    opacity: isLocked ? 0.6 : 1,
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedCategories.includes(category)}
-                    onChange={() => handleCategoryToggle(category)}
-                    disabled={isLocked}
+              <div style={{
+                display: 'flex',
+                gap: '12px',
+                overflowX: 'auto',
+                paddingBottom: '8px',
+                WebkitOverflowScrolling: 'touch',
+              }}>
+                {installCategories.map(category => (
+                  <label
+                    key={category}
                     style={{
-                      marginRight: '8px',
-                      width: '16px',
-                      height: '16px',
+                      display: 'flex',
+                      alignItems: 'center',
                       cursor: isLocked ? 'not-allowed' : 'pointer',
+                      opacity: isLocked ? 0.6 : 1,
+                      whiteSpace: 'nowrap',
+                      backgroundColor: selectedCategories.includes(category) ? '#BFDBFE' : 'white',
+                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      border: '1px solid #93C5FD',
                     }}
-                  />
-                  <span style={{ fontSize: '18px', color: '#374151' }}>{category}</span>
-                </label>
-              ))}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedCategories.includes(category)}
+                      onChange={() => handleCategoryToggle(category)}
+                      disabled={isLocked}
+                      style={{
+                        marginRight: '8px',
+                        width: '16px',
+                        height: '16px',
+                        cursor: isLocked ? 'not-allowed' : 'pointer',
+                      }}
+                    />
+                    <span style={{ fontSize: '16px', color: '#1E3A8A' }}>{category}</span>
+                  </label>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -381,7 +405,7 @@ return;
         </div>
 
         {/* Selected Categories Tools */}
-        {selectedCategories.length === 0 ? (
+        {selectedCategories.length === 0 && (showDemo || showInstall) ? (
           <div style={{
             textAlign: 'center',
             padding: '40px',
@@ -390,7 +414,7 @@ return;
           }}>
             Select categories above to view tool lists
           </div>
-        ) : (
+        ) : selectedCategories.length > 0 ? (
           selectedCategories.map(category => (
             <div key={category} style={{ marginBottom: '32px' }}>
               <div style={{
@@ -534,7 +558,7 @@ return;
               )}
             </div>
           ))
-        )}
+        ) : null}
       </div>
     );
   };
