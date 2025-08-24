@@ -532,6 +532,7 @@ const KHSInfoSimple = () => {
                       justifyContent: 'space-between',
                       padding: '8px 0',
                       borderBottom: '1px solid #F3F4F6',
+                      position: 'relative',
                     }}
                   >
                     <label
@@ -598,6 +599,8 @@ const KHSInfoSimple = () => {
                       <button
                         onClick={() => handleDeleteTool(category, tool.id)}
                         style={{
+                          position: 'absolute',
+                          left: '300px',
                           padding: '4px 6px',
                           backgroundColor: '#FEE2E2',
                           color: '#DC2626',
@@ -617,8 +620,8 @@ const KHSInfoSimple = () => {
               </div>
 
               {/* Add new tool and Lock/Edit button */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px' }}>
-                {!toolsData.isLocked ? (
+              <div style={{ display: 'flex', alignItems: 'center', marginTop: '12px', position: 'relative' }}>
+                {!toolsData.isLocked && (
                   <>
                     <input
                       type="text"
@@ -649,17 +652,18 @@ const KHSInfoSimple = () => {
                         cursor: 'pointer',
                         fontSize: '16px',
                         fontWeight: '500',
+                        marginLeft: '8px',
                       }}
                     >
                       Add
                     </button>
                   </>
-                ) : (
-                  <div style={{ width: '200px' }}></div>
                 )}
                 <button
                   onClick={() => updateToolsData({ isLocked: !toolsData.isLocked })}
                   style={{
+                    position: 'absolute',
+                    left: '300px',
                     padding: '6px 12px',
                     backgroundColor: toolsData.isLocked ? '#EF4444' : '#10B981',
                     color: 'white',
