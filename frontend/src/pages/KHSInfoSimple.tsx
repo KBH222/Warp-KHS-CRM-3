@@ -13,14 +13,15 @@ interface CategoryTools {
 
 interface ToolsData {
   tools: CategoryTools;
-  selectedCategories: string[];
+  selectedDemoCategories: string[];
+  selectedInstallCategories: string[];
   isLocked: boolean;
   showDemo: boolean;
   showInstall: boolean;
   lastUpdated: number;
 }
 
-const STORAGE_KEY = 'khs-tools-sync-data-v2';
+const STORAGE_KEY = 'khs-tools-sync-data-v3';
 const SYNC_INTERVAL = 2000; // Check for updates every 2 seconds
 
 const predefinedTools: CategoryTools = {
@@ -144,14 +145,25 @@ const KHSInfoSimple = () => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        // Migrate old data format
+        if (parsed.selectedCategories && !parsed.selectedDemoCategories) {
+          return {
+            ...parsed,
+            selectedDemoCategories: [],
+            selectedInstallCategories: [],
+            selectedCategories: undefined
+          };
+        }
+        return parsed;
       } catch (e) {
         console.error('Failed to parse stored data:', e);
       }
     }
     return {
       tools: predefinedTools,
-      selectedCategories: [],
+      selectedDemoCategories: [],
+      selectedInstallCategories: [],
       isLocked: false,
       showDemo: false,
       showInstall: false,
@@ -199,14 +211,22 @@ const KHSInfoSimple = () => {
     setToolsData(prev => ({ ...prev, ...updates }));
   };
 
-  const handleCategoryToggle = (category: string) => {
+  const handleCategoryToggle = (category: string, section: 'demo' | 'install') => {
     if (toolsData.isLocked) return;
     
-    const selectedCategories = toolsData.selectedCategories.includes(category)
-      ? toolsData.selectedCategories.filter(c => c !== category)
-      : [...toolsData.selectedCategories, category];
-    
-    updateToolsData({ selectedCategories });
+    if (section === 'demo') {
+      const selectedDemoCategories = toolsData.selectedDemoCategories.includes(category)
+        ? toolsData.selectedDemoCategories.filter(c => c !== category)
+        : [...toolsData.selectedDemoCategories, category];
+      
+      updateToolsData({ selectedDemoCategories });
+    } else {
+      const selectedInstallCategories = toolsData.selectedInstallCategories.includes(category)
+        ? toolsData.selectedInstallCategories.filter(c => c !== category)
+        : [...toolsData.selectedInstallCategories, category];
+      
+      updateToolsData({ selectedInstallCategories });
+    }
   };
 
   const handleToolCheck = (category: string, toolId: string) => {
@@ -250,18 +270,25 @@ const KHSInfoSimple = () => {
 
   // Clear invalid categories when Demo/Install changes
   useEffect(() => {
-    if (!toolsData.showDemo && !toolsData.showInstall) {
-      updateToolsData({ selectedCategories: [] });
+    if (!toolsData.showDemo) {
+      updateToolsData({ selectedDemoCategories: [] });
     } else {
-      const availableCategories = [
-        ...(toolsData.showDemo ? demoCategories : []),
-        ...(toolsData.showInstall ? installCategories : [])
-      ];
-      const validCategories = toolsData.selectedCategories.filter(cat => 
-        availableCategories.includes(cat)
+      const validDemoCategories = toolsData.selectedDemoCategories.filter(cat => 
+        demoCategories.includes(cat)
       );
-      if (validCategories.length !== toolsData.selectedCategories.length) {
-        updateToolsData({ selectedCategories: validCategories });
+      if (validDemoCategories.length !== toolsData.selectedDemoCategories.length) {
+        updateToolsData({ selectedDemoCategories: validDemoCategories });
+      }
+    }
+    
+    if (!toolsData.showInstall) {
+      updateToolsData({ selectedInstallCategories: [] });
+    } else {
+      const validInstallCategories = toolsData.selectedInstallCategories.filter(cat => 
+        installCategories.includes(cat)
+      );
+      if (validInstallCategories.length !== toolsData.selectedInstallCategories.length) {
+        updateToolsData({ selectedInstallCategories: validInstallCategories });
       }
     }
   }, [toolsData.showDemo, toolsData.showInstall]);
@@ -345,7 +372,7 @@ const KHSInfoSimple = () => {
                       cursor: toolsData.isLocked ? 'not-allowed' : 'pointer',
                       opacity: toolsData.isLocked ? 0.6 : 1,
                       whiteSpace: 'nowrap',
-                      backgroundColor: toolsData.selectedCategories.includes(category) ? '#FDE68A' : 'white',
+                      backgroundColor: toolsData.selectedDemoCategories.includes(category) ? '#FDE68A' : 'white',
                       padding: '4px 8px',
                       borderRadius: '4px',
                       border: '1px solid #FCD34D',
@@ -354,8 +381,8 @@ const KHSInfoSimple = () => {
                   >
                     <input
                       type="checkbox"
-                      checked={toolsData.selectedCategories.includes(category)}
-                      onChange={() => handleCategoryToggle(category)}
+                      checked={toolsData.selectedDemoCategories.includes(category)}
+                      onChange={() => handleCategoryToggle(category, 'demo')}
                       disabled={toolsData.isLocked}
                       style={{
                         marginRight: '6px',
@@ -401,7 +428,7 @@ const KHSInfoSimple = () => {
                       cursor: toolsData.isLocked ? 'not-allowed' : 'pointer',
                       opacity: toolsData.isLocked ? 0.6 : 1,
                       whiteSpace: 'nowrap',
-                      backgroundColor: toolsData.selectedCategories.includes(category) ? '#BFDBFE' : 'white',
+                      backgroundColor: toolsData.selectedInstallCategories.includes(category) ? '#BFDBFE' : 'white',
                       padding: '4px 8px',
                       borderRadius: '4px',
                       border: '1px solid #93C5FD',
@@ -410,8 +437,8 @@ const KHSInfoSimple = () => {
                   >
                     <input
                       type="checkbox"
-                      checked={toolsData.selectedCategories.includes(category)}
-                      onChange={() => handleCategoryToggle(category)}
+                      checked={toolsData.selectedInstallCategories.includes(category)}
+                      onChange={() => handleCategoryToggle(category, 'install')}
                       disabled={toolsData.isLocked}
                       style={{
                         marginRight: '6px',
@@ -453,7 +480,8 @@ const KHSInfoSimple = () => {
         )}
 
         {/* Selected Categories Tools */}
-        {!toolsData.showDemo && !toolsData.showInstall ? null : toolsData.selectedCategories.length === 0 ? (
+        {!toolsData.showDemo && !toolsData.showInstall ? null : 
+         toolsData.selectedDemoCategories.length === 0 && toolsData.selectedInstallCategories.length === 0 ? (
           <div style={{
             textAlign: 'center',
             padding: '40px',
@@ -463,7 +491,7 @@ const KHSInfoSimple = () => {
             Select categories above to view tool lists
           </div>
         ) : (
-          toolsData.selectedCategories.map(category => (
+          [...toolsData.selectedDemoCategories, ...toolsData.selectedInstallCategories].map(category => (
             <div key={category} style={{ marginBottom: '32px' }}>
               <div style={{
                 display: 'flex',
