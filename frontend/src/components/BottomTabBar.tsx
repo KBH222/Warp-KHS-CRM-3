@@ -44,9 +44,15 @@ export const BottomTabBar = () => {
               `flex flex-col items-center justify-center space-y-1 transition-colors ${
                 isActive
                   ? 'text-blue-600 bg-blue-50'
-                  : 'text-gray-600 hover:text-gray-900 active:bg-gray-100'
+                  : 'text-gray-600 hover:text-gray-900'
               }`
             }
+            style={{
+              WebkitTapHighlightColor: 'transparent'
+            }}
+            onMouseDown={(e) => {
+              e.preventDefault();
+            }}
           >
             {({ isActive }) => (
               <>

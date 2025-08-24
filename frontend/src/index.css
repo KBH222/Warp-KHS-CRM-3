@@ -333,6 +333,21 @@ table, thead, tbody, tfoot, tr, td, th {
   button[style*="color: #3B82F6"]:active {
     color: #3B82F6 !important;
   }
+  
+  /* Fix for bottom navigation links */
+  nav.fixed a:link,
+  nav.fixed a:visited,
+  nav.fixed a:hover,
+  nav.fixed a:active,
+  nav.fixed a:focus {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+  
+  /* Prevent red color on SVG icons */
+  nav.fixed svg {
+    color: inherit !important;
+  }
 
   /* Pull to refresh styles */
   .ptr-element {

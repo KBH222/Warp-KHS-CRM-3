@@ -214,6 +214,15 @@ const DashboardEnhanced = () => {
               alignItems: 'center',
               gap: '8px'
             }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.backgroundColor = '#2563EB';
+            }}
+            onMouseUp={(e) => {
+              e.currentTarget.style.backgroundColor = '#3B82F6';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#3B82F6';
+            }}
           >
             + New Customer
           </button>
@@ -232,6 +241,15 @@ const DashboardEnhanced = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '8px'
+            }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.backgroundColor = '#059669';
+            }}
+            onMouseUp={(e) => {
+              e.currentTarget.style.backgroundColor = '#10B981';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#10B981';
             }}
           >
             + New Job
