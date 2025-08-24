@@ -40,6 +40,13 @@ const DashboardEnhanced = () => {
       icon: '⚙️',
       path: '/profile',
       color: '#6B7280'
+    },
+    {
+      title: 'KHS Info',
+      description: 'Tools, SOPs, office docs and specs',
+      icon: '📋',
+      path: '/khs-info',
+      color: '#EC4899'
     }
   ];
 

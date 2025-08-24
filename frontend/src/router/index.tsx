@@ -27,6 +27,7 @@ const OfflineDataDashboard = lazy(() => import('../components/OfflineDataDashboa
 const PracticalSecurity = lazy(() => import('../pages/PracticalSecurity'));
 const SyncDebug = lazy(() => import('../pages/SyncDebug'));
 const DebugEnv = lazy(() => import('../pages/DebugEnv'));
+const KHSInfo = lazy(() => import('../pages/KHSInfo'));
 
 // Loading component
 const PageLoader = () => {
@@ -74,6 +75,7 @@ export const Router = () => {
           <Route path="/security" element={<PracticalSecurity />} />
           <Route path="/sync-debug" element={<SyncDebug />} />
           <Route path="/debug-env" element={<DebugEnv />} />
+          <Route path="/khs-info" element={<KHSInfo />} />
         </Route>
 
         {/* Catch all */}
