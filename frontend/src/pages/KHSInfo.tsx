@@ -299,8 +299,8 @@ return;
                   onClick={() => handleClearCategory(category)}
                   style={{
                     padding: '4px 12px',
-                    backgroundColor: '#F3F4F6',
-                    color: '#6B7280',
+                    backgroundColor: '#FB923C',
+                    color: 'white',
                     border: 'none',
                     borderRadius: '4px',
                     cursor: 'pointer',
@@ -309,10 +309,10 @@ return;
                     transition: 'background-color 0.2s',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#E5E7EB';
+                    e.currentTarget.style.backgroundColor = '#F97316';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#F3F4F6';
+                    e.currentTarget.style.backgroundColor = '#FB923C';
                   }}
                 >
                   Clear
@@ -382,7 +382,7 @@ return;
 
               {/* Add new tool */}
               {!isLocked && (
-                <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px' }}>
                   <input
                     type="text"
                     value={newToolName}
@@ -394,8 +394,8 @@ return;
                     }}
                     placeholder="Add new tool..."
                     style={{
-                      flex: 1,
-                      padding: '8px 12px',
+                      width: '150px',
+                      padding: '6px 10px',
                       border: '1px solid #D1D5DB',
                       borderRadius: '6px',
                       fontSize: '14px',
@@ -404,7 +404,7 @@ return;
                   <button
                     onClick={() => handleAddTool(category)}
                     style={{
-                      padding: '8px 16px',
+                      padding: '6px 12px',
                       backgroundColor: '#3B82F6',
                       color: 'white',
                       border: 'none',
