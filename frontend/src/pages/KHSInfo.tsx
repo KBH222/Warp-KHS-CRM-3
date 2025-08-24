@@ -281,8 +281,8 @@ return;
             <div key={category} style={{ marginBottom: '32px' }}>
               <div style={{
                 display: 'flex',
-                justifyContent: 'space-between',
                 alignItems: 'center',
+                gap: '24px',
                 marginBottom: '16px',
                 paddingBottom: '8px',
                 borderBottom: '2px solid #E5E7EB',
