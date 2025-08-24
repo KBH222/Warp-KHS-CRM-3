@@ -15,13 +15,13 @@ interface ToolsData {
   tools: CategoryTools;
   selectedDemoCategories: string[];
   selectedInstallCategories: string[];
-  isLocked: boolean;
+  lockedCategories: string[];
   showDemo: boolean;
   showInstall: boolean;
   lastUpdated: number;
 }
 
-const STORAGE_KEY = 'khs-tools-sync-data-v3';
+const STORAGE_KEY = 'khs-tools-sync-data-v4';
 const SYNC_INTERVAL = 2000; // Check for updates every 2 seconds
 
 const predefinedTools: CategoryTools = {
@@ -164,7 +164,7 @@ const KHSInfoSimple = () => {
       tools: predefinedTools,
       selectedDemoCategories: [],
       selectedInstallCategories: [],
-      isLocked: false,
+      lockedCategories: [],
       showDemo: false,
       showInstall: false,
       lastUpdated: Date.now()
@@ -214,7 +214,6 @@ const KHSInfoSimple = () => {
   };
 
   const handleCategoryToggle = (category: string, section: 'demo' | 'install') => {
-    if (toolsData.isLocked) return;
     
     if (section === 'demo') {
       const selectedDemoCategories = toolsData.selectedDemoCategories.includes(category)
@@ -240,7 +239,7 @@ const KHSInfoSimple = () => {
   };
 
   const handleAddTool = (category: string) => {
-    if (!newToolName.trim() || toolsData.isLocked) return;
+    if (!newToolName.trim() || isCategoryLocked(category)) return;
 
     const newTool: Tool = {
       id: `custom-${Date.now()}`,
@@ -257,7 +256,7 @@ const KHSInfoSimple = () => {
   };
 
   const handleDeleteTool = (category: string, toolId: string) => {
-    if (toolsData.isLocked) return;
+    if (isCategoryLocked(category)) return;
 
     const newTools = { ...toolsData.tools };
     newTools[category] = newTools[category].filter(tool => tool.id !== toolId);
@@ -278,6 +277,17 @@ const KHSInfoSimple = () => {
     updateToolsData({ tools: newTools });
     setEditingToolId(null);
     setEditingToolName('');
+  };
+
+  const toggleCategoryLock = (category: string) => {
+    const lockedCategories = toolsData.lockedCategories.includes(category)
+      ? toolsData.lockedCategories.filter(c => c !== category)
+      : [...toolsData.lockedCategories, category];
+    updateToolsData({ lockedCategories });
+  };
+
+  const isCategoryLocked = (category: string) => {
+    return toolsData.lockedCategories.includes(category);
   };
 
   // Clear invalid categories when Demo/Install changes
@@ -314,19 +324,17 @@ const KHSInfoSimple = () => {
             <label style={{
               display: 'flex',
               alignItems: 'center',
-              cursor: toolsData.isLocked ? 'not-allowed' : 'pointer',
-              opacity: toolsData.isLocked ? 0.6 : 1,
+              cursor: 'pointer',
             }}>
               <input
                 type="checkbox"
                 checked={toolsData.showDemo}
                 onChange={(e) => updateToolsData({ showDemo: e.target.checked })}
-                disabled={toolsData.isLocked}
                 style={{
                   marginRight: '8px',
                   width: '18px',
                   height: '18px',
-                  cursor: toolsData.isLocked ? 'not-allowed' : 'pointer',
+                  cursor: 'pointer',
                 }}
               />
               <span style={{ fontSize: '18px', fontWeight: '600', color: '#111827' }}>Demo</span>
@@ -335,19 +343,17 @@ const KHSInfoSimple = () => {
             <label style={{
               display: 'flex',
               alignItems: 'center',
-              cursor: toolsData.isLocked ? 'not-allowed' : 'pointer',
-              opacity: toolsData.isLocked ? 0.6 : 1,
+              cursor: 'pointer',
             }}>
               <input
                 type="checkbox"
                 checked={toolsData.showInstall}
                 onChange={(e) => updateToolsData({ showInstall: e.target.checked })}
-                disabled={toolsData.isLocked}
                 style={{
                   marginRight: '8px',
                   width: '18px',
                   height: '18px',
-                  cursor: toolsData.isLocked ? 'not-allowed' : 'pointer',
+                  cursor: 'pointer',
                 }}
               />
               <span style={{ fontSize: '18px', fontWeight: '600', color: '#111827' }}>Install</span>
@@ -381,8 +387,7 @@ const KHSInfoSimple = () => {
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      cursor: toolsData.isLocked ? 'not-allowed' : 'pointer',
-                      opacity: toolsData.isLocked ? 0.6 : 1,
+                      cursor: 'pointer',
                       whiteSpace: 'nowrap',
                       backgroundColor: toolsData.selectedDemoCategories.includes(category) ? '#FDE68A' : 'white',
                       padding: '4px 8px',
@@ -395,12 +400,11 @@ const KHSInfoSimple = () => {
                       type="checkbox"
                       checked={toolsData.selectedDemoCategories.includes(category)}
                       onChange={() => handleCategoryToggle(category, 'demo')}
-                      disabled={toolsData.isLocked}
                       style={{
                         marginRight: '6px',
                         width: '14px',
                         height: '14px',
-                        cursor: toolsData.isLocked ? 'not-allowed' : 'pointer',
+                        cursor: 'pointer',
                       }}
                     />
                     <span style={{ fontSize: '13px', color: '#78350F' }}>{category}</span>
@@ -437,8 +441,7 @@ const KHSInfoSimple = () => {
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      cursor: toolsData.isLocked ? 'not-allowed' : 'pointer',
-                      opacity: toolsData.isLocked ? 0.6 : 1,
+                      cursor: 'pointer',
                       whiteSpace: 'nowrap',
                       backgroundColor: toolsData.selectedInstallCategories.includes(category) ? '#BFDBFE' : 'white',
                       padding: '4px 8px',
@@ -451,12 +454,11 @@ const KHSInfoSimple = () => {
                       type="checkbox"
                       checked={toolsData.selectedInstallCategories.includes(category)}
                       onChange={() => handleCategoryToggle(category, 'install')}
-                      disabled={toolsData.isLocked}
                       style={{
                         marginRight: '6px',
                         width: '14px',
                         height: '14px',
-                        cursor: toolsData.isLocked ? 'not-allowed' : 'pointer',
+                        cursor: 'pointer',
                       }}
                     />
                     <span style={{ fontSize: '13px', color: '#1E3A8A' }}>{category}</span>
@@ -496,7 +498,7 @@ const KHSInfoSimple = () => {
                   color: '#111827',
                   margin: 0,
                 }}>
-                  {category} {!toolsData.isLocked && <span style={{ fontSize: '14px', color: '#10B981' }}>(Edit Mode)</span>}
+                  {category} {!isCategoryLocked(category) && <span style={{ fontSize: '14px', color: '#10B981' }}>(Edit Mode)</span>}
                 </h4>
                 <button
                   onClick={() => handleClearCategory(category)}
@@ -582,10 +584,10 @@ const KHSInfoSimple = () => {
                             color: '#374151',
                             textDecoration: tool.checked ? 'line-through' : 'none',
                             opacity: tool.checked ? 0.6 : 1,
-                            cursor: !toolsData.isLocked ? 'pointer' : 'default',
+                            cursor: !isCategoryLocked(category) ? 'pointer' : 'default',
                           }}
                           onClick={() => {
-                            if (!toolsData.isLocked) {
+                            if (!isCategoryLocked(category)) {
                               setEditingToolId(tool.id);
                               setEditingToolName(tool.name);
                             }
@@ -595,7 +597,7 @@ const KHSInfoSimple = () => {
                         </span>
                       )}
                     </label>
-                    {!toolsData.isLocked && (
+                    {!isCategoryLocked(category) && (
                       <button
                         onClick={() => handleDeleteTool(category, tool.id)}
                         style={{
@@ -621,7 +623,7 @@ const KHSInfoSimple = () => {
 
               {/* Add new tool and Lock/Edit button */}
               <div style={{ display: 'flex', alignItems: 'center', marginTop: '12px', position: 'relative' }}>
-                {!toolsData.isLocked && (
+                {!isCategoryLocked(category) ? (
                   <>
                     <input
                       type="text"
@@ -658,14 +660,16 @@ const KHSInfoSimple = () => {
                       Add
                     </button>
                   </>
+                ) : (
+                  <div style={{ width: '200px' }}></div>
                 )}
                 <button
-                  onClick={() => updateToolsData({ isLocked: !toolsData.isLocked })}
+                  onClick={() => toggleCategoryLock(category)}
                   style={{
                     position: 'absolute',
                     left: '300px',
                     padding: '6px 12px',
-                    backgroundColor: toolsData.isLocked ? '#EF4444' : '#10B981',
+                    backgroundColor: isCategoryLocked(category) ? '#EF4444' : '#10B981',
                     color: 'white',
                     border: 'none',
                     borderRadius: '6px',
