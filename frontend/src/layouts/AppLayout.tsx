@@ -10,7 +10,7 @@ export const AppLayout = () => {
       <header className="app-header bg-white shadow-sm">
         <div className="h-14 flex items-center">
           <div className="w-full max-w-[1200px] mx-auto px-5 flex items-center justify-between">
-            <h1 className="text-lg font-semibold text-gray-900">KHS CRM</h1>
+            <h1 className="text-lg font-semibold text-gray-900" style={{ marginLeft: '48px' }}>KHS CRM</h1>
             <span className="text-sm text-gray-600">{user?.name}</span>
           </div>
         </div>
