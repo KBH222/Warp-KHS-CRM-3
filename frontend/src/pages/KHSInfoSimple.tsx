@@ -718,72 +718,84 @@ const KHSInfoSimple = () => {
   };
 
   return (
-    <div style={{ height: '100%', overflowY: 'auto', backgroundColor: '#F9FAFB' }}>
-      {/* Header */}
-      <div style={{
-        backgroundColor: 'white',
-        borderBottom: '1px solid #E5E7EB',
-        padding: '20px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px'
-      }}>
-        <button
-          onClick={() => navigate('/dashboard')}
-          style={{
-            background: 'none',
-            border: 'none',
-            padding: '8px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            color: '#6B7280',
-            borderRadius: '6px',
-            marginTop: '-4px'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-        >
-          <svg style={{ width: '28px', height: '28px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: 0 }}>KHS Info</h1>
-      </div>
+    <div style={{ 
+      height: '100%',
+      overflowY: 'auto',
+      WebkitOverflowScrolling: 'touch',
+      paddingBottom: '100px' // Extra padding for iOS scrolling
+    }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+        {/* Header */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          marginBottom: '20px',
+          flexWrap: 'wrap',
+          gap: '12px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <button
+              onClick={() => navigate('/dashboard')}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: '8px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                color: '#6B7280',
+                borderRadius: '6px'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+            >
+              <svg style={{ width: '28px', height: '28px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: 0 }}>
+              KHS Info
+            </h1>
+          </div>
+        </div>
 
-      {/* Tabs */}
-      <div style={{
-        backgroundColor: 'white',
-        borderBottom: '1px solid #E5E7EB',
-        padding: '0 20px',
-        display: 'flex',
-        gap: '24px',
-        overflowX: 'auto',
-      }}>
-        {tabs.map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            style={{
-              padding: '16px 0',
-              border: 'none',
-              backgroundColor: 'transparent',
-              color: activeTab === tab ? '#3B82F6' : '#6B7280',
-              fontSize: '18px',
-              fontWeight: activeTab === tab ? '600' : '400',
-              cursor: 'pointer',
-              borderBottom: activeTab === tab ? '2px solid #3B82F6' : '2px solid transparent',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+        {/* Tabs */}
+        <div style={{
+          backgroundColor: 'white',
+          borderBottom: '1px solid #E5E7EB',
+          padding: '0 20px',
+          display: 'flex',
+          gap: '24px',
+          overflowX: 'auto',
+          borderRadius: '8px 8px 0 0',
+          marginTop: '16px'
+        }}>
+          {tabs.map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              style={{
+                padding: '16px 0',
+                border: 'none',
+                backgroundColor: 'transparent',
+                color: activeTab === tab ? '#3B82F6' : '#6B7280',
+                fontSize: '18px',
+                fontWeight: activeTab === tab ? '600' : '400',
+                cursor: 'pointer',
+                borderBottom: activeTab === tab ? '2px solid #3B82F6' : '2px solid transparent',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
 
-      {/* Tab Content */}
-      <div style={{ backgroundColor: 'white', minHeight: 'calc(100% - 120px)' }}>
-        {renderTabContent()}
+        {/* Tab Content */}
+        <div style={{ backgroundColor: 'white', minHeight: '500px', borderRadius: '0 0 8px 8px' }}>
+          {renderTabContent()}
+        </div>
       </div>
     </div>
   );
