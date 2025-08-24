@@ -172,6 +172,8 @@ const KHSInfoSimple = () => {
   });
   const [newToolName, setNewToolName] = useState('');
   const [lastCheckedTime, setLastCheckedTime] = useState(Date.now());
+  const [editingToolId, setEditingToolId] = useState<string | null>(null);
+  const [editingToolName, setEditingToolName] = useState('');
 
   const tabs = ['Tools List', 'SOP', 'Office Docs', 'Specs'];
   const demoCategories = ['Kitchen', 'Bathroom', 'Flooring', 'Framing', 'Drywall'];
@@ -266,6 +268,16 @@ const KHSInfoSimple = () => {
     const newTools = { ...toolsData.tools };
     newTools[category] = newTools[category].map(tool => ({ ...tool, checked: false }));
     updateToolsData({ tools: newTools });
+  };
+
+  const handleEditTool = (category: string, toolId: string, newName: string) => {
+    const newTools = { ...toolsData.tools };
+    newTools[category] = newTools[category].map(tool =>
+      tool.id === toolId ? { ...tool, name: newName } : tool
+    );
+    updateToolsData({ tools: newTools });
+    setEditingToolId(null);
+    setEditingToolName('');
   };
 
   // Clear invalid categories when Demo/Install changes
@@ -455,29 +467,6 @@ const KHSInfoSimple = () => {
           )}
         </div>
 
-        {/* Lock/Unlock Button */}
-        {(toolsData.showDemo || toolsData.showInstall) && (
-          <div style={{ marginBottom: '16px' }}>
-            <button
-              onClick={() => updateToolsData({ isLocked: !toolsData.isLocked })}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: toolsData.isLocked ? '#10B981' : '#EF4444',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '16px',
-                fontWeight: '500',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-              }}
-            >
-              {toolsData.isLocked ? '🔒 Unlock List' : '🔓 Lock List'}
-            </button>
-          </div>
-        )}
 
         {/* Selected Categories Tools */}
         {!toolsData.showDemo && !toolsData.showInstall ? null : 
@@ -564,14 +553,46 @@ const KHSInfoSimple = () => {
                           cursor: 'pointer',
                         }}
                       />
-                      <span style={{
-                        fontSize: '18px',
-                        color: '#374151',
-                        textDecoration: tool.checked ? 'line-through' : 'none',
-                        opacity: tool.checked ? 0.6 : 1,
-                      }}>
-                        {tool.name}
-                      </span>
+                      {editingToolId === tool.id ? (
+                        <input
+                          type="text"
+                          value={editingToolName}
+                          onChange={(e) => setEditingToolName(e.target.value)}
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              handleEditTool(category, tool.id, editingToolName);
+                            }
+                          }}
+                          onBlur={() => handleEditTool(category, tool.id, editingToolName)}
+                          style={{
+                            fontSize: '18px',
+                            color: '#374151',
+                            border: '1px solid #3B82F6',
+                            borderRadius: '4px',
+                            padding: '2px 6px',
+                            backgroundColor: 'white',
+                          }}
+                          autoFocus
+                        />
+                      ) : (
+                        <span 
+                          style={{
+                            fontSize: '18px',
+                            color: '#374151',
+                            textDecoration: tool.checked ? 'line-through' : 'none',
+                            opacity: tool.checked ? 0.6 : 1,
+                            cursor: !toolsData.isLocked ? 'pointer' : 'default',
+                          }}
+                          onClick={() => {
+                            if (!toolsData.isLocked) {
+                              setEditingToolId(tool.id);
+                              setEditingToolName(tool.name);
+                            }
+                          }}
+                        >
+                          {tool.name}
+                        </span>
+                      )}
                     </label>
                     {tool.custom && !toolsData.isLocked && (
                       <button
@@ -594,44 +615,62 @@ const KHSInfoSimple = () => {
                 ))}
               </div>
 
-              {/* Add new tool */}
-              {!toolsData.isLocked && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px' }}>
-                  <input
-                    type="text"
-                    value={newToolName}
-                    onChange={(e) => setNewToolName(e.target.value)}
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        handleAddTool(category);
-                      }
-                    }}
-                    placeholder="Add new tool..."
-                    style={{
-                      width: '200px',
-                      padding: '6px 10px',
-                      border: '1px solid #D1D5DB',
-                      borderRadius: '6px',
-                      fontSize: '16px',
-                    }}
-                  />
-                  <button
-                    onClick={() => handleAddTool(category)}
-                    style={{
-                      padding: '6px 12px',
-                      backgroundColor: '#3B82F6',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      fontSize: '16px',
-                      fontWeight: '500',
-                    }}
-                  >
-                    Add
-                  </button>
-                </div>
-              )}
+              {/* Add new tool and Lock/Edit button */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px' }}>
+                {!toolsData.isLocked && (
+                  <>
+                    <input
+                      type="text"
+                      value={newToolName}
+                      onChange={(e) => setNewToolName(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          handleAddTool(category);
+                        }
+                      }}
+                      placeholder="Add new tool..."
+                      style={{
+                        width: '200px',
+                        padding: '6px 10px',
+                        border: '1px solid #D1D5DB',
+                        borderRadius: '6px',
+                        fontSize: '16px',
+                      }}
+                    />
+                    <button
+                      onClick={() => handleAddTool(category)}
+                      style={{
+                        padding: '6px 12px',
+                        backgroundColor: '#3B82F6',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontSize: '16px',
+                        fontWeight: '500',
+                      }}
+                    >
+                      Add
+                    </button>
+                  </>
+                )}
+                <button
+                  onClick={() => updateToolsData({ isLocked: !toolsData.isLocked })}
+                  style={{
+                    padding: '6px 12px',
+                    backgroundColor: toolsData.isLocked ? '#10B981' : '#EF4444',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                    fontWeight: '500',
+                    marginLeft: !toolsData.isLocked ? '0' : 'auto',
+                  }}
+                >
+                  {toolsData.isLocked ? 'Edit' : 'Lock'}
+                </button>
+              </div>
             </div>
           ))
         )}
