@@ -75,7 +75,8 @@
       "Bash(npx serve:*)",
       "Bash(git ls-tree:*)",
       "WebFetch(domain:khs-crm-2-production.up.railway.app)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(npx vite:*)"
     ],
     "deny": []
   }
