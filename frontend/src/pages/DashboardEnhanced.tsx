@@ -101,9 +101,9 @@ const DashboardEnhanced = () => {
             className="dashboard-time"
             style={{ 
               fontSize: '36px', 
-              color: '#10B981',
+              color: '#EF4444',
               fontFamily: 'monospace',
-              fontWeight: '500',
+              fontWeight: 'bold',
               letterSpacing: '0.5px'
             }}>
             {formatDateTime().time}
