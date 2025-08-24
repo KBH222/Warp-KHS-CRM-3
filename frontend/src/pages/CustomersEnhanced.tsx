@@ -166,13 +166,6 @@ const CustomersEnhanced = () => {
       window.removeEventListener('online', handleOnline);
     };
   }, []);
-  
-  // Reload customers when customer type changes
-  useEffect(() => {
-    if (!isLoading) {
-      loadCustomers();
-    }
-  }, [customerType]);
 
   const [showModal, setShowModal] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<any>(null);
@@ -182,6 +175,13 @@ const CustomersEnhanced = () => {
   const [selectedCustomerForJob, setSelectedCustomerForJob] = useState<any>(null);
   const [editingJob, setEditingJob] = useState<any>(null);
   const [customerType, setCustomerType] = useState<'ACTIVE' | 'SOON_TO_BE' | null>(null); // null shows all
+  
+  // Reload customers when customer type changes
+  useEffect(() => {
+    if (!isLoading) {
+      loadCustomers();
+    }
+  }, [customerType]);
 
   // Sort customers
   // Helper function to get jobs for a customer
