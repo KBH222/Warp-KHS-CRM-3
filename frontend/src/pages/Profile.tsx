@@ -15,6 +15,8 @@ const Profile = () => {
     
     // Business Info
     businessName: 'KHS Construction & Remodeling',
+    businessAbbreviation: 'KHS',
+    businessLogo: '', // Logo URL or base64 data
     businessPhone: '(555) 100-2000',
     businessEmail: 'info@khsconstruction.com',
     businessAddress: '123 Construction Way, Springfield, IL 62701',
@@ -323,6 +325,71 @@ const Profile = () => {
               Business Information
             </h2>
             <div style={{ display: 'grid', gap: '16px' }}>
+              {/* Logo Section */}
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '16.1px', fontWeight: '500' }}>
+                  Business Logo
+                </label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '8px',
+                    border: '2px dashed #E5E7EB',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: '#F9FAFB',
+                    overflow: 'hidden'
+                  }}>
+                    {profile.businessLogo ? (
+                      <img 
+                        src={profile.businessLogo} 
+                        alt="Business Logo" 
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                      />
+                    ) : (
+                      <span style={{ color: '#9CA3AF', fontSize: '14px', textAlign: 'center' }}>
+                        No Logo
+                      </span>
+                    )}
+                  </div>
+                  {editMode && (
+                    <div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        id="logo-upload"
+                        style={{ display: 'none' }}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              setProfile({ ...profile, businessLogo: reader.result });
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                      <label
+                        htmlFor="logo-upload"
+                        style={{
+                          padding: '6px 12px',
+                          backgroundColor: '#3B82F6',
+                          color: 'white',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          display: 'inline-block'
+                        }}
+                      >
+                        Upload Logo
+                      </label>
+                    </div>
+                  )}
+                </div>
+              </div>
               <div>
                 <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
                   Business Name
@@ -341,6 +408,30 @@ const Profile = () => {
                     backgroundColor: editMode ? 'white' : '#F9FAFB'
                   }}
                 />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
+                  Company Abbreviation
+                </label>
+                <input
+                  type="text"
+                  value={profile.businessAbbreviation}
+                  onChange={(e) => setProfile({ ...profile, businessAbbreviation: e.target.value })}
+                  disabled={!editMode}
+                  placeholder="e.g., KHS"
+                  maxLength={10}
+                  style={{
+                    width: '200px',
+                    padding: '8px 12px',
+                    border: '1px solid #E5E7EB',
+                    borderRadius: '6px',
+                    fontSize: '16.1px',
+                    backgroundColor: editMode ? 'white' : '#F9FAFB'
+                  }}
+                />
+                <p style={{ fontSize: '14px', color: '#6B7280', marginTop: '4px' }}>
+                  Short name used throughout the app
+                </p>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
