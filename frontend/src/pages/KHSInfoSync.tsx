@@ -26,16 +26,31 @@ const KHSInfoSync = () => {
 
   const loadData = async () => {
     try {
+      console.log('[KHS Info] Loading data...');
       const [settingsData, itemsData] = await Promise.all([
         toolsAPI.getSettings(),
         toolsAPI.getItems()
       ]);
+      console.log('[KHS Info] Data loaded:', { settingsData, itemsCount: itemsData.length });
       setSettings(settingsData);
       setToolItems(itemsData);
       setError(null);
-    } catch (err) {
-      setError('Failed to load data. Please check your connection.');
-      console.error('Error loading data:', err);
+    } catch (err: any) {
+      console.error('[KHS Info] Error loading data:', err);
+      console.error('[KHS Info] Error details:', {
+        message: err.message,
+        response: err.response,
+        status: err.status
+      });
+      
+      // Check if it's an auth error
+      if (err.message?.includes('401') || err.message?.includes('Unauthorized')) {
+        setError('Not authenticated. Please log in again.');
+      } else if (err.message?.includes('Failed to fetch')) {
+        setError('Cannot connect to server. Please check your connection.');
+      } else {
+        setError(`Failed to load data: ${err.message}`);
+      }
     } finally {
       setLoading(false);
     }

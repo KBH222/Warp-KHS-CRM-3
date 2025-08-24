@@ -96,6 +96,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const { password, ...userWithoutPassword } = mockUser;
         user = userWithoutPassword;
         
+        // Set a mock token for API calls
+        const mockToken = `railway-token-${user.id}-${Date.now()}`;
+        localStorage.setItem('khs-crm-token', mockToken);
+        localStorage.setItem('auth-token', mockToken);
+        
         // Store in offline auth for future use
         try {
           await offlineAuthService.login(credentials, enableBiometric);

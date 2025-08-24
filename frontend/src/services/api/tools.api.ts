@@ -39,15 +39,25 @@ class ToolsAPI {
   }
 
   async getSettings(): Promise<ToolSettings> {
-    const response = await fetch(`${API_BASE_URL}/api/tools/settings`, {
+    const url = `${API_BASE_URL}/api/tools/settings`;
+    console.log('[ToolsAPI] Fetching settings from:', url);
+    console.log('[ToolsAPI] Auth headers:', this.getAuthHeaders());
+    
+    const response = await fetch(url, {
       headers: this.getAuthHeaders()
     });
     
+    console.log('[ToolsAPI] Response status:', response.status);
+    
     if (!response.ok) {
-      throw new Error(`Failed to fetch tool settings: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('[ToolsAPI] Error response:', errorText);
+      throw new Error(`Failed to fetch tool settings: ${response.status} ${response.statusText} - ${errorText}`);
     }
     
-    return response.json();
+    const data = await response.json();
+    console.log('[ToolsAPI] Settings received:', data);
+    return data;
   }
 
   async updateSettings(settings: Partial<ToolSettings>): Promise<ToolSettings> {
