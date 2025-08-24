@@ -105,14 +105,24 @@ const ScheduleCalendar = () => {
   const [workerColors, setWorkerColors] = useState({});
 
   useEffect(() => {
-    const loadedWorkers = workerService.getAll() || [];
-    setWorkers(loadedWorkers.map(w => w.name));
+    const loadWorkers = async () => {
+      try {
+        const loadedWorkers = await workerService.getAll();
+        setWorkers((loadedWorkers || []).map(w => w.name));
+        
+        const colors = {};
+        (loadedWorkers || []).forEach(w => {
+          colors[w.name] = w.color;
+        });
+        setWorkerColors(colors);
+      } catch (error) {
+        console.error('Failed to load workers:', error);
+        setWorkers([]);
+        setWorkerColors({});
+      }
+    };
     
-    const colors = {};
-    loadedWorkers.forEach(w => {
-      colors[w.name] = w.color;
-    });
-    setWorkerColors(colors);
+    loadWorkers();
   }, []);
 
   // New job form state
