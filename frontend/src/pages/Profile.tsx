@@ -199,7 +199,7 @@ const Profile = () => {
           {tabs.map(tab => (
             <button
               key={tab.id}
-              onClick={() => tab.isLink ? navigate(tab.path) : setActiveTab(tab.id)}
+              onClick={() => tab.isLink && tab.path ? navigate(tab.path) : setActiveTab(tab.id)}
               style={{
                 padding: '12px 16px',
                 border: 'none',

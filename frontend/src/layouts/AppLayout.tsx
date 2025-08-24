@@ -1,6 +1,7 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuth, useUser } from '../stores/auth.store';
 import { useState, useEffect } from 'react';
+import { BottomTabBar } from '../components/BottomTabBar';
 
 // Icons - using simple SVGs for now
 const MenuIcon = () => (
@@ -79,6 +80,51 @@ export const AppLayout = () => {
             <button
               onClick={() => {
                 setShowMenu(false);
+                navigate('/jobs');
+              }}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            >
+              <div className="flex items-center">
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Jobs
+              </div>
+            </button>
+            
+            <button
+              onClick={() => {
+                setShowMenu(false);
+                navigate('/invoices');
+              }}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            >
+              <div className="flex items-center">
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+                Invoices
+              </div>
+            </button>
+            
+            <button
+              onClick={() => {
+                setShowMenu(false);
+                navigate('/reports');
+              }}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            >
+              <div className="flex items-center">
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Reports
+              </div>
+            </button>
+            
+            <button
+              onClick={() => {
+                setShowMenu(false);
                 navigate('/offline-dashboard');
               }}
               className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
@@ -129,6 +175,9 @@ export const AppLayout = () => {
       <main className="app-main">
         <Outlet />
       </main>
+      
+      {/* Bottom Navigation */}
+      <BottomTabBar />
       
       {/* Click outside to close menu */}
       {showMenu && (

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { practicalEncryption } from '../services/practicalEncryption';
 import { authService } from '../services/authService';
 
-export const PracticalSecurity = () => {
+const PracticalSecurity = () => {
   const navigate = useNavigate();
   const [encryptionPassword, setEncryptionPassword] = useState('');
   const [authEnabled, setAuthEnabled] = useState(false);
@@ -287,3 +287,5 @@ export const PracticalSecurity = () => {
     </div>
   );
 };
+
+export default PracticalSecurity;

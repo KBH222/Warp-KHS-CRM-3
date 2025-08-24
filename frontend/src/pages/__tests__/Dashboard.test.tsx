@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '../../test/test-utils';
-import Dashboard from '../Dashboard';
+import Dashboard from '../DashboardEnhanced';
 
 // Mock useNavigate
 const mockNavigate = vi.fn();

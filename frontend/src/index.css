@@ -300,6 +300,23 @@ table, thead, tbody, tfoot, tr, td, th {
     left: 0 !important;
     right: 0 !important;
   }
+  
+  /* App layout styles */
+  .app-layout {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .app-header {
+    flex-shrink: 0;
+  }
+  
+  .app-main {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 80px; /* Space for bottom navigation */
+  }
 
   /* Pull to refresh styles */
   .ptr-element {
