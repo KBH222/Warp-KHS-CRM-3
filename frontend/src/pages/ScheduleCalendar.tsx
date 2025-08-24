@@ -18,9 +18,13 @@ const ScheduleCalendar = () => {
   
   // Load jobs from localStorage or use defaults
   const [allJobs, setAllJobs] = useState(() => {
-    const savedJobs = calendarJobStorage.getAll();
-    if (savedJobs && savedJobs.length > 0) {
-      return savedJobs;
+    try {
+      const savedJobs = calendarJobStorage.getAll();
+      if (savedJobs && savedJobs.length > 0) {
+        return savedJobs;
+      }
+    } catch (error) {
+      console.error('Failed to load saved jobs:', error);
     }
     // Default jobs for first time
     return [

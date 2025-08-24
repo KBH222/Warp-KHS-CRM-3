@@ -177,17 +177,23 @@ export const profileStorage = {
 // Calendar jobs specific functions
 export const calendarJobStorage = {
   getAll: () => {
-    const jobs = storage.get(STORAGE_KEYS.CALENDAR_JOBS, []);
-    // Ensure jobs is an array
-    if (!Array.isArray(jobs)) {
+    try {
+      const jobs = storage.get(STORAGE_KEYS.CALENDAR_JOBS, []);
+      // Ensure jobs is an array
+      if (!Array.isArray(jobs)) {
+        console.warn('calendarJobStorage.getAll: jobs is not an array:', jobs);
+        return [];
+      }
+      // Convert date strings back to Date objects
+      return jobs.map((job: Record<string, unknown>) => ({
+        ...job,
+        startDate: job.startDate ? new Date(job.startDate as string) : new Date(),
+        endDate: job.endDate ? new Date(job.endDate as string) : new Date(),
+      }));
+    } catch (error) {
+      console.error('calendarJobStorage.getAll error:', error);
       return [];
     }
-    // Convert date strings back to Date objects
-    return jobs.map((job: Record<string, unknown>) => ({
-      ...job,
-      startDate: new Date(job.startDate as string),
-      endDate: new Date(job.endDate as string),
-    }));
   },
   save: (jobs: Array<Record<string, unknown>>) => {
     // Convert Date objects to strings for storage
