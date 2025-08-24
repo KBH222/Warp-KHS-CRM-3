@@ -27,7 +27,7 @@ const OfflineDataDashboard = lazy(() => import('../components/OfflineDataDashboa
 const PracticalSecurity = lazy(() => import('../pages/PracticalSecurity'));
 const SyncDebug = lazy(() => import('../pages/SyncDebug'));
 const DebugEnv = lazy(() => import('../pages/DebugEnv'));
-const KHSInfo = lazy(() => import('../pages/KHSInfoSync'));
+const KHSInfo = lazy(() => import('../pages/KHSInfoSimple'));
 const TestConnection = lazy(() => import('../pages/TestConnection'));
 
 // Loading component

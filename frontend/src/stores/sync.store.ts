@@ -11,12 +11,35 @@ interface SyncError {
   details?: any;
 }
 
+interface Tool {
+  id: string;
+  name: string;
+  checked: boolean;
+  custom?: boolean;
+}
+
+interface CategoryTools {
+  [category: string]: Tool[];
+}
+
+interface ToolsData {
+  tools: CategoryTools;
+  selectedCategories: string[];
+  isLocked: boolean;
+  showDemo: boolean;
+  showInstall: boolean;
+}
+
 interface SyncState {
   isOnline: boolean;
   isSyncing: boolean;
   lastSyncTime: Date | null;
   errors: SyncError[];
   pendingOperations: number;
+  toolsData?: ToolsData;
+  status: {
+    syncInProgress: boolean;
+  };
 
   // Actions
   setOnline: (online: boolean) => void;
@@ -33,14 +56,21 @@ export const syncStore = create<SyncState>((set) => ({
   lastSyncTime: null,
   errors: [],
   pendingOperations: 0,
+  toolsData: undefined,
+  status: {
+    syncInProgress: false,
+  },
 
   setOnline: (online) => set({ isOnline: online }),
-  setSyncing: (syncing) => set({ isSyncing: syncing }),
+  setSyncing: (syncing) => set({ isSyncing: syncing, status: { syncInProgress: syncing } }),
   setLastSyncTime: (time) => set({ lastSyncTime: time }),
   addError: (error) => set((state) => ({ errors: [...state.errors, error] })),
   clearErrors: () => set({ errors: [] }),
   setPendingOperations: (count) => set({ pendingOperations: count }),
 }));
+
+// Export the store hook
+export const useSyncStore = syncStore;
 
 // Helper hooks
 export const useSyncStatus = () => {
