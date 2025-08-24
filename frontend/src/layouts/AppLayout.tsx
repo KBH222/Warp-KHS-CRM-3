@@ -1,7 +1,6 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuth, useUser } from '../stores/auth.store';
 import { useState, useEffect } from 'react';
-import { BottomTabBar } from '../components/BottomTabBar';
 
 // Icons - using simple SVGs for now
 const MenuIcon = () => (
@@ -175,9 +174,6 @@ export const AppLayout = () => {
       <main className="app-main">
         <Outlet />
       </main>
-      
-      {/* Bottom Navigation */}
-      <BottomTabBar />
       
       {/* Click outside to close menu */}
       {showMenu && (

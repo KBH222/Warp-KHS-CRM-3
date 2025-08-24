@@ -315,7 +315,6 @@ table, thead, tbody, tfoot, tr, td, th {
   .app-main {
     flex: 1;
     overflow-y: auto;
-    padding-bottom: 80px; /* Space for bottom navigation */
   }
   
   /* Fix for clickable links - prevent red on active */
