@@ -84,18 +84,22 @@ const DashboardEnhanced = () => {
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
         {/* Header Section */}
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ 
+          marginBottom: '20px',
+          display: 'flex',
+          alignItems: 'baseline',
+          gap: '16px'
+        }}>
           <div style={{ 
             fontSize: '27.6px', 
             fontWeight: 'bold', 
-            color: '#111827',
-            marginBottom: '4px'
+            color: '#111827'
           }}>
             {formatDateTime().date}
           </div>
           <div style={{ 
             fontSize: '23px', 
-            color: '#3B82F6',
+            color: '#EF4444',
             fontFamily: 'monospace'
           }}>
             {formatDateTime().time}
@@ -177,70 +181,6 @@ const DashboardEnhanced = () => {
       </div>
 
 
-        {/* Quick Actions */}
-        <div style={{ 
-          marginTop: '40px',
-          display: 'flex',
-          gap: '12px',
-          justifyContent: 'center'
-        }}>
-          <button
-            onClick={() => navigate('/customers')}
-            style={{
-              backgroundColor: '#3B82F6',
-              color: 'white',
-              padding: '12px 20px',
-              borderRadius: '8px',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: '16.1px',
-              fontWeight: '500',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.backgroundColor = '#2563EB';
-            }}
-            onMouseUp={(e) => {
-              e.currentTarget.style.backgroundColor = '#3B82F6';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#3B82F6';
-            }}
-          >
-            + New Customer
-          </button>
-          <button
-            onClick={() => navigate('/schedule')}
-            style={{
-              backgroundColor: '#10B981',
-              color: 'white',
-              padding: '12px 20px',
-              borderRadius: '8px',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: '16.1px',
-              fontWeight: '500',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.backgroundColor = '#059669';
-            }}
-            onMouseUp={(e) => {
-              e.currentTarget.style.backgroundColor = '#10B981';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#10B981';
-            }}
-          >
-            + New Job
-          </button>
-        </div>
       </div>
     </div>
   );
