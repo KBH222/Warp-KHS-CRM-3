@@ -723,59 +723,32 @@ const KHSInfoSimple = () => {
       <div style={{
         backgroundColor: 'white',
         borderBottom: '1px solid #E5E7EB',
-        padding: '16px 20px',
+        padding: '20px',
         display: 'flex',
         alignItems: 'center',
-        gap: '16px'
+        gap: '12px'
       }}>
         <button
           onClick={() => navigate('/dashboard')}
           style={{
-            padding: '8px',
-            backgroundColor: 'transparent',
+            background: 'none',
             border: 'none',
+            padding: '8px',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: '8px',
-            transition: 'background-color 0.2s',
+            color: '#6B7280',
+            borderRadius: '6px',
+            marginTop: '-4px'
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#F3F4F6';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-          }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
         >
-          <svg 
-            width="24" 
-            height="24" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2"
-          >
-            <path d="M19 12H5M5 12L12 19M5 12L12 5" />
+          <svg style={{ width: '28px', height: '28px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <div>
-          <h1 style={{ 
-            fontSize: '24px', 
-            fontWeight: '700', 
-            color: '#111827',
-            margin: 0 
-          }}>
-            KHS Info
-          </h1>
-          <p style={{ 
-            fontSize: '14px', 
-            color: '#6B7280',
-            margin: '4px 0 0 0'
-          }}>
-            Tools, SOPs, office docs and specs
-          </p>
-        </div>
+        <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: 0 }}>KHS Info</h1>
       </div>
 
       {/* Tabs */}
