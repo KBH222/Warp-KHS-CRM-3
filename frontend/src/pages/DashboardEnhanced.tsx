@@ -88,7 +88,7 @@ const DashboardEnhanced = () => {
           marginBottom: '20px',
           display: 'flex',
           alignItems: 'baseline',
-          gap: '16px'
+          gap: '32px'
         }}>
           <div style={{ 
             fontSize: '27.6px', 
@@ -98,7 +98,7 @@ const DashboardEnhanced = () => {
             {formatDateTime().date}
           </div>
           <div style={{ 
-            fontSize: '23px', 
+            fontSize: '29px', 
             color: '#EF4444',
             fontFamily: 'monospace'
           }}>
