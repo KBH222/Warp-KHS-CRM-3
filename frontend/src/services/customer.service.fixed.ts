@@ -11,6 +11,7 @@ interface Customer {
   email: string | null;
   address: string;
   notes: string | null;
+  customerType?: 'ACTIVE' | 'SOON_TO_BE';
   isArchived: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -25,6 +26,7 @@ interface CreateCustomerRequest {
   email?: string;
   address: string;
   notes?: string;
+  customerType?: 'ACTIVE' | 'SOON_TO_BE';
 }
 
 interface UpdateCustomerRequest {
@@ -33,6 +35,7 @@ interface UpdateCustomerRequest {
   email?: string | null;
   address?: string;
   notes?: string | null;
+  customerType?: 'ACTIVE' | 'SOON_TO_BE';
 }
 
 interface CustomerFilters {
@@ -53,11 +56,12 @@ class CustomerServiceFixed {
   /**
    * Get all customers - always try API first if online
    */
-  async getCustomers(filters?: CustomerFilters): Promise<Customer[]> {
+  async getCustomers(customerType?: 'ACTIVE' | 'SOON_TO_BE' | null, filters?: CustomerFilters): Promise<Customer[]> {
     // If online, fetch from API first
     if (navigator.onLine) {
       try {
-        const customers = await apiClient.get<Customer[]>(API_ENDPOINTS.CUSTOMERS);
+        const params = customerType ? `?type=${customerType}` : '';
+        const customers = await apiClient.get<Customer[]>(API_ENDPOINTS.CUSTOMERS + params);
 
         // Save to IndexedDB for offline access
         for (const customer of customers) {
@@ -71,7 +75,14 @@ class CustomerServiceFixed {
     }
 
     // Offline or API failed - use local data
-    return offlineDb.getCustomers(filters);
+    const allCustomers = await offlineDb.getCustomers(filters);
+    
+    // Filter by customer type if specified
+    if (customerType) {
+      return allCustomers.filter(c => c.customerType === customerType);
+    }
+    
+    return allCustomers;
   }
 
   /**
@@ -107,7 +118,8 @@ class CustomerServiceFixed {
           phone: data.phone || null,
           email: data.email || null,
           address: data.address,
-          notes: data.notes || null
+          notes: data.notes || null,
+          customerType: data.customerType || 'ACTIVE'
         });
 
         // Save to local DB for offline access
@@ -133,10 +145,12 @@ class CustomerServiceFixed {
       email: data.email || null,
       address: data.address,
       notes: data.notes || null,
+      customerType: data.customerType || 'ACTIVE',
       isArchived: false,
       createdAt: now,
       updatedAt: now,
-      createdBy: 'current-user',       modifiedBy: 'current-user'
+      createdBy: 'current-user',
+      modifiedBy: 'current-user'
     };
 
     // Save locally

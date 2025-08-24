@@ -47,7 +47,7 @@ const CustomersEnhanced = () => {
   const loadCustomers = async () => {
     try {
       setIsLoading(true);
-      const data = await customersApi.getAll();
+      const data = await customersApi.getAll(customerType);
       setCustomers(data);
     } catch (err: any) {
       const errorMessage = err.message || 'Failed to load customers';
@@ -166,6 +166,13 @@ const CustomersEnhanced = () => {
       window.removeEventListener('online', handleOnline);
     };
   }, []);
+  
+  // Reload customers when customer type changes
+  useEffect(() => {
+    if (!isLoading) {
+      loadCustomers();
+    }
+  }, [customerType]);
 
   const [showModal, setShowModal] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<any>(null);
@@ -174,6 +181,7 @@ const CustomersEnhanced = () => {
   const [showAddJobModal, setShowAddJobModal] = useState(false);
   const [selectedCustomerForJob, setSelectedCustomerForJob] = useState<any>(null);
   const [editingJob, setEditingJob] = useState<any>(null);
+  const [customerType, setCustomerType] = useState<'ACTIVE' | 'SOON_TO_BE' | null>(null); // null shows all
 
   // Sort customers
   // Helper function to get jobs for a customer
@@ -200,13 +208,19 @@ const CustomersEnhanced = () => {
   });
 
   // Filter customers
-  const filteredCustomers = sortedCustomers.filter(customer =>
-    customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.phone.includes(searchTerm) ||
-    customer.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (customer.notes && customer.notes.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredCustomers = sortedCustomers.filter(customer => {
+    // First filter by search term
+    const matchesSearch = customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.phone.includes(searchTerm) ||
+      customer.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (customer.notes && customer.notes.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    // Then filter by customer type if selected
+    const matchesType = !customerType || customer.customerType === customerType;
+    
+    return matchesSearch && matchesType;
+  });
 
 
 
@@ -216,6 +230,11 @@ const CustomersEnhanced = () => {
       // Don't pass any temp ID - let backend generate the ID
       const customerData = { ...newCustomer };
       delete customerData.id; // Remove any temp ID if present
+      
+      // Add customer type if one is selected
+      if (customerType) {
+        customerData.customerType = customerType;
+      }
       
       const customer = await customersApi.create(customerData);
       
@@ -581,6 +600,58 @@ const CustomersEnhanced = () => {
                 + Add Customer
               </button>
           </div>
+        </div>
+
+        {/* Customer Type Selector */}
+        <div style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
+          <button
+            onClick={() => setCustomerType(null)}
+            style={{
+              flex: 1,
+              padding: '12px',
+              backgroundColor: customerType === null ? '#3B82F6' : '#F3F4F6',
+              color: customerType === null ? 'white' : '#374151',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '16px',
+              fontWeight: '500'
+            }}
+          >
+            All Customers
+          </button>
+          <button
+            onClick={() => setCustomerType('ACTIVE')}
+            style={{
+              flex: 1,
+              padding: '12px',
+              backgroundColor: customerType === 'ACTIVE' ? '#10B981' : '#F3F4F6',
+              color: customerType === 'ACTIVE' ? 'white' : '#374151',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '16px',
+              fontWeight: '500'
+            }}
+          >
+            Active
+          </button>
+          <button
+            onClick={() => setCustomerType('SOON_TO_BE')}
+            style={{
+              flex: 1,
+              padding: '12px',
+              backgroundColor: customerType === 'SOON_TO_BE' ? '#F59E0B' : '#F3F4F6',
+              color: customerType === 'SOON_TO_BE' ? 'white' : '#374151',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '16px',
+              fontWeight: '500'
+            }}
+          >
+            Soon To Be
+          </button>
         </div>
 
         {/* Search Bar */}
@@ -1071,7 +1142,8 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
     city: '',
     state: '',
     zip: '',
-    notes: customer?.notes || ''
+    notes: customer?.notes || '',
+    customerType: customer?.customerType || 'ACTIVE'
   });
 
   // Parse address if editing
@@ -1191,7 +1263,8 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
       email: formData.email,
       phone: formData.phone,
       address,
-      notes: formData.notes
+      notes: formData.notes,
+      customerType: formData.customerType
     });
   };
 
@@ -1246,6 +1319,27 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
               <option value="HOD">HOD</option>
               <option value="Yelp">Yelp</option>
               <option value="Cust">Customer Referral</option>
+            </select>
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', marginBottom: '4px', fontWeight: '500' }}>
+              Customer Type
+            </label>
+            <select
+              value={formData.customerType}
+              onChange={(e) => setFormData({ ...formData, customerType: e.target.value })}
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #D1D5DB',
+                borderRadius: '6px',
+                fontSize: '18.4px',
+                backgroundColor: 'white'
+              }}
+            >
+              <option value="ACTIVE">Active</option>
+              <option value="SOON_TO_BE">Soon To Be</option>
             </select>
           </div>
 

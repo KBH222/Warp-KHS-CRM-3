@@ -25,6 +25,12 @@ enum JobStatus {
   CANCELLED
 }
 
+// Customer type enum
+enum CustomerType {
+  ACTIVE
+  SOON_TO_BE
+}
+
 // User model for authentication and role management
 model User {
   id                String    @id @default(cuid())
@@ -64,16 +70,17 @@ model RefreshToken {
 
 // Customer model
 model Customer {
-  id          String    @id @default(cuid())
-  reference   String    @unique // Customer reference like "A1", "B2"
-  name        String
-  phone       String?
-  email       String?
-  address     String
-  notes       String?
-  isArchived  Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id           String       @id @default(cuid())
+  reference    String       @unique // Customer reference like "A1", "B2"
+  name         String
+  phone        String?
+  email        String?
+  address      String
+  notes        String?
+  customerType CustomerType @default(ACTIVE)
+  isArchived   Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 
   // Relations
   jobs        Job[]
@@ -83,6 +90,7 @@ model Customer {
   @@index([address])
   @@index([reference])
   @@index([isArchived])
+  @@index([customerType])
 }
 
 // Job model

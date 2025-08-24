@@ -10,6 +10,7 @@ interface Customer {
   email: string | null;
   address: string;
   notes: string | null;
+  customerType?: 'ACTIVE' | 'SOON_TO_BE';
   isArchived: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -21,8 +22,8 @@ interface Customer {
 // Re-export the fixed customer service methods under the old API interface
 export const customersApi = {
   // Get all customers
-  async getAll(): Promise<Customer[]> {
-    return customerServiceFixed.getCustomers();
+  async getAll(customerType?: 'ACTIVE' | 'SOON_TO_BE' | null): Promise<Customer[]> {
+    return customerServiceFixed.getCustomers(customerType);
   },
 
   // Get single customer
@@ -41,7 +42,8 @@ export const customersApi = {
       phone: customer.phone || undefined,
       email: customer.email || undefined,
       address: customer.address,
-      notes: customer.notes || undefined
+      notes: customer.notes || undefined,
+      customerType: customer.customerType
     });
   },
 
@@ -52,7 +54,8 @@ export const customersApi = {
       phone: customer.phone,
       email: customer.email,
       address: customer.address,
-      notes: customer.notes
+      notes: customer.notes,
+      customerType: customer.customerType
     });
   },
 

@@ -366,8 +366,16 @@ app.post('/api/auth/login', async (req, res) => {
 // Customer routes
 app.get('/api/customers', authMiddleware, async (req, res) => {
   try {
+    const { type } = req.query;
+    const where = { isArchived: false };
+    
+    // Filter by customer type if provided
+    if (type && (type === 'ACTIVE' || type === 'SOON_TO_BE')) {
+      where.customerType = type;
+    }
+    
     const customers = await prisma.customer.findMany({
-      where: { isArchived: false },
+      where,
       include: {
         jobs: {
           select: {
@@ -441,7 +449,7 @@ app.get('/api/customers', authMiddleware, async (req, res) => {
 
 app.post('/api/customers', authMiddleware, async (req, res) => {
   try {
-    const { reference, name, phone, email, address, notes } = req.body;
+    const { reference, name, phone, email, address, notes, customerType } = req.body;
     
     let customerReference = reference;
     if (!customerReference) {
@@ -458,7 +466,8 @@ app.post('/api/customers', authMiddleware, async (req, res) => {
         phone,
         email,
         address,
-        notes
+        notes,
+        customerType: customerType || 'ACTIVE'
       }
     });
 
@@ -471,11 +480,16 @@ app.post('/api/customers', authMiddleware, async (req, res) => {
 
 app.put('/api/customers/:id', authMiddleware, async (req, res) => {
   try {
-    const { name, phone, email, address, notes } = req.body;
+    const { name, phone, email, address, notes, customerType } = req.body;
+    
+    const updateData = { name, phone, email, address, notes };
+    if (customerType && (customerType === 'ACTIVE' || customerType === 'SOON_TO_BE')) {
+      updateData.customerType = customerType;
+    }
     
     const customer = await prisma.customer.update({
       where: { id: req.params.id },
-      data: { name, phone, email, address, notes }
+      data: updateData
     });
     
     res.json(customer);
