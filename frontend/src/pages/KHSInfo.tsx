@@ -173,6 +173,13 @@ return;
     }));
   };
 
+  const handleClearCategory = (category: string) => {
+    setTools(prev => ({
+      ...prev,
+      [category]: prev[category].map(tool => ({ ...tool, checked: false })),
+    }));
+  };
+
   const renderToolsList = () => {
     return (
       <div style={{ padding: '20px' }}>
@@ -272,16 +279,45 @@ return;
         ) : (
           selectedCategories.map(category => (
             <div key={category} style={{ marginBottom: '32px' }}>
-              <h4 style={{
-                fontSize: '18px',
-                fontWeight: '600',
-                color: '#111827',
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
                 marginBottom: '16px',
                 paddingBottom: '8px',
                 borderBottom: '2px solid #E5E7EB',
               }}>
-                {category}
-              </h4>
+                <h4 style={{
+                  fontSize: '18px',
+                  fontWeight: '600',
+                  color: '#111827',
+                  margin: 0,
+                }}>
+                  {category}
+                </h4>
+                <button
+                  onClick={() => handleClearCategory(category)}
+                  style={{
+                    padding: '4px 12px',
+                    backgroundColor: '#F3F4F6',
+                    color: '#6B7280',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    transition: 'background-color 0.2s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#E5E7EB';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#F3F4F6';
+                  }}
+                >
+                  Clear
+                </button>
+              </div>
 
               <div style={{ marginBottom: '16px' }}>
                 {tools[category]?.map(tool => (
