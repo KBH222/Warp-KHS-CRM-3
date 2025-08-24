@@ -939,9 +939,93 @@ app.post('/api/sync/pull', authMiddleware, async (req, res) => {
   }
 });
 
+// Initialize tool data if needed
+async function initializeToolData() {
+  try {
+    // Check if we have any categories
+    const categoryCount = await prisma.toolCategory.count();
+    
+    if (categoryCount === 0) {
+      console.log('[Tools] Initializing tool data...');
+      
+      // Create categories
+      const demoCategory = await prisma.toolCategory.create({
+        data: {
+          name: 'Demo',
+          description: 'Demolition tools and equipment',
+          sortOrder: 1
+        }
+      });
+      
+      const installCategory = await prisma.toolCategory.create({
+        data: {
+          name: 'Install',
+          description: 'Installation tools and equipment',
+          sortOrder: 2
+        }
+      });
+      
+      // Create some initial lists and items
+      const toolData = {
+        Demo: {
+          Kitchen: ['Sledgehammer (20lb)', 'Crowbar (36")', 'Reciprocating saw', 'Utility knife', 'Safety glasses'],
+          Bathroom: ['Sledgehammer (10lb)', 'Pry bar', 'Pipe wrench', 'Safety glasses', 'Dust masks'],
+          Flooring: ['Floor scraper', 'Pry bar', 'Hammer', 'Utility knife', 'Knee pads'],
+          Framing: ['Reciprocating saw', 'Circular saw', 'Sledgehammer', 'Pry bar', 'Safety glasses'],
+          Drywall: ['Drywall saw', 'Utility knife', 'Pry bar', 'Hammer', 'Dust masks']
+        },
+        Install: {
+          Cabinets: ['Drill/Driver set', 'Level (4ft)', 'Stud finder', 'Tape measure', 'Cabinet jacks'],
+          Drywall: ['Drywall lift', 'Screw gun', 'Drywall saw', 'T-square (4ft)', 'Tape measure'],
+          Flooring: ['Flooring nailer', 'Miter saw', 'Jigsaw', 'Tape measure', 'Knee pads'],
+          Framing: ['Framing hammer', 'Circular saw', 'Speed square', 'Level (4ft)', 'Tape measure'],
+          Decking: ['Circular saw', 'Miter saw', 'Drill/Driver set', 'Level (4ft)', 'Tape measure'],
+          Painting: ['Drop cloths', 'Painters tape', 'Brushes', 'Rollers', 'Paint trays']
+        }
+      };
+      
+      // Create lists and items
+      for (const [categoryName, lists] of Object.entries(toolData)) {
+        const category = categoryName === 'Demo' ? demoCategory : installCategory;
+        let listOrder = 0;
+        
+        for (const [listName, items] of Object.entries(lists)) {
+          const toolList = await prisma.toolList.create({
+            data: {
+              categoryId: category.id,
+              name: listName,
+              isProtected: true,
+              sortOrder: listOrder++
+            }
+          });
+          
+          let itemOrder = 0;
+          for (const itemName of items) {
+            await prisma.toolItem.create({
+              data: {
+                listId: toolList.id,
+                name: itemName,
+                isChecked: false,
+                sortOrder: itemOrder++
+              }
+            });
+          }
+        }
+      }
+      
+      console.log('[Tools] Tool data initialized successfully');
+    }
+  } catch (error) {
+    console.error('[Tools] Error initializing tool data:', error);
+  }
+}
+
 // Tool Lists API endpoints
 app.get('/api/tools/settings', authMiddleware, async (req, res) => {
   try {
+    // Initialize tool data if needed
+    await initializeToolData();
+    
     // Get or create the single settings record
     let settings = await prisma.toolSettings.findFirst();
     
