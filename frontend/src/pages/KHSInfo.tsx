@@ -383,29 +383,31 @@ return;
         </div>
 
         {/* Lock/Unlock Button */}
-        <div style={{ marginBottom: '24px' }}>
-          <button
-            onClick={() => setIsLocked(!isLocked)}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: isLocked ? '#10B981' : '#EF4444',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: '500',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
-            {isLocked ? '🔒 Unlock List' : '🔓 Lock List'}
-          </button>
-        </div>
+        {(showDemo || showInstall) && (
+          <div style={{ marginBottom: '24px' }}>
+            <button
+              onClick={() => setIsLocked(!isLocked)}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: isLocked ? '#10B981' : '#EF4444',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '500',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}
+            >
+              {isLocked ? '🔒 Unlock List' : '🔓 Lock List'}
+            </button>
+          </div>
+        )}
 
         {/* Selected Categories Tools */}
-        {selectedCategories.length === 0 && (showDemo || showInstall) ? (
+        {!showDemo && !showInstall ? null : selectedCategories.length === 0 ? (
           <div style={{
             textAlign: 'center',
             padding: '40px',
