@@ -101,7 +101,7 @@ export const AppLayout = () => {
                 </div>
               )}
               <span>{companyAbbreviation}</span>
-              <span style={{ marginLeft: '6px' }}>CRM</span>
+              <span style={{ marginLeft: '6px' }}>CRM3</span>
             </h1>
             {!isMobile && (
               <span className="text-sm text-gray-600">
