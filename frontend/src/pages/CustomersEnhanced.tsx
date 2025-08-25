@@ -1329,26 +1329,74 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
 
         <form onSubmit={handleSubmit} style={{ padding: '20px' }}>
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '4px', fontWeight: '500' }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
               Reference
             </label>
-            <select
-              value={formData.reference}
-              onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #D1D5DB',
-                borderRadius: '6px',
-                fontSize: '18.4px',
-                backgroundColor: 'white'
-              }}
-            >
-              <option value="">Select reference...</option>
-              <option value="HOD">HOD</option>
-              <option value="Yelp">Yelp</option>
-              <option value="Cust">Customer Referral</option>
-            </select>
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                fontSize: '16px'
+              }}>
+                <input
+                  type="radio"
+                  name="reference"
+                  value="HOD"
+                  checked={formData.reference === 'HOD'}
+                  onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
+                  style={{
+                    marginRight: '8px',
+                    width: '18px',
+                    height: '18px',
+                    cursor: 'pointer'
+                  }}
+                />
+                HOD
+              </label>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                fontSize: '16px'
+              }}>
+                <input
+                  type="radio"
+                  name="reference"
+                  value="Yelp"
+                  checked={formData.reference === 'Yelp'}
+                  onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
+                  style={{
+                    marginRight: '8px',
+                    width: '18px',
+                    height: '18px',
+                    cursor: 'pointer'
+                  }}
+                />
+                Yelp
+              </label>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                fontSize: '16px'
+              }}>
+                <input
+                  type="radio"
+                  name="reference"
+                  value="Cust"
+                  checked={formData.reference === 'Cust'}
+                  onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
+                  style={{
+                    marginRight: '8px',
+                    width: '18px',
+                    height: '18px',
+                    cursor: 'pointer'
+                  }}
+                />
+                Cust Ref
+              </label>
+            </div>
           </div>
 
           <div style={{ marginBottom: '16px' }}>
