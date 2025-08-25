@@ -154,7 +154,15 @@ const KHSInfoSimple = () => {
             ...parsed,
             selectedDemoCategories: [],
             selectedInstallCategories: [],
-            selectedCategories: undefined
+            selectedCategories: undefined,
+            lockedCategories: parsed.lockedCategories || Object.keys(predefinedTools)
+          };
+        }
+        // Ensure lockedCategories exists (for data before this feature)
+        if (!parsed.lockedCategories) {
+          return {
+            ...parsed,
+            lockedCategories: Object.keys(predefinedTools)
           };
         }
         return parsed;
@@ -166,7 +174,7 @@ const KHSInfoSimple = () => {
       tools: predefinedTools,
       selectedDemoCategories: [],
       selectedInstallCategories: [],
-      lockedCategories: [],
+      lockedCategories: Object.keys(predefinedTools), // All categories locked by default
       showDemo: false,
       showInstall: false,
       lastUpdated: Date.now()
