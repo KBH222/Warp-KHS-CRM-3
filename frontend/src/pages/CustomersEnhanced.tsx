@@ -955,7 +955,7 @@ const CustomersEnhanced = () => {
                                       setShowAddJobModal(true);
                                     }}
                                     style={{
-                                      flex: 1,
+                                      width: '180px',
                                       background: 'none',
                                       border: '1px solid #D1D5DB',
                                       borderRadius: '4px',
@@ -990,30 +990,29 @@ const CustomersEnhanced = () => {
                                       }
                                     }}
                                     style={{
-                                      background: '#DC2626',
-                                      color: 'white',
+                                      background: 'transparent',
+                                      color: '#DC2626',
                                       border: 'none',
                                       borderRadius: '4px',
-                                      width: '24px',
-                                      height: '24px',
+                                      padding: '4px 8px',
                                       cursor: 'pointer',
-                                      fontSize: '14px',
-                                      fontWeight: 'bold',
+                                      fontSize: '12.65px',
+                                      fontWeight: '500',
                                       display: 'flex',
                                       alignItems: 'center',
                                       justifyContent: 'center',
                                       flexShrink: 0,
-                                      transition: 'background-color 0.2s'
+                                      transition: 'color 0.2s'
                                     }}
                                     onMouseEnter={(e) => {
-                                      e.currentTarget.style.backgroundColor = '#B91C1C';
+                                      e.currentTarget.style.color = '#B91C1C';
                                     }}
                                     onMouseLeave={(e) => {
-                                      e.currentTarget.style.backgroundColor = '#DC2626';
+                                      e.currentTarget.style.color = '#DC2626';
                                     }}
                                     title="Delete job"
                                   >
-                                    ×
+                                    Del Job
                                   </button>
                                 </div>
                               ))}
