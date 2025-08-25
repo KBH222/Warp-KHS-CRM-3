@@ -859,7 +859,6 @@ const CustomersEnhanced = () => {
                       >
                         💬 Text
                       </button>
-                      <span style={{ fontSize: '13.8px', color: '#666' }}>{customer.phone}</span>
                     </div>
                     <button
                       onClick={(e) => handleAddressClick(customer.address, e)}

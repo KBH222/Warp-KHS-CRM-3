@@ -23,11 +23,6 @@ const CustomerDetailEnhanced = () => {
   // For now, show empty jobs list - in a real app, this would load from a jobs service
   const [jobs] = useState([]);
 
-  const handlePhoneClick = (e) => {
-    e.stopPropagation();
-    window.location.href = `tel:${customer.phone.replace(/\D/g, '')}`;
-  };
-
   const handleEmailClick = (e) => {
     e.stopPropagation();
     window.location.href = `mailto:${customer.email}`;
@@ -135,21 +130,6 @@ const CustomerDetailEnhanced = () => {
                 }}
               >
                 {customer.email}
-              </button>
-              <button
-                onClick={handlePhoneClick}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#3B82F6',
-                  textDecoration: 'underline',
-                  cursor: 'pointer',
-                  padding: 0,
-                  fontSize: '18.4px',
-                  textAlign: 'left'
-                }}
-              >
-                {customer.phone}
               </button>
               <button
                 onClick={handleAddressClick}
