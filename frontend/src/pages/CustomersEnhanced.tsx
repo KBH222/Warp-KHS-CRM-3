@@ -578,56 +578,85 @@ const CustomersEnhanced = () => {
             </button>
           </div>
 
-        {/* Customer Type Selector */}
-        <div style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
-          <button
-            onClick={() => setCustomerType(null)}
-            style={{
-              flex: 1,
-              padding: '12px',
-              backgroundColor: customerType === null ? '#3B82F6' : '#F3F4F6',
-              color: customerType === null ? 'white' : '#374151',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '16px',
-              fontWeight: '500'
-            }}
-          >
+        {/* Customer Type Selector - Radio Buttons */}
+        <div style={{ 
+          marginBottom: '16px', 
+          display: 'flex', 
+          gap: '24px',
+          padding: '16px',
+          backgroundColor: '#F9FAFB',
+          borderRadius: '8px',
+          border: '1px solid #E5E7EB'
+        }}>
+          <label style={{
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            fontSize: '16px',
+            color: '#374151',
+            fontWeight: customerType === null ? '600' : '400'
+          }}>
+            <input
+              type="radio"
+              name="customerType"
+              checked={customerType === null}
+              onChange={() => setCustomerType(null)}
+              style={{
+                marginRight: '8px',
+                width: '18px',
+                height: '18px',
+                cursor: 'pointer',
+                accentColor: '#3B82F6'
+              }}
+            />
             All Customers
-          </button>
-          <button
-            onClick={() => setCustomerType('ACTIVE')}
-            style={{
-              flex: 1,
-              padding: '12px',
-              backgroundColor: customerType === 'ACTIVE' ? '#10B981' : '#F3F4F6',
-              color: customerType === 'ACTIVE' ? 'white' : '#374151',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '16px',
-              fontWeight: '500'
-            }}
-          >
+          </label>
+          <label style={{
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            fontSize: '16px',
+            color: '#374151',
+            fontWeight: customerType === 'ACTIVE' ? '600' : '400'
+          }}>
+            <input
+              type="radio"
+              name="customerType"
+              checked={customerType === 'ACTIVE'}
+              onChange={() => setCustomerType('ACTIVE')}
+              style={{
+                marginRight: '8px',
+                width: '18px',
+                height: '18px',
+                cursor: 'pointer',
+                accentColor: '#10B981'
+              }}
+            />
             Active
-          </button>
-          <button
-            onClick={() => setCustomerType('SOON_TO_BE')}
-            style={{
-              flex: 1,
-              padding: '12px',
-              backgroundColor: customerType === 'SOON_TO_BE' ? '#F59E0B' : '#F3F4F6',
-              color: customerType === 'SOON_TO_BE' ? 'white' : '#374151',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '16px',
-              fontWeight: '500'
-            }}
-          >
+          </label>
+          <label style={{
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            fontSize: '16px',
+            color: '#374151',
+            fontWeight: customerType === 'SOON_TO_BE' ? '600' : '400'
+          }}>
+            <input
+              type="radio"
+              name="customerType"
+              checked={customerType === 'SOON_TO_BE'}
+              onChange={() => setCustomerType('SOON_TO_BE')}
+              style={{
+                marginRight: '8px',
+                width: '18px',
+                height: '18px',
+                cursor: 'pointer',
+                accentColor: '#F59E0B'
+              }}
+            />
             Soon To Be
-          </button>
+          </label>
         </div>
 
         {/* Search Bar */}
