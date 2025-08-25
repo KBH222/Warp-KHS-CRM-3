@@ -1352,24 +1352,53 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
           </div>
 
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '4px', fontWeight: '500' }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
               Customer Type
             </label>
-            <select
-              value={formData.customerType}
-              onChange={(e) => setFormData({ ...formData, customerType: e.target.value })}
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #D1D5DB',
-                borderRadius: '6px',
-                fontSize: '18.4px',
-                backgroundColor: 'white'
-              }}
-            >
-              <option value="ACTIVE">Active</option>
-              <option value="SOON_TO_BE">Soon To Be</option>
-            </select>
+            <div style={{ display: 'flex', gap: '20px' }}>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                fontSize: '16px'
+              }}>
+                <input
+                  type="radio"
+                  name="customerType"
+                  value="ACTIVE"
+                  checked={formData.customerType === 'ACTIVE'}
+                  onChange={(e) => setFormData({ ...formData, customerType: e.target.value })}
+                  style={{
+                    marginRight: '8px',
+                    width: '18px',
+                    height: '18px',
+                    cursor: 'pointer'
+                  }}
+                />
+                Current
+              </label>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                fontSize: '16px'
+              }}>
+                <input
+                  type="radio"
+                  name="customerType"
+                  value="SOON_TO_BE"
+                  checked={formData.customerType === 'SOON_TO_BE'}
+                  onChange={(e) => setFormData({ ...formData, customerType: e.target.value })}
+                  style={{
+                    marginRight: '8px',
+                    width: '18px',
+                    height: '18px',
+                    cursor: 'pointer'
+                  }}
+                />
+                Soon To Be
+              </label>
+            </div>
           </div>
 
           <div style={{ marginBottom: '16px' }}>
