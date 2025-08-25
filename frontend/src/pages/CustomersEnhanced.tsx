@@ -1600,11 +1600,11 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
   }, [existingJob, customer]);
 
   const tabs = [
-    { id: 'description', label: 'Job Description', icon: '📋' },
+    { id: 'description', label: 'Task', icon: '📋' },
     { id: 'photos', label: 'Photos', icon: '📸' },
-    { id: 'plans', label: 'Drawings/Plans', icon: '📐' },
-    { id: 'notes', label: 'Job Notes', icon: '📝' },
-    { id: 'comments', label: 'Extra Costs', icon: '💬' }
+    { id: 'plans', label: 'Plans', icon: '📐' },
+    { id: 'notes', label: 'Notes', icon: '📝' },
+    { id: 'comments', label: 'Extra $', icon: '💬' }
   ];
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
