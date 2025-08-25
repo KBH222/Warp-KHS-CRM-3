@@ -1004,29 +1004,30 @@ const CustomersEnhanced = () => {
                                       }
                                     }}
                                     style={{
-                                      background: 'transparent',
-                                      color: '#DC2626',
+                                      background: '#DC2626',
+                                      color: 'white',
                                       border: 'none',
                                       borderRadius: '4px',
-                                      padding: '4px 8px',
+                                      width: '24px',
+                                      height: '24px',
                                       cursor: 'pointer',
-                                      fontSize: '12.65px',
-                                      fontWeight: '500',
+                                      fontSize: '14px',
+                                      fontWeight: 'bold',
                                       display: 'flex',
                                       alignItems: 'center',
                                       justifyContent: 'center',
                                       flexShrink: 0,
-                                      transition: 'color 0.2s'
+                                      transition: 'background-color 0.2s'
                                     }}
                                     onMouseEnter={(e) => {
-                                      e.currentTarget.style.color = '#B91C1C';
+                                      e.currentTarget.style.backgroundColor = '#B91C1C';
                                     }}
                                     onMouseLeave={(e) => {
-                                      e.currentTarget.style.color = '#DC2626';
+                                      e.currentTarget.style.backgroundColor = '#DC2626';
                                     }}
                                     title="Delete job"
                                   >
-                                    Del Job
+                                    ×
                                   </button>
                                 </div>
                               ))}
