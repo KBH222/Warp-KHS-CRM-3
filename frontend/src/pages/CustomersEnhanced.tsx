@@ -1944,6 +1944,28 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
               {/* Save/Close button */}
               <button
                 type="button"
+                onClick={() => {
+                  if (unsavedChanges && !window.confirm('You have unsaved changes. Are you sure you want to cancel?')) {
+                    return;
+                  }
+                  onClose();
+                }}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#E5E7EB',
+                  color: '#374151',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '16.1px',
+                  fontWeight: '500',
+                  marginRight: '8px'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
                 onClick={async () => {
                   try {
                     // Always use form submit for all tabs to ensure consistent save behavior
