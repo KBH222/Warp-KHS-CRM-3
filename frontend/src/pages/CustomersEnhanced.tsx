@@ -785,41 +785,25 @@ const CustomersEnhanced = () => {
                         </span>
                       )}
                     </div>
-                    <button
-                      onClick={(e) => handleEmailClick(customer.email, e)}
-                      style={{ 
-                        background: 'none',
-                        border: 'none',
-                        color: '#666',
-                        textDecoration: 'none',
-                        cursor: 'pointer',
-                        padding: '4px 0',
-                        font: 'inherit',
-                        fontSize: '13.8px',
-                        display: 'block',
-                        marginBottom: '8px',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        width: '100%',
-                        textAlign: 'left'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.color = '#3B82F6';
-                        e.currentTarget.style.textDecoration = 'underline';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.color = '#666';
-                        e.currentTarget.style.textDecoration = 'none';
-                      }}
-                      onMouseDown={(e) => {
-                        e.stopPropagation();
-                        e.currentTarget.style.color = '#3B82F6';
-                      }}
-                    >
-                      {customer.email}
-                    </button>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                      <button
+                        onClick={(e) => handleEmailClick(customer.email, e)}
+                        title="Email customer"
+                        style={{ 
+                          background: 'none',
+                          border: '1px solid #3B82F6',
+                          color: '#3B82F6',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          padding: '4px 8px',
+                          fontSize: '13.8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        ✉️ Email
+                      </button>
                       <button
                         onClick={(e) => handlePhoneClick(customer.phone, e)}
                         title="Call customer"
