@@ -1572,7 +1572,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     plans: existingJob?.plans || [],
     notes: existingJob?.notes || '',
     comments: existingJob?.comments || [],
-    commentsText: existingJob?.commentsText || ''
+    commentsText: existingJob?.commentsText || '',
+    lists: existingJob?.lists || ''
   });
   
 
@@ -1593,14 +1594,16 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         plans: existingJob.plans || [],
         notes: existingJob.notes || '',
         comments: existingJob.comments || [],
-        commentsText: existingJob.commentsText || ''
+        commentsText: existingJob.commentsText || '',
+        lists: existingJob.lists || ''
       });
       setCurrentJobId(existingJob.id);
     }
   }, [existingJob, customer]);
 
   const tabs = [
-    { id: 'description', label: 'Task', icon: '📋' },
+    { id: 'description', label: 'Tasks', icon: '📋' },
+    { id: 'lists', label: 'Lists', icon: '📑' },
     { id: 'photos', label: 'Photos', icon: '📸' },
     { id: 'plans', label: 'Plans', icon: '📐' },
     { id: 'notes', label: 'Notes', icon: '📝' },
@@ -1957,6 +1960,29 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     }}
                   />
                 </div>
+              </div>
+            )}
+
+            {/* Lists Tab */}
+            {activeTab === 'lists' && (
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
+                  Task Lists
+                </label>
+                <textarea
+                  value={jobData.lists}
+                  onChange={(e) => setJobData({ ...jobData, lists: e.target.value })}
+                  rows={10}
+                  placeholder="Add task lists for this job..."
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #D1D5DB',
+                    borderRadius: '6px',
+                    fontSize: '18.4px',
+                    resize: 'vertical'
+                  }}
+                />
               </div>
             )}
 
