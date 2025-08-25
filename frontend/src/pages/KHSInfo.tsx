@@ -400,7 +400,10 @@ return;
         {(showDemo || showInstall) && (
           <div style={{ marginBottom: '24px' }}>
             <button
-              onClick={() => setIsLocked(!isLocked)}
+              onClick={() => {
+                console.log('Button clicked. Current isLocked:', isLocked, 'Setting to:', !isLocked);
+                setIsLocked(!isLocked);
+              }}
               style={{
                 padding: '8px 16px',
                 backgroundColor: isLocked ? '#10B981' : '#EF4444',
