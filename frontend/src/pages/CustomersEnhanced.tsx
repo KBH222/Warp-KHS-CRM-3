@@ -955,7 +955,7 @@ const CustomersEnhanced = () => {
                                       setShowAddJobModal(true);
                                     }}
                                     style={{
-                                      width: '180px',
+                                      width: '90px',
                                       background: 'none',
                                       border: '1px solid #D1D5DB',
                                       borderRadius: '4px',
@@ -964,7 +964,10 @@ const CustomersEnhanced = () => {
                                       cursor: 'pointer',
                                       fontSize: '12.65px',
                                       color: '#374151',
-                                      transition: 'all 0.2s'
+                                      transition: 'all 0.2s',
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis',
+                                      whiteSpace: 'nowrap'
                                     }}
                                     onMouseEnter={(e) => {
                                       e.currentTarget.style.backgroundColor = '#F3F4F6';
@@ -975,9 +978,20 @@ const CustomersEnhanced = () => {
                                       e.currentTarget.style.borderColor = '#D1D5DB';
                                     }}
                                   >
-                                    <div style={{ fontWeight: '500' }}>{job.title}</div>
+                                    <div style={{ 
+                                      fontWeight: '500',
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis',
+                                      whiteSpace: 'nowrap'
+                                    }}>{job.title}</div>
                                     {job.startDate && (
-                                      <div style={{ color: '#6B7280', fontSize: '11.5px' }}>
+                                      <div style={{ 
+                                        color: '#6B7280', 
+                                        fontSize: '11.5px',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap'
+                                      }}>
                                         {new Date(job.startDate).toLocaleDateString()}
                                       </div>
                                     )}
