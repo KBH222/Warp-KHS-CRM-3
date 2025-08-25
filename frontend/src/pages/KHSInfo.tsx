@@ -415,7 +415,7 @@ return;
                 gap: '8px',
               }}
             >
-              {isLocked ? '🔒 Unlock List' : '🔓 Lock List'}
+              {isLocked ? 'Edit' : 'Lock'}
             </button>
           </div>
         )}
