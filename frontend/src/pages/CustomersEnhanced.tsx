@@ -955,7 +955,7 @@ const CustomersEnhanced = () => {
                                       setShowAddJobModal(true);
                                     }}
                                     style={{
-                                      width: '90px',
+                                      width: '140px',
                                       background: 'none',
                                       border: '1px solid #D1D5DB',
                                       borderRadius: '4px',
