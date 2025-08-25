@@ -397,6 +397,7 @@ return;
         </div>
 
         {/* Lock/Unlock Button */}
+        {console.log('Button render check - showDemo:', showDemo, 'showInstall:', showInstall, 'isLocked:', isLocked)}
         {(showDemo || showInstall) && (
           <div style={{ marginBottom: '24px' }}>
             <button
@@ -418,7 +419,7 @@ return;
                 gap: '8px',
               }}
             >
-              {isLocked ? 'Edit' : 'Lock'}
+              {`${isLocked ? 'Edit' : 'Lock'} (isLocked: ${isLocked})`}
             </button>
           </div>
         )}
