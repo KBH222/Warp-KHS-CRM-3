@@ -889,7 +889,22 @@ const CustomersEnhanced = () => {
                         e.currentTarget.style.color = '#3B82F6';
                       }}
                     >
-                      {customer.address}
+                      {(() => {
+                        // Split address into street and city/state/zip
+                        const parts = customer.address.split(', ');
+                        if (parts.length >= 3) {
+                          const street = parts[0];
+                          const cityStateZip = parts.slice(1).join(', ');
+                          return (
+                            <>
+                              <div>{street}</div>
+                              <div>{cityStateZip}</div>
+                            </>
+                          );
+                        }
+                        // Fallback for addresses that don't match expected format
+                        return customer.address;
+                      })()}
                     </button>
                     {customer.notes && (
                       <p style={{ 
