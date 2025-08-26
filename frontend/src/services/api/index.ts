@@ -2,6 +2,7 @@ export * from './customers.api';
 export * from './jobs.api';
 export * from './auth.api';
 export * from './workers.api';
+export * from './khsToolsSync.api';
 
 // Sync all data
 export async function syncAllData() {
