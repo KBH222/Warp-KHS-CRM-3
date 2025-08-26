@@ -24,8 +24,9 @@ interface ToolsData {
 }
 
 const STORAGE_KEY = 'khs-tools-sync-data-v4';
-const SYNC_INTERVAL = 2000; // Check for updates every 2 seconds
-const DB_SYNC_INTERVAL = 5000; // Sync with database every 5 seconds
+const SYNC_INTERVAL = 10000; // Check for updates every 10 seconds
+const DB_SYNC_INTERVAL = 30000; // Sync with database every 30 seconds
+const DEBOUNCE_DELAY = 1000; // Debounce user interactions for 1 second
 
 const predefinedTools: CategoryTools = {
   'Kitchen': [
@@ -302,53 +303,44 @@ const KHSInfoSimple = () => {
   const pushToDatabase = async (forcePush = false) => {
     if (isSyncing) return;
     
-    // Clear any pending sync
-    if (syncTimeoutRef.current) {
-      clearTimeout(syncTimeoutRef.current);
-    }
-    
-    // Debounce the sync (unless force push)
-    const delay = forcePush ? 0 : 1000;
-    syncTimeoutRef.current = setTimeout(async () => {
-      try {
-        setIsSyncing(true);
-        debugLog(forcePush ? 'Force pushing to database...' : 'Pushing changes to database...');
-        
-        // First fetch latest version to ensure we're up to date
-        const currentDbData = await khsToolsSyncApi.get();
-        const currentVersion = currentDbData.version;
-        debugLog('Current DB version before push', currentVersion);
-        
-        // If force push and local version is higher, use local version
-        const pushVersion = forcePush && dbVersion > currentVersion ? dbVersion : currentVersion;
-        
-        const payload = {
-          tools: toolsData.tools,
-          selectedDemoCategories: toolsData.selectedDemoCategories,
-          selectedInstallCategories: toolsData.selectedInstallCategories,
-          lockedCategories: toolsData.lockedCategories,
-          showDemo: toolsData.showDemo,
-          showInstall: toolsData.showInstall,
-          version: pushVersion
-        };
-        debugLog('Push payload version', payload.version);
-        
-        const response = await khsToolsSyncApi.update(payload);
-        
-        setDbVersion(response.version);
-        debugLog('Push successful, new version', response.version);
-      } catch (error: any) {
-        if (error.response?.status === 409) {
-          debugLog('Version conflict, fetching latest');
-          // Version conflict - fetch latest and retry
-          await syncWithDatabase();
-        } else {
-          debugLog('Push failed', error.message);
-        }
-      } finally {
-        setIsSyncing(false);
+    try {
+      setIsSyncing(true);
+      debugLog(forcePush ? 'Force pushing to database...' : 'Pushing changes to database...');
+      
+      // First fetch latest version to ensure we're up to date
+      const currentDbData = await khsToolsSyncApi.get();
+      const currentVersion = currentDbData.version;
+      debugLog('Current DB version before push', currentVersion);
+      
+      // If force push and local version is higher, use local version
+      const pushVersion = forcePush && dbVersion > currentVersion ? dbVersion : currentVersion;
+      
+      const payload = {
+        tools: toolsData.tools,
+        selectedDemoCategories: toolsData.selectedDemoCategories,
+        selectedInstallCategories: toolsData.selectedInstallCategories,
+        lockedCategories: toolsData.lockedCategories,
+        showDemo: toolsData.showDemo,
+        showInstall: toolsData.showInstall,
+        version: pushVersion
+      };
+      debugLog('Push payload version', payload.version);
+      
+      const response = await khsToolsSyncApi.update(payload);
+      
+      setDbVersion(response.version);
+      debugLog('Push successful, new version', response.version);
+    } catch (error: any) {
+      if (error.response?.status === 409) {
+        debugLog('Version conflict, fetching latest');
+        // Version conflict - fetch latest and retry
+        await syncWithDatabase();
+      } else {
+        debugLog('Push failed', error.message);
       }
-    }, delay); // Wait before pushing (unless force push)
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   // Initial database sync
@@ -396,11 +388,11 @@ const KHSInfoSimple = () => {
     return () => clearInterval(interval);
   }, [dbVersion]);
 
-  // Push changes to database when toolsData changes
+  // Debounced push changes to database when toolsData changes
   useEffect(() => {
     // Skip initial render
     if (toolsData.lastUpdated > 0) {
-      debugLog('Tools data changed, triggering push', {
+      debugLog('Tools data changed, debouncing push', {
         showDemo: toolsData.showDemo,
         showInstall: toolsData.showInstall,
         demoCategories: toolsData.selectedDemoCategories.length,
@@ -408,8 +400,24 @@ const KHSInfoSimple = () => {
         lockedCategories: toolsData.lockedCategories.length,
         totalTools: Object.keys(toolsData.tools).length
       });
-      pushToDatabase();
+      
+      // Clear any pending push
+      if (syncTimeoutRef.current) {
+        clearTimeout(syncTimeoutRef.current);
+      }
+      
+      // Debounce the push to avoid too many syncs
+      syncTimeoutRef.current = setTimeout(() => {
+        debugLog('Executing debounced push to database');
+        pushToDatabase();
+      }, DEBOUNCE_DELAY);
     }
+    
+    return () => {
+      if (syncTimeoutRef.current) {
+        clearTimeout(syncTimeoutRef.current);
+      }
+    };
   }, [toolsData]);
 
   const updateToolsData = (updates: Partial<ToolsData>) => {
