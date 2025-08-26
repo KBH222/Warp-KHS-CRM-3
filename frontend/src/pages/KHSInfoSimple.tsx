@@ -679,7 +679,7 @@ const KHSInfoSimple = () => {
                     position: 'absolute',
                     left: '300px',
                     padding: '6px 12px',
-                    backgroundColor: isCategoryLocked(category) ? '#3B82F6' : '#EF4444',
+                    backgroundColor: isCategoryLocked(category) ? '#10B981' : '#EF4444',
                     color: 'white',
                     border: 'none',
                     borderRadius: '6px',
