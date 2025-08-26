@@ -253,7 +253,7 @@ const KHSInfoSimple = () => {
       
       // Check if database has newer data
       if (dbData.version > dbVersion) {
-        console.log('[KHSToolsSync] Database has newer data, updating local state...');
+        debugLog('Database has newer data, updating local state');
         // Update local state with database data
         setToolsData({
           tools: dbData.tools || {},
@@ -297,7 +297,12 @@ const KHSInfoSimple = () => {
     syncTimeoutRef.current = setTimeout(async () => {
       try {
         setIsSyncing(true);
-        console.log('[KHSToolsSync] Pushing changes to database...');
+        debugLog('Pushing changes to database...');
+        
+        // First fetch latest version to ensure we're up to date
+        const currentDbData = await khsToolsSyncApi.get();
+        const currentVersion = currentDbData.version;
+        debugLog('Current DB version before push', currentVersion);
         
         const payload = {
           tools: toolsData.tools,
@@ -306,26 +311,21 @@ const KHSInfoSimple = () => {
           lockedCategories: toolsData.lockedCategories,
           showDemo: toolsData.showDemo,
           showInstall: toolsData.showInstall,
-          version: dbVersion
+          version: currentVersion
         };
-        console.log('[KHSToolsSync] Push payload:', { version: payload.version });
+        debugLog('Push payload version', payload.version);
         
         const response = await khsToolsSyncApi.update(payload);
         
         setDbVersion(response.version);
-        console.log('[KHSToolsSync] Push successful, new version:', response.version);
+        debugLog('Push successful, new version', response.version);
       } catch (error: any) {
         if (error.response?.status === 409) {
-          console.log('[KHSToolsSync] Version conflict detected, fetching latest...');
+          debugLog('Version conflict, fetching latest');
           // Version conflict - fetch latest and retry
           await syncWithDatabase();
         } else {
-          console.error('[KHSToolsSync] Push failed:', error);
-          console.error('[KHSToolsSync] Push error details:', {
-            message: error.message,
-            status: error.response?.status,
-            stack: error.stack
-          });
+          debugLog('Push failed', error.message);
         }
       } finally {
         setIsSyncing(false);
@@ -382,6 +382,14 @@ const KHSInfoSimple = () => {
   useEffect(() => {
     // Skip initial render
     if (toolsData.lastUpdated > 0) {
+      debugLog('Tools data changed, triggering push', {
+        showDemo: toolsData.showDemo,
+        showInstall: toolsData.showInstall,
+        demoCategories: toolsData.selectedDemoCategories.length,
+        installCategories: toolsData.selectedInstallCategories.length,
+        lockedCategories: toolsData.lockedCategories.length,
+        totalTools: Object.keys(toolsData.tools).length
+      });
       pushToDatabase();
     }
   }, [toolsData]);
@@ -1025,7 +1033,9 @@ const KHSInfoSimple = () => {
           zIndex: 9999,
           borderTop: '2px solid #00ff00'
         }}>
-          <div style={{ marginBottom: '5px', color: '#ffff00' }}>Debug Console (tap to close)</div>
+          <div style={{ marginBottom: '5px', color: '#ffff00' }}>
+            Debug Console (tap to close) | DB Version: {dbVersion} | Syncing: {isSyncing ? 'YES' : 'NO'}
+          </div>
           <div onClick={() => setDebugLogs([])}>
             {debugLogs.map((log, i) => (
               <div key={i}>{log}</div>
