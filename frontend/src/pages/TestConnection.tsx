@@ -1,8 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../services/config';
 
 const TestConnection = () => {
   const [results, setResults] = useState<any[]>([]);
+  const [deviceInfo, setDeviceInfo] = useState<any>({});
+  
+  useEffect(() => {
+    // Get device info
+    const info = {
+      userAgent: navigator.userAgent,
+      platform: navigator.platform,
+      online: navigator.onLine,
+      cookiesEnabled: navigator.cookieEnabled,
+      isMobile: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent),
+      isIPhone: /iPhone|iPad|iPod/i.test(navigator.userAgent),
+      apiUrl: API_BASE_URL || 'Not configured',
+      viteApiUrl: import.meta.env.VITE_API_URL || 'Not set'
+    };
+    setDeviceInfo(info);
+  }, []);
   
   const addResult = (test: string, success: boolean, details: any) => {
     setResults(prev => [...prev, { test, success, details, timestamp: new Date().toISOString() }]);
@@ -59,17 +75,101 @@ const TestConnection = () => {
     }
   };
   
+  const testKHSToolsSync = async () => {
+    try {
+      const token = localStorage.getItem('khs-crm-token') || 
+                   localStorage.getItem('auth-token') ||
+                   localStorage.getItem('token');
+      
+      if (!token) {
+        addResult('KHS Tools Sync', false, { error: 'No auth token found' });
+        return;
+      }
+      
+      const response = await fetch(`${API_BASE_URL}/api/khs-tools-sync`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const text = await response.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = text;
+      }
+      
+      addResult('KHS Tools Sync', response.ok, { 
+        status: response.status, 
+        token: `${token.substring(0, 20)}...`,
+        data: data ? { version: data.version, hasTools: !!data.tools } : data
+      });
+    } catch (err: any) {
+      addResult('KHS Tools Sync', false, { error: err.message, stack: err.stack });
+    }
+  };
+  
+  const testAuthCheck = async () => {
+    try {
+      const token = localStorage.getItem('khs-crm-token') || 
+                   localStorage.getItem('auth-token') ||
+                   localStorage.getItem('token');
+      
+      if (!token) {
+        addResult('Auth Check', false, { error: 'No auth token found' });
+        return;
+      }
+      
+      const response = await fetch(`${API_BASE_URL}/api/auth/check`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      const data = response.ok ? await response.json() : await response.text();
+      
+      addResult('Auth Check', response.ok, { 
+        status: response.status,
+        user: data.user?.email || 'Unknown',
+        data 
+      });
+    } catch (err: any) {
+      addResult('Auth Check', false, { error: err.message });
+    }
+  };
+  
   const runAllTests = async () => {
     setResults([]);
     await testHealth();
+    await testAuthCheck();
     await testToolsWithoutAuth();
     await testToolsWithAuth();
+    await testKHSToolsSync();
   };
   
   return (
     <div style={{ padding: '20px' }}>
       <h1>API Connection Test</h1>
-      <p>API URL: {API_BASE_URL}</p>
+      
+      <div style={{
+        marginBottom: '20px',
+        padding: '15px',
+        backgroundColor: '#F3F4F6',
+        borderRadius: '8px'
+      }}>
+        <h3>Device Information:</h3>
+        <p><strong>Platform:</strong> {deviceInfo.platform}</p>
+        <p><strong>Mobile:</strong> {deviceInfo.isMobile ? 'Yes' : 'No'}</p>
+        <p><strong>iPhone:</strong> {deviceInfo.isIPhone ? 'Yes' : 'No'}</p>
+        <p><strong>Online:</strong> {deviceInfo.online ? 'Yes' : 'No'}</p>
+        <p><strong>API URL:</strong> {deviceInfo.apiUrl}</p>
+        <p><strong>VITE_API_URL:</strong> {deviceInfo.viteApiUrl}</p>
+        <p style={{ fontSize: '12px', wordBreak: 'break-all' }}>
+          <strong>User Agent:</strong> {deviceInfo.userAgent}
+        </p>
+      </div>
       
       <button 
         onClick={runAllTests}
