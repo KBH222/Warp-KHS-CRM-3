@@ -407,7 +407,7 @@ return;
               }}
               style={{
                 padding: '8px 16px',
-                backgroundColor: isLocked ? '#10B981' : '#EF4444',
+                backgroundColor: isLocked ? '#3B82F6' : '#EF4444',
                 color: 'white',
                 border: 'none',
                 borderRadius: '6px',
