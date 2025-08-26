@@ -101,24 +101,43 @@ export const khsToolsSyncApi = {
   async update(data: Partial<KHSToolsSyncData>): Promise<KHSToolsSyncData> {
     try {
       console.log('[KHSToolsSync] Updating on server, version:', data.version);
+      console.log('[KHSToolsSync] Update payload size:', JSON.stringify(data).length);
+      
+      // Add timestamp for debugging
+      const startTime = Date.now();
+      
       const response = await api.put('/khs-tools-sync', data);
+      
+      const duration = Date.now() - startTime;
+      console.log(`[KHSToolsSync] Update successful in ${duration}ms, new version:`, response.data.version);
       
       // Cache the successful response
       localStorage.setItem(STORAGE_KEY, JSON.stringify(response.data));
-      console.log('[KHSToolsSync] Update successful, new version:', response.data.version);
       
       return response.data;
     } catch (error: any) {
-      console.error('[KHSToolsSync] Update failed:', error.message);
+      console.error('[KHSToolsSync] Update failed:', error);
+      console.error('[KHSToolsSync] Error details:', {
+        message: error.message,
+        code: error.code,
+        response: error.response?.data,
+        status: error.response?.status,
+        config: {
+          url: error.config?.url,
+          method: error.config?.method,
+          timeout: error.config?.timeout,
+          baseURL: error.config?.baseURL
+        }
+      });
       
       // For version conflicts, still throw to trigger sync
       if (error.response?.status === 409) {
         throw error;
       }
       
-      // For network errors, update cache and queue for later sync
-      if (error.code === 'ERR_NETWORK' || error.message.includes('Network')) {
-        console.log('[KHSToolsSync] Network error, updating cache only');
+      // For network errors or no response, update cache and queue for later sync
+      if (error.code === 'ERR_NETWORK' || error.message.includes('Network') || error.message === 'No response from server') {
+        console.log('[KHSToolsSync] Network/timeout error, updating cache only');
         
         // Update local cache
         const updatedData = {

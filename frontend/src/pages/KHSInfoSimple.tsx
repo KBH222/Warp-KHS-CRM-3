@@ -186,7 +186,19 @@ const KHSInfoSimple = () => {
   const [lastCheckedTime, setLastCheckedTime] = useState(Date.now());
   const [editingToolId, setEditingToolId] = useState<string | null>(null);
   const [editingToolName, setEditingToolName] = useState('');
-  const [dbVersion, setDbVersion] = useState(1);
+  const [dbVersion, setDbVersion] = useState(() => {
+    // Initialize from cached data if available
+    const cached = localStorage.getItem('khs-tools-sync-cache');
+    if (cached) {
+      try {
+        const data = JSON.parse(cached);
+        return data.version || 1;
+      } catch {
+        return 1;
+      }
+    }
+    return 1;
+  });
   const [isSyncing, setIsSyncing] = useState(false);
   const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [debugLogs, setDebugLogs] = useState<string[]>([]);
@@ -285,7 +297,7 @@ const KHSInfoSimple = () => {
   };
 
   // Push local changes to database
-  const pushToDatabase = async () => {
+  const pushToDatabase = async (forcePush = false) => {
     if (isSyncing) return;
     
     // Clear any pending sync
@@ -293,16 +305,20 @@ const KHSInfoSimple = () => {
       clearTimeout(syncTimeoutRef.current);
     }
     
-    // Debounce the sync
+    // Debounce the sync (unless force push)
+    const delay = forcePush ? 0 : 1000;
     syncTimeoutRef.current = setTimeout(async () => {
       try {
         setIsSyncing(true);
-        debugLog('Pushing changes to database...');
+        debugLog(forcePush ? 'Force pushing to database...' : 'Pushing changes to database...');
         
         // First fetch latest version to ensure we're up to date
         const currentDbData = await khsToolsSyncApi.get();
         const currentVersion = currentDbData.version;
         debugLog('Current DB version before push', currentVersion);
+        
+        // If force push and local version is higher, use local version
+        const pushVersion = forcePush && dbVersion > currentVersion ? dbVersion : currentVersion;
         
         const payload = {
           tools: toolsData.tools,
@@ -311,7 +327,7 @@ const KHSInfoSimple = () => {
           lockedCategories: toolsData.lockedCategories,
           showDemo: toolsData.showDemo,
           showInstall: toolsData.showInstall,
-          version: currentVersion
+          version: pushVersion
         };
         debugLog('Push payload version', payload.version);
         
@@ -330,7 +346,7 @@ const KHSInfoSimple = () => {
       } finally {
         setIsSyncing(false);
       }
-    }, 1000); // Wait 1 second before pushing
+    }, delay); // Wait before pushing (unless force push)
   };
 
   // Initial database sync
@@ -931,7 +947,7 @@ const KHSInfoSimple = () => {
           flexWrap: 'wrap',
           gap: '12px'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
             <button
               onClick={() => navigate('/dashboard')}
               style={{
@@ -975,6 +991,47 @@ const KHSInfoSimple = () => {
                 Syncing...
               </span>
             )}
+            <div style={{
+              marginLeft: 'auto',
+              fontSize: '12px',
+              color: '#6B7280',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px'
+            }}>
+              <span>Version: {dbVersion}</span>
+              <button
+                onClick={() => {
+                  debugLog('Manual sync triggered');
+                  syncWithDatabase();
+                }}
+                style={{
+                  padding: '4px 8px',
+                  fontSize: '12px',
+                  backgroundColor: '#E5E7EB',
+                  color: '#374151',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Sync Now
+              </button>
+              <button
+                onClick={() => setDebugLogs(debugLogs.length > 0 ? [] : ['Debug console opened'])}
+                style={{
+                  padding: '4px 8px',
+                  fontSize: '12px',
+                  backgroundColor: '#FEE2E2',
+                  color: '#991B1B',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Debug
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1033,8 +1090,28 @@ const KHSInfoSimple = () => {
           zIndex: 9999,
           borderTop: '2px solid #00ff00'
         }}>
-          <div style={{ marginBottom: '5px', color: '#ffff00' }}>
-            Debug Console (tap to close) | DB Version: {dbVersion} | Syncing: {isSyncing ? 'YES' : 'NO'}
+          <div style={{ marginBottom: '5px', color: '#ffff00', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span>Debug Console (tap to close) | DB Version: {dbVersion} | Syncing: {isSyncing ? 'YES' : 'NO'}</span>
+            {dbVersion > 19 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  debugLog('Force push initiated');
+                  pushToDatabase(true);
+                }}
+                style={{
+                  padding: '2px 8px',
+                  backgroundColor: '#ef4444',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontSize: '10px',
+                  cursor: 'pointer'
+                }}
+              >
+                Force Push v{dbVersion}
+              </button>
+            )}
           </div>
           <div onClick={() => setDebugLogs([])}>
             {debugLogs.map((log, i) => (
