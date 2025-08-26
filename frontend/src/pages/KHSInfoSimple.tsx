@@ -232,6 +232,12 @@ const KHSInfoSimple = () => {
       setIsSyncing(true);
       console.log('[KHSToolsSync] Starting database sync...');
       
+      // Check auth token
+      const token = localStorage.getItem('khs-crm-token') || 
+                   localStorage.getItem('auth-token') ||
+                   localStorage.getItem('token');
+      console.log('[KHSToolsSync] Auth token check:', token ? 'Found' : 'NOT FOUND');
+      
       // Get latest from database
       const dbData = await khsToolsSyncApi.get();
       console.log('[KHSToolsSync] Fetched data:', { version: dbData.version, currentVersion: dbVersion });
@@ -342,6 +348,20 @@ const KHSInfoSimple = () => {
         console.error('[KHSToolsSync] Mobile localStorage test failed:', error);
       }
     }
+    
+    // Test direct API connectivity
+    console.log('[KHSToolsSync] Testing API connectivity...');
+    const apiUrl = import.meta.env.VITE_API_URL || '';
+    console.log('[KHSToolsSync] API URL:', apiUrl || 'Using relative path');
+    
+    // Simple connectivity test
+    fetch(`${apiUrl}/api/health`)
+      .then(res => {
+        console.log('[KHSToolsSync] Health check response:', res.status, res.ok ? 'OK' : 'Failed');
+      })
+      .catch(err => {
+        console.error('[KHSToolsSync] Health check failed:', err.message);
+      });
     
     syncWithDatabase();
   }, []);

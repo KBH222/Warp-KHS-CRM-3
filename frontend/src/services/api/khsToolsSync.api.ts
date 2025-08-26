@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || '';
+// Use explicit production URL as fallback for mobile
+const API_URL = import.meta.env.VITE_API_URL || 
+                (window.location.hostname.includes('railway.app') 
+                  ? 'https://khs-crm-2-production.up.railway.app' 
+                  : '');
 
 export interface KHSToolsSyncData {
   id: string;
@@ -21,43 +25,35 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000, // 10 second timeout for mobile
+  withCredentials: false // Explicitly set for CORS
 });
 
 // Add auth token to requests
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('khs-crm-token') || 
-                localStorage.getItem('auth-token') ||
-                localStorage.getItem('token');
+  const token = localStorage.getItem('khs-crm-token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-    console.log('[KHSToolsSync] Auth token added to request');
-  } else {
-    console.warn('[KHSToolsSync] No auth token found');
   }
   return config;
 });
 
-// Add response interceptor for better error handling
+// Add response error interceptor
 api.interceptors.response.use(
   (response) => {
-    console.log('[KHSToolsSync] Response received:', response.status);
     return response;
   },
   (error) => {
-    console.error('[KHSToolsSync] Request error:', {
-      message: error.message,
-      status: error.response?.status,
-      data: error.response?.data
-    });
-    
-    // Provide better error messages
-    if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
-      error.message = 'Network error - check internet connection';
-    } else if (error.response?.status === 401) {
-      error.message = 'Authentication failed - please log in again';
+    // Extract meaningful error message
+    let errorMessage = 'Operation failed';
+    if (error.response) {
+      errorMessage = error.response.data?.error || error.response.data?.message || `HTTP error! status: ${error.response.status}`;
+    } else if (error.request) {
+      errorMessage = 'No response from server';
+    } else {
+      errorMessage = error.message;
     }
-    
-    return Promise.reject(error);
+    return Promise.reject(new Error(errorMessage));
   }
 );
 
