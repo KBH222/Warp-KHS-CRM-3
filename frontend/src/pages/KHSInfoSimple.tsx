@@ -230,12 +230,15 @@ const KHSInfoSimple = () => {
     
     try {
       setIsSyncing(true);
+      console.log('[KHSToolsSync] Starting database sync...');
       
       // Get latest from database
       const dbData = await khsToolsSyncApi.get();
+      console.log('[KHSToolsSync] Fetched data:', { version: dbData.version, currentVersion: dbVersion });
       
       // Check if database has newer data
       if (dbData.version > dbVersion) {
+        console.log('[KHSToolsSync] Database has newer data, updating local state...');
         // Update local state with database data
         setToolsData({
           tools: dbData.tools || {},
@@ -248,9 +251,19 @@ const KHSInfoSimple = () => {
         });
         setDbVersion(dbData.version);
         setLastCheckedTime(Date.now());
+        console.log('[KHSToolsSync] Local state updated successfully');
       }
-    } catch (error) {
-      console.error('Failed to sync with database:', error);
+    } catch (error: any) {
+      console.error('[KHSToolsSync] Sync failed:', error);
+      console.error('[KHSToolsSync] Error details:', {
+        message: error.message,
+        status: error.response?.status,
+        stack: error.stack
+      });
+      // On mobile, network errors might be more common
+      if (error.message?.includes('Failed to fetch') || error.message?.includes('Network')) {
+        console.log('[KHSToolsSync] Network error detected - this is common on mobile');
+      }
     } finally {
       setIsSyncing(false);
     }
@@ -269,8 +282,9 @@ const KHSInfoSimple = () => {
     syncTimeoutRef.current = setTimeout(async () => {
       try {
         setIsSyncing(true);
+        console.log('[KHSToolsSync] Pushing changes to database...');
         
-        const response = await khsToolsSyncApi.update({
+        const payload = {
           tools: toolsData.tools,
           selectedDemoCategories: toolsData.selectedDemoCategories,
           selectedInstallCategories: toolsData.selectedInstallCategories,
@@ -278,15 +292,25 @@ const KHSInfoSimple = () => {
           showDemo: toolsData.showDemo,
           showInstall: toolsData.showInstall,
           version: dbVersion
-        });
+        };
+        console.log('[KHSToolsSync] Push payload:', { version: payload.version });
+        
+        const response = await khsToolsSyncApi.update(payload);
         
         setDbVersion(response.version);
+        console.log('[KHSToolsSync] Push successful, new version:', response.version);
       } catch (error: any) {
         if (error.response?.status === 409) {
+          console.log('[KHSToolsSync] Version conflict detected, fetching latest...');
           // Version conflict - fetch latest and retry
           await syncWithDatabase();
         } else {
-          console.error('Failed to push to database:', error);
+          console.error('[KHSToolsSync] Push failed:', error);
+          console.error('[KHSToolsSync] Push error details:', {
+            message: error.message,
+            status: error.response?.status,
+            stack: error.stack
+          });
         }
       } finally {
         setIsSyncing(false);
@@ -296,6 +320,29 @@ const KHSInfoSimple = () => {
 
   // Initial database sync
   useEffect(() => {
+    // Check if running on mobile and log environment details
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    console.log('[KHSToolsSync] Environment:', {
+      isMobile,
+      userAgent: navigator.userAgent,
+      hasLocalStorage: typeof localStorage !== 'undefined',
+      hasSessionStorage: typeof sessionStorage !== 'undefined',
+      online: navigator.onLine
+    });
+    
+    // Test localStorage access on mobile
+    if (isMobile) {
+      try {
+        const testKey = 'khs-mobile-test';
+        localStorage.setItem(testKey, 'test');
+        const value = localStorage.getItem(testKey);
+        localStorage.removeItem(testKey);
+        console.log('[KHSToolsSync] Mobile localStorage test:', value === 'test' ? 'PASSED' : 'FAILED');
+      } catch (error) {
+        console.error('[KHSToolsSync] Mobile localStorage test failed:', error);
+      }
+    }
+    
     syncWithDatabase();
   }, []);
 
