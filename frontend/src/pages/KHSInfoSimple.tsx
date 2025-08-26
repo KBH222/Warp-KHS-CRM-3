@@ -189,10 +189,19 @@ const KHSInfoSimple = () => {
   const [dbVersion, setDbVersion] = useState(1);
   const [isSyncing, setIsSyncing] = useState(false);
   const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [debugLogs, setDebugLogs] = useState<string[]>([]);
 
   const tabs = ['Tools List', 'SOP', 'Office Docs', 'Specs'];
   const demoCategories = ['Kitchen', 'Bathroom', 'Flooring', 'Framing', 'Drywall'];
   const installCategories = ['Cabinets', 'Drywall', 'Flooring', 'Framing', 'Decking', 'Painting'];
+  
+  // Debug logger for mobile
+  const debugLog = (message: string, data?: any) => {
+    const timestamp = new Date().toLocaleTimeString();
+    const logEntry = `[${timestamp}] ${message}${data ? ': ' + JSON.stringify(data) : ''}`;
+    console.log(logEntry);
+    setDebugLogs(prev => [...prev.slice(-19), logEntry]); // Keep last 20 logs
+  };
 
   // Save data whenever it changes
   useEffect(() => {
@@ -230,17 +239,17 @@ const KHSInfoSimple = () => {
     
     try {
       setIsSyncing(true);
-      console.log('[KHSToolsSync] Starting database sync...');
+      debugLog('Starting database sync...');
       
       // Check auth token
       const token = localStorage.getItem('khs-crm-token') || 
                    localStorage.getItem('auth-token') ||
                    localStorage.getItem('token');
-      console.log('[KHSToolsSync] Auth token check:', token ? 'Found' : 'NOT FOUND');
+      debugLog('Auth token check', token ? 'Found' : 'NOT FOUND');
       
       // Get latest from database
       const dbData = await khsToolsSyncApi.get();
-      console.log('[KHSToolsSync] Fetched data:', { version: dbData.version, currentVersion: dbVersion });
+      debugLog('Fetched data', { version: dbData.version, currentVersion: dbVersion });
       
       // Check if database has newer data
       if (dbData.version > dbVersion) {
@@ -328,11 +337,9 @@ const KHSInfoSimple = () => {
   useEffect(() => {
     // Check if running on mobile and log environment details
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    console.log('[KHSToolsSync] Environment:', {
+    debugLog('Environment', {
       isMobile,
-      userAgent: navigator.userAgent,
-      hasLocalStorage: typeof localStorage !== 'undefined',
-      hasSessionStorage: typeof sessionStorage !== 'undefined',
+      platform: navigator.platform,
       online: navigator.onLine
     });
     
@@ -350,17 +357,16 @@ const KHSInfoSimple = () => {
     }
     
     // Test direct API connectivity
-    console.log('[KHSToolsSync] Testing API connectivity...');
     const apiUrl = import.meta.env.VITE_API_URL || '';
-    console.log('[KHSToolsSync] API URL:', apiUrl || 'Using relative path');
+    debugLog('API URL', apiUrl || 'Using relative path');
     
     // Simple connectivity test
     fetch(`${apiUrl}/api/health`)
       .then(res => {
-        console.log('[KHSToolsSync] Health check response:', res.status, res.ok ? 'OK' : 'Failed');
+        debugLog('Health check', `${res.status} ${res.ok ? 'OK' : 'Failed'}`);
       })
       .catch(err => {
-        console.error('[KHSToolsSync] Health check failed:', err.message);
+        debugLog('Health check failed', err.message);
       });
     
     syncWithDatabase();
@@ -1001,6 +1007,32 @@ const KHSInfoSimple = () => {
           {renderTabContent()}
         </div>
       </div>
+      
+      {/* Debug Console for Mobile */}
+      {debugLogs.length > 0 && (
+        <div style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          maxHeight: '200px',
+          backgroundColor: 'rgba(0, 0, 0, 0.9)',
+          color: '#00ff00',
+          padding: '10px',
+          fontSize: '10px',
+          fontFamily: 'monospace',
+          overflowY: 'auto',
+          zIndex: 9999,
+          borderTop: '2px solid #00ff00'
+        }}>
+          <div style={{ marginBottom: '5px', color: '#ffff00' }}>Debug Console (tap to close)</div>
+          <div onClick={() => setDebugLogs([])}>
+            {debugLogs.map((log, i) => (
+              <div key={i}>{log}</div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
     </>
   );
