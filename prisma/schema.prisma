@@ -332,6 +332,8 @@ model KHSToolsSync {
   lastUpdatedBy          String?   // User ID who last updated
   lastUpdated            DateTime  @default(now())
   version                Int       @default(1) // For conflict resolution
+  dataHash               String?   // SHA256 hash of content for change detection
+  deviceInfo             String?   // Optional device fingerprint
   
   @@index([lastUpdated])
 }

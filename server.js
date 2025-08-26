@@ -4,6 +4,7 @@ const fs = require('fs');
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 require('dotenv').config();
 
 
@@ -1507,6 +1508,76 @@ app.get('/api/khs-tools-sync', authMiddleware, async (req, res) => {
   }
 });
 
+// GET /api/health - Health check endpoint
+app.get('/api/health', async (req, res) => {
+  try {
+    // Test database connection
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      message: 'KHS CRM API on Railway',
+      database: 'Connected'
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error', 
+      message: 'API running but database connection failed',
+      error: error.message
+    });
+  }
+});
+
+// GET /api/khs-tools-sync/debug - Get database connection info and sync data
+app.get('/api/khs-tools-sync/debug', authMiddleware, async (req, res) => {
+  try {
+    // Get database URL (hide password)
+    const dbUrl = process.env.DATABASE_URL || '';
+    const maskedUrl = dbUrl.replace(/:([^@]+)@/, ':****@');
+    
+    // Get all KHSToolsSync records to verify data consistency
+    const syncRecords = await prisma.kHSToolsSync.findMany({
+      orderBy: {
+        lastUpdated: 'desc'
+      }
+    });
+    
+    res.json({
+      database: {
+        url: maskedUrl,
+        host: maskedUrl.match(/@([^:\/]+)/)?.[1] || 'unknown',
+        isRailway: maskedUrl.includes('railway'),
+        environment: process.env.NODE_ENV || 'unknown'
+      },
+      khsToolsSync: {
+        recordCount: syncRecords.length,
+        records: syncRecords,
+        message: 'All devices should see the same records if connected to same database'
+      }
+    });
+  } catch (error) {
+    console.error('Database info error:', error);
+    res.status(500).json({ error: 'Failed to get database info' });
+  }
+});
+
+// Helper function to calculate hash of tools data
+function calculateDataHash(data) {
+  const sortedData = {
+    tools: data.tools || {},
+    selectedDemoCategories: (data.selectedDemoCategories || []).sort(),
+    selectedInstallCategories: (data.selectedInstallCategories || []).sort(),
+    lockedCategories: (data.lockedCategories || []).sort(),
+    showDemo: data.showDemo || false,
+    showInstall: data.showInstall || false
+  };
+  
+  return crypto
+    .createHash('sha256')
+    .update(JSON.stringify(sortedData))
+    .digest('hex');
+}
+
 // PUT /api/khs-tools-sync - Update the tools sync data
 app.put('/api/khs-tools-sync', authMiddleware, async (req, res) => {
   try {
@@ -1520,20 +1591,49 @@ app.put('/api/khs-tools-sync', authMiddleware, async (req, res) => {
       version
     } = req.body;
 
-    // Get current data to check version
+    // Get current data to check version and content
     const currentData = await prisma.kHSToolsSync.findUnique({
       where: { id: 'main' }
     });
 
-    if (currentData && currentData.version > version) {
-      // Version conflict - return current data
-      return res.status(409).json({
-        error: 'Version conflict',
-        currentData
+    // Calculate hash of incoming data
+    const incomingDataHash = calculateDataHash({
+      tools,
+      selectedDemoCategories,
+      selectedInstallCategories,
+      lockedCategories,
+      showDemo,
+      showInstall
+    });
+
+    // If data exists, check if content has actually changed
+    if (currentData) {
+      const currentDataHash = calculateDataHash({
+        tools: currentData.tools,
+        selectedDemoCategories: currentData.selectedDemoCategories,
+        selectedInstallCategories: currentData.selectedInstallCategories,
+        lockedCategories: currentData.lockedCategories,
+        showDemo: currentData.showDemo,
+        showInstall: currentData.showInstall
       });
+
+      // If content hasn't changed, return current data without incrementing version
+      if (currentDataHash === incomingDataHash) {
+        console.log('[KHSToolsSync] Content unchanged, skipping version increment');
+        return res.json(currentData);
+      }
+
+      // Check for version conflict
+      if (currentData.version > version) {
+        // Version conflict - return current data
+        return res.status(409).json({
+          error: 'Version conflict',
+          currentData
+        });
+      }
     }
 
-    // Update or create the data
+    // Content has changed or this is a new record - update with version increment
     const updatedData = await prisma.kHSToolsSync.upsert({
       where: { id: 'main' },
       create: {
@@ -1545,7 +1645,8 @@ app.put('/api/khs-tools-sync', authMiddleware, async (req, res) => {
         showDemo: showDemo || false,
         showInstall: showInstall || false,
         lastUpdatedBy: req.userId,
-        version: (currentData?.version || 0) + 1
+        version: 1,
+        dataHash: incomingDataHash
       },
       update: {
         tools: tools || {},
@@ -1556,10 +1657,12 @@ app.put('/api/khs-tools-sync', authMiddleware, async (req, res) => {
         showInstall: showInstall || false,
         lastUpdatedBy: req.userId,
         lastUpdated: new Date(),
-        version: (currentData?.version || 0) + 1
+        version: (currentData?.version || 0) + 1,
+        dataHash: incomingDataHash
       }
     });
 
+    console.log('[KHSToolsSync] Content changed, version incremented to:', updatedData.version);
     res.json(updatedData);
   } catch (error) {
     console.error('[KHSToolsSync] Error updating tools sync data:', error);

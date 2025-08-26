@@ -202,6 +202,8 @@ const KHSInfoSimple = () => {
   const [isSyncing, setIsSyncing] = useState(false);
   const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [debugLogs, setDebugLogs] = useState<string[]>([]);
+  const previousToolsDataRef = useRef<string>('');
+  const isUserChangeRef = useRef(false);
 
   const tabs = ['Tools List', 'SOP', 'Office Docs', 'Specs'];
   const demoCategories = ['Kitchen', 'Bathroom', 'Flooring', 'Framing', 'Drywall'];
