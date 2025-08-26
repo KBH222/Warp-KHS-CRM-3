@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Lock/Edit Button</title>
+</head>
+<body>
+    <h1>Test Lock/Edit Button Behavior</h1>
+    <p>This tests the exact button implementation from KHSInfo.tsx</p>
+    
+    <div id="app"></div>
+
+    <script>
+        let isLocked = false;
+        
+        function render() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <p>Current state: isLocked = ${isLocked}</p>
+                <button 
+                    onclick="toggleLock()"
+                    style="
+                        padding: 8px 16px;
+                        background-color: ${isLocked ? '#10B981' : '#EF4444'};
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 14px;
+                        font-weight: 500;
+                    "
+                >
+                    ${isLocked ? 'Edit' : 'Lock'}
+                </button>
+                <br><br>
+                <p>Expected behavior:</p>
+                <ul>
+                    <li>When isLocked = false: Red button saying "Lock"</li>
+                    <li>When isLocked = true: Green button saying "Edit"</li>
+                </ul>
+            `;
+        }
+        
+        function toggleLock() {
+            console.log('Button clicked. Current isLocked:', isLocked, 'Setting to:', !isLocked);
+            isLocked = !isLocked;
+            render();
+        }
+        
+        // Initial render
+        render();
+    </script>
+</body>
+</html>

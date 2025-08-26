@@ -320,4 +320,20 @@ model ToolSettings {
   updatedAt         DateTime  @updatedAt
 }
 
+// KHS Tools Sync Data - for syncing tool states across users
+model KHSToolsSync {
+  id                      String    @id @default("main") // Single record for all users
+  tools                   Json      // Complete tools state with categories and items
+  selectedDemoCategories  Json      @default("[]") // Array of selected demo category names
+  selectedInstallCategories Json   @default("[]") // Array of selected install category names
+  lockedCategories        Json      @default("[]") // Array of locked category names
+  showDemo               Boolean   @default(false)
+  showInstall            Boolean   @default(false)
+  lastUpdatedBy          String?   // User ID who last updated
+  lastUpdated            DateTime  @default(now())
+  version                Int       @default(1) // For conflict resolution
+  
+  @@index([lastUpdated])
+}
+
 

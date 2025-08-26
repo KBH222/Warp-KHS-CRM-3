@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { khsToolsSyncApi } from '../services/api/khsToolsSync.api';
 
 interface Tool {
   id: string;
@@ -24,6 +25,7 @@ interface ToolsData {
 
 const STORAGE_KEY = 'khs-tools-sync-data-v4';
 const SYNC_INTERVAL = 2000; // Check for updates every 2 seconds
+const DB_SYNC_INTERVAL = 5000; // Sync with database every 5 seconds
 
 const predefinedTools: CategoryTools = {
   'Kitchen': [
@@ -184,6 +186,9 @@ const KHSInfoSimple = () => {
   const [lastCheckedTime, setLastCheckedTime] = useState(Date.now());
   const [editingToolId, setEditingToolId] = useState<string | null>(null);
   const [editingToolName, setEditingToolName] = useState('');
+  const [dbVersion, setDbVersion] = useState(1);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const tabs = ['Tools List', 'SOP', 'Office Docs', 'Specs'];
   const demoCategories = ['Kitchen', 'Bathroom', 'Flooring', 'Framing', 'Drywall'];
@@ -218,6 +223,95 @@ const KHSInfoSimple = () => {
 
     return () => clearInterval(interval);
   }, [lastCheckedTime]);
+
+  // Sync with database
+  const syncWithDatabase = async () => {
+    if (isSyncing) return;
+    
+    try {
+      setIsSyncing(true);
+      
+      // Get latest from database
+      const dbData = await khsToolsSyncApi.get();
+      
+      // Check if database has newer data
+      if (dbData.version > dbVersion) {
+        // Update local state with database data
+        setToolsData({
+          tools: dbData.tools || {},
+          selectedDemoCategories: dbData.selectedDemoCategories || [],
+          selectedInstallCategories: dbData.selectedInstallCategories || [],
+          lockedCategories: dbData.lockedCategories || [],
+          showDemo: dbData.showDemo || false,
+          showInstall: dbData.showInstall || false,
+          lastUpdated: new Date(dbData.lastUpdated).getTime()
+        });
+        setDbVersion(dbData.version);
+        setLastCheckedTime(Date.now());
+      }
+    } catch (error) {
+      console.error('Failed to sync with database:', error);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  // Push local changes to database
+  const pushToDatabase = async () => {
+    if (isSyncing) return;
+    
+    // Clear any pending sync
+    if (syncTimeoutRef.current) {
+      clearTimeout(syncTimeoutRef.current);
+    }
+    
+    // Debounce the sync
+    syncTimeoutRef.current = setTimeout(async () => {
+      try {
+        setIsSyncing(true);
+        
+        const response = await khsToolsSyncApi.update({
+          tools: toolsData.tools,
+          selectedDemoCategories: toolsData.selectedDemoCategories,
+          selectedInstallCategories: toolsData.selectedInstallCategories,
+          lockedCategories: toolsData.lockedCategories,
+          showDemo: toolsData.showDemo,
+          showInstall: toolsData.showInstall,
+          version: dbVersion
+        });
+        
+        setDbVersion(response.version);
+      } catch (error: any) {
+        if (error.response?.status === 409) {
+          // Version conflict - fetch latest and retry
+          await syncWithDatabase();
+        } else {
+          console.error('Failed to push to database:', error);
+        }
+      } finally {
+        setIsSyncing(false);
+      }
+    }, 1000); // Wait 1 second before pushing
+  };
+
+  // Initial database sync
+  useEffect(() => {
+    syncWithDatabase();
+  }, []);
+
+  // Periodic database sync
+  useEffect(() => {
+    const interval = setInterval(syncWithDatabase, DB_SYNC_INTERVAL);
+    return () => clearInterval(interval);
+  }, [dbVersion]);
+
+  // Push changes to database when toolsData changes
+  useEffect(() => {
+    // Skip initial render
+    if (toolsData.lastUpdated > 0) {
+      pushToDatabase();
+    }
+  }, [toolsData]);
 
   const updateToolsData = (updates: Partial<ToolsData>) => {
     setToolsData(prev => ({ ...prev, ...updates }));
@@ -726,12 +820,26 @@ const KHSInfoSimple = () => {
   };
 
   return (
-    <div style={{ 
-      height: '100%',
-      overflowY: 'auto',
-      WebkitOverflowScrolling: 'touch',
-      paddingBottom: '100px' // Extra padding for iOS scrolling
-    }}>
+    <>
+      <style>{`
+        @keyframes pulse {
+          0% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.5;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+      `}</style>
+      <div style={{ 
+        height: '100%',
+        overflowY: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        paddingBottom: '100px' // Extra padding for iOS scrolling
+      }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
         {/* Header */}
         <div style={{ 
@@ -765,6 +873,27 @@ const KHSInfoSimple = () => {
             <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: 0 }}>
               KHS Info
             </h1>
+            {isSyncing && (
+              <span style={{
+                marginLeft: '12px',
+                fontSize: '14px',
+                color: '#3B82F6',
+                fontWeight: 'normal',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}>
+                <span style={{
+                  display: 'inline-block',
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  backgroundColor: '#3B82F6',
+                  animation: 'pulse 1.5s ease-in-out infinite'
+                }}></span>
+                Syncing...
+              </span>
+            )}
           </div>
         </div>
 
@@ -806,6 +935,7 @@ const KHSInfoSimple = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

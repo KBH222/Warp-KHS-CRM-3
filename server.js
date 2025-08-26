@@ -1474,6 +1474,99 @@ app.put('/api/tools/lists/:listId/clear', authMiddleware, async (req, res) => {
   }
 });
 
+// KHS Tools Sync API endpoints
+// GET /api/khs-tools-sync - Get the current tools sync data
+app.get('/api/khs-tools-sync', authMiddleware, async (req, res) => {
+  try {
+    let toolsSync = await prisma.kHSToolsSync.findUnique({
+      where: { id: 'main' }
+    });
+
+    // If no data exists, create default data
+    if (!toolsSync) {
+      const defaultData = {
+        id: 'main',
+        tools: {},
+        selectedDemoCategories: [],
+        selectedInstallCategories: [],
+        lockedCategories: [],
+        showDemo: false,
+        showInstall: false,
+        version: 1
+      };
+
+      toolsSync = await prisma.kHSToolsSync.create({
+        data: defaultData
+      });
+    }
+
+    res.json(toolsSync);
+  } catch (error) {
+    console.error('[KHSToolsSync] Error fetching tools sync data:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// PUT /api/khs-tools-sync - Update the tools sync data
+app.put('/api/khs-tools-sync', authMiddleware, async (req, res) => {
+  try {
+    const {
+      tools,
+      selectedDemoCategories,
+      selectedInstallCategories,
+      lockedCategories,
+      showDemo,
+      showInstall,
+      version
+    } = req.body;
+
+    // Get current data to check version
+    const currentData = await prisma.kHSToolsSync.findUnique({
+      where: { id: 'main' }
+    });
+
+    if (currentData && currentData.version > version) {
+      // Version conflict - return current data
+      return res.status(409).json({
+        error: 'Version conflict',
+        currentData
+      });
+    }
+
+    // Update or create the data
+    const updatedData = await prisma.kHSToolsSync.upsert({
+      where: { id: 'main' },
+      create: {
+        id: 'main',
+        tools: tools || {},
+        selectedDemoCategories: selectedDemoCategories || [],
+        selectedInstallCategories: selectedInstallCategories || [],
+        lockedCategories: lockedCategories || [],
+        showDemo: showDemo || false,
+        showInstall: showInstall || false,
+        lastUpdatedBy: req.userId,
+        version: (currentData?.version || 0) + 1
+      },
+      update: {
+        tools: tools || {},
+        selectedDemoCategories: selectedDemoCategories || [],
+        selectedInstallCategories: selectedInstallCategories || [],
+        lockedCategories: lockedCategories || [],
+        showDemo: showDemo || false,
+        showInstall: showInstall || false,
+        lastUpdatedBy: req.userId,
+        lastUpdated: new Date(),
+        version: (currentData?.version || 0) + 1
+      }
+    });
+
+    res.json(updatedData);
+  } catch (error) {
+    console.error('[KHSToolsSync] Error updating tools sync data:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Serve React app for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
