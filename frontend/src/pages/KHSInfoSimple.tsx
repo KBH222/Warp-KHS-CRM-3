@@ -679,7 +679,7 @@ const KHSInfoSimple = () => {
                     position: 'absolute',
                     left: '300px',
                     padding: '6px 12px',
-                    backgroundColor: isCategoryLocked(category) ? '#EF4444' : '#10B981',
+                    backgroundColor: isCategoryLocked(category) ? '#3B82F6' : '#EF4444',
                     color: 'white',
                     border: 'none',
                     borderRadius: '6px',
@@ -688,7 +688,7 @@ const KHSInfoSimple = () => {
                     fontWeight: '500',
                   }}
                 >
-                  Lock/Edit
+                  {isCategoryLocked(category) ? 'Edit' : 'Lock'}
                 </button>
               </div>
             </div>
