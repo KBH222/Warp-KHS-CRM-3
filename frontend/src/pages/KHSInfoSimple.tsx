@@ -365,12 +365,69 @@ const KHSInfoSimple = () => {
 
   // Initial database sync
   useEffect(() => {
+    // CRITICAL: Check if user is on wrong domain
+    if (window.location.hostname.includes('khs-crm-3')) {
+      console.error('[CRITICAL] Wrong domain detected! User is on khs-crm-3');
+      
+      // Unregister all service workers that might be blocking requests
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          console.log(`[ServiceWorker] Found ${registrations.length} service workers to unregister`);
+          for(let registration of registrations) {
+            registration.unregister().then(function(success) {
+              console.log('[ServiceWorker] Unregistered:', success);
+            });
+          }
+        });
+      }
+      
+      // Show prominent warning to user
+      const correctUrl = 'https://khs-crm-2-production.up.railway.app/khs-info';
+      
+      // Create warning banner
+      const warningBanner = document.createElement('div');
+      warningBanner.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: #ef4444;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        z-index: 99999;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      `;
+      warningBanner.innerHTML = `
+        ⚠️ WRONG URL - You're on khs-crm-3! ⚠️<br>
+        <a href="${correctUrl}" style="color: white; text-decoration: underline;">
+          Click here to go to the correct site: khs-crm-2
+        </a><br>
+        <small>Service workers have been cleared. Please use the link above.</small>
+      `;
+      document.body.appendChild(warningBanner);
+      
+      // Also show alert for mobile users who might miss the banner
+      setTimeout(() => {
+        if (confirm(`You're on the wrong site (khs-crm-3)!\n\nClick OK to go to the correct site:\n${correctUrl}`)) {
+          window.location.href = correctUrl;
+        }
+      }, 1000);
+      
+      debugLog('CRITICAL: Wrong domain - should be khs-crm-2');
+      debugLog('Service workers cleared');
+      debugLog('Correct URL:', correctUrl);
+    }
+    
     // Check if running on mobile and log environment details
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     debugLog('Environment', {
       isMobile,
       platform: navigator.platform,
-      online: navigator.onLine
+      online: navigator.onLine,
+      hostname: window.location.hostname
     });
     
     // Test localStorage access on mobile
