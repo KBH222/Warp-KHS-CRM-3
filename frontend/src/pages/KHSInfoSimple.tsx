@@ -1142,18 +1142,58 @@ const KHSInfoSimple = () => {
           zIndex: 9999,
           borderTop: '2px solid #00ff00'
         }}>
-          <div style={{ marginBottom: '5px', color: '#ffff00', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span>Debug Console (tap to close) | DB Version: {dbVersion} | Syncing: {isSyncing ? 'YES' : 'NO'}</span>
-            {dbVersion > 19 && (
+          <div style={{ marginBottom: '5px', color: '#ffff00', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '5px' }}>
+            <span>Debug Console (tap to close) | DB Version: {dbVersion} | Syncing: {isSyncing ? 'YES' : 'NO'} | Queue: {khsToolsSyncApi.getSyncQueueSize()}</span>
+            <div style={{ display: 'flex', gap: '5px' }}>
+              {dbVersion > 19 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    debugLog('Force push initiated');
+                    pushToDatabase(true);
+                  }}
+                  style={{
+                    padding: '2px 8px',
+                    backgroundColor: '#ef4444',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    fontSize: '10px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Force Push v{dbVersion}
+                </button>
+              )}
               <button
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.stopPropagation();
-                  debugLog('Force push initiated');
-                  pushToDatabase(true);
+                  debugLog('Force pull initiated - overriding local data');
+                  try {
+                    const serverData = await khsToolsSyncApi.refresh();
+                    // Force update local state with server data
+                    isSyncingFromDatabase.current = true;
+                    setToolsData({
+                      tools: serverData.tools || {},
+                      selectedDemoCategories: serverData.selectedDemoCategories || [],
+                      selectedInstallCategories: serverData.selectedInstallCategories || [],
+                      lockedCategories: serverData.lockedCategories || [],
+                      showDemo: serverData.showDemo || false,
+                      showInstall: serverData.showInstall || false,
+                      lastUpdated: new Date(serverData.lastUpdated).getTime()
+                    });
+                    setDbVersion(serverData.version);
+                    debugLog('Force pull complete, new version:', serverData.version);
+                    setTimeout(() => {
+                      isSyncingFromDatabase.current = false;
+                    }, 100);
+                  } catch (error: any) {
+                    debugLog('Force pull failed:', error.message);
+                  }
                 }}
                 style={{
                   padding: '2px 8px',
-                  backgroundColor: '#ef4444',
+                  backgroundColor: '#10b981',
                   color: 'white',
                   border: 'none',
                   borderRadius: '4px',
@@ -1161,9 +1201,53 @@ const KHSInfoSimple = () => {
                   cursor: 'pointer'
                 }}
               >
-                Force Push v{dbVersion}
+                Force Pull
               </button>
-            )}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (confirm('Clear all sync data and localStorage? This will reset everything.')) {
+                    debugLog('Clearing all sync data');
+                    khsToolsSyncApi.clearAllSyncData();
+                    khsToolsSyncApi.clearSyncQueue();
+                    // Clear other localStorage items
+                    localStorage.removeItem('khs-tools-sync-data-v4');
+                    localStorage.removeItem('khs-tools-db-version');
+                    debugLog('All sync data cleared - please refresh the page');
+                  }
+                }}
+                style={{
+                  padding: '2px 8px',
+                  backgroundColor: '#f59e0b',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontSize: '10px',
+                  cursor: 'pointer'
+                }}
+              >
+                Clear Storage
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  debugLog('Clearing sync queue only');
+                  khsToolsSyncApi.clearSyncQueue();
+                  debugLog('Sync queue cleared');
+                }}
+                style={{
+                  padding: '2px 8px',
+                  backgroundColor: '#6366f1',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontSize: '10px',
+                  cursor: 'pointer'
+                }}
+              >
+                Clear Queue
+              </button>
+            </div>
           </div>
           <div onClick={() => setDebugLogs([])}>
             {debugLogs.map((log, i) => (

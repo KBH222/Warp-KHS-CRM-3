@@ -149,14 +149,29 @@ export const khsToolsSyncApi = {
         
         localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
         
-        // Queue for later sync
-        const syncQueue = JSON.parse(localStorage.getItem('khs-sync-queue') || '[]');
-        syncQueue.push({
-          type: 'khs-tools',
-          data: updatedData,
-          timestamp: new Date().toISOString()
-        });
-        localStorage.setItem('khs-sync-queue', JSON.stringify(syncQueue));
+        // Queue for later sync with size limit
+        try {
+          let syncQueue = JSON.parse(localStorage.getItem('khs-sync-queue') || '[]');
+          
+          // Limit queue size to prevent localStorage overflow
+          const MAX_QUEUE_SIZE = 10;
+          if (syncQueue.length >= MAX_QUEUE_SIZE) {
+            // Remove oldest items
+            syncQueue = syncQueue.slice(-5); // Keep only last 5 items
+          }
+          
+          syncQueue.push({
+            type: 'khs-tools',
+            data: updatedData,
+            timestamp: new Date().toISOString()
+          });
+          
+          localStorage.setItem('khs-sync-queue', JSON.stringify(syncQueue));
+        } catch (storageError) {
+          console.error('[KHSToolsSync] Failed to update sync queue:', storageError);
+          // Clear the queue if storage is full
+          localStorage.removeItem('khs-sync-queue');
+        }
         
         return updatedData;
       }
@@ -172,5 +187,30 @@ export const khsToolsSyncApi = {
     const response = await api.get('/khs-tools-sync');
     localStorage.setItem(STORAGE_KEY, JSON.stringify(response.data));
     return response.data;
+  },
+  
+  // Clear sync queue
+  clearSyncQueue(): void {
+    console.log('[KHSToolsSync] Clearing sync queue');
+    localStorage.removeItem('khs-sync-queue');
+  },
+  
+  // Get sync queue size
+  getSyncQueueSize(): number {
+    try {
+      const queue = JSON.parse(localStorage.getItem('khs-sync-queue') || '[]');
+      return queue.length;
+    } catch {
+      return 0;
+    }
+  },
+  
+  // Clear all sync-related localStorage
+  clearAllSyncData(): void {
+    console.log('[KHSToolsSync] Clearing all sync data');
+    localStorage.removeItem('khs-sync-queue');
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem('khs-tools-sync-data-v4');
+    localStorage.removeItem('khs-tools-db-version');
   }
 };
