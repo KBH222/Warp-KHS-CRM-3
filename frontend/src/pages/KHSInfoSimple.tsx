@@ -365,59 +365,6 @@ const KHSInfoSimple = () => {
 
   // Initial database sync
   useEffect(() => {
-    // CRITICAL: Check if user is on wrong domain and AUTO-REDIRECT
-    if (window.location.hostname.includes('khs-crm-3')) {
-      console.error('[CRITICAL] Wrong domain detected! User is on khs-crm-3 - AUTO REDIRECTING');
-      
-      // Build the correct URL preserving the path
-      const correctUrl = 'https://khs-crm-2-production.up.railway.app' + window.location.pathname + window.location.search + window.location.hash;
-      
-      debugLog('CRITICAL: Wrong domain - redirecting to khs-crm-2');
-      debugLog('Current URL:', window.location.href);
-      debugLog('Redirecting to:', correctUrl);
-      
-      // Show brief message before redirect
-      const redirectMessage = document.createElement('div');
-      redirectMessage.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: #1f2937;
-        color: white;
-        padding: 40px;
-        text-align: center;
-        font-size: 20px;
-        font-weight: bold;
-        z-index: 99999;
-        border-radius: 10px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      `;
-      redirectMessage.innerHTML = `
-        <div style="margin-bottom: 20px;">⏳ Redirecting to correct server...</div>
-        <div style="font-size: 16px; opacity: 0.8;">Moving from khs-crm-3 → khs-crm-2</div>
-        <div style="margin-top: 20px; font-size: 14px;">This prevents sync errors</div>
-      `;
-      document.body.appendChild(redirectMessage);
-      
-      // Unregister service workers before redirect
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          console.log(`[ServiceWorker] Clearing ${registrations.length} service workers before redirect`);
-          Promise.all(registrations.map(r => r.unregister())).then(() => {
-            console.log('[ServiceWorker] All workers cleared, redirecting now');
-            // Redirect after service workers are cleared
-            window.location.href = correctUrl;
-          });
-        });
-      } else {
-        // No service workers, redirect immediately
-        window.location.href = correctUrl;
-      }
-      
-      // Stop further execution on this domain
-      return;
-    }
     
     // Check if running on mobile and log environment details
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
