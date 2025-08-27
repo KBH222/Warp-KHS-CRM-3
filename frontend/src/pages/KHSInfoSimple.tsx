@@ -1347,6 +1347,92 @@ const KHSInfoSimple = () => {
               >
                 Test API
               </button>
+              <button
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  
+                  // Prepare debug log export
+                  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                  const deviceType = isMobile ? 'Mobile' : 'Desktop';
+                  const apiUrl = import.meta.env.VITE_API_URL || 'relative';
+                  const exportTime = new Date().toLocaleString();
+                  const logEntries = debugLogs.slice(-100); // Last 100 entries
+                  
+                  const logText = `===== Debug Log Export =====
+Device: ${deviceType}
+URL: ${window.location.href}
+API: ${apiUrl}
+Version: ${dbVersion}
+Time: ${exportTime}
+User Agent: ${navigator.userAgent}
+===== Log Entries (${logEntries.length}) =====
+${logEntries.join('\n')}
+=========================`;
+                  
+                  // Try modern clipboard API first
+                  if (navigator.clipboard && navigator.clipboard.writeText) {
+                    try {
+                      await navigator.clipboard.writeText(logText);
+                      debugLog('Debug log copied to clipboard!');
+                      
+                      // Show temporary success message
+                      const originalText = (e.target as HTMLButtonElement).textContent;
+                      (e.target as HTMLButtonElement).textContent = 'Copied!';
+                      setTimeout(() => {
+                        (e.target as HTMLButtonElement).textContent = originalText || 'Copy Log';
+                      }, 1500);
+                    } catch (err) {
+                      debugLog('Clipboard API failed, using fallback');
+                      // Fallback method below
+                    }
+                  }
+                  
+                  // Fallback for older browsers or if clipboard API fails
+                  if (!navigator.clipboard || !(await navigator.clipboard.writeText(logText).then(() => true).catch(() => false))) {
+                    // Create textarea element
+                    const textArea = document.createElement('textarea');
+                    textArea.value = logText;
+                    textArea.style.position = 'fixed';
+                    textArea.style.left = '-999999px';
+                    textArea.style.top = '-999999px';
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    
+                    try {
+                      const successful = document.execCommand('copy');
+                      if (successful) {
+                        debugLog('Debug log copied using fallback method');
+                        const originalText = (e.target as HTMLButtonElement).textContent;
+                        (e.target as HTMLButtonElement).textContent = 'Copied!';
+                        setTimeout(() => {
+                          (e.target as HTMLButtonElement).textContent = originalText || 'Copy Log';
+                        }, 1500);
+                      } else {
+                        // Last resort - show in alert for manual copy
+                        debugLog('Copy failed - showing in prompt');
+                        prompt('Copy the debug log below:', logText);
+                      }
+                    } catch (err) {
+                      debugLog('All copy methods failed');
+                      prompt('Copy the debug log below:', logText);
+                    } finally {
+                      document.body.removeChild(textArea);
+                    }
+                  }
+                }}
+                style={{
+                  padding: '2px 8px',
+                  backgroundColor: '#64748b',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontSize: '10px',
+                  cursor: 'pointer'
+                }}
+              >
+                Copy Log
+              </button>
             </div>
           </div>
           <div onClick={() => setDebugLogs([])}>
