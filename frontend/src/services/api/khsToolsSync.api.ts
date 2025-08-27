@@ -9,11 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL ||
 export interface KHSToolsSyncData {
   id: string;
   tools: any; // JSON object containing all tools data
-  selectedDemoCategories: string[];
-  selectedInstallCategories: string[];
   lockedCategories: string[];
-  showDemo: boolean;
-  showInstall: boolean;
   lastUpdatedBy?: string;
   lastUpdated: string;
   version: number;
@@ -86,11 +82,7 @@ export const khsToolsSyncApi = {
       return {
         id: 'main',
         tools: {},
-        selectedDemoCategories: [],
-        selectedInstallCategories: [],
         lockedCategories: [],
-        showDemo: false,
-        showInstall: false,
         lastUpdated: new Date().toISOString(),
         version: 1
       };

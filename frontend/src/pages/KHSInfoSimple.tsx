@@ -13,17 +13,23 @@ interface CategoryTools {
   [category: string]: Tool[];
 }
 
+// Synced data - shared across devices
 interface ToolsData {
   tools: CategoryTools;
-  selectedDemoCategories: string[];
-  selectedInstallCategories: string[];
   lockedCategories: string[];
-  showDemo: boolean;
-  showInstall: boolean;
   lastUpdated: number;
 }
 
-const STORAGE_KEY = 'khs-tools-sync-data-v4'; // Using khs-crm-3
+// Local view preferences - per device
+interface ViewPreferences {
+  selectedDemoCategories: string[];
+  selectedInstallCategories: string[];
+  showDemo: boolean;
+  showInstall: boolean;
+}
+
+const STORAGE_KEY = 'khs-tools-sync-data-v5'; // Incremented for data structure change
+const VIEW_PREFS_KEY = 'khs-tools-view-prefs'; // Local view preferences
 const SYNC_INTERVAL = 10000; // Check for updates every 10 seconds
 const DB_SYNC_INTERVAL = 5000; // Sync with database every 5 seconds (reduced for testing)
 const DEBOUNCE_DELAY = 1000; // Debounce user interactions for 1 second
@@ -146,41 +152,52 @@ const predefinedTools: CategoryTools = {
 const KHSInfoSimple = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Tools List');
+  
+  // Synced data - shared across devices
   const [toolsData, setToolsData] = useState<ToolsData>(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        // Migrate old data format
-        if (parsed.selectedCategories && !parsed.selectedDemoCategories) {
-          return {
-            ...parsed,
-            selectedDemoCategories: [],
-            selectedInstallCategories: [],
-            selectedCategories: undefined,
-            lockedCategories: parsed.lockedCategories || Object.keys(predefinedTools)
-          };
-        }
-        // Ensure lockedCategories exists (for data before this feature)
+        // Ensure lockedCategories exists
         if (!parsed.lockedCategories) {
           return {
-            ...parsed,
-            lockedCategories: Object.keys(predefinedTools)
+            tools: parsed.tools || predefinedTools,
+            lockedCategories: Object.keys(predefinedTools),
+            lastUpdated: Date.now()
           };
         }
-        return parsed;
+        return {
+          tools: parsed.tools || predefinedTools,
+          lockedCategories: parsed.lockedCategories || Object.keys(predefinedTools),
+          lastUpdated: parsed.lastUpdated || Date.now()
+        };
       } catch (e) {
         console.error('Failed to parse stored data:', e);
       }
     }
     return {
       tools: predefinedTools,
+      lockedCategories: Object.keys(predefinedTools), // All categories locked by default
+      lastUpdated: Date.now()
+    };
+  });
+  
+  // Local view preferences - per device
+  const [viewPrefs, setViewPrefs] = useState<ViewPreferences>(() => {
+    const stored = localStorage.getItem(VIEW_PREFS_KEY);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch (e) {
+        console.error('Failed to parse view preferences:', e);
+      }
+    }
+    return {
       selectedDemoCategories: [],
       selectedInstallCategories: [],
-      lockedCategories: Object.keys(predefinedTools), // All categories locked by default
       showDemo: false,
-      showInstall: false,
-      lastUpdated: Date.now()
+      showInstall: false
     };
   });
   const [newToolName, setNewToolName] = useState('');
@@ -220,7 +237,7 @@ const KHSInfoSimple = () => {
     setDebugLogs(prev => [...prev.slice(-19), logEntry]); // Keep last 20 logs
   };
 
-  // Save data whenever it changes
+  // Save synced data whenever it changes
   useEffect(() => {
     const dataToSave = {
       ...toolsData,
@@ -228,6 +245,11 @@ const KHSInfoSimple = () => {
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
   }, [toolsData]);
+  
+  // Save view preferences whenever they change
+  useEffect(() => {
+    localStorage.setItem(VIEW_PREFS_KEY, JSON.stringify(viewPrefs));
+  }, [viewPrefs]);
 
   // Poll for updates from other users
   useEffect(() => {
@@ -238,7 +260,12 @@ const KHSInfoSimple = () => {
           const parsed = JSON.parse(stored);
           // Only update if data is newer than what we have
           if (parsed.lastUpdated > lastCheckedTime) {
-            setToolsData(parsed);
+            // Ensure we only set valid ToolsData fields
+            setToolsData({
+              tools: parsed.tools || {},
+              lockedCategories: parsed.lockedCategories || [],
+              lastUpdated: parsed.lastUpdated || Date.now()
+            });
             setLastCheckedTime(parsed.lastUpdated);
           }
         } catch (e) {
@@ -284,14 +311,10 @@ const KHSInfoSimple = () => {
         });
         // Set flag to prevent triggering push
         isSyncingFromDatabase.current = true;
-        // Update local state with database data
+        // Update local state with database data (only tools and locked categories)
         setToolsData({
           tools: dbData.tools || {},
-          selectedDemoCategories: dbData.selectedDemoCategories || [],
-          selectedInstallCategories: dbData.selectedInstallCategories || [],
           lockedCategories: dbData.lockedCategories || [],
-          showDemo: dbData.showDemo || false,
-          showInstall: dbData.showInstall || false,
           lastUpdated: new Date(dbData.lastUpdated).getTime()
         });
         setDbVersion(dbData.version);
@@ -348,11 +371,7 @@ const KHSInfoSimple = () => {
       
       const payload = {
         tools: toolsData.tools,
-        selectedDemoCategories: toolsData.selectedDemoCategories,
-        selectedInstallCategories: toolsData.selectedInstallCategories,
         lockedCategories: toolsData.lockedCategories,
-        showDemo: toolsData.showDemo,
-        showInstall: toolsData.showInstall,
         version: pushVersion
       };
       debugLog('Push payload version', payload.version);
@@ -444,11 +463,7 @@ const KHSInfoSimple = () => {
     // Create a string representation of the current data for comparison
     const currentDataString = JSON.stringify({
       tools: toolsData.tools,
-      selectedDemoCategories: toolsData.selectedDemoCategories,
-      selectedInstallCategories: toolsData.selectedInstallCategories,
-      lockedCategories: toolsData.lockedCategories,
-      showDemo: toolsData.showDemo,
-      showInstall: toolsData.showInstall
+      lockedCategories: toolsData.lockedCategories
     });
     
     // Skip if data hasn't actually changed
@@ -477,10 +492,6 @@ const KHSInfoSimple = () => {
     }
     
     debugLog('[AUTO-SYNC] Change detected - will push', {
-      showDemo: toolsData.showDemo,
-      showInstall: toolsData.showInstall,
-      demoCategories: toolsData.selectedDemoCategories.length,
-      installCategories: toolsData.selectedInstallCategories.length,
       lockedCategories: toolsData.lockedCategories.length,
       totalTools: Object.keys(toolsData.tools).length
     });
@@ -520,27 +531,26 @@ const KHSInfoSimple = () => {
       };
       debugLog('[UPDATE] New state will be', {
         lastUpdated: newData.lastUpdated,
-        showDemo: newData.showDemo,
-        showInstall: newData.showInstall
+        hasToolChanges: 'tools' in updates,
+        hasLockedCategories: 'lockedCategories' in updates
       });
       return newData;
     });
   };
 
   const handleCategoryToggle = (category: string, section: 'demo' | 'install') => {
-    
     if (section === 'demo') {
-      const selectedDemoCategories = toolsData.selectedDemoCategories.includes(category)
-        ? toolsData.selectedDemoCategories.filter(c => c !== category)
-        : [...toolsData.selectedDemoCategories, category];
+      const selectedDemoCategories = viewPrefs.selectedDemoCategories.includes(category)
+        ? viewPrefs.selectedDemoCategories.filter(c => c !== category)
+        : [...viewPrefs.selectedDemoCategories, category];
       
-      updateToolsData({ selectedDemoCategories });
+      setViewPrefs(prev => ({ ...prev, selectedDemoCategories }));
     } else {
-      const selectedInstallCategories = toolsData.selectedInstallCategories.includes(category)
-        ? toolsData.selectedInstallCategories.filter(c => c !== category)
-        : [...toolsData.selectedInstallCategories, category];
+      const selectedInstallCategories = viewPrefs.selectedInstallCategories.includes(category)
+        ? viewPrefs.selectedInstallCategories.filter(c => c !== category)
+        : [...viewPrefs.selectedInstallCategories, category];
       
-      updateToolsData({ selectedInstallCategories });
+      setViewPrefs(prev => ({ ...prev, selectedInstallCategories }));
     }
   };
 
@@ -606,28 +616,28 @@ const KHSInfoSimple = () => {
 
   // Clear invalid categories when Demo/Install changes
   useEffect(() => {
-    if (!toolsData.showDemo) {
-      updateToolsData({ selectedDemoCategories: [] });
+    if (!viewPrefs.showDemo) {
+      setViewPrefs(prev => ({ ...prev, selectedDemoCategories: [] }));
     } else {
-      const validDemoCategories = toolsData.selectedDemoCategories.filter(cat => 
+      const validDemoCategories = viewPrefs.selectedDemoCategories.filter(cat => 
         demoCategories.includes(cat)
       );
-      if (validDemoCategories.length !== toolsData.selectedDemoCategories.length) {
-        updateToolsData({ selectedDemoCategories: validDemoCategories });
+      if (validDemoCategories.length !== viewPrefs.selectedDemoCategories.length) {
+        setViewPrefs(prev => ({ ...prev, selectedDemoCategories: validDemoCategories }));
       }
     }
     
-    if (!toolsData.showInstall) {
-      updateToolsData({ selectedInstallCategories: [] });
+    if (!viewPrefs.showInstall) {
+      setViewPrefs(prev => ({ ...prev, selectedInstallCategories: [] }));
     } else {
-      const validInstallCategories = toolsData.selectedInstallCategories.filter(cat => 
+      const validInstallCategories = viewPrefs.selectedInstallCategories.filter(cat => 
         installCategories.includes(cat)
       );
-      if (validInstallCategories.length !== toolsData.selectedInstallCategories.length) {
-        updateToolsData({ selectedInstallCategories: validInstallCategories });
+      if (validInstallCategories.length !== viewPrefs.selectedInstallCategories.length) {
+        setViewPrefs(prev => ({ ...prev, selectedInstallCategories: validInstallCategories }));
       }
     }
-  }, [toolsData.showDemo, toolsData.showInstall]);
+  }, [viewPrefs.showDemo, viewPrefs.showInstall]);
 
   const renderToolsList = () => {
     return (
@@ -642,8 +652,8 @@ const KHSInfoSimple = () => {
             }}>
               <input
                 type="checkbox"
-                checked={toolsData.showDemo}
-                onChange={(e) => updateToolsData({ showDemo: e.target.checked })}
+                checked={viewPrefs.showDemo}
+                onChange={(e) => setViewPrefs(prev => ({ ...prev, showDemo: e.target.checked }))}
                 style={{
                   marginRight: '8px',
                   width: '18px',
@@ -661,8 +671,8 @@ const KHSInfoSimple = () => {
             }}>
               <input
                 type="checkbox"
-                checked={toolsData.showInstall}
-                onChange={(e) => updateToolsData({ showInstall: e.target.checked })}
+                checked={viewPrefs.showInstall}
+                onChange={(e) => setViewPrefs(prev => ({ ...prev, showInstall: e.target.checked }))}
                 style={{
                   marginRight: '8px',
                   width: '18px',
@@ -675,7 +685,7 @@ const KHSInfoSimple = () => {
           </div>
 
           {/* Demo Categories */}
-          {toolsData.showDemo && (
+          {viewPrefs.showDemo && (
             <div style={{
               backgroundColor: '#FEF3C7',
               padding: '8px',
@@ -703,7 +713,7 @@ const KHSInfoSimple = () => {
                       alignItems: 'center',
                       cursor: 'pointer',
                       whiteSpace: 'nowrap',
-                      backgroundColor: toolsData.selectedDemoCategories.includes(category) ? '#FDE68A' : 'white',
+                      backgroundColor: viewPrefs.selectedDemoCategories.includes(category) ? '#FDE68A' : 'white',
                       padding: '4px 8px',
                       borderRadius: '4px',
                       border: '1px solid #FCD34D',
@@ -712,7 +722,7 @@ const KHSInfoSimple = () => {
                   >
                     <input
                       type="checkbox"
-                      checked={toolsData.selectedDemoCategories.includes(category)}
+                      checked={viewPrefs.selectedDemoCategories.includes(category)}
                       onChange={() => handleCategoryToggle(category, 'demo')}
                       style={{
                         marginRight: '6px',
@@ -729,7 +739,7 @@ const KHSInfoSimple = () => {
           )}
 
           {/* Install Categories */}
-          {toolsData.showInstall && (
+          {viewPrefs.showInstall && (
             <div style={{
               backgroundColor: '#DBEAFE',
               padding: '8px',
@@ -757,7 +767,7 @@ const KHSInfoSimple = () => {
                       alignItems: 'center',
                       cursor: 'pointer',
                       whiteSpace: 'nowrap',
-                      backgroundColor: toolsData.selectedInstallCategories.includes(category) ? '#BFDBFE' : 'white',
+                      backgroundColor: viewPrefs.selectedInstallCategories.includes(category) ? '#BFDBFE' : 'white',
                       padding: '4px 8px',
                       borderRadius: '4px',
                       border: '1px solid #93C5FD',
@@ -766,7 +776,7 @@ const KHSInfoSimple = () => {
                   >
                     <input
                       type="checkbox"
-                      checked={toolsData.selectedInstallCategories.includes(category)}
+                      checked={viewPrefs.selectedInstallCategories.includes(category)}
                       onChange={() => handleCategoryToggle(category, 'install')}
                       style={{
                         marginRight: '6px',
@@ -785,8 +795,8 @@ const KHSInfoSimple = () => {
 
 
         {/* Selected Categories Tools */}
-        {!toolsData.showDemo && !toolsData.showInstall ? null : 
-         toolsData.selectedDemoCategories.length === 0 && toolsData.selectedInstallCategories.length === 0 ? (
+        {!viewPrefs.showDemo && !viewPrefs.showInstall ? null : 
+         viewPrefs.selectedDemoCategories.length === 0 && viewPrefs.selectedInstallCategories.length === 0 ? (
           <div style={{
             textAlign: 'center',
             padding: '40px',
@@ -796,7 +806,7 @@ const KHSInfoSimple = () => {
             Select categories above to view tool lists
           </div>
         ) : (
-          [...toolsData.selectedDemoCategories, ...toolsData.selectedInstallCategories].map(category => (
+          [...viewPrefs.selectedDemoCategories, ...viewPrefs.selectedInstallCategories].map(category => (
             <div key={category} style={{ marginBottom: '32px' }}>
               <div style={{
                 display: 'flex',
