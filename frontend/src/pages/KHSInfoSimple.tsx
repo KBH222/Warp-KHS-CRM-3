@@ -220,6 +220,8 @@ const predefinedTools: CategoryTools = {
 const KHSInfoSimple = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Tools List');
+  const [showNavigationWarning, setShowNavigationWarning] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
   
   // Synced data - shared across devices
   const [toolsData, setToolsData] = useState<ToolsData>(() => {
@@ -555,6 +557,21 @@ const KHSInfoSimple = () => {
     };
   }, [hasUnsavedChanges]); // Re-setup when unsaved changes state changes
 
+  // Warn before leaving page with unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        debugLog('[NAV-WARNING] Preventing unload - unsaved changes');
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+        return e.returnValue;
+      }
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges]);
+
   // Track unsaved changes when toolsData changes
   useEffect(() => {
     debugLog('[CHANGE-TRACKING] useEffect triggered', {
@@ -679,6 +696,38 @@ const KHSInfoSimple = () => {
       debugLog('[DISCARD] Pulling available update after discard');
       await pullFromDatabase();
     }
+  };
+  
+  // Handle tab navigation with unsaved changes warning
+  const handleTabChange = (tab: string) => {
+    if (hasUnsavedChanges && tab !== activeTab) {
+      debugLog('[NAV-WARNING] Tab change blocked - unsaved changes');
+      setPendingNavigation(tab);
+      setShowNavigationWarning(true);
+    } else {
+      setActiveTab(tab);
+    }
+  };
+  
+  // Handle navigation warning response
+  const handleNavigationChoice = async (choice: 'save' | 'discard' | 'cancel') => {
+    debugLog('[NAV-WARNING] User choice:', choice);
+    
+    if (choice === 'save') {
+      await saveChanges();
+      if (pendingNavigation) {
+        setActiveTab(pendingNavigation);
+      }
+    } else if (choice === 'discard') {
+      await discardChanges();
+      if (pendingNavigation) {
+        setActiveTab(pendingNavigation);
+      }
+    }
+    
+    // Close modal and reset
+    setShowNavigationWarning(false);
+    setPendingNavigation(null);
   };
 
   const handleCategoryToggle = (category: string, section: 'demo' | 'install') => {
@@ -1578,7 +1627,15 @@ ${debugLogs.join('\n')}
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
             <button
-              onClick={() => navigate('/dashboard')}
+              onClick={() => {
+                if (hasUnsavedChanges) {
+                  if (confirm('You have unsaved changes. Leave without saving?')) {
+                    navigate('/dashboard');
+                  }
+                } else {
+                  navigate('/dashboard');
+                }
+              }}
               style={{
                 background: 'none',
                 border: 'none',
@@ -1709,7 +1766,7 @@ ${debugLogs.join('\n')}
           {tabs.map(tab => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => handleTabChange(tab)}
               style={{
                 padding: '16px 0',
                 border: 'none',
@@ -2162,6 +2219,85 @@ ${logEntries.join('\n')}
         </div>
       )}
     </div>
+    
+    {/* Navigation Warning Modal */}
+    {showNavigationWarning && (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 10000
+      }}>
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          padding: '24px',
+          maxWidth: '400px',
+          width: '90%',
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+        }}>
+          <h2 style={{ marginTop: 0, marginBottom: '16px', fontSize: '20px', fontWeight: '600' }}>
+            Unsaved Changes
+          </h2>
+          <p style={{ marginBottom: '24px', color: '#6B7280' }}>
+            You have unsaved changes. What would you like to do?
+          </p>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+            <button
+              onClick={() => handleNavigationChoice('cancel')}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#E5E7EB',
+                color: '#374151',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '500'
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => handleNavigationChoice('discard')}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#EF4444',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '500'
+              }}
+            >
+              Discard Changes
+            </button>
+            <button
+              onClick={() => handleNavigationChoice('save')}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#10B981',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '500'
+              }}
+            >
+              Save & Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
     </>
   );
 };
