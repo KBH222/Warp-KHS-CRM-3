@@ -183,10 +183,25 @@ export const khsToolsSyncApi = {
   // Force refresh from server
   async refresh(): Promise<KHSToolsSyncData> {
     console.log('[KHSToolsSync] Force refresh from server');
-    // Don't use cache for refresh
-    const response = await api.get('/khs-tools-sync');
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(response.data));
-    return response.data;
+    const fullUrl = API_URL ? `${API_URL}/api/khs-tools-sync` : '/api/khs-tools-sync';
+    console.log('[KHSToolsSync] Refresh URL:', fullUrl);
+    console.log('[KHSToolsSync] API base URL:', API_URL || 'relative');
+    
+    try {
+      // Don't use cache for refresh
+      const response = await api.get('/khs-tools-sync');
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(response.data));
+      return response.data;
+    } catch (error: any) {
+      console.error('[KHSToolsSync] Refresh failed - Full error details:');
+      console.error('[KHSToolsSync] Error config:', {
+        url: error.config?.url,
+        baseURL: error.config?.baseURL,
+        method: error.config?.method,
+        headers: error.config?.headers
+      });
+      throw error;
+    }
   },
   
   // Clear sync queue

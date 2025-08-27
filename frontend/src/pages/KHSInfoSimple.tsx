@@ -1169,6 +1169,9 @@ const KHSInfoSimple = () => {
                 onClick={async (e) => {
                   e.stopPropagation();
                   debugLog('Force pull initiated - overriding local data');
+                  const apiUrl = import.meta.env.VITE_API_URL || '';
+                  debugLog('API URL:', apiUrl || 'relative path');
+                  
                   try {
                     const serverData = await khsToolsSyncApi.refresh();
                     // Force update local state with server data
@@ -1188,7 +1191,25 @@ const KHSInfoSimple = () => {
                       isSyncingFromDatabase.current = false;
                     }, 100);
                   } catch (error: any) {
-                    debugLog('Force pull failed:', error.message);
+                    debugLog('Force pull FAILED - Full error details:');
+                    debugLog('Error type:', error.name || 'Unknown');
+                    debugLog('Error message:', error.message || 'No message');
+                    debugLog('Error code:', error.code || 'No code');
+                    
+                    if (error.response) {
+                      debugLog('Response status:', error.response.status);
+                      debugLog('Response data:', JSON.stringify(error.response.data));
+                      debugLog('Response headers:', JSON.stringify(error.response.headers));
+                    } else if (error.request) {
+                      debugLog('Request made but no response received');
+                      debugLog('Request URL:', error.config?.url || 'Unknown');
+                      debugLog('Request method:', error.config?.method || 'Unknown');
+                      debugLog('Is network error:', error.message.includes('Network') ? 'YES' : 'NO');
+                    } else {
+                      debugLog('Error setting up request:', error.message);
+                    }
+                    
+                    debugLog('Full error object:', JSON.stringify(error, null, 2));
                   }
                 }}
                 style={{
@@ -1246,6 +1267,85 @@ const KHSInfoSimple = () => {
                 }}
               >
                 Clear Queue
+              </button>
+              <button
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  debugLog('=== API TEST STARTING ===');
+                  
+                  const apiUrl = import.meta.env.VITE_API_URL || '';
+                  const fullUrl = apiUrl ? `${apiUrl}/api/health` : '/api/health';
+                  const token = localStorage.getItem('khs-crm-token');
+                  
+                  debugLog('Test URL:', fullUrl);
+                  debugLog('Base API URL:', apiUrl || 'relative');
+                  debugLog('Auth token:', token ? `Bearer ${token.substring(0, 10)}...` : 'NO TOKEN');
+                  debugLog('Current origin:', window.location.origin);
+                  debugLog('User agent:', navigator.userAgent);
+                  
+                  try {
+                    debugLog('Making fetch request...');
+                    const startTime = Date.now();
+                    
+                    const response = await fetch(fullUrl, {
+                      method: 'GET',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+                      },
+                      // Don't use credentials for cross-origin requests
+                      credentials: apiUrl ? 'omit' : 'same-origin'
+                    });
+                    
+                    const duration = Date.now() - startTime;
+                    debugLog(`Response received in ${duration}ms`);
+                    debugLog('Response status:', response.status);
+                    debugLog('Response ok:', response.ok ? 'YES' : 'NO');
+                    debugLog('Response headers:', JSON.stringify(Object.fromEntries(response.headers.entries())));
+                    
+                    const data = await response.json();
+                    debugLog('Response data:', JSON.stringify(data, null, 2));
+                    
+                    if (response.ok) {
+                      debugLog('=== API TEST SUCCESS ===');
+                    } else {
+                      debugLog('=== API TEST FAILED (bad status) ===');
+                    }
+                  } catch (error: any) {
+                    debugLog('=== API TEST FAILED WITH ERROR ===');
+                    debugLog('Error name:', error.name);
+                    debugLog('Error message:', error.message);
+                    debugLog('Error stack:', error.stack);
+                    
+                    // Check for specific error types
+                    if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                      debugLog('NETWORK ERROR - Cannot reach server');
+                      debugLog('Possible causes:');
+                      debugLog('- CORS blocking request');
+                      debugLog('- Server unreachable');
+                      debugLog('- HTTPS/HTTP mismatch');
+                      debugLog('- Network connectivity issue');
+                    }
+                    
+                    // Try to determine if it's CORS
+                    if (error.message.includes('CORS') || error.message.includes('cross-origin')) {
+                      debugLog('CORS ERROR DETECTED');
+                    }
+                    
+                    debugLog('Full error:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+                  }
+                }}
+                style={{
+                  padding: '2px 8px',
+                  backgroundColor: '#ec4899',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontSize: '10px',
+                  cursor: 'pointer'
+                }}
+              >
+                Test API
               </button>
             </div>
           </div>
