@@ -205,6 +205,7 @@ const KHSInfoSimple = () => {
   const [debugLogs, setDebugLogs] = useState<string[]>([]);
   const previousToolsDataRef = useRef<string>('');
   const isUserChangeRef = useRef(false);
+  const isSyncingFromDatabase = useRef(false);
 
   const tabs = ['Tools List', 'SOP', 'Office Docs', 'Specs'];
   const demoCategories = ['Kitchen', 'Bathroom', 'Flooring', 'Framing', 'Drywall'];
@@ -269,6 +270,8 @@ const KHSInfoSimple = () => {
       // Check if database has newer data
       if (dbData.version > dbVersion) {
         debugLog('Database has newer data, updating local state');
+        // Set flag to prevent triggering push
+        isSyncingFromDatabase.current = true;
         // Update local state with database data
         setToolsData({
           tools: dbData.tools || {},
@@ -282,6 +285,10 @@ const KHSInfoSimple = () => {
         setDbVersion(dbData.version);
         setLastCheckedTime(Date.now());
         console.log('[KHSToolsSync] Local state updated successfully');
+        // Reset flag after state update
+        setTimeout(() => {
+          isSyncingFromDatabase.current = false;
+        }, 100);
       }
     } catch (error: any) {
       console.error('[KHSToolsSync] Sync failed:', error);
@@ -390,8 +397,8 @@ const KHSInfoSimple = () => {
 
   // Debounced push changes to database when toolsData changes
   useEffect(() => {
-    // Skip initial render
-    if (toolsData.lastUpdated > 0) {
+    // Skip initial render and syncs from database
+    if (toolsData.lastUpdated > 0 && !isSyncingFromDatabase.current) {
       debugLog('Tools data changed, debouncing push', {
         showDemo: toolsData.showDemo,
         showInstall: toolsData.showInstall,
@@ -421,7 +428,11 @@ const KHSInfoSimple = () => {
   }, [toolsData]);
 
   const updateToolsData = (updates: Partial<ToolsData>) => {
-    setToolsData(prev => ({ ...prev, ...updates }));
+    setToolsData(prev => ({ 
+      ...prev, 
+      ...updates,
+      lastUpdated: Date.now() 
+    }));
   };
 
   const handleCategoryToggle = (category: string, section: 'demo' | 'install') => {
