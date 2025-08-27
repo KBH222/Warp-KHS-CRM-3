@@ -31,7 +31,7 @@ interface ViewPreferences {
 const STORAGE_KEY = 'khs-tools-sync-data-v5'; // Incremented for data structure change
 const VIEW_PREFS_KEY = 'khs-tools-view-prefs'; // Local view preferences
 const SYNC_INTERVAL = 10000; // Check for updates every 10 seconds
-const DB_SYNC_INTERVAL = 60000; // Check for updates every 60 seconds (less aggressive)
+const DB_SYNC_INTERVAL = 30000; // Check for updates every 30 seconds
 const DEBOUNCE_DELAY = 1000; // Debounce user interactions for 1 second
 
 // Helper to safely save to localStorage with quota handling
@@ -546,7 +546,7 @@ const KHSInfoSimple = () => {
   useEffect(() => {
     debugLog(`[UPDATE-INTERVAL] Setting up ${DB_SYNC_INTERVAL / 1000}s interval for safe update checks`);
     const interval = setInterval(() => {
-      debugLog('[UPDATE-INTERVAL] 60s timer fired - checking for updates (safe mode)');
+      debugLog('[UPDATE-INTERVAL] 30s timer fired - checking for updates (safe mode)');
       checkForUpdates();
     }, DB_SYNC_INTERVAL);
     return () => {
