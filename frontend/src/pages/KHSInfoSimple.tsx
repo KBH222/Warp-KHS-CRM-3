@@ -255,7 +255,10 @@ const KHSInfoSimple = () => {
     
     try {
       setIsSyncing(true);
-      debugLog('Starting database sync...');
+      debugLog('Starting database sync...', {
+        apiUrl: import.meta.env.VITE_API_URL || 'relative',
+        currentVersion: dbVersion
+      });
       
       // Check auth token
       const token = localStorage.getItem('khs-crm-token') || 
@@ -265,7 +268,11 @@ const KHSInfoSimple = () => {
       
       // Get latest from database
       const dbData = await khsToolsSyncApi.get();
-      debugLog('Fetched data', { version: dbData.version, currentVersion: dbVersion });
+      debugLog('Fetched data', { 
+        version: dbData.version, 
+        currentVersion: dbVersion,
+        versionDiff: dbData.version - dbVersion 
+      });
       
       // Check if database has newer data
       if (dbData.version > dbVersion) {
@@ -343,7 +350,13 @@ const KHSInfoSimple = () => {
         // Version conflict - fetch latest and retry
         await syncWithDatabase();
       } else {
-        debugLog('Push failed', error.message);
+        debugLog('Push failed', {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+          code: error.code,
+          apiUrl: import.meta.env.VITE_API_URL || 'relative'
+        });
       }
     } finally {
       setIsSyncing(false);
