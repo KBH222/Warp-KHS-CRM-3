@@ -31,7 +31,7 @@ interface ViewPreferences {
 const STORAGE_KEY = 'khs-tools-sync-data-v5'; // Incremented for data structure change
 const VIEW_PREFS_KEY = 'khs-tools-view-prefs'; // Local view preferences
 const SYNC_INTERVAL = 10000; // Check for updates every 10 seconds
-const DB_SYNC_INTERVAL = 5000; // Sync with database every 5 seconds (reduced for testing)
+const DB_SYNC_INTERVAL = 60000; // Check for updates every 60 seconds (less aggressive)
 const DEBOUNCE_DELAY = 1000; // Debounce user interactions for 1 second
 
 // Helper to safely save to localStorage with quota handling
@@ -544,9 +544,9 @@ const KHSInfoSimple = () => {
 
   // Periodic update check (safe - won't overwrite unsaved changes)
   useEffect(() => {
-    debugLog(`[UPDATE-INTERVAL] Setting up ${DB_SYNC_INTERVAL}ms interval for safe update checks`);
+    debugLog(`[UPDATE-INTERVAL] Setting up ${DB_SYNC_INTERVAL / 1000}s interval for safe update checks`);
     const interval = setInterval(() => {
-      debugLog('[UPDATE-INTERVAL] Timer fired - checking for updates (safe mode)');
+      debugLog('[UPDATE-INTERVAL] 60s timer fired - checking for updates (safe mode)');
       checkForUpdates();
     }, DB_SYNC_INTERVAL);
     return () => {
@@ -651,6 +651,32 @@ const KHSInfoSimple = () => {
     // After saving, check for any updates that were waiting
     if (updateAvailable) {
       debugLog('[SAVE] Pulling pending update after save');
+      await pullFromDatabase();
+    }
+  };
+  
+  // Discard changes function
+  const discardChanges = async () => {
+    if (!hasUnsavedChanges) return;
+    
+    debugLog('[DISCARD] Discarding local changes');
+    
+    // Revert to last saved state
+    if (savedDataRef.current) {
+      const savedData = JSON.parse(savedDataRef.current);
+      setToolsData({
+        tools: savedData.tools,
+        lockedCategories: savedData.lockedCategories,
+        lastUpdated: Date.now()
+      });
+    }
+    
+    setHasUnsavedChanges(false);
+    debugLog('[DISCARD] Changes discarded');
+    
+    // After discarding, pull any available updates
+    if (updateAvailable) {
+      debugLog('[DISCARD] Pulling available update after discard');
       await pullFromDatabase();
     }
   };
@@ -1290,68 +1316,126 @@ const KHSInfoSimple = () => {
                   backgroundColor: '#FEF3C7',
                   color: '#92400E',
                   borderRadius: '4px',
-                  fontWeight: '500'
+                  fontWeight: '500',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
                 }}>
-                  Update pending (save first)
+                  <svg style={{ width: '12px', height: '12px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  Update blocked - save or discard changes first
                 </span>
               )}
               {hasUnsavedChanges && (
-                <button
-                  onClick={() => saveChanges()}
-                  disabled={isPushing}
-                  style={{
-                    padding: '6px 12px',
-                    fontSize: '12px',
-                    backgroundColor: isPushing ? '#9CA3AF' : '#10B981',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: isPushing ? 'not-allowed' : 'pointer',
-                    fontWeight: '600',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px'
-                  }}
-                >
-                  {isPushing ? (
-                    <>
-                      <span style={{
-                        display: 'inline-block',
-                        width: '12px',
-                        height: '12px',
-                        border: '2px solid #fff',
-                        borderTopColor: 'transparent',
-                        borderRadius: '50%',
-                        animation: 'spin 1s linear infinite'
-                      }}></span>
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      <svg style={{ width: '14px', height: '14px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      Save Changes
-                    </>
-                  )}
-                </button>
+                <>
+                  <button
+                    onClick={() => saveChanges()}
+                    disabled={isPushing}
+                    style={{
+                      padding: '6px 12px',
+                      fontSize: '12px',
+                      backgroundColor: isPushing ? '#9CA3AF' : '#10B981',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: isPushing ? 'not-allowed' : 'pointer',
+                      fontWeight: '600',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    {isPushing ? (
+                      <>
+                        <span style={{
+                          display: 'inline-block',
+                          width: '12px',
+                          height: '12px',
+                          border: '2px solid #fff',
+                          borderTopColor: 'transparent',
+                          borderRadius: '50%',
+                          animation: 'spin 1s linear infinite'
+                        }}></span>
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <svg style={{ width: '14px', height: '14px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        Save Changes
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (confirm('Discard all unsaved changes?')) {
+                        discardChanges();
+                      }
+                    }}
+                    style={{
+                      padding: '6px 12px',
+                      fontSize: '12px',
+                      backgroundColor: '#EF4444',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontWeight: '600',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    <svg style={{ width: '14px', height: '14px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Discard
+                  </button>
+                </>
               )}
               <button
                 onClick={() => {
                   debugLog('Manual refresh triggered');
                   checkForUpdates();
                 }}
+                disabled={isSyncing}
                 style={{
-                  padding: '4px 8px',
+                  padding: '6px 12px',
                   fontSize: '12px',
-                  backgroundColor: '#E5E7EB',
-                  color: '#374151',
+                  backgroundColor: isSyncing ? '#E5E7EB' : '#3B82F6',
+                  color: isSyncing ? '#9CA3AF' : 'white',
                   border: 'none',
                   borderRadius: '4px',
-                  cursor: 'pointer'
+                  cursor: isSyncing ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontWeight: '500'
                 }}
               >
-                Check Updates
+                {isSyncing ? (
+                  <>
+                    <span style={{
+                      display: 'inline-block',
+                      width: '12px',
+                      height: '12px',
+                      border: '2px solid #9CA3AF',
+                      borderTopColor: 'transparent',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite'
+                    }}></span>
+                    Checking...
+                  </>
+                ) : (
+                  <>
+                    <svg style={{ width: '14px', height: '14px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Refresh
+                  </>
+                )}
               </button>
               <button
                 onClick={() => setDebugLogs(debugLogs.length > 0 ? [] : ['Debug console opened'])}
