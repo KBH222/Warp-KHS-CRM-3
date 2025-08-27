@@ -353,75 +353,94 @@ const KHSInfoSimple = () => {
     return () => clearInterval(interval);
   }, [lastCheckedTime]);
 
-  // Sync with database
-  const syncWithDatabase = async () => {
+  // State to track if an update is available
+  const [updateAvailable, setUpdateAvailable] = useState(false);
+  const [serverVersion, setServerVersion] = useState(dbVersion);
+
+  // Check for updates without pulling (safe check)
+  const checkForUpdates = async () => {
     if (isSyncing) return;
     
     try {
       setIsSyncing(true);
-      debugLog('Starting database sync...', {
-        apiUrl: import.meta.env.VITE_API_URL || 'relative',
+      debugLog('[UPDATE-CHECK] Checking for updates...', {
+        hasUnsavedChanges,
         currentVersion: dbVersion
       });
       
-      // Check auth token
-      const token = localStorage.getItem('khs-crm-token') || 
-                   localStorage.getItem('auth-token') ||
-                   localStorage.getItem('token');
-      debugLog('Auth token check', token ? 'Found' : 'NOT FOUND');
-      
-      // Get latest from database
+      // Only check version, don't pull data
       const dbData = await khsToolsSyncApi.get();
-      debugLog('Fetched data', { 
-        version: dbData.version, 
-        currentVersion: dbVersion,
-        versionDiff: dbData.version - dbVersion 
-      });
       
-      // Check if database has newer data
       if (dbData.version > dbVersion) {
-        debugLog('[SYNC-PULL] Database has newer data, updating local state', {
+        setServerVersion(dbData.version);
+        setUpdateAvailable(true);
+        debugLog('[UPDATE-CHECK] Update available', {
           serverVersion: dbData.version,
           localVersion: dbVersion,
-          diff: dbData.version - dbVersion
+          willPull: !hasUnsavedChanges
         });
-        // Set flag to prevent triggering push
-        isSyncingFromDatabase.current = true;
-        // Update local state with database data (only tools and locked categories)
-        setToolsData({
-          tools: dbData.tools || {},
-          lockedCategories: dbData.lockedCategories || [],
-          lastUpdated: new Date(dbData.lastUpdated).getTime()
-        });
-        setDbVersion(dbData.version);
-        setLastCheckedTime(Date.now());
-        debugLog('[SYNC-PULL] Local state updated successfully');
-        // Reset flag after state update
-        setTimeout(() => {
-          isSyncingFromDatabase.current = false;
-          debugLog('[SYNC-PULL] Re-enabled push detection');
-        }, 100);
+        
+        // Only pull if no unsaved changes
+        if (!hasUnsavedChanges) {
+          debugLog('[UPDATE-CHECK] No unsaved changes, pulling update');
+          await pullFromDatabase(dbData);
+        } else {
+          debugLog('[UPDATE-CHECK] Has unsaved changes, NOT pulling (would overwrite user work!)');
+        }
       } else {
-        debugLog('[SYNC-PULL] No update needed', {
-          serverVersion: dbData.version,
-          localVersion: dbVersion,
-          isEqual: dbData.version === dbVersion
-        });
+        setUpdateAvailable(false);
+        debugLog('[UPDATE-CHECK] No update available');
       }
     } catch (error: any) {
-      console.error('[KHSToolsSync] Sync failed:', error);
-      console.error('[KHSToolsSync] Error details:', {
-        message: error.message,
-        status: error.response?.status,
-        stack: error.stack
-      });
-      // On mobile, network errors might be more common
-      if (error.message?.includes('Failed to fetch') || error.message?.includes('Network')) {
-        console.log('[KHSToolsSync] Network error detected - this is common on mobile');
-      }
+      console.error('[UPDATE-CHECK] Check failed:', error);
     } finally {
       setIsSyncing(false);
     }
+  };
+  
+  // Pull data from database (only when safe)
+  const pullFromDatabase = async (dbData?: any) => {
+    debugLog('[PULL] Pulling from database');
+    
+    // If no data provided, fetch it
+    if (!dbData) {
+      dbData = await khsToolsSyncApi.get();
+    }
+    
+    // Set flag to prevent triggering change detection
+    isSyncingFromDatabase.current = true;
+    
+    // Update local state with database data
+    setToolsData({
+      tools: dbData.tools || {},
+      lockedCategories: dbData.lockedCategories || [],
+      lastUpdated: new Date(dbData.lastUpdated).getTime()
+    });
+    
+    setDbVersion(dbData.version);
+    setServerVersion(dbData.version);
+    setUpdateAvailable(false);
+    setLastCheckedTime(Date.now());
+    
+    // Update saved state reference
+    const newDataString = JSON.stringify({
+      tools: dbData.tools || {},
+      lockedCategories: dbData.lockedCategories || []
+    });
+    savedDataRef.current = newDataString;
+    previousToolsDataRef.current = newDataString;
+    
+    debugLog('[PULL] Pull complete');
+    
+    // Reset flag after state update
+    setTimeout(() => {
+      isSyncingFromDatabase.current = false;
+    }, 100);
+  };
+  
+  // Legacy sync function (now just checks for updates)
+  const syncWithDatabase = async () => {
+    await checkForUpdates();
   };
 
   // Push local changes to database
@@ -520,21 +539,21 @@ const KHSInfoSimple = () => {
         debugLog('Health check failed', err.message);
       });
     
-    syncWithDatabase();
+    checkForUpdates();
   }, []);
 
-  // Periodic database sync
+  // Periodic update check (safe - won't overwrite unsaved changes)
   useEffect(() => {
-    debugLog(`[SYNC-INTERVAL] Setting up ${DB_SYNC_INTERVAL}ms interval`);
+    debugLog(`[UPDATE-INTERVAL] Setting up ${DB_SYNC_INTERVAL}ms interval for safe update checks`);
     const interval = setInterval(() => {
-      debugLog('[SYNC-INTERVAL] Timer fired - checking for updates');
-      syncWithDatabase();
+      debugLog('[UPDATE-INTERVAL] Timer fired - checking for updates (safe mode)');
+      checkForUpdates();
     }, DB_SYNC_INTERVAL);
     return () => {
-      debugLog('[SYNC-INTERVAL] Cleanup - clearing interval');
+      debugLog('[UPDATE-INTERVAL] Cleanup - clearing interval');
       clearInterval(interval);
     };
-  }, []); // Remove dbVersion dependency - we don't want to reset the interval when version changes
+  }, [hasUnsavedChanges]); // Re-setup when unsaved changes state changes
 
   // Track unsaved changes when toolsData changes
   useEffect(() => {
@@ -628,6 +647,12 @@ const KHSInfoSimple = () => {
     savedDataRef.current = currentDataString;
     setHasUnsavedChanges(false);
     debugLog('[SAVE] Changes saved successfully');
+    
+    // After saving, check for any updates that were waiting
+    if (updateAvailable) {
+      debugLog('[SAVE] Pulling pending update after save');
+      await pullFromDatabase();
+    }
   };
 
   const handleCategoryToggle = (category: string, section: 'demo' | 'install') => {
@@ -1236,6 +1261,40 @@ const KHSInfoSimple = () => {
               gap: '12px'
             }}>
               <span>Version: {dbVersion}</span>
+              {updateAvailable && !hasUnsavedChanges && (
+                <button
+                  onClick={() => pullFromDatabase()}
+                  style={{
+                    padding: '4px 8px',
+                    fontSize: '12px',
+                    backgroundColor: '#3B82F6',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
+                >
+                  <svg style={{ width: '12px', height: '12px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Update Available (v{serverVersion})
+                </button>
+              )}
+              {updateAvailable && hasUnsavedChanges && (
+                <span style={{
+                  padding: '4px 8px',
+                  fontSize: '12px',
+                  backgroundColor: '#FEF3C7',
+                  color: '#92400E',
+                  borderRadius: '4px',
+                  fontWeight: '500'
+                }}>
+                  Update pending (save first)
+                </span>
+              )}
               {hasUnsavedChanges && (
                 <button
                   onClick={() => saveChanges()}
@@ -1279,8 +1338,8 @@ const KHSInfoSimple = () => {
               )}
               <button
                 onClick={() => {
-                  debugLog('Manual sync triggered');
-                  syncWithDatabase();
+                  debugLog('Manual refresh triggered');
+                  checkForUpdates();
                 }}
                 style={{
                   padding: '4px 8px',
@@ -1292,7 +1351,7 @@ const KHSInfoSimple = () => {
                   cursor: 'pointer'
                 }}
               >
-                Sync Now
+                Check Updates
               </button>
               <button
                 onClick={() => setDebugLogs(debugLogs.length > 0 ? [] : ['Debug console opened'])}
@@ -1368,7 +1427,7 @@ const KHSInfoSimple = () => {
           borderTop: '2px solid #00ff00'
         }}>
           <div style={{ marginBottom: '5px', color: '#ffff00', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '5px' }}>
-            <span>Debug Console (tap to close) | DB Version: {dbVersion} | Syncing: {isSyncing ? 'YES' : 'NO'} | Queue: {khsToolsSyncApi.getSyncQueueSize()}</span>
+            <span>Debug Console (tap to close) | DB Version: {dbVersion} | Syncing: {isSyncing ? 'YES' : 'NO'} | Queue: {khsToolsSyncApi.getSyncQueueSize()} | Unsaved: {hasUnsavedChanges ? 'YES' : 'NO'}</span>
             <div style={{ display: 'flex', gap: '5px' }}>
               {dbVersion > 19 && (
                 <button
