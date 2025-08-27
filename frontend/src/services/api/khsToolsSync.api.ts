@@ -3,7 +3,7 @@ import axios from 'axios';
 // Use explicit production URL as fallback for mobile
 const API_URL = import.meta.env.VITE_API_URL || 
                 (window.location.hostname.includes('railway.app') 
-                  ? 'https://khs-crm-3-production.up.railway.app' 
+                  ? 'https://khs-crm-2-production.up.railway.app' 
                   : '');
 
 export interface KHSToolsSyncData {
