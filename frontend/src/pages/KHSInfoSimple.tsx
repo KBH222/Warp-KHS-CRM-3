@@ -397,6 +397,24 @@ const KHSInfoSimple = () => {
 
   // Debounced push changes to database when toolsData changes
   useEffect(() => {
+    // Create a string representation of the current data for comparison
+    const currentDataString = JSON.stringify({
+      tools: toolsData.tools,
+      selectedDemoCategories: toolsData.selectedDemoCategories,
+      selectedInstallCategories: toolsData.selectedInstallCategories,
+      lockedCategories: toolsData.lockedCategories,
+      showDemo: toolsData.showDemo,
+      showInstall: toolsData.showInstall
+    });
+    
+    // Skip if data hasn't actually changed
+    if (currentDataString === previousToolsDataRef.current) {
+      return;
+    }
+    
+    // Update previous data reference
+    previousToolsDataRef.current = currentDataString;
+    
     // Skip initial render and syncs from database
     if (toolsData.lastUpdated > 0 && !isSyncingFromDatabase.current) {
       debugLog('Tools data changed, debouncing push', {
