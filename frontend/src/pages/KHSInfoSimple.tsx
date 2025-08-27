@@ -295,7 +295,7 @@ const KHSInfoSimple = () => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const savedDataRef = useRef<string>(''); // Track last saved state
 
-  const tabs = ['Tools List', 'SOP', 'Office Docs', 'Specs'];
+  const tabs = ['Tools List', 'SOP', 'Office Docs', 'Specs', 'Debug'];
   const demoCategories = ['Kitchen', 'Bathroom', 'Flooring', 'Framing', 'Drywall'];
   const installCategories = ['Cabinets', 'Drywall', 'Flooring', 'Framing', 'Decking', 'Painting'];
   
@@ -1155,6 +1155,359 @@ const KHSInfoSimple = () => {
     );
   };
 
+  const getStorageInfo = () => {
+    // Calculate storage usage
+    let totalSize = 0;
+    let itemCount = 0;
+    const storageInfo: string[] = [];
+    
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key) {
+        const value = localStorage.getItem(key) || '';
+        const size = new Blob([key + value]).size;
+        totalSize += size;
+        itemCount++;
+        
+        if (key.includes('khs') || key.includes('tools')) {
+          storageInfo.push(`${key}: ${(size / 1024).toFixed(1)}KB`);
+        }
+      }
+    }
+    
+    debugLog('=== STORAGE INFO ===');
+    debugLog(`Total localStorage usage: ${(totalSize / 1024).toFixed(1)}KB`);
+    debugLog(`Number of items: ${itemCount}`);
+    debugLog('KHS-related items:');
+    storageInfo.forEach(info => debugLog(info));
+    
+    // Check specific data sizes
+    const toolsData = localStorage.getItem(STORAGE_KEY);
+    if (toolsData) {
+      debugLog(`Tools data size: ${(new Blob([toolsData]).size / 1024).toFixed(1)}KB`);
+      const parsed = JSON.parse(toolsData);
+      debugLog(`Number of categories: ${Object.keys(parsed.tools || {}).length}`);
+      let totalTools = 0;
+      Object.values(parsed.tools || {}).forEach((tools: any) => {
+        totalTools += tools.length;
+      });
+      debugLog(`Total tools: ${totalTools}`);
+    }
+    
+    debugLog('=== END STORAGE INFO ===');
+  };
+
+  const renderDebugButtons = () => {
+    const buttonStyle = {
+      padding: '8px 12px',
+      border: 'none',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      fontSize: '13px',
+      fontWeight: '500',
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '6px'
+    };
+
+    return (
+      <>
+        {dbVersion > 19 && (
+          <button
+            onClick={() => {
+              debugLog('Force push initiated');
+              pushToDatabase(true);
+            }}
+            style={{
+              ...buttonStyle,
+              backgroundColor: '#ef4444',
+              color: 'white'
+            }}
+          >
+            Force Push v{dbVersion}
+          </button>
+        )}
+        <button
+          onClick={async () => {
+            debugLog('Force pull initiated - overriding local data');
+            try {
+              await pullFromDatabase();
+            } catch (error: any) {
+              debugLog('Force pull failed:', error.message);
+            }
+          }}
+          style={{
+            ...buttonStyle,
+            backgroundColor: '#10b981',
+            color: 'white'
+          }}
+        >
+          Force Pull
+        </button>
+        <button
+          onClick={() => {
+            if (confirm('Clear all sync data and localStorage? This will reset everything.')) {
+              debugLog('Clearing all sync data');
+              khsToolsSyncApi.clearAllSyncData();
+              khsToolsSyncApi.clearSyncQueue();
+              localStorage.removeItem('khs-tools-sync-data-v4');
+              localStorage.removeItem('khs-tools-db-version');
+              debugLog('All sync data cleared - please refresh the page');
+            }
+          }}
+          style={{
+            ...buttonStyle,
+            backgroundColor: '#f59e0b',
+            color: 'white'
+          }}
+        >
+          Clear Storage
+        </button>
+        <button
+          onClick={() => {
+            debugLog('Clearing sync queue only');
+            khsToolsSyncApi.clearSyncQueue();
+            debugLog('Sync queue cleared');
+          }}
+          style={{
+            ...buttonStyle,
+            backgroundColor: '#6366f1',
+            color: 'white'
+          }}
+        >
+          Clear Queue
+        </button>
+        <button
+          onClick={() => {
+            debugLog('Optimizing storage...');
+            
+            // Clean and optimize tools data
+            const optimized = {
+              tools: {} as any,
+              lockedCategories: toolsData.lockedCategories,
+              lastUpdated: toolsData.lastUpdated
+            };
+            
+            // Remove duplicates and clean up tools
+            Object.entries(toolsData.tools).forEach(([category, tools]) => {
+              const uniqueTools = new Map();
+              (tools as Tool[]).forEach(tool => {
+                if (!uniqueTools.has(tool.id)) {
+                  uniqueTools.set(tool.id, {
+                    id: tool.id,
+                    name: tool.name,
+                    checked: tool.checked,
+                    ...(tool.custom ? { custom: true } : {})
+                  });
+                }
+              });
+              optimized.tools[category] = Array.from(uniqueTools.values());
+            });
+            
+            // Update state with optimized data
+            setToolsData(optimized);
+            
+            // Clear old localStorage versions
+            const keysToRemove: string[] = [];
+            for (let i = 0; i < localStorage.length; i++) {
+              const key = localStorage.key(i);
+              if (key && key.startsWith('khs-tools-sync-data-') && key !== STORAGE_KEY) {
+                keysToRemove.push(key);
+              }
+            }
+            
+            keysToRemove.forEach(key => {
+              localStorage.removeItem(key);
+              debugLog(`Removed old key: ${key}`);
+            });
+            
+            debugLog('Storage optimized');
+          }}
+          style={{
+            ...buttonStyle,
+            backgroundColor: '#059669',
+            color: 'white'
+          }}
+        >
+          Optimize
+        </button>
+        <button
+          onClick={async () => {
+            debugLog('=== API TEST STARTING ===');
+            
+            const apiUrl = import.meta.env.VITE_API_URL || '';
+            const fullUrl = apiUrl ? `${apiUrl}/api/health` : '/api/health';
+            const token = localStorage.getItem('khs-crm-token');
+            
+            debugLog('Test URL:', fullUrl);
+            debugLog('Auth token:', token ? 'Present' : 'Missing');
+            
+            try {
+              const response = await fetch(fullUrl, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+                }
+              });
+              
+              debugLog('Response status:', response.status);
+              const data = await response.json();
+              debugLog('Response data:', JSON.stringify(data));
+              debugLog('=== API TEST SUCCESS ===');
+            } catch (error: any) {
+              debugLog('=== API TEST FAILED ===');
+              debugLog('Error:', error.message);
+            }
+          }}
+          style={{
+            ...buttonStyle,
+            backgroundColor: '#ec4899',
+            color: 'white'
+          }}
+        >
+          Test API
+        </button>
+        <button
+          onClick={async () => {
+            const logText = `===== Debug Log Export =====
+Device: ${/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop'}
+Version: ${dbVersion}
+Time: ${new Date().toLocaleString()}
+===== Log Entries =====
+${debugLogs.join('\n')}
+=========================`;
+            
+            try {
+              await navigator.clipboard.writeText(logText);
+              debugLog('Debug log copied to clipboard!');
+            } catch (err) {
+              debugLog('Failed to copy to clipboard');
+            }
+          }}
+          style={{
+            ...buttonStyle,
+            backgroundColor: '#64748b',
+            color: 'white'
+          }}
+        >
+          Copy Log
+        </button>
+      </>
+    );
+  };
+
+  const renderDebugTab = () => {
+    return (
+      <div style={{ padding: '20px' }}>
+        {/* Debug Console Output */}
+        <div style={{
+          backgroundColor: '#1a1a1a',
+          color: '#00ff00',
+          padding: '15px',
+          borderRadius: '8px',
+          marginBottom: '20px',
+          maxHeight: '300px',
+          overflowY: 'auto',
+          fontFamily: 'monospace',
+          fontSize: '12px',
+          border: '1px solid #333'
+        }}>
+          <div style={{ 
+            marginBottom: '10px', 
+            color: '#ffff00', 
+            fontSize: '14px',
+            fontWeight: 'bold',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <span>Debug Console Output</span>
+            <button
+              onClick={() => setDebugLogs([])}
+              style={{
+                padding: '4px 8px',
+                fontSize: '11px',
+                backgroundColor: '#444',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              Clear
+            </button>
+          </div>
+          {debugLogs.length === 0 ? (
+            <div style={{ color: '#888' }}>No debug logs yet...</div>
+          ) : (
+            debugLogs.map((log, i) => (
+              <div key={i} style={{ marginBottom: '2px' }}>{log}</div>
+            ))
+          )}
+        </div>
+
+        {/* Debug Info */}
+        <div style={{
+          backgroundColor: '#f9fafb',
+          padding: '15px',
+          borderRadius: '8px',
+          marginBottom: '20px',
+          fontSize: '14px'
+        }}>
+          <h3 style={{ marginTop: 0, marginBottom: '10px' }}>Sync Status</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+            <div>DB Version: <strong>{dbVersion}</strong></div>
+            <div>Server Version: <strong>{serverVersion}</strong></div>
+            <div>Syncing: <strong style={{ color: isSyncing ? '#10b981' : '#6b7280' }}>{isSyncing ? 'YES' : 'NO'}</strong></div>
+            <div>Unsaved Changes: <strong style={{ color: hasUnsavedChanges ? '#f59e0b' : '#6b7280' }}>{hasUnsavedChanges ? 'YES' : 'NO'}</strong></div>
+            <div>Update Available: <strong style={{ color: updateAvailable ? '#3b82f6' : '#6b7280' }}>{updateAvailable ? 'YES' : 'NO'}</strong></div>
+            <div>Sync Queue: <strong>{khsToolsSyncApi.getSyncQueueSize()}</strong></div>
+          </div>
+        </div>
+
+        {/* Control Buttons */}
+        <div style={{
+          backgroundColor: '#f9fafb',
+          padding: '15px',
+          borderRadius: '8px',
+          marginBottom: '20px'
+        }}>
+          <h3 style={{ marginTop: 0, marginBottom: '15px' }}>Debug Controls</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '10px' }}>
+            {renderDebugButtons()}
+          </div>
+        </div>
+
+        {/* Storage Info */}
+        <div style={{
+          backgroundColor: '#f9fafb',
+          padding: '15px',
+          borderRadius: '8px'
+        }}>
+          <h3 style={{ marginTop: 0, marginBottom: '10px' }}>Storage Diagnostics</h3>
+          <button
+            onClick={getStorageInfo}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#6366f1',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: '500'
+            }}
+          >
+            Analyze Storage
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'Tools List':
@@ -1177,6 +1530,8 @@ const KHSInfoSimple = () => {
             <p style={{ fontSize: '18px' }}>Specifications - Coming Soon</p>
           </div>
         );
+      case 'Debug':
+        return renderDebugTab();
       default:
         return null;
     }
@@ -1284,173 +1639,58 @@ const KHSInfoSimple = () => {
               color: '#6B7280',
               display: 'flex',
               alignItems: 'center',
-              gap: '12px'
+              gap: '16px'
             }}>
-              <span>Version: {dbVersion}</span>
-              {updateAvailable && !hasUnsavedChanges && (
+              {/* Sync Status Indicator */}
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {updateAvailable && (
+                  <span style={{ color: '#3B82F6' }}>• Update available</span>
+                )}
+                <span>v{dbVersion}</span>
+              </span>
+              
+              {/* Save Changes Button */}
+              {hasUnsavedChanges && (
                 <button
-                  onClick={() => pullFromDatabase()}
+                  onClick={() => saveChanges()}
+                  disabled={isPushing}
                   style={{
-                    padding: '4px 8px',
+                    padding: '6px 12px',
                     fontSize: '12px',
-                    backgroundColor: '#3B82F6',
+                    backgroundColor: isPushing ? '#9CA3AF' : '#10B981',
                     color: 'white',
                     border: 'none',
                     borderRadius: '4px',
-                    cursor: 'pointer',
+                    cursor: isPushing ? 'not-allowed' : 'pointer',
+                    fontWeight: '600',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '4px'
+                    gap: '6px'
                   }}
                 >
-                  <svg style={{ width: '12px', height: '12px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
-                  Update Available (v{serverVersion})
+                  {isPushing ? (
+                    <>
+                      <span style={{
+                        display: 'inline-block',
+                        width: '12px',
+                        height: '12px',
+                        border: '2px solid #fff',
+                        borderTopColor: 'transparent',
+                        borderRadius: '50%',
+                        animation: 'spin 1s linear infinite'
+                      }}></span>
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <svg style={{ width: '14px', height: '14px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Save Changes
+                    </>
+                  )}
                 </button>
               )}
-              {updateAvailable && hasUnsavedChanges && (
-                <span style={{
-                  padding: '4px 8px',
-                  fontSize: '12px',
-                  backgroundColor: '#FEF3C7',
-                  color: '#92400E',
-                  borderRadius: '4px',
-                  fontWeight: '500',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}>
-                  <svg style={{ width: '12px', height: '12px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                  Update blocked - save or discard changes first
-                </span>
-              )}
-              {hasUnsavedChanges && (
-                <>
-                  <button
-                    onClick={() => saveChanges()}
-                    disabled={isPushing}
-                    style={{
-                      padding: '6px 12px',
-                      fontSize: '12px',
-                      backgroundColor: isPushing ? '#9CA3AF' : '#10B981',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: isPushing ? 'not-allowed' : 'pointer',
-                      fontWeight: '600',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px'
-                    }}
-                  >
-                    {isPushing ? (
-                      <>
-                        <span style={{
-                          display: 'inline-block',
-                          width: '12px',
-                          height: '12px',
-                          border: '2px solid #fff',
-                          borderTopColor: 'transparent',
-                          borderRadius: '50%',
-                          animation: 'spin 1s linear infinite'
-                        }}></span>
-                        Saving...
-                      </>
-                    ) : (
-                      <>
-                        <svg style={{ width: '14px', height: '14px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        Save Changes
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => {
-                      if (confirm('Discard all unsaved changes?')) {
-                        discardChanges();
-                      }
-                    }}
-                    style={{
-                      padding: '6px 12px',
-                      fontSize: '12px',
-                      backgroundColor: '#EF4444',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontWeight: '600',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px'
-                    }}
-                  >
-                    <svg style={{ width: '14px', height: '14px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                    Discard
-                  </button>
-                </>
-              )}
-              <button
-                onClick={() => {
-                  debugLog('Manual refresh triggered');
-                  checkForUpdates();
-                }}
-                disabled={isSyncing}
-                style={{
-                  padding: '6px 12px',
-                  fontSize: '12px',
-                  backgroundColor: isSyncing ? '#E5E7EB' : '#3B82F6',
-                  color: isSyncing ? '#9CA3AF' : 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: isSyncing ? 'not-allowed' : 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontWeight: '500'
-                }}
-              >
-                {isSyncing ? (
-                  <>
-                    <span style={{
-                      display: 'inline-block',
-                      width: '12px',
-                      height: '12px',
-                      border: '2px solid #9CA3AF',
-                      borderTopColor: 'transparent',
-                      borderRadius: '50%',
-                      animation: 'spin 1s linear infinite'
-                    }}></span>
-                    Checking...
-                  </>
-                ) : (
-                  <>
-                    <svg style={{ width: '14px', height: '14px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                    Refresh
-                  </>
-                )}
-              </button>
-              <button
-                onClick={() => setDebugLogs(debugLogs.length > 0 ? [] : ['Debug console opened'])}
-                style={{
-                  padding: '4px 8px',
-                  fontSize: '12px',
-                  backgroundColor: '#FEE2E2',
-                  color: '#991B1B',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
-              >
-                Debug
-              </button>
             </div>
           </div>
         </div>
@@ -1493,8 +1733,8 @@ const KHSInfoSimple = () => {
         </div>
       </div>
       
-      {/* Debug Console for Mobile */}
-      {debugLogs.length > 0 && (
+      {/* Debug Console - Moved to Debug Tab */}
+      {false && debugLogs.length > 0 && (
         <div style={{
           position: 'fixed',
           bottom: 0,
