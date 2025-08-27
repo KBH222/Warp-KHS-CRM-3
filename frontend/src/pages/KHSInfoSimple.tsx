@@ -23,7 +23,7 @@ interface ToolsData {
   lastUpdated: number;
 }
 
-const STORAGE_KEY = 'khs-tools-sync-data-v4';
+const STORAGE_KEY = 'khs-tools-sync-data-v4'; // Using khs-crm-3
 const SYNC_INTERVAL = 10000; // Check for updates every 10 seconds
 const DB_SYNC_INTERVAL = 30000; // Sync with database every 30 seconds
 const DEBOUNCE_DELAY = 1000; // Debounce user interactions for 1 second
