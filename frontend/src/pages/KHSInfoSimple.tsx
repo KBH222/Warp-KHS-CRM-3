@@ -201,6 +201,7 @@ const KHSInfoSimple = () => {
     return 1;
   });
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isPushing, setIsPushing] = useState(false);
   const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [debugLogs, setDebugLogs] = useState<string[]>([]);
   const previousToolsDataRef = useRef<string>('');
@@ -326,15 +327,15 @@ const KHSInfoSimple = () => {
 
   // Push local changes to database
   const pushToDatabase = async (forcePush = false) => {
-    debugLog(`[PUSH] pushToDatabase called (forcePush=${forcePush}, isSyncing=${isSyncing})`);
+    debugLog(`[PUSH] pushToDatabase called (forcePush=${forcePush}, isPushing=${isPushing})`);
     
-    if (isSyncing) {
-      debugLog('[PUSH] Skipping - already syncing');
+    if (isPushing) {
+      debugLog('[PUSH] Skipping - already pushing');
       return;
     }
     
     try {
-      setIsSyncing(true);
+      setIsPushing(true);
       debugLog(forcePush ? '[PUSH] Force pushing to database...' : '[PUSH] Auto-pushing changes...');
       
       // First fetch latest version to ensure we're up to date
@@ -375,7 +376,7 @@ const KHSInfoSimple = () => {
         });
       }
     } finally {
-      setIsSyncing(false);
+      setIsPushing(false);
     }
   };
 
