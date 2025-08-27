@@ -34,6 +34,74 @@ const SYNC_INTERVAL = 10000; // Check for updates every 10 seconds
 const DB_SYNC_INTERVAL = 5000; // Sync with database every 5 seconds (reduced for testing)
 const DEBOUNCE_DELAY = 1000; // Debounce user interactions for 1 second
 
+// Helper to safely save to localStorage with quota handling
+const safeLocalStorageSet = (key: string, value: string, debugLog: (msg: string, data?: any) => void): boolean => {
+  try {
+    // First try to save normally
+    localStorage.setItem(key, value);
+    return true;
+  } catch (e: any) {
+    if (e.name === 'QuotaExceededError' || e.code === 22) {
+      debugLog(`[STORAGE] Quota exceeded for ${key}, attempting cleanup...`);
+      
+      // Clear old versions of the same key pattern
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const storageKey = localStorage.key(i);
+        if (storageKey && (
+          storageKey.startsWith('khs-tools-sync-data-') && storageKey !== key ||
+          storageKey === 'khs-sync-queue' ||
+          storageKey === 'khs-tools-db-version'
+        )) {
+          keysToRemove.push(storageKey);
+        }
+      }
+      
+      // Remove old data
+      keysToRemove.forEach(k => {
+        debugLog(`[STORAGE] Removing old key: ${k}`);
+        localStorage.removeItem(k);
+      });
+      
+      // Try again with cleaned storage
+      try {
+        localStorage.setItem(key, value);
+        debugLog('[STORAGE] Successfully saved after cleanup');
+        return true;
+      } catch (retryError) {
+        debugLog('[STORAGE] Still failed after cleanup, storing minimal data');
+        
+        // If still failing, store minimal data
+        if (key === STORAGE_KEY) {
+          const parsed = JSON.parse(value);
+          const minimal = {
+            tools: parsed.tools || {},
+            lockedCategories: parsed.lockedCategories || [],
+            lastUpdated: parsed.lastUpdated
+          };
+          
+          // Remove any custom tools to save space
+          Object.keys(minimal.tools).forEach(category => {
+            minimal.tools[category] = minimal.tools[category].filter((tool: any) => !tool.custom);
+          });
+          
+          try {
+            localStorage.setItem(key, JSON.stringify(minimal));
+            debugLog('[STORAGE] Saved minimal data successfully');
+            return true;
+          } catch (finalError) {
+            debugLog('[STORAGE] Failed to save even minimal data', finalError);
+            return false;
+          }
+        }
+      }
+    }
+    
+    debugLog('[STORAGE] Error saving to localStorage', e);
+    return false;
+  }
+};
+
 const predefinedTools: CategoryTools = {
   'Kitchen': [
     { id: 'k1', name: 'Sledgehammer (20lb)', checked: false },
@@ -243,12 +311,18 @@ const KHSInfoSimple = () => {
       ...toolsData,
       lastUpdated: Date.now()
     };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+    const saved = safeLocalStorageSet(STORAGE_KEY, JSON.stringify(dataToSave), debugLog);
+    if (!saved) {
+      debugLog('[STORAGE] Failed to save tools data to localStorage');
+    }
   }, [toolsData]);
   
   // Save view preferences whenever they change
   useEffect(() => {
-    localStorage.setItem(VIEW_PREFS_KEY, JSON.stringify(viewPrefs));
+    const saved = safeLocalStorageSet(VIEW_PREFS_KEY, JSON.stringify(viewPrefs), debugLog);
+    if (!saved) {
+      debugLog('[STORAGE] Failed to save view preferences to localStorage');
+    }
   }, [viewPrefs]);
 
   // Poll for updates from other users
@@ -1249,11 +1323,7 @@ const KHSInfoSimple = () => {
                     isSyncingFromDatabase.current = true;
                     setToolsData({
                       tools: serverData.tools || {},
-                      selectedDemoCategories: serverData.selectedDemoCategories || [],
-                      selectedInstallCategories: serverData.selectedInstallCategories || [],
                       lockedCategories: serverData.lockedCategories || [],
-                      showDemo: serverData.showDemo || false,
-                      showInstall: serverData.showInstall || false,
                       lastUpdated: new Date(serverData.lastUpdated).getTime()
                     });
                     setDbVersion(serverData.version);
@@ -1319,6 +1389,65 @@ const KHSInfoSimple = () => {
                 }}
               >
                 Clear Storage
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  debugLog('Optimizing storage...');
+                  
+                  // Clean and optimize tools data
+                  const optimized = {
+                    tools: {} as any,
+                    lockedCategories: toolsData.lockedCategories,
+                    lastUpdated: toolsData.lastUpdated
+                  };
+                  
+                  // Remove duplicates and clean up tools
+                  Object.entries(toolsData.tools).forEach(([category, tools]) => {
+                    const uniqueTools = new Map();
+                    (tools as Tool[]).forEach(tool => {
+                      if (!uniqueTools.has(tool.id)) {
+                        uniqueTools.set(tool.id, {
+                          id: tool.id,
+                          name: tool.name,
+                          checked: tool.checked,
+                          ...(tool.custom ? { custom: true } : {})
+                        });
+                      }
+                    });
+                    optimized.tools[category] = Array.from(uniqueTools.values());
+                  });
+                  
+                  // Update state with optimized data
+                  setToolsData(optimized);
+                  
+                  // Clear old localStorage versions
+                  const keysToRemove: string[] = [];
+                  for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && key.startsWith('khs-tools-sync-data-') && key !== STORAGE_KEY) {
+                      keysToRemove.push(key);
+                    }
+                  }
+                  
+                  keysToRemove.forEach(key => {
+                    localStorage.removeItem(key);
+                    debugLog(`Removed old key: ${key}`);
+                  });
+                  
+                  debugLog('Storage optimized');
+                }}
+                style={{
+                  padding: '2px 8px',
+                  backgroundColor: '#059669',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontSize: '10px',
+                  cursor: 'pointer'
+                }}
+              >
+                Optimize
               </button>
               <button
                 onClick={(e) => {
@@ -1417,6 +1546,62 @@ const KHSInfoSimple = () => {
                 }}
               >
                 Test API
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  
+                  // Calculate storage usage
+                  let totalSize = 0;
+                  let itemCount = 0;
+                  const storageInfo: string[] = [];
+                  
+                  for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key) {
+                      const value = localStorage.getItem(key) || '';
+                      const size = new Blob([key + value]).size;
+                      totalSize += size;
+                      itemCount++;
+                      
+                      if (key.includes('khs') || key.includes('tools')) {
+                        storageInfo.push(`${key}: ${(size / 1024).toFixed(1)}KB`);
+                      }
+                    }
+                  }
+                  
+                  debugLog('=== STORAGE INFO ===');
+                  debugLog(`Total localStorage usage: ${(totalSize / 1024).toFixed(1)}KB`);
+                  debugLog(`Number of items: ${itemCount}`);
+                  debugLog('KHS-related items:');
+                  storageInfo.forEach(info => debugLog(info));
+                  
+                  // Check specific data sizes
+                  const toolsData = localStorage.getItem(STORAGE_KEY);
+                  if (toolsData) {
+                    debugLog(`Tools data size: ${(new Blob([toolsData]).size / 1024).toFixed(1)}KB`);
+                    const parsed = JSON.parse(toolsData);
+                    debugLog(`Number of categories: ${Object.keys(parsed.tools || {}).length}`);
+                    let totalTools = 0;
+                    Object.values(parsed.tools || {}).forEach((tools: any) => {
+                      totalTools += tools.length;
+                    });
+                    debugLog(`Total tools: ${totalTools}`);
+                  }
+                  
+                  debugLog('=== END STORAGE INFO ===');
+                }}
+                style={{
+                  padding: '2px 8px',
+                  backgroundColor: '#9333ea',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontSize: '10px',
+                  cursor: 'pointer'
+                }}
+              >
+                Storage Info
               </button>
               <button
                 onClick={async (e) => {
