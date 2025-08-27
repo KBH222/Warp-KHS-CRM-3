@@ -25,7 +25,7 @@ interface ToolsData {
 
 const STORAGE_KEY = 'khs-tools-sync-data-v4'; // Using khs-crm-3
 const SYNC_INTERVAL = 10000; // Check for updates every 10 seconds
-const DB_SYNC_INTERVAL = 30000; // Sync with database every 30 seconds
+const DB_SYNC_INTERVAL = 5000; // Sync with database every 5 seconds (reduced for testing)
 const DEBOUNCE_DELAY = 1000; // Debounce user interactions for 1 second
 
 const predefinedTools: CategoryTools = {
@@ -276,7 +276,11 @@ const KHSInfoSimple = () => {
       
       // Check if database has newer data
       if (dbData.version > dbVersion) {
-        debugLog('Database has newer data, updating local state');
+        debugLog('[SYNC-PULL] Database has newer data, updating local state', {
+          serverVersion: dbData.version,
+          localVersion: dbVersion,
+          diff: dbData.version - dbVersion
+        });
         // Set flag to prevent triggering push
         isSyncingFromDatabase.current = true;
         // Update local state with database data
@@ -291,11 +295,18 @@ const KHSInfoSimple = () => {
         });
         setDbVersion(dbData.version);
         setLastCheckedTime(Date.now());
-        console.log('[KHSToolsSync] Local state updated successfully');
+        debugLog('[SYNC-PULL] Local state updated successfully');
         // Reset flag after state update
         setTimeout(() => {
           isSyncingFromDatabase.current = false;
+          debugLog('[SYNC-PULL] Re-enabled push detection');
         }, 100);
+      } else {
+        debugLog('[SYNC-PULL] No update needed', {
+          serverVersion: dbData.version,
+          localVersion: dbVersion,
+          isEqual: dbData.version === dbVersion
+        });
       }
     } catch (error: any) {
       console.error('[KHSToolsSync] Sync failed:', error);
@@ -315,11 +326,16 @@ const KHSInfoSimple = () => {
 
   // Push local changes to database
   const pushToDatabase = async (forcePush = false) => {
-    if (isSyncing) return;
+    debugLog(`[PUSH] pushToDatabase called (forcePush=${forcePush}, isSyncing=${isSyncing})`);
+    
+    if (isSyncing) {
+      debugLog('[PUSH] Skipping - already syncing');
+      return;
+    }
     
     try {
       setIsSyncing(true);
-      debugLog(forcePush ? 'Force pushing to database...' : 'Pushing changes to database...');
+      debugLog(forcePush ? '[PUSH] Force pushing to database...' : '[PUSH] Auto-pushing changes...');
       
       // First fetch latest version to ensure we're up to date
       const currentDbData = await khsToolsSyncApi.get();
@@ -406,12 +422,24 @@ const KHSInfoSimple = () => {
 
   // Periodic database sync
   useEffect(() => {
-    const interval = setInterval(syncWithDatabase, DB_SYNC_INTERVAL);
-    return () => clearInterval(interval);
-  }, [dbVersion]);
+    debugLog(`[SYNC-INTERVAL] Setting up ${DB_SYNC_INTERVAL}ms interval`);
+    const interval = setInterval(() => {
+      debugLog('[SYNC-INTERVAL] Timer fired - checking for updates');
+      syncWithDatabase();
+    }, DB_SYNC_INTERVAL);
+    return () => {
+      debugLog('[SYNC-INTERVAL] Cleanup - clearing interval');
+      clearInterval(interval);
+    };
+  }, []); // Remove dbVersion dependency - we don't want to reset the interval when version changes
 
   // Debounced push changes to database when toolsData changes
   useEffect(() => {
+    debugLog('[AUTO-SYNC] useEffect triggered', {
+      lastUpdated: toolsData.lastUpdated,
+      isSyncingFromDatabase: isSyncingFromDatabase.current
+    });
+    
     // Create a string representation of the current data for comparison
     const currentDataString = JSON.stringify({
       tools: toolsData.tools,
@@ -424,48 +452,78 @@ const KHSInfoSimple = () => {
     
     // Skip if data hasn't actually changed
     if (currentDataString === previousToolsDataRef.current) {
+      debugLog('[AUTO-SYNC] Skipping - data unchanged (string comparison)');
       return;
     }
+    
+    debugLog('[AUTO-SYNC] Data changed detected', {
+      previousLength: previousToolsDataRef.current.length,
+      currentLength: currentDataString.length
+    });
     
     // Update previous data reference
     previousToolsDataRef.current = currentDataString;
     
     // Skip initial render and syncs from database
-    if (toolsData.lastUpdated > 0 && !isSyncingFromDatabase.current) {
-      debugLog('Tools data changed, debouncing push', {
-        showDemo: toolsData.showDemo,
-        showInstall: toolsData.showInstall,
-        demoCategories: toolsData.selectedDemoCategories.length,
-        installCategories: toolsData.selectedInstallCategories.length,
-        lockedCategories: toolsData.lockedCategories.length,
-        totalTools: Object.keys(toolsData.tools).length
-      });
-      
-      // Clear any pending push
-      if (syncTimeoutRef.current) {
-        clearTimeout(syncTimeoutRef.current);
-      }
-      
-      // Debounce the push to avoid too many syncs
-      syncTimeoutRef.current = setTimeout(() => {
-        debugLog('Executing debounced push to database');
-        pushToDatabase();
-      }, DEBOUNCE_DELAY);
+    if (toolsData.lastUpdated === 0) {
+      debugLog('[AUTO-SYNC] Skipping - initial render (lastUpdated=0)');
+      return;
     }
+    
+    if (isSyncingFromDatabase.current) {
+      debugLog('[AUTO-SYNC] Skipping - sync from database in progress');
+      return;
+    }
+    
+    debugLog('[AUTO-SYNC] Change detected - will push', {
+      showDemo: toolsData.showDemo,
+      showInstall: toolsData.showInstall,
+      demoCategories: toolsData.selectedDemoCategories.length,
+      installCategories: toolsData.selectedInstallCategories.length,
+      lockedCategories: toolsData.lockedCategories.length,
+      totalTools: Object.keys(toolsData.tools).length
+    });
+    
+    // Clear any pending push
+    if (syncTimeoutRef.current) {
+      debugLog('[AUTO-SYNC] Clearing previous timeout');
+      clearTimeout(syncTimeoutRef.current);
+    }
+    
+    // Debounce the push to avoid too many syncs
+    debugLog(`[AUTO-SYNC] Setting ${DEBOUNCE_DELAY}ms debounce timer`);
+    syncTimeoutRef.current = setTimeout(() => {
+      debugLog('[AUTO-SYNC] Debounce timer fired - pushing to database');
+      pushToDatabase();
+    }, DEBOUNCE_DELAY);
     
     return () => {
       if (syncTimeoutRef.current) {
+        debugLog('[AUTO-SYNC] Cleanup - clearing timeout');
         clearTimeout(syncTimeoutRef.current);
       }
     };
   }, [toolsData]);
 
   const updateToolsData = (updates: Partial<ToolsData>) => {
-    setToolsData(prev => ({ 
-      ...prev, 
-      ...updates,
-      lastUpdated: Date.now() 
-    }));
+    debugLog('[UPDATE] updateToolsData called', {
+      updates: Object.keys(updates),
+      hasTools: 'tools' in updates,
+      hasCategories: 'selectedDemoCategories' in updates || 'selectedInstallCategories' in updates
+    });
+    setToolsData(prev => {
+      const newData = { 
+        ...prev, 
+        ...updates,
+        lastUpdated: Date.now() 
+      };
+      debugLog('[UPDATE] New state will be', {
+        lastUpdated: newData.lastUpdated,
+        showDemo: newData.showDemo,
+        showInstall: newData.showInstall
+      });
+      return newData;
+    });
   };
 
   const handleCategoryToggle = (category: string, section: 'demo' | 'install') => {
