@@ -365,60 +365,58 @@ const KHSInfoSimple = () => {
 
   // Initial database sync
   useEffect(() => {
-    // CRITICAL: Check if user is on wrong domain
+    // CRITICAL: Check if user is on wrong domain and AUTO-REDIRECT
     if (window.location.hostname.includes('khs-crm-3')) {
-      console.error('[CRITICAL] Wrong domain detected! User is on khs-crm-3');
+      console.error('[CRITICAL] Wrong domain detected! User is on khs-crm-3 - AUTO REDIRECTING');
       
-      // Unregister all service workers that might be blocking requests
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          console.log(`[ServiceWorker] Found ${registrations.length} service workers to unregister`);
-          for(let registration of registrations) {
-            registration.unregister().then(function(success) {
-              console.log('[ServiceWorker] Unregistered:', success);
-            });
-          }
-        });
-      }
+      // Build the correct URL preserving the path
+      const correctUrl = 'https://khs-crm-2-production.up.railway.app' + window.location.pathname + window.location.search + window.location.hash;
       
-      // Show prominent warning to user
-      const correctUrl = 'https://khs-crm-2-production.up.railway.app/khs-info';
+      debugLog('CRITICAL: Wrong domain - redirecting to khs-crm-2');
+      debugLog('Current URL:', window.location.href);
+      debugLog('Redirecting to:', correctUrl);
       
-      // Create warning banner
-      const warningBanner = document.createElement('div');
-      warningBanner.style.cssText = `
+      // Show brief message before redirect
+      const redirectMessage = document.createElement('div');
+      redirectMessage.style.cssText = `
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        background: #ef4444;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #1f2937;
         color: white;
-        padding: 20px;
+        padding: 40px;
         text-align: center;
-        font-size: 18px;
+        font-size: 20px;
         font-weight: bold;
         z-index: 99999;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
       `;
-      warningBanner.innerHTML = `
-        ⚠️ WRONG URL - You're on khs-crm-3! ⚠️<br>
-        <a href="${correctUrl}" style="color: white; text-decoration: underline;">
-          Click here to go to the correct site: khs-crm-2
-        </a><br>
-        <small>Service workers have been cleared. Please use the link above.</small>
+      redirectMessage.innerHTML = `
+        <div style="margin-bottom: 20px;">⏳ Redirecting to correct server...</div>
+        <div style="font-size: 16px; opacity: 0.8;">Moving from khs-crm-3 → khs-crm-2</div>
+        <div style="margin-top: 20px; font-size: 14px;">This prevents sync errors</div>
       `;
-      document.body.appendChild(warningBanner);
+      document.body.appendChild(redirectMessage);
       
-      // Also show alert for mobile users who might miss the banner
-      setTimeout(() => {
-        if (confirm(`You're on the wrong site (khs-crm-3)!\n\nClick OK to go to the correct site:\n${correctUrl}`)) {
-          window.location.href = correctUrl;
-        }
-      }, 1000);
+      // Unregister service workers before redirect
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          console.log(`[ServiceWorker] Clearing ${registrations.length} service workers before redirect`);
+          Promise.all(registrations.map(r => r.unregister())).then(() => {
+            console.log('[ServiceWorker] All workers cleared, redirecting now');
+            // Redirect after service workers are cleared
+            window.location.href = correctUrl;
+          });
+        });
+      } else {
+        // No service workers, redirect immediately
+        window.location.href = correctUrl;
+      }
       
-      debugLog('CRITICAL: Wrong domain - should be khs-crm-2');
-      debugLog('Service workers cleared');
-      debugLog('Correct URL:', correctUrl);
+      // Stop further execution on this domain
+      return;
     }
     
     // Check if running on mobile and log environment details

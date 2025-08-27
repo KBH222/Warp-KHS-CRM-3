@@ -48,6 +48,14 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  // CRITICAL: Redirect from khs-crm-3 to khs-crm-2 immediately
+  if (window.location.hostname.includes('khs-crm-3')) {
+    const correctUrl = 'https://khs-crm-2-production.up.railway.app' + window.location.pathname + window.location.search + window.location.hash;
+    console.error('[App] Wrong domain! Redirecting from khs-crm-3 to khs-crm-2');
+    window.location.replace(correctUrl); // Use replace to prevent back button issues
+    return null; // Don't render anything while redirecting
+  }
+  
   const [isInitialized, setIsInitialized] = useState(false);
   const [needsAuthSetup, setNeedsAuthSetup] = useState(false);
   const [needsLogin, setNeedsLogin] = useState(false);
