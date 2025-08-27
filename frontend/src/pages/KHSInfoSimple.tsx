@@ -292,6 +292,8 @@ const KHSInfoSimple = () => {
   const previousToolsDataRef = useRef<string>('');
   const isUserChangeRef = useRef(false);
   const isSyncingFromDatabase = useRef(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const savedDataRef = useRef<string>(''); // Track last saved state
 
   const tabs = ['Tools List', 'SOP', 'Office Docs', 'Specs'];
   const demoCategories = ['Kitchen', 'Bathroom', 'Flooring', 'Framing', 'Drywall'];
@@ -475,6 +477,13 @@ const KHSInfoSimple = () => {
 
   // Initial database sync
   useEffect(() => {
+    // Initialize saved data reference
+    const initialDataString = JSON.stringify({
+      tools: toolsData.tools,
+      lockedCategories: toolsData.lockedCategories
+    });
+    savedDataRef.current = initialDataString;
+    previousToolsDataRef.current = initialDataString;
     
     // Check if running on mobile and log environment details
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -527,9 +536,9 @@ const KHSInfoSimple = () => {
     };
   }, []); // Remove dbVersion dependency - we don't want to reset the interval when version changes
 
-  // Debounced push changes to database when toolsData changes
+  // Track unsaved changes when toolsData changes
   useEffect(() => {
-    debugLog('[AUTO-SYNC] useEffect triggered', {
+    debugLog('[CHANGE-TRACKING] useEffect triggered', {
       lastUpdated: toolsData.lastUpdated,
       isSyncingFromDatabase: isSyncingFromDatabase.current
     });
@@ -542,11 +551,11 @@ const KHSInfoSimple = () => {
     
     // Skip if data hasn't actually changed
     if (currentDataString === previousToolsDataRef.current) {
-      debugLog('[AUTO-SYNC] Skipping - data unchanged (string comparison)');
+      debugLog('[CHANGE-TRACKING] Skipping - data unchanged (string comparison)');
       return;
     }
     
-    debugLog('[AUTO-SYNC] Data changed detected', {
+    debugLog('[CHANGE-TRACKING] Data changed detected', {
       previousLength: previousToolsDataRef.current.length,
       currentLength: currentDataString.length
     });
@@ -554,48 +563,40 @@ const KHSInfoSimple = () => {
     // Update previous data reference
     previousToolsDataRef.current = currentDataString;
     
-    // Skip initial render and syncs from database
+    // Skip initial render
     if (toolsData.lastUpdated === 0) {
-      debugLog('[AUTO-SYNC] Skipping - initial render (lastUpdated=0)');
+      debugLog('[CHANGE-TRACKING] Skipping - initial render (lastUpdated=0)');
+      savedDataRef.current = currentDataString; // Initialize saved state
       return;
     }
     
+    // Skip if this is a sync from database
     if (isSyncingFromDatabase.current) {
-      debugLog('[AUTO-SYNC] Skipping - sync from database in progress');
+      debugLog('[CHANGE-TRACKING] Skipping - sync from database in progress');
+      savedDataRef.current = currentDataString; // Update saved state
+      setHasUnsavedChanges(false);
       return;
     }
     
-    debugLog('[AUTO-SYNC] Change detected - will push', {
-      lockedCategories: toolsData.lockedCategories.length,
-      totalTools: Object.keys(toolsData.tools).length
-    });
+    // Check if we have unsaved changes
+    const hasChanges = currentDataString !== savedDataRef.current;
+    setHasUnsavedChanges(hasChanges);
     
-    // Clear any pending push
+    debugLog('[CHANGE-TRACKING] Unsaved changes:', hasChanges ? 'YES' : 'NO');
+    
+    // Clear any pending auto-sync timeout since we're now manual
     if (syncTimeoutRef.current) {
-      debugLog('[AUTO-SYNC] Clearing previous timeout');
+      debugLog('[CHANGE-TRACKING] Clearing auto-sync timeout');
       clearTimeout(syncTimeoutRef.current);
+      syncTimeoutRef.current = null;
     }
-    
-    // Debounce the push to avoid too many syncs
-    debugLog(`[AUTO-SYNC] Setting ${DEBOUNCE_DELAY}ms debounce timer`);
-    syncTimeoutRef.current = setTimeout(() => {
-      debugLog('[AUTO-SYNC] Debounce timer fired - pushing to database');
-      pushToDatabase();
-    }, DEBOUNCE_DELAY);
-    
-    return () => {
-      if (syncTimeoutRef.current) {
-        debugLog('[AUTO-SYNC] Cleanup - clearing timeout');
-        clearTimeout(syncTimeoutRef.current);
-      }
-    };
   }, [toolsData]);
 
   const updateToolsData = (updates: Partial<ToolsData>) => {
     debugLog('[UPDATE] updateToolsData called', {
       updates: Object.keys(updates),
       hasTools: 'tools' in updates,
-      hasCategories: 'selectedDemoCategories' in updates || 'selectedInstallCategories' in updates
+      hasLockedCategories: 'lockedCategories' in updates
     });
     setToolsData(prev => {
       const newData = { 
@@ -610,6 +611,23 @@ const KHSInfoSimple = () => {
       });
       return newData;
     });
+  };
+  
+  // Manual save function
+  const saveChanges = async () => {
+    if (!hasUnsavedChanges || isPushing) return;
+    
+    debugLog('[SAVE] Manual save initiated');
+    await pushToDatabase();
+    
+    // Update saved state after successful push
+    const currentDataString = JSON.stringify({
+      tools: toolsData.tools,
+      lockedCategories: toolsData.lockedCategories
+    });
+    savedDataRef.current = currentDataString;
+    setHasUnsavedChanges(false);
+    debugLog('[SAVE] Changes saved successfully');
   };
 
   const handleCategoryToggle = (category: string, section: 'demo' | 'install') => {
@@ -1127,6 +1145,14 @@ const KHSInfoSimple = () => {
             opacity: 1;
           }
         }
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
       `}</style>
       <div style={{ 
         height: '100%',
@@ -1167,6 +1193,19 @@ const KHSInfoSimple = () => {
             <h1 style={{ fontSize: '27.6px', fontWeight: 'bold', margin: 0 }}>
               KHS Info
             </h1>
+            {hasUnsavedChanges && (
+              <span style={{
+                marginLeft: '8px',
+                padding: '2px 8px',
+                backgroundColor: '#FEF3C7',
+                color: '#92400E',
+                fontSize: '12px',
+                borderRadius: '4px',
+                fontWeight: '500'
+              }}>
+                Unsaved
+              </span>
+            )}
             {isSyncing && (
               <span style={{
                 marginLeft: '12px',
@@ -1197,6 +1236,47 @@ const KHSInfoSimple = () => {
               gap: '12px'
             }}>
               <span>Version: {dbVersion}</span>
+              {hasUnsavedChanges && (
+                <button
+                  onClick={() => saveChanges()}
+                  disabled={isPushing}
+                  style={{
+                    padding: '6px 12px',
+                    fontSize: '12px',
+                    backgroundColor: isPushing ? '#9CA3AF' : '#10B981',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: isPushing ? 'not-allowed' : 'pointer',
+                    fontWeight: '600',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  {isPushing ? (
+                    <>
+                      <span style={{
+                        display: 'inline-block',
+                        width: '12px',
+                        height: '12px',
+                        border: '2px solid #fff',
+                        borderTopColor: 'transparent',
+                        borderRadius: '50%',
+                        animation: 'spin 1s linear infinite'
+                      }}></span>
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <svg style={{ width: '14px', height: '14px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Save Changes
+                    </>
+                  )}
+                </button>
+              )}
               <button
                 onClick={() => {
                   debugLog('Manual sync triggered');
