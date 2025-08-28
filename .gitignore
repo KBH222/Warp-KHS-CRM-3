@@ -86,6 +86,12 @@ pnpm-lock.yaml
 *.pid.lock
 .vercel
 
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
 # Zip and archive files (too large for GitHub)
 *.zip
 *.tar.gz
