@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { customersApi, jobsApi, authApi } from '../services/api';
 import { toast } from 'react-toastify';
@@ -6,6 +6,8 @@ import { customerStorage } from '../services/localStorageService';
 import { ScrollablePageContainer } from '../components/ScrollablePageContainer';
 import { compressImage } from '../utils/imageCompression';
 import { enhancedSyncService } from '../services/sync.service.enhanced';
+import { geocodingService, AddressSuggestion } from '../services/geocoding.service';
+import { useDebounce } from '../hooks/useDebounce';
 
 const CustomersEnhanced = () => {
   const navigate = useNavigate();
@@ -1159,6 +1161,17 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
     customerType: customer?.customerType || 'ACTIVE'
   });
 
+  // Address autocomplete state
+  const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+  const addressInputRef = useRef<HTMLInputElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
+  
+  // Debounce the street input for API calls
+  const debouncedStreet = useDebounce(formData.street, 500);
+
   // Parse address if editing
   useEffect(() => {
     if (customer?.address) {
@@ -1231,21 +1244,100 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
     }
   };
 
+  // Fetch address suggestions when street input changes
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (debouncedStreet.length < 3) {
+        setAddressSuggestions([]);
+        setShowSuggestions(false);
+        return;
+      }
+
+      setIsLoadingSuggestions(true);
+      try {
+        const suggestions = await geocodingService.searchAddresses(debouncedStreet);
+        setAddressSuggestions(suggestions);
+        setShowSuggestions(suggestions.length > 0);
+        setSelectedSuggestionIndex(-1);
+      } catch (error) {
+        console.error('Error fetching address suggestions:', error);
+        // Fall back to local database
+        const normalizedStreet = debouncedStreet.toLowerCase().trim();
+        const addressInfo = addressDatabase[normalizedStreet];
+        if (addressInfo) {
+          setFormData(prev => ({
+            ...prev,
+            city: addressInfo.city,
+            state: addressInfo.state,
+            zip: addressInfo.zip
+          }));
+        }
+      } finally {
+        setIsLoadingSuggestions(false);
+      }
+    };
+
+    fetchSuggestions();
+  }, [debouncedStreet]);
+
+  // Handle clicking outside suggestions
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        suggestionsRef.current &&
+        !suggestionsRef.current.contains(event.target as Node) &&
+        addressInputRef.current &&
+        !addressInputRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleStreetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setFormData({ ...formData, street: value });
-    
-    const normalizedStreet = value.toLowerCase().trim();
-    const addressInfo = addressDatabase[normalizedStreet];
-    
-    if (addressInfo) {
-      setFormData(prev => ({
-        ...prev,
-        street: value,
-        city: addressInfo.city,
-        state: addressInfo.state,
-        zip: addressInfo.zip
-      }));
+    setShowSuggestions(true);
+  };
+
+  const handleSelectSuggestion = (suggestion: AddressSuggestion) => {
+    setFormData({
+      ...formData,
+      street: suggestion.formatted.street,
+      city: suggestion.formatted.city,
+      state: suggestion.formatted.state,
+      zip: suggestion.formatted.zip
+    });
+    setShowSuggestions(false);
+    setAddressSuggestions([]);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showSuggestions || addressSuggestions.length === 0) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedSuggestionIndex(prev => 
+          prev < addressSuggestions.length - 1 ? prev + 1 : prev
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedSuggestionIndex(prev => prev > 0 ? prev - 1 : -1);
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (selectedSuggestionIndex >= 0) {
+          handleSelectSuggestion(addressSuggestions[selectedSuggestionIndex]);
+        }
+        break;
+      case 'Escape':
+        setShowSuggestions(false);
+        break;
     }
   };
 
@@ -1491,16 +1583,20 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
             />
           </div>
 
-          <div style={{ marginBottom: '16px' }}>
+          <div style={{ marginBottom: '16px', position: 'relative' }}>
             <label style={{ display: 'block', marginBottom: '4px', fontWeight: '500' }}>
               Street Address *
             </label>
             <input
+              ref={addressInputRef}
               type="text"
               value={formData.street}
               onChange={handleStreetChange}
+              onKeyDown={handleKeyDown}
+              onFocus={() => formData.street.length >= 3 && setShowSuggestions(true)}
               required
-              placeholder="123 Main St"
+              placeholder="Start typing an address..."
+              autoComplete="off"
               style={{
                 width: '100%',
                 padding: '8px 12px',
@@ -1509,6 +1605,60 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
                 fontSize: '18.4px'
               }}
             />
+            
+            {/* Loading indicator */}
+            {isLoadingSuggestions && (
+              <div style={{
+                position: 'absolute',
+                right: '12px',
+                top: '38px',
+                color: '#6B7280'
+              }}>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
+              </div>
+            )}
+            
+            {/* Address suggestions dropdown */}
+            {showSuggestions && addressSuggestions.length > 0 && (
+              <div
+                ref={suggestionsRef}
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  right: 0,
+                  maxHeight: '200px',
+                  overflowY: 'auto',
+                  backgroundColor: 'white',
+                  border: '1px solid #D1D5DB',
+                  borderRadius: '6px',
+                  marginTop: '4px',
+                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                  zIndex: 10
+                }}
+              >
+                {addressSuggestions.map((suggestion, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleSelectSuggestion(suggestion)}
+                    onMouseEnter={() => setSelectedSuggestionIndex(index)}
+                    style={{
+                      padding: '12px',
+                      cursor: 'pointer',
+                      backgroundColor: selectedSuggestionIndex === index ? '#F3F4F6' : 'white',
+                      borderBottom: index < addressSuggestions.length - 1 ? '1px solid #E5E7EB' : 'none'
+                    }}
+                  >
+                    <div style={{ fontSize: '14px', fontWeight: '500' }}>
+                      {suggestion.formatted.street}
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '2px' }}>
+                      {suggestion.formatted.city}, {suggestion.formatted.state} {suggestion.formatted.zip}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '12px', marginBottom: '16px' }}>
