@@ -644,7 +644,7 @@ app.get('/api/customers', authMiddleware, async (req, res) => {
     const where = { isArchived: false };
     
     // Filter by customer type if provided
-    if (type && (type === 'ACTIVE' || type === 'SOON_TO_BE')) {
+    if (type && (type === 'ACTIVE' || type === 'LEADS')) {
       where.customerType = type;
     }
     
@@ -725,6 +725,8 @@ app.post('/api/customers', authMiddleware, async (req, res) => {
   try {
     const { reference, name, phone, email, address, notes, customerType } = req.body;
     
+    console.log('[Customer Create] Request body:', { reference, name, email, customerType });
+    
     let customerReference = reference;
     if (!customerReference) {
       const count = await prisma.customer.count();
@@ -733,17 +735,23 @@ app.post('/api/customers', authMiddleware, async (req, res) => {
       customerReference = `${letter}${number}`;
     }
 
+    const createData = {
+      reference: customerReference,
+      name,
+      phone,
+      email,
+      address,
+      notes,
+      customerType: customerType || 'ACTIVE'
+    };
+    
+    console.log('[Customer Create] Creating customer with data:', createData);
+
     const customer = await prisma.customer.create({
-      data: {
-        reference: customerReference,
-        name,
-        phone,
-        email,
-        address,
-        notes,
-        customerType: customerType || 'ACTIVE'
-      }
+      data: createData
     });
+    
+    console.log('[Customer Create] Created customer:', customer.id, 'customerType:', customer.customerType);
 
     res.status(201).json(customer);
   } catch (error) {
@@ -756,15 +764,28 @@ app.put('/api/customers/:id', authMiddleware, async (req, res) => {
   try {
     const { name, phone, email, address, notes, customerType } = req.body;
     
-    const updateData = { name, phone, email, address, notes };
-    if (customerType && (customerType === 'ACTIVE' || customerType === 'LEADS')) {
+    // Include all fields in updateData
+    const updateData = { 
+      name, 
+      phone, 
+      email, 
+      address, 
+      notes 
+    };
+    
+    // Only add customerType if it's valid
+    if (customerType === 'ACTIVE' || customerType === 'LEADS') {
       updateData.customerType = customerType;
     }
+    
+    console.log('[Customer Update] Updating customer:', req.params.id, 'with data:', updateData);
     
     const customer = await prisma.customer.update({
       where: { id: req.params.id },
       data: updateData
     });
+    
+    console.log('[Customer Update] Updated customer:', customer.id, 'customerType:', customer.customerType);
     
     res.json(customer);
   } catch (error) {
