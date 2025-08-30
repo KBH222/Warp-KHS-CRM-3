@@ -36,14 +36,14 @@ class GeocodingService {
   private lastRequestTime = 0;
   private minRequestInterval = 1000; // 1 second between requests (Nominatim rate limit)
 
-  // Search for address suggestions
+  // Search for address suggestions (focused on Hawaii/Oahu)
   async searchAddresses(query: string, countryCode: string = 'us'): Promise<AddressSuggestion[]> {
     if (!query || query.length < 3) {
       return [];
     }
 
     // Check cache first
-    const cacheKey = `${query}-${countryCode}`;
+    const cacheKey = `${query}-${countryCode}-hawaii`;
     if (this.cache.has(cacheKey)) {
       return this.cache.get(cacheKey)!;
     }
@@ -57,13 +57,26 @@ class GeocodingService {
     this.lastRequestTime = Date.now();
 
     try {
+      // Oahu geographic bounds
+      const oahuBounds = {
+        west: -158.3,
+        east: -157.6,
+        north: 21.7,
+        south: 21.2
+      };
+
+      // Add "Hawaii" to the query to prioritize Hawaii results
+      const hawaiiQuery = `${query}, Hawaii`;
+
       const params = new URLSearchParams({
-        q: query,
+        q: hawaiiQuery,
         format: 'json',
         addressdetails: '1',
         countrycodes: countryCode,
-        limit: '5',
-        'accept-language': 'en'
+        limit: '10', // Increase limit to ensure we get enough Hawaii results
+        'accept-language': 'en',
+        bounded: '1', // Restrict to bounds
+        viewbox: `${oahuBounds.west},${oahuBounds.north},${oahuBounds.east},${oahuBounds.south}` // West,North,East,South
       });
 
       const response = await fetch(`${this.baseUrl}/search?${params}`, {
@@ -78,14 +91,36 @@ class GeocodingService {
 
       const data = await response.json();
       
-      // Format the results
-      const suggestions: AddressSuggestion[] = data.map((item: any) => ({
-        display_name: item.display_name,
-        lat: item.lat,
-        lon: item.lon,
-        address: item.address || {},
-        formatted: this.formatAddress(item)
-      }));
+      // Filter and format the results - only include Hawaii addresses
+      const suggestions: AddressSuggestion[] = data
+        .filter((item: any) => {
+          // Check if the address is in Hawaii
+          const address = item.address || {};
+          const displayName = item.display_name || '';
+          return address.state === 'Hawaii' || 
+                 address.state === 'Hawaiʻi' || 
+                 displayName.includes('Hawaii') ||
+                 displayName.includes('Hawaiʻi') ||
+                 displayName.includes('HI');
+        })
+        .map((item: any) => ({
+          display_name: item.display_name,
+          lat: item.lat,
+          lon: item.lon,
+          address: item.address || {},
+          formatted: this.formatAddress(item)
+        }))
+        .sort((a, b) => {
+          // Prioritize Oahu results by checking for Oahu city names
+          const oahuCities = ['Honolulu', 'Pearl City', 'Kailua', 'Kaneohe', 'Aiea', 'Waipahu', 'Mililani', 'Ewa Beach', 'Kapolei', 'Wahiawa'];
+          const aIsOahu = oahuCities.some(city => a.formatted.city.includes(city) || a.display_name.includes(city));
+          const bIsOahu = oahuCities.some(city => b.formatted.city.includes(city) || b.display_name.includes(city));
+          
+          if (aIsOahu && !bIsOahu) return -1;
+          if (!aIsOahu && bIsOahu) return 1;
+          return 0;
+        })
+        .slice(0, 5); // Limit to 5 results
 
       // Cache the results
       this.cache.set(cacheKey, suggestions);
@@ -114,10 +149,12 @@ class GeocodingService {
     const street = streetParts.join(' ') || '';
 
     // Get city (Nominatim uses different fields for different locations)
-    const city = addr.city || addr.town || addr.village || addr.hamlet || '';
+    // For Hawaii, common cities include Honolulu, Pearl City, Kailua, Kaneohe, etc.
+    const city = addr.city || addr.town || addr.village || addr.hamlet || addr.suburb || '';
 
-    // Get state abbreviation
-    const state = this.getStateAbbreviation(addr.state || '');
+    // Get state abbreviation - ensure it's always HI for Hawaii
+    const stateName = addr.state || '';
+    const state = (stateName === 'Hawaii' || stateName === 'Hawaiʻi') ? 'HI' : this.getStateAbbreviation(stateName);
 
     // Get zip code
     const zip = addr.postcode || '';

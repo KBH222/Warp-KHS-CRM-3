@@ -1248,42 +1248,62 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
     }
   }, [customer]);
 
-  // Mock address database for auto-completion
+  // Mock address database for auto-completion - Hawaii/Oahu focused
   const addressDatabase: Record<string, { city: string; state: string; zip: string }> = {
-    '123 main st': { city: 'Springfield', state: 'IL', zip: '62701' },
-    '456 oak ave': { city: 'Springfield', state: 'IL', zip: '62702' },
-    '789 elm street': { city: 'Springfield', state: 'IL', zip: '62703' },
-    '321 maple drive': { city: 'Springfield', state: 'IL', zip: '62704' },
-    '654 pine road': { city: 'Chicago', state: 'IL', zip: '60601' },
-    '987 cedar lane': { city: 'Chicago', state: 'IL', zip: '60602' },
-    '111 walnut way': { city: 'Bloomington', state: 'IL', zip: '61701' },
-    '222 birch boulevard': { city: 'Champaign', state: 'IL', zip: '61820' },
+    // Honolulu addresses
     '350 ward ave': { city: 'Honolulu', state: 'HI', zip: '96814' },
     '1717 ala wai blvd': { city: 'Honolulu', state: 'HI', zip: '96815' },
+    '1188 bishop st': { city: 'Honolulu', state: 'HI', zip: '96813' },
+    '1450 ala moana blvd': { city: 'Honolulu', state: 'HI', zip: '96814' },
+    '2005 kalia rd': { city: 'Honolulu', state: 'HI', zip: '96815' },
+    // Pearl City addresses
+    '850 kamehameha hwy': { city: 'Pearl City', state: 'HI', zip: '96782' },
+    '1000 kamehameha hwy': { city: 'Pearl City', state: 'HI', zip: '96782' },
+    // Kailua addresses  
+    '600 kailua rd': { city: 'Kailua', state: 'HI', zip: '96734' },
+    '45 kainehe st': { city: 'Kailua', state: 'HI', zip: '96734' },
+    // Kaneohe addresses
+    '45-939 kamehameha hwy': { city: 'Kaneohe', state: 'HI', zip: '96744' },
+    '46-001 kamehameha hwy': { city: 'Kaneohe', state: 'HI', zip: '96744' },
+    // Aiea addresses
+    '99-115 aiea heights dr': { city: 'Aiea', state: 'HI', zip: '96701' },
+    '98-1005 moanalua rd': { city: 'Aiea', state: 'HI', zip: '96701' },
   };
 
-  // Zip code database for auto-population
+  // Zip code database for auto-population - Hawaii/Oahu focused
   const zipCodeDatabase: Record<string, { city: string; state: string }> = {
-    '62701': { city: 'Springfield', state: 'IL' },
-    '62702': { city: 'Springfield', state: 'IL' },
-    '62703': { city: 'Springfield', state: 'IL' },
-    '62704': { city: 'Springfield', state: 'IL' },
-    '60601': { city: 'Chicago', state: 'IL' },
-    '60602': { city: 'Chicago', state: 'IL' },
-    '61701': { city: 'Bloomington', state: 'IL' },
-    '61820': { city: 'Champaign', state: 'IL' },
+    // Honolulu zip codes
+    '96813': { city: 'Honolulu', state: 'HI' },
     '96814': { city: 'Honolulu', state: 'HI' },
     '96815': { city: 'Honolulu', state: 'HI' },
-    '10001': { city: 'New York', state: 'NY' },
-    '90210': { city: 'Beverly Hills', state: 'CA' },
-    '94105': { city: 'San Francisco', state: 'CA' },
-    '98101': { city: 'Seattle', state: 'WA' },
-    '33139': { city: 'Miami Beach', state: 'FL' },
-    '02134': { city: 'Boston', state: 'MA' },
-    '78701': { city: 'Austin', state: 'TX' },
-    '85001': { city: 'Phoenix', state: 'AZ' },
-    '80202': { city: 'Denver', state: 'CO' },
-    '30303': { city: 'Atlanta', state: 'GA' }
+    '96816': { city: 'Honolulu', state: 'HI' },
+    '96817': { city: 'Honolulu', state: 'HI' },
+    '96818': { city: 'Honolulu', state: 'HI' },
+    '96819': { city: 'Honolulu', state: 'HI' },
+    '96820': { city: 'Honolulu', state: 'HI' },
+    '96821': { city: 'Honolulu', state: 'HI' },
+    '96822': { city: 'Honolulu', state: 'HI' },
+    '96825': { city: 'Honolulu', state: 'HI' },
+    '96826': { city: 'Honolulu', state: 'HI' },
+    // Other Oahu cities
+    '96701': { city: 'Aiea', state: 'HI' },
+    '96706': { city: 'Ewa Beach', state: 'HI' },
+    '96707': { city: 'Kapolei', state: 'HI' },
+    '96712': { city: 'Haleiwa', state: 'HI' },
+    '96717': { city: 'Hauula', state: 'HI' },
+    '96730': { city: 'Kaaawa', state: 'HI' },
+    '96731': { city: 'Kahuku', state: 'HI' },
+    '96734': { city: 'Kailua', state: 'HI' },
+    '96744': { city: 'Kaneohe', state: 'HI' },
+    '96759': { city: 'Kunia', state: 'HI' },
+    '96762': { city: 'Laie', state: 'HI' },
+    '96782': { city: 'Pearl City', state: 'HI' },
+    '96786': { city: 'Wahiawa', state: 'HI' },
+    '96789': { city: 'Mililani', state: 'HI' },
+    '96791': { city: 'Waialua', state: 'HI' },
+    '96792': { city: 'Waianae', state: 'HI' },
+    '96795': { city: 'Waimanalo', state: 'HI' },
+    '96797': { city: 'Waipahu', state: 'HI' }
   };
 
   const formatPhoneNumber = (value: string) => {
