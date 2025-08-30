@@ -648,6 +648,9 @@ app.get('/api/customers', authMiddleware, async (req, res) => {
       where.customerType = type;
     }
     
+    console.log('[Customer GET] Query params:', req.query);
+    console.log('[Customer GET] Where clause:', where);
+    
     const customers = await prisma.customer.findMany({
       where,
       include: {
@@ -780,12 +783,24 @@ app.put('/api/customers/:id', authMiddleware, async (req, res) => {
     
     console.log('[Customer Update] Updating customer:', req.params.id, 'with data:', updateData);
     
+    // First, fetch the current customer to log the before state
+    const before = await prisma.customer.findUnique({
+      where: { id: req.params.id }
+    });
+    console.log('[Customer Update] Before update - customerType:', before?.customerType);
+    
     const customer = await prisma.customer.update({
       where: { id: req.params.id },
       data: updateData
     });
     
-    console.log('[Customer Update] Updated customer:', customer.id, 'customerType:', customer.customerType);
+    console.log('[Customer Update] After update - customerType:', customer.customerType);
+    
+    // Double-check by fetching again
+    const verification = await prisma.customer.findUnique({
+      where: { id: req.params.id }
+    });
+    console.log('[Customer Update] Verification query - customerType:', verification?.customerType);
     
     res.json(customer);
   } catch (error) {

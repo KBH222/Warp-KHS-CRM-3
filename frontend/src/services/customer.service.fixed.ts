@@ -177,6 +177,8 @@ class CustomerServiceFixed {
    * Update an existing customer
    */
   async updateCustomer(id: string, data: UpdateCustomerRequest): Promise<Customer> {
+    console.log('[CustomerService] Updating customer:', id, 'with data:', data);
+    
     const existing = await offlineDb.getCustomer(id);
     if (!existing) {
       throw new Error('Customer not found');
@@ -188,11 +190,14 @@ class CustomerServiceFixed {
       ...data,
       updatedAt: new Date(),
       modifiedBy: 'current-user'     };
+    
+    console.log('[CustomerService] Saving to local DB:', updated);
 
     // Save locally
     await offlineDb.saveCustomer(updated);
     // Queue for sync if not a temp ID
     if (!id.startsWith('temp_')) {
+      console.log('[CustomerService] Queueing update for sync');
       await simpleSyncService.queueOperation({
         operation: 'update',
         entityType: 'customer',
@@ -203,6 +208,7 @@ class CustomerServiceFixed {
 
       // Try immediate sync if online
       if (navigator.onLine) {
+        console.log('[CustomerService] Online - triggering immediate sync');
         simpleSyncService.syncAll();
       }
     }

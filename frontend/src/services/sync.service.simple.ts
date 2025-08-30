@@ -168,10 +168,9 @@ class SimpleSyncService {
     this.saveQueue();
     this.syncing = false;
 
-    // Fetch latest data from server after sync
-    if (synced > 0) {
-      await this.refreshDataFromServer();
-    }
+    // Don't refresh all data after sync - it overwrites local changes
+    // The sync operations already update the local DB with server responses
+    console.log('[SyncService] Sync complete:', { synced, failed });
 
     return { success: true, synced, failed };
   }
@@ -207,10 +206,12 @@ class SimpleSyncService {
       }
       case 'update': {
         if (op.entityId && !op.entityId.startsWith('temp_')) {
+          console.log('[SyncService] Syncing customer update:', op.entityId, op.payload);
           const updated = await apiClient.put<Customer>(
             API_ENDPOINTS.CUSTOMER_BY_ID(op.entityId),
             op.payload
           );
+          console.log('[SyncService] Server response for customer update:', updated);
           await offlineDb.saveCustomer(updated);
         }
         break;
