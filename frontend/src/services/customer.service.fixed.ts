@@ -67,6 +67,14 @@ class CustomerServiceFixed {
         for (const customer of customers) {
           await offlineDb.saveCustomer(customer);
         }
+        
+        // Clean up any temp customers that exist in local DB
+        const localCustomers = await offlineDb.getCustomers();
+        const tempCustomers = localCustomers.filter(c => c.id.startsWith('temp_'));
+        for (const tempCustomer of tempCustomers) {
+          console.log('[CustomerService] Cleaning up stale temp customer:', tempCustomer.id);
+          await offlineDb.deleteCustomer(tempCustomer.id);
+        }
 
         return customers;
       } catch (error) {
@@ -77,12 +85,15 @@ class CustomerServiceFixed {
     // Offline or API failed - use local data
     const allCustomers = await offlineDb.getCustomers(filters);
     
+    // Filter out temp customers to prevent display issues
+    const realCustomers = allCustomers.filter(c => !c.id.startsWith('temp_'));
+    
     // Filter by customer type if specified
     if (customerType) {
-      return allCustomers.filter(c => c.customerType === customerType);
+      return realCustomers.filter(c => c.customerType === customerType);
     }
     
-    return allCustomers;
+    return realCustomers;
   }
 
   /**
@@ -124,6 +135,20 @@ class CustomerServiceFixed {
 
         // Save to local DB for offline access
         await offlineDb.saveCustomer(serverCustomer);
+        
+        // Clean up any temp customers that might exist for this data
+        // This prevents duplicate entries with temp IDs
+        const allCustomers = await offlineDb.getCustomers();
+        const tempCustomers = allCustomers.filter(c => 
+          c.id.startsWith('temp_') && 
+          c.name === serverCustomer.name && 
+          c.email === serverCustomer.email
+        );
+        
+        for (const tempCustomer of tempCustomers) {
+          console.log('[CustomerService] Cleaning up temp customer:', tempCustomer.id);
+          await offlineDb.deleteCustomer(tempCustomer.id);
+        }
 
         return serverCustomer;
       } catch (error) {
