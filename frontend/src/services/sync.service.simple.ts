@@ -10,7 +10,7 @@ interface Customer {
   email: string | null;
   address: string;
   notes: string | null;
-  customerType?: 'ACTIVE' | 'LEADS';
+  customerType?: 'CURRENT' | 'LEADS';
   isArchived: boolean;
   createdAt: Date;
   updatedAt: Date;

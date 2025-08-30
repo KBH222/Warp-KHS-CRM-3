@@ -27,7 +27,7 @@ enum JobStatus {
 
 // Customer type enum
 enum CustomerType {
-  ACTIVE
+  CURRENT
   LEADS
 }
 
@@ -77,7 +77,7 @@ model Customer {
   email        String?
   address      String
   notes        String?
-  customerType CustomerType @default(ACTIVE)
+  customerType CustomerType @default(CURRENT)
   isArchived   Boolean      @default(false)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt

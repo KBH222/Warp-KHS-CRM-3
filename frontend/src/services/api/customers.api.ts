@@ -10,7 +10,7 @@ interface Customer {
   email: string | null;
   address: string;
   notes: string | null;
-  customerType?: 'ACTIVE' | 'LEADS';
+  customerType?: 'CURRENT' | 'LEADS';
   isArchived: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -22,7 +22,7 @@ interface Customer {
 // Re-export the fixed customer service methods under the old API interface
 export const customersApi = {
   // Get all customers
-  async getAll(customerType?: 'ACTIVE' | 'LEADS' | null): Promise<Customer[]> {
+  async getAll(customerType?: 'CURRENT' | 'LEADS' | null): Promise<Customer[]> {
     return customerServiceFixed.getCustomers(customerType);
   },
 

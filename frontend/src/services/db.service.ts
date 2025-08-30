@@ -6,7 +6,7 @@ interface Customer {
   email?: string;
   phone?: string;
   address: string;
-  customerType?: 'ACTIVE' | 'LEADS';
+  customerType?: 'CURRENT' | 'LEADS';
   isArchived?: boolean;
   createdAt: string;
   updatedAt: string;

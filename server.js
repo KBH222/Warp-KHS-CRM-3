@@ -644,7 +644,7 @@ app.get('/api/customers', authMiddleware, async (req, res) => {
     const where = { isArchived: false };
     
     // Filter by customer type if provided
-    if (type && (type === 'ACTIVE' || type === 'LEADS')) {
+    if (type && (type === 'CURRENT' || type === 'LEADS')) {
       where.customerType = type;
     }
     
@@ -745,7 +745,7 @@ app.post('/api/customers', authMiddleware, async (req, res) => {
       email,
       address,
       notes,
-      customerType: customerType || 'ACTIVE'
+      customerType: customerType || 'CURRENT'
     };
     
     console.log('[Customer Create] Creating customer with data:', createData);
@@ -777,7 +777,7 @@ app.put('/api/customers/:id', authMiddleware, async (req, res) => {
     };
     
     // Only add customerType if it's valid
-    if (customerType === 'ACTIVE' || customerType === 'LEADS') {
+    if (customerType === 'CURRENT' || customerType === 'LEADS') {
       updateData.customerType = customerType;
     }
     
@@ -1726,7 +1726,7 @@ app.get('/api/debug/customer-type-test', authMiddleware, async (req, res) => {
     // Try to update it
     const updated = await prisma.customer.update({
       where: { id: testCustomer.id },
-      data: { customerType: 'ACTIVE' }
+      data: { customerType: 'CURRENT' }
     });
     
     console.log('[Debug] Updated test customer:', updated);

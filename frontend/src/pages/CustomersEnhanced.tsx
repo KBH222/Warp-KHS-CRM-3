@@ -189,9 +189,9 @@ const CustomersEnhanced = () => {
   const [selectedCustomerForJob, setSelectedCustomerForJob] = useState<any>(null);
   const [editingJob, setEditingJob] = useState<any>(null);
   // Load filter preference from localStorage
-  const [customerType, setCustomerType] = useState<'ACTIVE' | 'LEADS' | null>(() => {
+  const [customerType, setCustomerType] = useState<'CURRENT' | 'LEADS' | null>(() => {
     const saved = localStorage.getItem('khs-crm-customer-filter');
-    if (saved === 'ACTIVE' || saved === 'LEADS') return saved;
+    if (saved === 'CURRENT' || saved === 'LEADS') return saved;
     return null; // null shows all
   });
   
@@ -671,13 +671,13 @@ const CustomersEnhanced = () => {
             cursor: 'pointer',
             fontSize: '16px',
             color: '#374151',
-            fontWeight: customerType === 'ACTIVE' ? '600' : '400'
+            fontWeight: customerType === 'CURRENT' ? '600' : '400'
           }}>
             <input
               type="radio"
               name="customerType"
-              checked={customerType === 'ACTIVE'}
-              onChange={() => setCustomerType('ACTIVE')}
+              checked={customerType === 'CURRENT'}
+              onChange={() => setCustomerType('CURRENT')}
               style={{
                 marginRight: '8px',
                 width: '18px',
@@ -686,7 +686,7 @@ const CustomersEnhanced = () => {
                 accentColor: '#10B981'
               }}
             />
-            Active
+            Current
           </label>
           <label style={{
             display: 'flex',
@@ -1213,7 +1213,7 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
     state: '',
     zip: '',
     notes: customer?.notes || '',
-    customerType: customer?.customerType || 'ACTIVE'
+    customerType: customer?.customerType || 'CURRENT'
   });
   
   console.log('[CustomerModal] Initial formData customerType:', formData.customerType);
@@ -1551,8 +1551,8 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
                 <input
                   type="radio"
                   name="customerType"
-                  value="ACTIVE"
-                  checked={formData.customerType === 'ACTIVE'}
+                  value="CURRENT"
+                  checked={formData.customerType === 'CURRENT'}
                   onChange={(e) => {
                     console.log('[CustomerModal] customerType changed to:', e.target.value);
                     setFormData({ ...formData, customerType: e.target.value });

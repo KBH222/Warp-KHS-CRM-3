@@ -11,7 +11,7 @@ interface Customer {
   email: string | null;
   address: string;
   notes: string | null;
-  customerType?: 'ACTIVE' | 'LEADS';
+  customerType?: 'CURRENT' | 'LEADS';
   isArchived: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -26,7 +26,7 @@ interface CreateCustomerRequest {
   email?: string;
   address: string;
   notes?: string;
-  customerType?: 'ACTIVE' | 'LEADS';
+  customerType?: 'CURRENT' | 'LEADS';
 }
 
 interface UpdateCustomerRequest {
@@ -35,7 +35,7 @@ interface UpdateCustomerRequest {
   email?: string | null;
   address?: string;
   notes?: string | null;
-  customerType?: 'ACTIVE' | 'LEADS';
+  customerType?: 'CURRENT' | 'LEADS';
 }
 
 interface CustomerFilters {
@@ -56,7 +56,7 @@ class CustomerServiceFixed {
   /**
    * Get all customers - always try API first if online
    */
-  async getCustomers(customerType?: 'ACTIVE' | 'LEADS' | null, filters?: CustomerFilters): Promise<Customer[]> {
+  async getCustomers(customerType?: 'CURRENT' | 'LEADS' | null, filters?: CustomerFilters): Promise<Customer[]> {
     console.log('[CustomerService.getCustomers] Called with customerType:', customerType);
     console.log('[CustomerService.getCustomers] Online status:', navigator.onLine);
     
@@ -150,7 +150,7 @@ class CustomerServiceFixed {
           email: data.email || null,
           address: data.address,
           notes: data.notes || null,
-          customerType: data.customerType || 'ACTIVE'
+          customerType: data.customerType || 'CURRENT'
         };
         
         console.log('[CustomerService.createCustomer] Sending to server:', payload);
@@ -199,7 +199,7 @@ class CustomerServiceFixed {
       email: data.email || null,
       address: data.address,
       notes: data.notes || null,
-      customerType: data.customerType || 'ACTIVE',
+      customerType: data.customerType || 'CURRENT',
       isArchived: false,
       createdAt: now,
       updatedAt: now,
