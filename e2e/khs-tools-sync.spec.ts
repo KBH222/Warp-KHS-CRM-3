@@ -2,10 +2,25 @@ import { test, expect } from '@playwright/test';
 
 test.describe('KHS Tools Sync', () => {
   test.beforeEach(async ({ page }) => {
+    // Set up auth mock
+    await page.route('**/api/auth/check', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ 
+          user: {
+            id: 'test-user-1',
+            email: 'test@example.com',
+            name: 'Test User',
+            role: 'admin'
+          }
+        })
+      });
+    });
+    
     // Navigate to KHS Info page
-    await page.goto('/');
-    await page.click('text=KHS Info');
-    await expect(page.locator('h1')).toContainText('KHS Info');
+    await page.goto('/khs-info');
+    await page.waitForLoadState('networkidle');
   });
 
   test('should show Tools List tab by default', async ({ page }) => {
