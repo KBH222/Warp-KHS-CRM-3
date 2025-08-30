@@ -757,7 +757,7 @@ app.put('/api/customers/:id', authMiddleware, async (req, res) => {
     const { name, phone, email, address, notes, customerType } = req.body;
     
     const updateData = { name, phone, email, address, notes };
-    if (customerType && (customerType === 'ACTIVE' || customerType === 'SOON_TO_BE')) {
+    if (customerType && (customerType === 'ACTIVE' || customerType === 'LEADS')) {
       updateData.customerType = customerType;
     }
     

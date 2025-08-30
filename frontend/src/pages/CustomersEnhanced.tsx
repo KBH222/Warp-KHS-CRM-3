@@ -176,12 +176,23 @@ const CustomersEnhanced = () => {
   const [showAddJobModal, setShowAddJobModal] = useState(false);
   const [selectedCustomerForJob, setSelectedCustomerForJob] = useState<any>(null);
   const [editingJob, setEditingJob] = useState<any>(null);
-  const [customerType, setCustomerType] = useState<'ACTIVE' | 'LEADS' | null>(null); // null shows all
+  // Load filter preference from localStorage
+  const [customerType, setCustomerType] = useState<'ACTIVE' | 'LEADS' | null>(() => {
+    const saved = localStorage.getItem('khs-crm-customer-filter');
+    if (saved === 'ACTIVE' || saved === 'LEADS') return saved;
+    return null; // null shows all
+  });
   
   // Reload customers when customer type changes
   useEffect(() => {
     if (!isLoading) {
       loadCustomers();
+    }
+    // Save filter preference
+    if (customerType !== null) {
+      localStorage.setItem('khs-crm-customer-filter', customerType);
+    } else {
+      localStorage.removeItem('khs-crm-customer-filter');
     }
   }, [customerType]);
 
@@ -233,10 +244,8 @@ const CustomersEnhanced = () => {
       const customerData = { ...newCustomer };
       delete customerData.id; // Remove any temp ID if present
       
-      // Add customer type if one is selected
-      if (customerType) {
-        customerData.customerType = customerType;
-      }
+      // Don't override the customerType from the form
+      // The form already has the customerType selected by the user
       
       const customer = await customersApi.create(customerData);
       
@@ -249,6 +258,12 @@ const CustomersEnhanced = () => {
       setCustomers([customer, ...customers]);
       toast.success('Customer added successfully');
       setShowModal(false);
+      
+      // If the new customer doesn't match current filter, switch to show all
+      if (customerType && customer.customerType !== customerType) {
+        setCustomerType(null);
+        toast.info('Switched to "All Customers" to show the new customer');
+      }
       
       return customer; // Return customer with real ID
     } catch (err: any) {
