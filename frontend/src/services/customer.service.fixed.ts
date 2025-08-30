@@ -99,18 +99,18 @@ class CustomerServiceFixed {
     const allCustomers = await offlineDb.getCustomers(filters);
     console.log('[CustomerService.getCustomers] Local customers before filtering:', allCustomers.length);
     
-    // Filter out temp customers to prevent display issues
-    const realCustomers = allCustomers.filter(c => !c.id.startsWith('temp_'));
-    console.log('[CustomerService.getCustomers] Real customers after temp filter:', realCustomers.length);
+    // When offline or API fails, we SHOULD show temp customers
+    // They represent real work that needs to be synced
+    console.log('[CustomerService.getCustomers] Including temp customers since we are offline/API failed');
     
     // Filter by customer type if specified
     if (customerType) {
-      const filtered = realCustomers.filter(c => c.customerType === customerType);
+      const filtered = allCustomers.filter(c => c.customerType === customerType);
       console.log('[CustomerService.getCustomers] Filtered by type:', filtered.length);
       return filtered;
     }
     
-    return realCustomers;
+    return allCustomers;
   }
 
   /**
