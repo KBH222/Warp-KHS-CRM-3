@@ -104,10 +104,13 @@ const CustomersEnhanced = () => {
   useEffect(() => {
     // Function to sync data
     const syncData = () => {
+      console.log('[syncData] Loading customers from localStorage');
       const savedCustomers = customerStorage.load();
       
       // Update state with latest data from localStorage
       if (savedCustomers) {
+        console.log('[syncData] Found customers in localStorage:', savedCustomers.length);
+        console.log('[syncData] First customer type:', savedCustomers[0]?.customerType);
         setCustomers(savedCustomers);
       }
       
@@ -159,7 +162,8 @@ const CustomersEnhanced = () => {
     window.addEventListener('storage', handleStorageChange);
 
     // Sync immediately on mount
-    syncData();
+    // TEMPORARILY DISABLED to debug customerType issue
+    // syncData();
 
     // Cleanup
     return () => {
@@ -276,9 +280,15 @@ const CustomersEnhanced = () => {
   };
 
   const handleEditCustomer = async (updatedCustomer: any) => {
+    console.log('[handleEditCustomer] Received data:', updatedCustomer);
+    console.log('[handleEditCustomer] customerType:', updatedCustomer.customerType);
+    
     try {
       setIsLoading(true);
       const customer = await customersApi.update(editingCustomer.id, updatedCustomer);
+      console.log('[handleEditCustomer] API response:', customer);
+      console.log('[handleEditCustomer] Response customerType:', customer.customerType);
+      
       setCustomers(customers.map(c => 
         c.id === customer.id ? customer : c
       ));
@@ -1163,6 +1173,9 @@ interface CustomerModalProps {
 }
 
 const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
+  console.log('[CustomerModal] Initializing with customer:', customer);
+  console.log('[CustomerModal] Customer customerType:', customer?.customerType);
+  
   const [formData, setFormData] = useState({
     reference: customer?.reference || '',
     name: customer?.name || '',
@@ -1175,6 +1188,8 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
     notes: customer?.notes || '',
     customerType: customer?.customerType || 'ACTIVE'
   });
+  
+  console.log('[CustomerModal] Initial formData customerType:', formData.customerType);
 
   // Address autocomplete state
   const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
@@ -1375,8 +1390,10 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('[CustomerModal] Form submission - customerType in formData:', formData.customerType);
+    
     const address = `${formData.street}, ${formData.city}, ${formData.state} ${formData.zip}`;
-    onSave({
+    const saveData = {
       id: customer?.id,
       reference: formData.reference,
       name: formData.name,
@@ -1385,7 +1402,10 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
       address,
       notes: formData.notes,
       customerType: formData.customerType
-    });
+    };
+    
+    console.log('[CustomerModal] Calling onSave with data:', saveData);
+    onSave(saveData);
   };
 
   return (
@@ -1506,7 +1526,10 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
                   name="customerType"
                   value="ACTIVE"
                   checked={formData.customerType === 'ACTIVE'}
-                  onChange={(e) => setFormData({ ...formData, customerType: e.target.value })}
+                  onChange={(e) => {
+                    console.log('[CustomerModal] customerType changed to:', e.target.value);
+                    setFormData({ ...formData, customerType: e.target.value });
+                  }}
                   style={{
                     marginRight: '8px',
                     width: '18px',
@@ -1527,7 +1550,10 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
                   name="customerType"
                   value="LEADS"
                   checked={formData.customerType === 'LEADS'}
-                  onChange={(e) => setFormData({ ...formData, customerType: e.target.value })}
+                  onChange={(e) => {
+                    console.log('[CustomerModal] customerType changed to:', e.target.value);
+                    setFormData({ ...formData, customerType: e.target.value });
+                  }}
                   style={{
                     marginRight: '8px',
                     width: '18px',

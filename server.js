@@ -1706,6 +1706,62 @@ app.put('/api/khs-tools-sync', authMiddleware, async (req, res) => {
   }
 });
 
+// Debug endpoint to test customer type enum
+app.get('/api/debug/customer-type-test', authMiddleware, async (req, res) => {
+  try {
+    console.log('[Debug] Testing CustomerType enum values');
+    
+    // Try to create a test customer with LEADS type
+    const testCustomer = await prisma.customer.create({
+      data: {
+        reference: 'TEST-' + Date.now(),
+        name: 'Test Customer',
+        address: 'Test Address',
+        customerType: 'LEADS'
+      }
+    });
+    
+    console.log('[Debug] Created test customer:', testCustomer);
+    
+    // Try to update it
+    const updated = await prisma.customer.update({
+      where: { id: testCustomer.id },
+      data: { customerType: 'ACTIVE' }
+    });
+    
+    console.log('[Debug] Updated test customer:', updated);
+    
+    // Try to update back to LEADS
+    const updatedAgain = await prisma.customer.update({
+      where: { id: testCustomer.id },
+      data: { customerType: 'LEADS' }
+    });
+    
+    console.log('[Debug] Updated back to LEADS:', updatedAgain);
+    
+    // Clean up
+    await prisma.customer.delete({
+      where: { id: testCustomer.id }
+    });
+    
+    res.json({
+      success: true,
+      created: testCustomer,
+      updated: updated,
+      updatedAgain: updatedAgain,
+      enumValuesWork: true
+    });
+  } catch (error) {
+    console.error('[Debug] CustomerType test error:', error);
+    res.json({
+      success: false,
+      error: error.message,
+      code: error.code,
+      meta: error.meta
+    });
+  }
+});
+
 // User Management Routes (OWNER only)
 const ownerMiddleware = (req, res, next) => {
   if (req.userRole !== 'OWNER') {

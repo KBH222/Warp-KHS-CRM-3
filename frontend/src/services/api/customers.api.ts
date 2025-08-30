@@ -49,14 +49,26 @@ export const customersApi = {
 
   // Update customer
   async update(id: string, customer: Partial<Customer>): Promise<Customer> {
-    return customerServiceFixed.updateCustomer(id, {
+    console.log('[customersApi.update] Input customer:', customer);
+    console.log('[customersApi.update] customerType:', customer.customerType);
+    
+    const updateData = {
       name: customer.name,
       phone: customer.phone,
       email: customer.email,
       address: customer.address,
       notes: customer.notes,
       customerType: customer.customerType
-    });
+    };
+    
+    console.log('[customersApi.update] Sending to service:', updateData);
+    
+    const result = await customerServiceFixed.updateCustomer(id, updateData);
+    
+    console.log('[customersApi.update] Service returned:', result);
+    console.log('[customersApi.update] Result customerType:', result.customerType);
+    
+    return result;
   },
 
   // Delete (archive) customer

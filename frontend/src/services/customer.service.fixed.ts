@@ -165,7 +165,8 @@ class CustomerServiceFixed {
         phone: data.phone,
         email: data.email,
         address: data.address,
-        notes: data.notes
+        notes: data.notes,
+        customerType: data.customerType
       },
       timestamp: now
     });
