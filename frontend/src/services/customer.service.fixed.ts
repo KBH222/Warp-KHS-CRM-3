@@ -57,11 +57,23 @@ class CustomerServiceFixed {
    * Get all customers - always try API first if online
    */
   async getCustomers(customerType?: 'ACTIVE' | 'LEADS' | null, filters?: CustomerFilters): Promise<Customer[]> {
+    console.log('[CustomerService.getCustomers] Called with customerType:', customerType);
+    console.log('[CustomerService.getCustomers] Online status:', navigator.onLine);
+    
     // If online, fetch from API first
     if (navigator.onLine) {
       try {
         const params = customerType ? `?type=${customerType}` : '';
+        console.log('[CustomerService.getCustomers] Fetching from API with params:', params);
+        
         const customers = await apiClient.get<Customer[]>(API_ENDPOINTS.CUSTOMERS + params);
+        
+        console.log('[CustomerService.getCustomers] API returned customers:', customers.length);
+        console.log('[CustomerService.getCustomers] Sample customers:', customers.slice(0, 3).map(c => ({
+          id: c.id,
+          name: c.name,
+          customerType: c.customerType
+        })));
 
         // Save to IndexedDB for offline access
         for (const customer of customers) {
@@ -83,14 +95,19 @@ class CustomerServiceFixed {
     }
 
     // Offline or API failed - use local data
+    console.log('[CustomerService.getCustomers] Using local data (offline or API failed)');
     const allCustomers = await offlineDb.getCustomers(filters);
+    console.log('[CustomerService.getCustomers] Local customers before filtering:', allCustomers.length);
     
     // Filter out temp customers to prevent display issues
     const realCustomers = allCustomers.filter(c => !c.id.startsWith('temp_'));
+    console.log('[CustomerService.getCustomers] Real customers after temp filter:', realCustomers.length);
     
     // Filter by customer type if specified
     if (customerType) {
-      return realCustomers.filter(c => c.customerType === customerType);
+      const filtered = realCustomers.filter(c => c.customerType === customerType);
+      console.log('[CustomerService.getCustomers] Filtered by type:', filtered.length);
+      return filtered;
     }
     
     return realCustomers;
@@ -121,20 +138,32 @@ class CustomerServiceFixed {
    * Create a new customer
    */
   async createCustomer(data: CreateCustomerRequest): Promise<Customer> {
+    console.log('[CustomerService.createCustomer] Starting with data:', data);
+    console.log('[CustomerService.createCustomer] Online status:', navigator.onLine);
+    
     // If online, create directly on server to get real ID
     if (navigator.onLine) {
       try {
-        const serverCustomer = await apiClient.post<Customer>(API_ENDPOINTS.CUSTOMERS, {
+        const payload = {
           name: data.name,
           phone: data.phone || null,
           email: data.email || null,
           address: data.address,
           notes: data.notes || null,
           customerType: data.customerType || 'ACTIVE'
-        });
+        };
+        
+        console.log('[CustomerService.createCustomer] Sending to server:', payload);
+        
+        const serverCustomer = await apiClient.post<Customer>(API_ENDPOINTS.CUSTOMERS, payload);
+        
+        console.log('[CustomerService.createCustomer] Server response:', serverCustomer);
+        console.log('[CustomerService.createCustomer] Server customer ID:', serverCustomer.id);
+        console.log('[CustomerService.createCustomer] Server customer type:', serverCustomer.customerType);
 
         // Save to local DB for offline access
         await offlineDb.saveCustomer(serverCustomer);
+        console.log('[CustomerService.createCustomer] Saved to IndexedDB');
         
         // Clean up any temp customers that might exist for this data
         // This prevents duplicate entries with temp IDs

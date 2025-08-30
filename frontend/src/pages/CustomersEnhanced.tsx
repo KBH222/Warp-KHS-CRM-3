@@ -49,9 +49,17 @@ const CustomersEnhanced = () => {
   const loadCustomers = async () => {
     try {
       setIsLoading(true);
+      console.log('[loadCustomers] Loading with filter:', customerType);
       const data = await customersApi.getAll(customerType);
+      console.log('[loadCustomers] Received customers:', data.length);
+      console.log('[loadCustomers] First few customers:', data.slice(0, 3).map(c => ({
+        id: c.id,
+        name: c.name,
+        customerType: c.customerType
+      })));
       setCustomers(data);
     } catch (err: any) {
+      console.error('[loadCustomers] Error:', err);
       const errorMessage = err.message || 'Failed to load customers';
       toast.error('Failed to load customers: ' + errorMessage);
       // Will fall back to localStorage in the API
@@ -244,33 +252,52 @@ const CustomersEnhanced = () => {
   const handleAddCustomer = async (newCustomer: any) => {
     try {
       setIsLoading(true);
+      console.log('[handleAddCustomer] Starting with data:', newCustomer);
+      console.log('[handleAddCustomer] Current customers count:', customers.length);
+      console.log('[handleAddCustomer] Current filter:', customerType);
+      
       // Don't pass any temp ID - let backend generate the ID
       const customerData = { ...newCustomer };
       delete customerData.id; // Remove any temp ID if present
       
-      // Don't override the customerType from the form
-      // The form already has the customerType selected by the user
+      console.log('[handleAddCustomer] Sending to API:', customerData);
       
       const customer = await customersApi.create(customerData);
       
+      console.log('[handleAddCustomer] Received from API:', customer);
+      console.log('[handleAddCustomer] Customer ID:', customer.id);
+      console.log('[handleAddCustomer] Customer Type:', customer.customerType);
+      
       // Validate that we got a real ID back
       if (!customer.id || customer.id.includes('temp')) {
+        console.error('[handleAddCustomer] WARNING: Got temp ID or no ID!');
         toast.warning('Customer created but may need to refresh for proper ID');
       }
       
       // Use the server response with REAL ID
-      setCustomers([customer, ...customers]);
+      const updatedCustomers = [customer, ...customers];
+      console.log('[handleAddCustomer] Updating customers list, new count:', updatedCustomers.length);
+      setCustomers(updatedCustomers);
+      
       toast.success('Customer added successfully');
       setShowModal(false);
       
       // If the new customer doesn't match current filter, switch to show all
       if (customerType && customer.customerType !== customerType) {
+        console.log('[handleAddCustomer] Customer type mismatch, switching to show all');
         setCustomerType(null);
         toast.info('Switched to "All Customers" to show the new customer');
       }
       
+      // Force a reload to ensure the customer shows up
+      console.log('[handleAddCustomer] Forcing reload of customers');
+      setTimeout(() => {
+        loadCustomers();
+      }, 100);
+      
       return customer; // Return customer with real ID
     } catch (err: any) {
+      console.error('[handleAddCustomer] Error:', err);
       const errorMessage = err.message || 'Failed to add customer';
       toast.error('Failed to add customer: ' + errorMessage);
       throw err;

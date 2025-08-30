@@ -63,6 +63,7 @@ class ApiClient {
     this.client.interceptors.response.use(
       (response) => {
         console.log('[ApiClient] Response:', response.status, response.config.url);
+        console.log('[ApiClient] Response data:', response.data);
         return response.data;
       },
       async (error: AxiosError<{ error: ApiError }>) => {
