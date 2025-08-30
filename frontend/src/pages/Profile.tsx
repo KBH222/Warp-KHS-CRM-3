@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { profileStorage } from '../utils/localStorage';
+import { UsersManagement } from '../components/UsersManagement';
+import { useIsOwner, useUser } from '../stores/auth.store';
 
 const Profile = () => {
   const navigate = useNavigate();
+  const user = useUser();
+  const isOwner = useIsOwner();
   
   // Default profile data
   const defaultProfile = {
@@ -92,6 +96,7 @@ const Profile = () => {
     { id: 'business', label: 'Business Info', icon: '🏢' },
     { id: 'notifications', label: 'Notifications', icon: '🔔' },
     { id: 'hours', label: 'Working Hours', icon: '🕐' },
+    ...(isOwner ? [{ id: 'users', label: 'Users', icon: '👥' }] : []),
     { id: 'security', label: 'Security', icon: '🔒', isLink: true, path: '/security' },
     { id: 'reports', label: 'Reports', icon: '📊', isLink: true, path: '/reports' },
     { id: 'invoices', label: 'Invoices', icon: '💰', isLink: true, path: '/invoices' }
@@ -776,6 +781,11 @@ const Profile = () => {
               ))}
             </div>
           </div>
+        )}
+
+        {/* Users Tab (Owner only) */}
+        {activeTab === 'users' && isOwner && (
+          <UsersManagement currentUserId={user?.id || ''} />
         )}
 
         {/* Security Tab */}

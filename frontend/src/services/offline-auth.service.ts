@@ -3,7 +3,7 @@ interface User {
   id: string;
   email: string;
   name: string;
-  role: 'admin' | 'manager' | 'worker';
+  role: 'OWNER' | 'WORKER';
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -21,7 +21,7 @@ interface AuthTokens {
   expiresAt: string;
 }
 
-type Role = 'admin' | 'manager' | 'worker';
+type Role = 'OWNER' | 'WORKER';
 
 // Inline constants
 const STORAGE_KEYS = {

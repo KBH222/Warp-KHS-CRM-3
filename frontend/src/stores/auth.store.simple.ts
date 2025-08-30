@@ -4,7 +4,7 @@ interface User {
   id: string;
   email: string;
   name: string;
-  role: 'admin' | 'manager' | 'worker';
+  role: 'OWNER' | 'WORKER';
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -17,24 +17,23 @@ interface LoginRequest {
 }
 
 enum Role {
-  OWNER = 'admin',
-  MANAGER = 'manager',
-  WORKER = 'worker'
+  OWNER = 'OWNER',
+  WORKER = 'WORKER'
 }
 import { offlineAuthService } from '../services/offline-auth.service';
 import { offlineDataService } from '../services/offline-data.service';
 
 // Mock users for development
 const MOCK_USERS: Record<string, User & { password: string }> = {
-  'owner@khs.com': {
+  'admin@khscrm.com': {
     id: '1',
-    email: 'owner@khs.com',
-    password: 'password123',
-    name: 'John Owner',
+    email: 'admin@khscrm.com',
+    password: 'admin123',
+    name: 'Admin',
     role: Role.OWNER,
     isActive: true,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01'),
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01',
   },
   'worker@khs.com': {
     id: '2',
@@ -43,8 +42,8 @@ const MOCK_USERS: Record<string, User & { password: string }> = {
     name: 'Jane Worker',
     role: Role.WORKER,
     isActive: true,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01'),
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01',
   },
 };
 

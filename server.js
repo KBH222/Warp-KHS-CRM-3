@@ -1670,6 +1670,191 @@ app.put('/api/khs-tools-sync', authMiddleware, async (req, res) => {
   }
 });
 
+// User Management Routes (OWNER only)
+const ownerMiddleware = (req, res, next) => {
+  if (req.userRole !== 'OWNER') {
+    return res.status(403).json({ error: 'Access denied. Owner role required.' });
+  }
+  next();
+};
+
+// Get all users (OWNER only)
+app.get('/api/users', authMiddleware, ownerMiddleware, async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        isActive: true,
+        lastLoginAt: true,
+        createdAt: true
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+    
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
+// Create new user (OWNER only)
+app.post('/api/users', authMiddleware, ownerMiddleware, async (req, res) => {
+  try {
+    const { email, password, name, role } = req.body;
+    
+    // Validate input
+    if (!email || !password || !name || !role) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+    
+    if (!['OWNER', 'WORKER'].includes(role)) {
+      return res.status(400).json({ error: 'Invalid role' });
+    }
+    
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+    
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email }
+    });
+    
+    if (existingUser) {
+      return res.status(400).json({ error: 'User with this email already exists' });
+    }
+    
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Create user
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        name,
+        role
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        isActive: true,
+        createdAt: true
+      }
+    });
+    
+    res.json(user);
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ error: 'Failed to create user' });
+  }
+});
+
+// Reset user password (OWNER only)
+app.put('/api/users/:userId/reset-password', authMiddleware, ownerMiddleware, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { password } = req.body;
+    
+    if (!password) {
+      return res.status(400).json({ error: 'Password is required' });
+    }
+    
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+    
+    // Check if user exists
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Don't allow resetting own password through this endpoint
+    if (userId === req.userId) {
+      return res.status(400).json({ error: 'Cannot reset your own password through this endpoint' });
+    }
+    
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Update password
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword }
+    });
+    
+    // Invalidate all refresh tokens for this user
+    await prisma.refreshToken.deleteMany({
+      where: { userId }
+    });
+    
+    res.json({ message: 'Password reset successfully' });
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    res.status(500).json({ error: 'Failed to reset password' });
+  }
+});
+
+// Delete user (OWNER only)
+app.delete('/api/users/:userId', authMiddleware, ownerMiddleware, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Check if user exists
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Don't allow deleting yourself
+    if (userId === req.userId) {
+      return res.status(400).json({ error: 'Cannot delete your own account' });
+    }
+    
+    // Don't allow deleting the last owner
+    if (user.role === 'OWNER') {
+      const ownerCount = await prisma.user.count({
+        where: { role: 'OWNER', isActive: true }
+      });
+      
+      if (ownerCount <= 1) {
+        return res.status(400).json({ error: 'Cannot delete the last owner' });
+      }
+    }
+    
+    // Soft delete by setting isActive to false
+    await prisma.user.update({
+      where: { id: userId },
+      data: { isActive: false }
+    });
+    
+    // Invalidate all refresh tokens for this user
+    await prisma.refreshToken.deleteMany({
+      where: { userId }
+    });
+    
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
+});
+
 // Serve React app for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
