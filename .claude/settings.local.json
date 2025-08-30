@@ -76,7 +76,9 @@
       "Bash(git ls-tree:*)",
       "WebFetch(domain:khs-crm-2-production.up.railway.app)",
       "Bash(git restore:*)",
-      "Bash(npx vite:*)"
+      "Bash(npx vite:*)",
+      "Bash(npx playwright:*)",
+      "Bash(timeout:*)"
     ],
     "deny": []
   }

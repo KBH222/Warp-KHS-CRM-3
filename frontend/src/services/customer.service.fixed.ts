@@ -11,7 +11,7 @@ interface Customer {
   email: string | null;
   address: string;
   notes: string | null;
-  customerType?: 'ACTIVE' | 'SOON_TO_BE';
+  customerType?: 'ACTIVE' | 'LEADS';
   isArchived: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -26,7 +26,7 @@ interface CreateCustomerRequest {
   email?: string;
   address: string;
   notes?: string;
-  customerType?: 'ACTIVE' | 'SOON_TO_BE';
+  customerType?: 'ACTIVE' | 'LEADS';
 }
 
 interface UpdateCustomerRequest {
@@ -35,7 +35,7 @@ interface UpdateCustomerRequest {
   email?: string | null;
   address?: string;
   notes?: string | null;
-  customerType?: 'ACTIVE' | 'SOON_TO_BE';
+  customerType?: 'ACTIVE' | 'LEADS';
 }
 
 interface CustomerFilters {
@@ -56,7 +56,7 @@ class CustomerServiceFixed {
   /**
    * Get all customers - always try API first if online
    */
-  async getCustomers(customerType?: 'ACTIVE' | 'SOON_TO_BE' | null, filters?: CustomerFilters): Promise<Customer[]> {
+  async getCustomers(customerType?: 'ACTIVE' | 'LEADS' | null, filters?: CustomerFilters): Promise<Customer[]> {
     // If online, fetch from API first
     if (navigator.onLine) {
       try {

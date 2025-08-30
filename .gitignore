@@ -91,6 +91,7 @@ pnpm-lock.yaml
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/playwright/.auth/
 
 # Zip and archive files (too large for GitHub)
 *.zip

@@ -28,7 +28,7 @@ enum JobStatus {
 // Customer type enum
 enum CustomerType {
   ACTIVE
-  SOON_TO_BE
+  LEADS
 }
 
 // User model for authentication and role management

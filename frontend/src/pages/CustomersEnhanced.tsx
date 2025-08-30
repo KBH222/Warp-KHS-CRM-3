@@ -174,7 +174,7 @@ const CustomersEnhanced = () => {
   const [showAddJobModal, setShowAddJobModal] = useState(false);
   const [selectedCustomerForJob, setSelectedCustomerForJob] = useState<any>(null);
   const [editingJob, setEditingJob] = useState<any>(null);
-  const [customerType, setCustomerType] = useState<'ACTIVE' | 'SOON_TO_BE' | null>(null); // null shows all
+  const [customerType, setCustomerType] = useState<'ACTIVE' | 'LEADS' | null>(null); // null shows all
   
   // Reload customers when customer type changes
   useEffect(() => {
@@ -640,13 +640,13 @@ const CustomersEnhanced = () => {
             cursor: 'pointer',
             fontSize: '16px',
             color: '#374151',
-            fontWeight: customerType === 'SOON_TO_BE' ? '600' : '400'
+            fontWeight: customerType === 'LEADS' ? '600' : '400'
           }}>
             <input
               type="radio"
               name="customerType"
-              checked={customerType === 'SOON_TO_BE'}
-              onChange={() => setCustomerType('SOON_TO_BE')}
+              checked={customerType === 'LEADS'}
+              onChange={() => setCustomerType('LEADS')}
               style={{
                 marginRight: '8px',
                 width: '18px',
@@ -655,7 +655,7 @@ const CustomersEnhanced = () => {
                 accentColor: '#F59E0B'
               }}
             />
-            Soon To Be
+            Leads
           </label>
         </div>
 
@@ -1418,8 +1418,8 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
                 <input
                   type="radio"
                   name="customerType"
-                  value="SOON_TO_BE"
-                  checked={formData.customerType === 'SOON_TO_BE'}
+                  value="LEADS"
+                  checked={formData.customerType === 'LEADS'}
                   onChange={(e) => setFormData({ ...formData, customerType: e.target.value })}
                   style={{
                     marginRight: '8px',
@@ -1428,7 +1428,7 @@ const CustomerModal = ({ customer, onClose, onSave }: CustomerModalProps) => {
                     cursor: 'pointer'
                   }}
                 />
-                Soon To Be
+                Leads
               </label>
             </div>
           </div>

@@ -29,6 +29,7 @@
     "test:e2e:codegen": "playwright codegen"
   },
   "dependencies": {
+    "@playwright/test": "^1.55.0",
     "@prisma/client": "^5.22.0",
     "bcrypt": "^6.0.0",
     "dotenv": "^16.0.3",
