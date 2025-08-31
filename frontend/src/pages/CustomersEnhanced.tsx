@@ -2232,65 +2232,37 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
               </div>
             </div>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              {/* Upload Photos button - show when Photos tab is active */}
-              {activeTab === 'photos' && (
+              {/* Dynamic Add button based on active tab */}
+              {(activeTab === 'photos' || activeTab === 'plans') && (
                 <>
                   <input
                     type="file"
-                    accept="image/*"
+                    accept={activeTab === 'photos' ? "image/*" : ".pdf,.jpg,.jpeg,.png,.doc,.docx"}
                     multiple
-                    onChange={handlePhotoUpload}
+                    onChange={activeTab === 'photos' ? handlePhotoUpload : handlePlanUpload}
                     style={{ display: 'none' }}
-                    id="photo-upload-header"
+                    id="file-upload-header"
                   />
                   <label
-                    htmlFor="photo-upload-header"
+                    htmlFor="file-upload-header"
                     style={{
                       display: 'inline-block',
-                      padding: '8px 16px',
+                      padding: '8px 12px',
                       backgroundColor: '#3B82F6',
                       color: 'white',
+                      border: 'none',
                       borderRadius: '6px',
                       cursor: 'pointer',
-                      fontSize: '16.1px',
+                      fontSize: '14px',
                       fontWeight: '500'
                     }}
                   >
-                    Add Photos
+                    Add
                   </label>
                 </>
               )}
               
-              {/* Upload Documents button - show when Plans tab is active */}
-              {activeTab === 'plans' && (
-                <>
-                  <input
-                    type="file"
-                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                    multiple
-                    onChange={handlePlanUpload}
-                    style={{ display: 'none' }}
-                    id="plan-upload-header"
-                  />
-                  <label
-                    htmlFor="plan-upload-header"
-                    style={{
-                      display: 'inline-block',
-                      padding: '8px 16px',
-                      backgroundColor: '#3B82F6',
-                      color: 'white',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      fontSize: '16.1px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    Add Documents
-                  </label>
-                </>
-              )}
-              
-              {/* Save/Close button */}
+              {/* Cancel button */}
               <button
                 type="button"
                 onClick={() => {
@@ -2300,19 +2272,20 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   onClose();
                 }}
                 style={{
-                  padding: '8px 16px',
+                  padding: '8px 12px',
                   backgroundColor: '#E5E7EB',
                   color: '#374151',
                   border: 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '16.1px',
-                  fontWeight: '500',
-                  marginRight: '8px'
+                  fontSize: '14px',
+                  fontWeight: '500'
                 }}
               >
                 Cancel
               </button>
+              
+              {/* Save button */}
               <button
                 type="button"
                 onClick={async () => {
@@ -2329,18 +2302,17 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 }}
                 disabled={!jobData.title}
                 style={{
-                  padding: '8px 16px',
+                  padding: '8px 12px',
                   backgroundColor: jobData.title ? '#10B981' : '#9CA3AF',
                   color: 'white',
                   border: 'none',
                   borderRadius: '6px',
                   cursor: jobData.title ? 'pointer' : 'not-allowed',
-                  fontSize: '16.1px',
-                  fontWeight: '500',
-                  marginLeft: window.innerWidth <= 640 ? '20px' : '0px'
+                  fontSize: '14px',
+                  fontWeight: '500'
                 }}
               >
-                Save/Close
+                Save
               </button>
             </div>
           </div>
