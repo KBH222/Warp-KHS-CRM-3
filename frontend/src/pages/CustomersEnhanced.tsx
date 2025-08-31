@@ -2349,7 +2349,12 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         </div>
 
         <form onSubmit={handleSubmit} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <div style={{ flex: 1, overflow: 'auto', padding: '20px' }}>
+          <div style={{ 
+            flex: 1, 
+            overflow: 'auto', 
+            padding: '20px',
+            WebkitOverflowScrolling: 'touch'
+          }}>
             {/* Job Description Tab */}
             {activeTab === 'description' && (
               <div>
@@ -2472,7 +2477,11 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     maxHeight: '300px',
                     overflowY: 'auto',
                     overflowX: 'hidden',
-                    paddingRight: '8px'
+                    WebkitOverflowScrolling: 'touch',
+                    paddingRight: '8px',
+                    // iOS scroll fix
+                    position: 'relative',
+                    zIndex: 1
                   }}>
                   <div style={{
                     display: 'grid',
@@ -2595,7 +2604,18 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 </div>
                 
                 {/* Plans List */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  gap: '8px',
+                  maxHeight: '400px',
+                  overflowY: 'auto',
+                  WebkitOverflowScrolling: 'touch',
+                  paddingRight: '8px',
+                  // iOS scroll fix
+                  position: 'relative',
+                  zIndex: 1
+                }}>
                   {jobData.plans.map(plan => (
                     <div 
                       key={plan.id} 
