@@ -2188,9 +2188,24 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   </span>
                 )}
               </h2>
-              <p style={{ margin: '4px 0 0 0', color: '#6B7280', fontSize: '16.1px' }}>
-                {customer.address}
-              </p>
+              <div style={{ margin: '4px 0 0 0', color: '#6B7280', fontSize: '16.1px' }}>
+                {(() => {
+                  // Split address into street and city/state/zip
+                  const parts = customer.address.split(', ');
+                  if (parts.length >= 3) {
+                    const street = parts[0];
+                    const cityStateZip = parts.slice(1).join(', ');
+                    return (
+                      <>
+                        <div>{street}</div>
+                        <div>{cityStateZip}</div>
+                      </>
+                    );
+                  }
+                  // Fallback for addresses that don't match expected format
+                  return customer.address;
+                })()}
+              </div>
             </div>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
               {/* Upload Photos button - show when Photos tab is active */}
@@ -2455,7 +2470,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     backgroundColor: isDraggingPhotos ? '#EFF6FF' : '#F9FAFB',
                     marginBottom: '16px',
                     transition: 'all 0.2s ease',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    flexShrink: 0  // Prevent drag zone from shrinking
                   }}
                   onClick={() => document.getElementById('photo-upload-inline')?.click()}
                 >
@@ -2588,7 +2604,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     backgroundColor: isDraggingPlans ? '#EFF6FF' : '#F9FAFB',
                     marginBottom: '16px',
                     transition: 'all 0.2s ease',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    flexShrink: 0  // Prevent drag zone from shrinking
                   }}
                   onClick={() => document.getElementById('plan-upload-inline')?.click()}
                 >
