@@ -1886,6 +1886,10 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<any>(null);
   
+  // Drag-drop states
+  const [isDraggingPhotos, setIsDraggingPhotos] = useState(false);
+  const [isDraggingPlans, setIsDraggingPlans] = useState(false);
+  
   const [jobData, setJobData] = useState({
     id: existingJob?.id || null,
     title: existingJob?.title || '',
@@ -1938,13 +1942,78 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     { id: 'comments', label: 'Extra $', icon: '💬' }
   ];
 
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+  // Drag-drop handlers for Photos
+  const handlePhotoDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDraggingPhotos(true);
+  };
+  
+  const handlePhotoDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    // Only set to false if we're leaving the drop zone entirely
+    if (e.currentTarget === e.target) {
+      setIsDraggingPhotos(false);
+    }
+  };
+  
+  const handlePhotoDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingPhotos(false);
     
+    const files = Array.from(e.dataTransfer.files);
+    // Filter for image files only
+    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    
+    if (imageFiles.length === 0) {
+      toast.error('Please drop image files only');
+      return;
+    }
+    
+    // Process files using the same logic as file picker
+    await processPhotoFiles(imageFiles);
+  };
+  
+  // Drag-drop handlers for Plans
+  const handlePlanDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDraggingPlans(true);
+  };
+  
+  const handlePlanDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    // Only set to false if we're leaving the drop zone entirely
+    if (e.currentTarget === e.target) {
+      setIsDraggingPlans(false);
+    }
+  };
+  
+  const handlePlanDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingPlans(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    // Filter for allowed file types
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    const validFiles = files.filter(file => 
+      allowedTypes.includes(file.type) || file.type.startsWith('image/')
+    );
+    
+    if (validFiles.length === 0) {
+      toast.error('Please drop PDF, image, or document files only');
+      return;
+    }
+    
+    // Process files using the same logic as file picker
+    await processPlanFiles(validFiles);
+  };
+  
+  // Common function to process photo files (used by both file picker and drag-drop)
+  const processPhotoFiles = async (files: File[]) => {
     // Check if job has a title
     if (!jobData.title && !existingJob) {
       toast.error('Please enter a job title first');
-      e.target.value = ''; // Reset file input
       return;
     }
     
@@ -1982,13 +2051,18 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     }
   };
 
-  const handlePlanUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    
+    await processPhotoFiles(files);
+    // Reset file input
+    e.target.value = '';
+  };
+  
+  // Common function to process plan files (used by both file picker and drag-drop)
+  const processPlanFiles = async (files: File[]) => {
     // Check if job has a title
     if (!jobData.title && !existingJob) {
       toast.error('Please enter a job title first');
-      e.target.value = ''; // Reset file input
       return;
     }
     
@@ -2036,6 +2110,13 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
       toast.dismiss(loadingToast);
       toast.error('Failed to process some documents');
     }
+  };
+
+  const handlePlanUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    await processPlanFiles(files);
+    // Reset file input
+    e.target.value = '';
   };
 
 
@@ -2338,21 +2419,57 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
             {/* Photos Tab */}
             {activeTab === 'photos' && (
-              <div 
-                className="photos-scroll-container"
-                style={{
-                maxHeight: '400px',
-                overflowY: 'auto',
-                overflowX: 'hidden',
-                paddingRight: '8px'
-              }}>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-                  gap: '12px'
-                }}>
-                  {jobData.photos.map(photo => (
-                    <div key={photo.id} style={{
+              <div>
+                {/* Drag-Drop Zone for Photos */}
+                <div
+                  onDragOver={handlePhotoDragOver}
+                  onDragLeave={handlePhotoDragLeave}
+                  onDrop={handlePhotoDrop}
+                  style={{
+                    border: `2px dashed ${isDraggingPhotos ? '#3B82F6' : '#D1D5DB'}`,
+                    borderRadius: '8px',
+                    padding: '24px',
+                    textAlign: 'center',
+                    backgroundColor: isDraggingPhotos ? '#EFF6FF' : '#F9FAFB',
+                    marginBottom: '16px',
+                    transition: 'all 0.2s ease',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => document.getElementById('photo-upload-inline')?.click()}
+                >
+                  <div style={{ fontSize: '48px', marginBottom: '8px' }}>📸</div>
+                  <p style={{ fontSize: '16px', fontWeight: '500', marginBottom: '4px' }}>
+                    {isDraggingPhotos ? 'Drop photos here' : 'Drag and drop photos here'}
+                  </p>
+                  <p style={{ fontSize: '14px', color: '#6B7280' }}>
+                    or click to browse
+                  </p>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handlePhotoUpload}
+                    style={{ display: 'none' }}
+                    id="photo-upload-inline"
+                  />
+                </div>
+                
+                {/* Photos Grid */}
+                <div 
+                  className="photos-scroll-container"
+                  style={{
+                    maxHeight: '300px',
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
+                    paddingRight: '8px'
+                  }}>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+                    gap: '12px'
+                  }}>
+                    {jobData.photos.map(photo => (
+                      <div key={photo.id} style={{
                       position: 'relative',
                       paddingBottom: '100%',
                       backgroundColor: '#F3F4F6',
@@ -2408,23 +2525,61 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   ))}
                 </div>
                 
-                {/* Empty state for photos */}
-                {jobData.photos.length === 0 && (
-                  <div style={{
-                    textAlign: 'center',
-                    color: '#6B7280',
-                    padding: '40px',
-                    fontSize: '16.1px'
-                  }}>
-                    No photos uploaded yet. Click "Add Photos" above to add job photos.
+                    {/* Empty state for photos */}
+                    {jobData.photos.length === 0 && (
+                      <div style={{
+                        textAlign: 'center',
+                        color: '#6B7280',
+                        padding: '40px',
+                        fontSize: '16.1px',
+                        gridColumn: '1 / -1'
+                      }}>
+                        No photos uploaded yet. Drag and drop or use the button above.
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             )}
 
             {/* Plans Tab */}
             {activeTab === 'plans' && (
               <div>
+                {/* Drag-Drop Zone for Plans */}
+                <div
+                  onDragOver={handlePlanDragOver}
+                  onDragLeave={handlePlanDragLeave}
+                  onDrop={handlePlanDrop}
+                  style={{
+                    border: `2px dashed ${isDraggingPlans ? '#3B82F6' : '#D1D5DB'}`,
+                    borderRadius: '8px',
+                    padding: '24px',
+                    textAlign: 'center',
+                    backgroundColor: isDraggingPlans ? '#EFF6FF' : '#F9FAFB',
+                    marginBottom: '16px',
+                    transition: 'all 0.2s ease',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => document.getElementById('plan-upload-inline')?.click()}
+                >
+                  <div style={{ fontSize: '48px', marginBottom: '8px' }}>📄</div>
+                  <p style={{ fontSize: '16px', fontWeight: '500', marginBottom: '4px' }}>
+                    {isDraggingPlans ? 'Drop documents here' : 'Drag and drop plans/documents here'}
+                  </p>
+                  <p style={{ fontSize: '14px', color: '#6B7280' }}>
+                    PDF, images, or documents - or click to browse
+                  </p>
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                    multiple
+                    onChange={handlePlanUpload}
+                    style={{ display: 'none' }}
+                    id="plan-upload-inline"
+                  />
+                </div>
+                
+                {/* Plans List */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {jobData.plans.map(plan => (
                     <div 
@@ -2495,17 +2650,18 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   ))}
                 </div>
                 
-                {/* Empty state for plans */}
-                {jobData.plans.length === 0 && (
-                  <div style={{
-                    textAlign: 'center',
-                    color: '#6B7280',
-                    padding: '40px',
-                    fontSize: '16.1px'
-                  }}>
-                    No documents uploaded yet. Click "Add Documents" above to add plans or drawings.
-                  </div>
-                )}
+                  {/* Empty state for plans */}
+                  {jobData.plans.length === 0 && (
+                    <div style={{
+                      textAlign: 'center',
+                      color: '#6B7280',
+                      padding: '40px',
+                      fontSize: '16.1px'
+                    }}>
+                      No documents uploaded yet. Drag and drop or use the button above.
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
