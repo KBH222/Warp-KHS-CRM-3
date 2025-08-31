@@ -2164,7 +2164,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         maxHeight: '90vh',
         overflow: 'hidden',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        position: 'relative'  // Add for proper iOS positioning
       }}>
         <div style={{
           padding: '20px',
@@ -2348,18 +2349,21 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
           ))}
         </div>
 
-        <form onSubmit={handleSubmit} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <form onSubmit={handleSubmit} style={{ 
+          flex: 1, 
+          display: 'flex', 
+          flexDirection: 'column',
+          minHeight: 0  // Critical for iOS flex sizing
+        }}>
           <div style={{ 
-            flex: 1, 
-            overflow: 'hidden',  // Changed from 'auto' to 'hidden'
-            padding: '20px',
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: 0  // Critical for iOS
+            flex: 1,
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
+            padding: '20px'
           }}>
             {/* Job Description Tab */}
             {activeTab === 'description' && (
-              <div style={{ height: '100%', overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
+              <div>
                 <div style={{ marginBottom: '16px' }}>
                   <label style={{ display: 'block', marginBottom: '4px', fontWeight: '500' }}>
                     Job Title *
@@ -2409,7 +2413,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
             {/* Lists Tab */}
             {activeTab === 'lists' && (
-              <div style={{ height: '100%', overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
+              <div>
                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
                   Task Lists
                 </label>
@@ -2432,12 +2436,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
             {/* Photos Tab */}
             {activeTab === 'photos' && (
-              <div style={{ 
-                display: 'flex', 
-                flexDirection: 'column',
-                height: '100%',
-                minHeight: 0  // Important for iOS flexbox
-              }}>
+              <div>
                 {/* Drag-Drop Zone for Photos */}
                 <div
                   onDragEnter={(e) => {
@@ -2481,13 +2480,14 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 <div 
                   className="photos-scroll-container"
                   style={{
-                    flex: 1,
-                    minHeight: 0,  // Critical for iOS
-                    overflowY: 'scroll',  // Use 'scroll' instead of 'auto' for iOS
-                    overflowX: 'hidden',
+                    maxHeight: '400px',
+                    overflowY: 'auto',
                     WebkitOverflowScrolling: 'touch',
                     paddingRight: '8px',
-                    marginTop: '8px'
+                    marginTop: '8px',
+                    border: '1px solid #E5E7EB',
+                    borderRadius: '6px',
+                    padding: '8px'
                   }}>
                   <div style={{
                     display: 'grid',
@@ -2569,12 +2569,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
             {/* Plans Tab */}
             {activeTab === 'plans' && (
-              <div style={{ 
-                display: 'flex', 
-                flexDirection: 'column',
-                height: '100%',
-                minHeight: 0  // Important for iOS flexbox
-              }}>
+              <div>
                 {/* Drag-Drop Zone for Plans */}
                 <div
                   onDragEnter={(e) => {
@@ -2619,12 +2614,14 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   display: 'flex', 
                   flexDirection: 'column', 
                   gap: '8px',
-                  flex: 1,
-                  minHeight: 0,  // Critical for iOS
-                  overflowY: 'scroll',  // Use 'scroll' instead of 'auto' for iOS
+                  maxHeight: '400px',
+                  overflowY: 'auto',
                   WebkitOverflowScrolling: 'touch',
                   paddingRight: '8px',
-                  marginTop: '8px'
+                  marginTop: '8px',
+                  border: '1px solid #E5E7EB',
+                  borderRadius: '6px',
+                  padding: '8px'
                 }}>
                   {jobData.plans.map(plan => (
                     <div 
@@ -2711,7 +2708,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
             {/* Notes Tab */}
             {activeTab === 'notes' && (
-              <div style={{ height: '100%', overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
+              <div>
                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
                   Job Notes
                 </label>
@@ -2734,7 +2731,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
             {/* Comments Tab */}
             {activeTab === 'comments' && (
-              <div style={{ height: '100%', overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
+              <div>
                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
                   Extra Costs
                 </label>
