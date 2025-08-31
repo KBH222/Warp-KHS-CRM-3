@@ -2231,61 +2231,64 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 })()}
               </div>
             </div>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              {/* Dynamic Add button based on active tab */}
-              {(activeTab === 'photos' || activeTab === 'plans') && (
-                <>
-                  <input
-                    type="file"
-                    accept={activeTab === 'photos' ? "image/*" : ".pdf,.jpg,.jpeg,.png,.doc,.docx"}
-                    multiple
-                    onChange={activeTab === 'photos' ? handlePhotoUpload : handlePlanUpload}
-                    style={{ display: 'none' }}
-                    id="file-upload-header"
-                  />
-                  <label
-                    htmlFor="file-upload-header"
-                    style={{
-                      display: 'inline-block',
-                      padding: '8px 12px',
-                      backgroundColor: '#3B82F6',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    Add
-                  </label>
-                </>
-              )}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end' }}>
+              {/* Top row: Add and Cancel buttons */}
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {/* Dynamic Add button based on active tab */}
+                {(activeTab === 'photos' || activeTab === 'plans') && (
+                  <>
+                    <input
+                      type="file"
+                      accept={activeTab === 'photos' ? "image/*" : ".pdf,.jpg,.jpeg,.png,.doc,.docx"}
+                      multiple
+                      onChange={activeTab === 'photos' ? handlePhotoUpload : handlePlanUpload}
+                      style={{ display: 'none' }}
+                      id="file-upload-header"
+                    />
+                    <label
+                      htmlFor="file-upload-header"
+                      style={{
+                        display: 'inline-block',
+                        padding: '8px 12px',
+                        backgroundColor: '#3B82F6',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: '500'
+                      }}
+                    >
+                      Add
+                    </label>
+                  </>
+                )}
+                
+                {/* Cancel button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (unsavedChanges && !window.confirm('You have unsaved changes. Are you sure you want to cancel?')) {
+                      return;
+                    }
+                    onClose();
+                  }}
+                  style={{
+                    padding: '8px 12px',
+                    backgroundColor: '#E5E7EB',
+                    color: '#374151',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '500'
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
               
-              {/* Cancel button */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (unsavedChanges && !window.confirm('You have unsaved changes. Are you sure you want to cancel?')) {
-                    return;
-                  }
-                  onClose();
-                }}
-                style={{
-                  padding: '8px 12px',
-                  backgroundColor: '#E5E7EB',
-                  color: '#374151',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '500'
-                }}
-              >
-                Cancel
-              </button>
-              
-              {/* Save button */}
+              {/* Bottom row: Save button */}
               <button
                 type="button"
                 onClick={async () => {
@@ -2302,14 +2305,16 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 }}
                 disabled={!jobData.title}
                 style={{
-                  padding: '8px 12px',
+                  padding: '8px 20px',
                   backgroundColor: jobData.title ? '#10B981' : '#9CA3AF',
                   color: 'white',
                   border: 'none',
                   borderRadius: '6px',
                   cursor: jobData.title ? 'pointer' : 'not-allowed',
                   fontSize: '14px',
-                  fontWeight: '500'
+                  fontWeight: '500',
+                  width: '100%',
+                  maxWidth: '120px'
                 }}
               >
                 Save
