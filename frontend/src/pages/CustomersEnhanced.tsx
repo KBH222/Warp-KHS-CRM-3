@@ -2504,12 +2504,12 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   }}>
                     {jobData.photos.map(photo => (
                       <div key={photo.id} style={{
-                      position: 'relative',
-                      paddingBottom: '100%',
-                      backgroundColor: '#F3F4F6',
-                      borderRadius: '8px',
-                      overflow: 'hidden'
-                    }}>
+                        position: 'relative',
+                        paddingBottom: '100%',
+                        backgroundColor: '#F3F4F6',
+                        borderRadius: '8px',
+                        overflow: 'hidden'
+                      }}>
                       <img
                         src={photo.url}
                         alt={photo.name}
@@ -2557,24 +2557,23 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       </button>
                     </div>
                   ))}
-                </div>
-                
-                    {/* Empty state for photos */}
-                    {jobData.photos.length === 0 && (
-                      <div style={{
-                        textAlign: 'center',
-                        color: '#6B7280',
-                        padding: '40px',
-                        fontSize: '16.1px',
-                        gridColumn: '1 / -1'
-                      }}>
-                        No photos uploaded yet. Drag and drop or use the button above.
-                      </div>
-                    )}
-                  </div>
+                  
+                  {/* Empty state for photos */}
+                  {jobData.photos.length === 0 && (
+                    <div style={{
+                      textAlign: 'center',
+                      color: '#6B7280',
+                      padding: '40px',
+                      fontSize: '16.1px',
+                      gridColumn: '1 / -1'
+                    }}>
+                      No photos uploaded yet. Drag and drop or use the button above.
+                    </div>
+                  )}
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
             {/* Plans Tab */}
             {activeTab === 'plans' && (
@@ -2688,8 +2687,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       </button>
                     </div>
                   ))}
-                </div>
-                
+                  
                   {/* Empty state for plans */}
                   {jobData.plans.length === 0 && (
                     <div style={{
