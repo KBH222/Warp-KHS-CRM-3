@@ -2188,22 +2188,46 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   </span>
                 )}
               </h2>
-              <div style={{ margin: '4px 0 0 0', color: '#6B7280', fontSize: '16.1px' }}>
+              <div style={{ 
+                margin: '4px 0 0 0', 
+                color: '#6B7280', 
+                fontSize: '16.1px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                maxWidth: '100%'
+              }}>
                 {(() => {
                   // Split address into street and city/state/zip
                   const parts = customer.address.split(', ');
                   if (parts.length >= 3) {
-                    const street = parts[0];
-                    const cityStateZip = parts.slice(1).join(', ');
+                    // Get the last 2 parts for city/state/zip
+                    const stateZip = parts.slice(-2).join(', ');
+                    // Everything else is the street address
+                    const street = parts.slice(0, -2).join(', ');
                     return (
                       <>
-                        <div>{street}</div>
-                        <div>{cityStateZip}</div>
+                        <div style={{
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}>{street}</div>
+                        <div style={{
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}>{stateZip}</div>
                       </>
                     );
                   }
                   // Fallback for addresses that don't match expected format
-                  return customer.address;
+                  return (
+                    <div style={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>{customer.address}</div>
+                  );
                 })()}
               </div>
             </div>
