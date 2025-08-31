@@ -1890,13 +1890,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
   const [isDraggingPhotos, setIsDraggingPhotos] = useState(false);
   const [isDraggingPlans, setIsDraggingPlans] = useState(false);
   
-  // Debug: Log when modal mounts
-  useEffect(() => {
-    console.log('🚀 AddJobModal mounted, drag-drop ready');
-    return () => {
-      console.log('👋 AddJobModal unmounted');
-    };
-  }, []);
   
   const [jobData, setJobData] = useState({
     id: existingJob?.id || null,
@@ -1952,17 +1945,15 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
   // Drag-drop handlers for Photos
   const handlePhotoDragOver = (e: React.DragEvent) => {
-    console.log('🎯 Photo drag over detected!');
     e.preventDefault();
-    e.stopPropagation(); // Prevent event bubbling
-    e.dataTransfer.dropEffect = 'copy'; // Show copy cursor
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = 'copy';
     setIsDraggingPhotos(true);
   };
   
   const handlePhotoDragLeave = (e: React.DragEvent) => {
-    console.log('👋 Photo drag leave detected');
     e.preventDefault();
-    e.stopPropagation(); // Prevent event bubbling
+    e.stopPropagation();
     // Only set to false if we're leaving the drop zone entirely
     if (e.currentTarget === e.target) {
       setIsDraggingPhotos(false);
@@ -1970,17 +1961,14 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
   };
   
   const handlePhotoDrop = async (e: React.DragEvent) => {
-    console.log('📁 Photo drop detected!', e.dataTransfer.files);
     e.preventDefault();
     e.stopPropagation();
     setIsDraggingPhotos(false);
     
     const files = Array.from(e.dataTransfer.files);
-    console.log('Files received:', files.length, files);
     
     // Filter for image files only
     const imageFiles = files.filter(file => file.type.startsWith('image/'));
-    console.log('Image files filtered:', imageFiles.length);
     
     if (imageFiles.length === 0) {
       toast.error('Please drop image files only');
@@ -1993,14 +1981,12 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
   
   // Drag-drop handlers for Plans
   const handlePlanDragOver = (e: React.DragEvent) => {
-    console.log('🎯 Plan drag over detected!');
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy'; // Show copy cursor
     setIsDraggingPlans(true);
   };
   
   const handlePlanDragLeave = (e: React.DragEvent) => {
-    console.log('👋 Plan drag leave detected');
     e.preventDefault();
     // Only set to false if we're leaving the drop zone entirely
     if (e.currentTarget === e.target) {
@@ -2009,7 +1995,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
   };
   
   const handlePlanDrop = async (e: React.DragEvent) => {
-    console.log('📁 Plan drop detected!', e.dataTransfer.files);
     e.preventDefault();
     e.stopPropagation();
     setIsDraggingPlans(false);
@@ -2032,11 +2017,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
   
   // Common function to process photo files (used by both file picker and drag-drop)
   const processPhotoFiles = async (files: File[]) => {
-    console.log('📷 Processing photo files:', files.length);
-    
     // Check if job has a title
     if (!jobData.title && !existingJob) {
-      console.log('❌ No job title - aborting photo upload');
       toast.error('Please enter a job title first');
       return;
     }
@@ -2447,7 +2429,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 {/* Drag-Drop Zone for Photos */}
                 <div
                   onDragEnter={(e) => {
-                    console.log('🚪 Photo drag enter detected!');
                     e.preventDefault();
                     e.stopPropagation();
                     setIsDraggingPhotos(true);
@@ -2473,10 +2454,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   </p>
                   <p style={{ fontSize: '14px', color: '#6B7280' }}>
                     or click to browse
-                  </p>
-                  {/* Debug: Show drag state */}
-                  <p style={{ fontSize: '12px', color: '#DC2626', marginTop: '8px' }}>
-                    [DEBUG] Drag state: {isDraggingPhotos ? 'DRAGGING' : 'NOT DRAGGING'}
                   </p>
                   <input
                     type="file"
@@ -2581,7 +2558,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                 {/* Drag-Drop Zone for Plans */}
                 <div
                   onDragEnter={(e) => {
-                    console.log('🚪 Plan drag enter detected!');
                     e.preventDefault();
                     e.stopPropagation();
                     setIsDraggingPlans(true);
