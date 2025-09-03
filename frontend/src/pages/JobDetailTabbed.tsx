@@ -643,6 +643,9 @@ const JobDetailTabbed = () => {
         {/* Tasks Tab */}
         {activeTab === 'tasks' && (
           <div style={{ position: 'relative', minHeight: '400px' }}>
+            <div style={{background: 'red', color: 'white', fontSize: '40px', padding: '20px', textAlign: 'center'}}>
+              !!! TESTING RAILWAY DEPLOYMENT - VERSION 4 !!!
+            </div>
             <h2 style={{ margin: '0 0 16px 0', fontSize: '20.7px', fontWeight: '600' }}>Task List (RED TAB v3)</h2>
             
             {/* Bulk Actions Toolbar */}
