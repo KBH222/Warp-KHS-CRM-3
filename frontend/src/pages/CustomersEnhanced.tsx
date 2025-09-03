@@ -2498,12 +2498,18 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
             {/* Tasks Tab (formerly Lists) */}
             {activeTab === 'lists' && (
-              <div style={{ position: 'relative', paddingBottom: '80px' }}>
+              <div style={{ 
+                position: 'relative', 
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
                 {/* Task List */}
                 <div style={{ 
-                  maxHeight: '500px', 
+                  flex: 1,
                   overflowY: 'auto',
-                  WebkitOverflowScrolling: 'touch'
+                  WebkitOverflowScrolling: 'touch',
+                  paddingBottom: '80px'
                 }}>
                   {jobData.tasks.length === 0 ? (
                     <div style={{
@@ -2826,7 +2832,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
                 {/* Fixed Task Input at Bottom */}
                 <div style={{
-                  position: 'fixed',
+                  position: 'absolute',
                   bottom: 0,
                   left: 0,
                   right: 0,
@@ -2834,7 +2840,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   borderTop: '1px solid #E5E7EB',
                   padding: '16px',
                   boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
-                  zIndex: 20
+                  zIndex: 10
                 }}>
                   <form onSubmit={(e) => {
                     e.preventDefault();
