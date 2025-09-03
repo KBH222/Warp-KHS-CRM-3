@@ -78,7 +78,9 @@
       "Bash(git restore:*)",
       "Bash(npx vite:*)",
       "Bash(npx playwright:*)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git branch:*)"
     ],
     "deny": []
   }
