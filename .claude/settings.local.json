@@ -82,7 +82,9 @@
       "Bash(git rev-parse:*)",
       "Bash(git branch:*)",
       "Bash(/dev/null)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(start C:Usersbrucedevkhs-crmtest-tasks-no-button.html)",
+      "Bash(start http://localhost:5173/clear-sw.html)"
     ],
     "deny": []
   }

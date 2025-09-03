@@ -2498,58 +2498,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
 
             {/* Tasks Tab (formerly Lists) */}
             {activeTab === 'lists' && (
-              <div style={{ position: 'relative' }}>
-                {/* Add Task Input */}
-                <div style={{ marginBottom: '20px' }}>
-                  <form onSubmit={(e) => {
-                    e.preventDefault();
-                    if (newTaskText.trim()) {
-                      const newTask = {
-                        id: `task-${Date.now()}`,
-                        text: newTaskText.trim(),
-                        completed: false,
-                        order: jobData.tasks.length
-                      };
-                      setJobData(prev => ({
-                        ...prev,
-                        tasks: [...prev.tasks, newTask]
-                      }));
-                      setNewTaskText('');
-                      setUnsavedChanges(true);
-                    }
-                  }}>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <input
-                        type="text"
-                        value={newTaskText}
-                        onChange={(e) => setNewTaskText(e.target.value)}
-                        placeholder="Add a new task..."
-                        style={{
-                          flex: 1,
-                          padding: '12px',
-                          border: '1px solid #D1D5DB',
-                          borderRadius: '6px',
-                          fontSize: '16px'
-                        }}
-                      />
-                      <button
-                        type="submit"
-                        style={{
-                          padding: '12px 20px',
-                          backgroundColor: '#3B82F6',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '6px',
-                          fontSize: '16px',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        Add
-                      </button>
-                    </div>
-                  </form>
-                </div>
-
+              <div style={{ position: 'relative', paddingBottom: '80px' }}>
                 {/* Task List */}
                 <div style={{ 
                   maxHeight: '500px', 
@@ -2874,6 +2823,64 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     </div>
                   </div>
                 )}
+
+                {/* Fixed Task Input at Bottom */}
+                <div style={{
+                  position: 'fixed',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  backgroundColor: 'white',
+                  borderTop: '1px solid #E5E7EB',
+                  padding: '16px',
+                  boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
+                  zIndex: 20
+                }}>
+                  <form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (newTaskText.trim()) {
+                      const newTask = {
+                        id: `task-${Date.now()}`,
+                        text: newTaskText.trim(),
+                        completed: false,
+                        order: jobData.tasks.length
+                      };
+                      setJobData(prev => ({
+                        ...prev,
+                        tasks: [...prev.tasks, newTask]
+                      }));
+                      setNewTaskText('');
+                      setUnsavedChanges(true);
+                    }
+                  }} style={{ maxWidth: '800px', margin: '0 auto' }}>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <input
+                        type="text"
+                        value={newTaskText}
+                        onChange={(e) => setNewTaskText(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            e.currentTarget.form.requestSubmit();
+                          }
+                        }}
+                        placeholder="Add a task..."
+                        style={{
+                          flex: 1,
+                          padding: '12px 16px',
+                          border: '2px solid #E5E7EB',
+                          borderRadius: '8px',
+                          fontSize: '16.1px',
+                          outline: 'none',
+                          transition: 'border-color 0.2s'
+                        }}
+                        onFocus={(e) => e.currentTarget.style.borderColor = '#3B82F6'}
+                        onBlur={(e) => e.currentTarget.style.borderColor = '#E5E7EB'}
+                      />
+                      {/* NO ADD BUTTON - JUST PRESS ENTER */}
+                    </div>
+                  </form>
+                </div>
 
               </div>
             )}

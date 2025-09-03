@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 // BUILD TIMESTAMP: 2025-09-03T02:00:00Z - FORCE REBUILD
+console.log('JobDetailTabbed LOADING - NO ADD BUTTON VERSION - ' + new Date().toISOString());
 const JobDetailTabbed = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -950,6 +951,7 @@ const JobDetailTabbed = () => {
               boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
               zIndex: 20
             }}>
+              {console.log('RENDERING TASK INPUT FORM - NO ADD BUTTON - JUST PRESS ENTER')}
               <form onSubmit={handleAddTask} style={{ maxWidth: '800px', margin: '0 auto' }} data-version="NO-ADD-BUTTON-V6">
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }} data-container="task-input-container">
                   <input

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Service Worker</title>
+</head>
+<body>
+    <h1>Clearing Service Worker...</h1>
+    <div id="status"></div>
+    <script>
+        const statusEl = document.getElementById('status');
+        
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister().then(function(success) {
+                        statusEl.innerHTML += '<p>Service worker unregistered: ' + success + '</p>';
+                    });
+                }
+                
+                // Clear all caches
+                caches.keys().then(function(names) {
+                    for (let name of names) {
+                        caches.delete(name);
+                        statusEl.innerHTML += '<p>Cache deleted: ' + name + '</p>';
+                    }
+                    
+                    statusEl.innerHTML += '<h2 style="color: green">All service workers and caches cleared!</h2>';
+                    statusEl.innerHTML += '<p>Now go back to <a href="http://localhost:5173">http://localhost:5173</a></p>';
+                });
+            });
+        } else {
+            statusEl.innerHTML = '<p>Service workers not supported</p>';
+        }
+    </script>
+</body>
+</html>
