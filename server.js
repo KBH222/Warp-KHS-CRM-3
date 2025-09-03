@@ -66,6 +66,24 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Debug endpoint to check if tasks column exists
+app.get('/api/check-tasks-column', async (req, res) => {
+  try {
+    // Try a simple query first
+    const testJob = await prisma.job.findFirst();
+    const hasTasksColumn = testJob && 'tasks' in testJob;
+    
+    res.json({ 
+      hasTasksColumn,
+      message: hasTasksColumn ? 'Tasks column exists' : 'Tasks column does not exist',
+      testJob: testJob ? Object.keys(testJob) : []
+    });
+  } catch (error) {
+    console.error('Error checking schema:', error);
+    res.status(500).json({ error: 'Failed to check schema', details: error.message });
+  }
+});
+
 // Authentication Routes
 app.post('/api/auth/register', async (req, res) => {
   try {
