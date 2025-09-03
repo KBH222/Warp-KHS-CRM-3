@@ -11,6 +11,15 @@ const ScheduleCalendar = () => {
   const [showEditMenu, setShowEditMenu] = useState(null);
   const [draggedJob, setDraggedJob] = useState(null);
   const [dragOverDate, setDragOverDate] = useState(null);
+  const [showJobModal, setShowJobModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [newEvent, setNewEvent] = useState({
+    title: '',
+    startDate: '',
+    endDate: '',
+    description: '',
+    type: 'personal' // personal event type
+  });
   
   // Load jobs from API
   const [allJobs, setAllJobs] = useState([]);
@@ -162,9 +171,21 @@ const ScheduleCalendar = () => {
     });
   };
 
+  const formatDateForInput = (date) => {
+    const d = new Date(date);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+
   const handleDateClick = (date) => {
-    // Navigate to customers page to add a job
-    navigate('/customers');
+    setSelectedDate(date);
+    setNewEvent({
+      title: '',
+      startDate: formatDateForInput(date),
+      endDate: formatDateForInput(date),
+      description: '',
+      type: 'personal'
+    });
+    setShowJobModal(true);
   };
 
 
@@ -1260,7 +1281,7 @@ const ScheduleCalendar = () => {
             {isLoading ? 'Syncing...' : '🔄 Sync'}
           </button>
           <button
-            onClick={() => navigate('/customers')}
+            onClick={() => handleDateClick(new Date())}
             style={{
               padding: '8px 16px',
               backgroundColor: '#3B82F6',
@@ -1271,7 +1292,7 @@ const ScheduleCalendar = () => {
               fontSize: '16.1px'
             }}
           >
-            + New Job
+            + New Event
           </button>
         </div>
         </div>
@@ -1455,6 +1476,199 @@ const ScheduleCalendar = () => {
           </div>
         </div>
       </div>
+
+      {/* Schedule Event Modal */}
+      {showJobModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 50
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '8px',
+            padding: '24px',
+            maxWidth: '500px',
+            width: '90%'
+          }}>
+            <h2 style={{ fontSize: '23px', fontWeight: '600', marginBottom: '20px' }}>
+              Add Schedule Event
+            </h2>
+            
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              // For now, just show info about using Customers page for work jobs
+              toast.info('Personal events feature coming soon. Please use Customers page to add work jobs.');
+              setShowJobModal(false);
+              setSelectedDate(null);
+            }}>
+              {/* Event Title */}
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
+                  Event Title *
+                </label>
+                <input
+                  type="text"
+                  value={newEvent.title}
+                  onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+                  placeholder="e.g., Doctor appointment, Meeting"
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #E5E7EB',
+                    borderRadius: '6px',
+                    fontSize: '16.1px'
+                  }}
+                  required
+                />
+              </div>
+
+              {/* Date Range */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
+                    Start Date *
+                  </label>
+                  <input
+                    type="date"
+                    value={newEvent.startDate}
+                    onChange={(e) => setNewEvent({ ...newEvent, startDate: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      border: '1px solid #E5E7EB',
+                      borderRadius: '6px',
+                      fontSize: '16.1px'
+                    }}
+                    required
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
+                    End Date *
+                  </label>
+                  <input
+                    type="date"
+                    value={newEvent.endDate}
+                    onChange={(e) => setNewEvent({ ...newEvent, endDate: e.target.value })}
+                    min={newEvent.startDate}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      border: '1px solid #E5E7EB',
+                      borderRadius: '6px',
+                      fontSize: '16.1px'
+                    }}
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Description */}
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
+                  Description
+                </label>
+                <textarea
+                  value={newEvent.description}
+                  onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
+                  placeholder="Add event details..."
+                  rows={3}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #E5E7EB',
+                    borderRadius: '6px',
+                    fontSize: '16.1px',
+                    resize: 'vertical'
+                  }}
+                />
+              </div>
+
+              {/* Info Box */}
+              <div style={{
+                padding: '12px',
+                backgroundColor: '#EBF5FF',
+                borderRadius: '6px',
+                marginBottom: '20px'
+              }}>
+                <p style={{ color: '#1E40AF', fontSize: '14px', margin: 0 }}>
+                  <strong>Note:</strong> This form is for personal events. To add work jobs with customer information, 
+                  please use the <button
+                    type="button"
+                    onClick={() => {
+                      navigate('/customers');
+                      setShowJobModal(false);
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      color: '#1E40AF',
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
+                      fontSize: 'inherit',
+                      fontWeight: '600'
+                    }}
+                  >
+                    Customers page
+                  </button>.
+                </p>
+              </div>
+
+              {/* Buttons */}
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowJobModal(false);
+                    setSelectedDate(null);
+                    setNewEvent({
+                      title: '',
+                      startDate: '',
+                      endDate: '',
+                      description: '',
+                      type: 'personal'
+                    });
+                  }}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#E5E7EB',
+                    color: '#374151',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '16.1px'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#9333EA',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '16.1px'
+                  }}
+                >
+                  Add Personal Event
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
