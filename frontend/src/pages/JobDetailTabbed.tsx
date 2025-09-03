@@ -6,7 +6,7 @@ const JobDetailTabbed = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('description');
 
-  // Add CSS animations
+  // Add CSS animations and hide any Add button
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = `
@@ -29,10 +29,44 @@ const JobDetailTabbed = () => {
           stroke-dasharray: 100 0;
         }
       }
+      
+      /* NUCLEAR OPTION: Hide ANY button with Add text in Tasks tab */
+      button:has-text("Add") {
+        display: none !important;
+      }
     `;
     document.head.appendChild(style);
     return () => document.head.removeChild(style);
   }, []);
+
+  // Force remove any Add button when Tasks tab is active
+  useEffect(() => {
+    if (activeTab === 'tasks') {
+      const removeAddButtons = () => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(btn => {
+          if (btn.textContent && btn.textContent.trim() === 'Add') {
+            console.warn('FOUND ADD BUTTON - REMOVING:', btn);
+            btn.style.display = 'none';
+            btn.remove();
+          }
+        });
+      };
+      
+      // Run immediately
+      removeAddButtons();
+      
+      // Run again after a delay in case of dynamic rendering
+      setTimeout(removeAddButtons, 100);
+      setTimeout(removeAddButtons, 500);
+      
+      // Watch for new buttons being added
+      const observer = new MutationObserver(removeAddButtons);
+      observer.observe(document.body, { childList: true, subtree: true });
+      
+      return () => observer.disconnect();
+    }
+  }, [activeTab]);
 
   // Load job data from localStorage
   const [job, setJob] = useState(null);
@@ -609,7 +643,7 @@ const JobDetailTabbed = () => {
         {/* Tasks Tab */}
         {activeTab === 'tasks' && (
           <div style={{ position: 'relative', minHeight: '400px' }}>
-            <h2 style={{ margin: '0 0 16px 0', fontSize: '20.7px', fontWeight: '600' }}>Task List (Flow Input)</h2>
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '20.7px', fontWeight: '600' }}>Task List (Flow Input - NO ADD BUTTON v2)</h2>
             
             {/* Bulk Actions Toolbar */}
             <div style={{
