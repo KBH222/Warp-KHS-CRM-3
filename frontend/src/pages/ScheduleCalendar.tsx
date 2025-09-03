@@ -141,6 +141,11 @@ const ScheduleCalendar = () => {
   });
 
   // Calendar helpers
+  const formatDateForInput = (date) => {
+    const d = new Date(date);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+
   const getDaysInMonth = (date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   };
@@ -175,8 +180,8 @@ const ScheduleCalendar = () => {
       title: '',
       customerId: '',
       workers: [],
-      startDate: date.toISOString().split('T')[0],
-      endDate: date.toISOString().split('T')[0],
+      startDate: formatDateForInput(date),
+      endDate: formatDateForInput(date),
       description: '',
       isRecurring: false,
       recurrenceType: 'weekly',
@@ -226,8 +231,8 @@ const ScheduleCalendar = () => {
       title: job.title,
       customerId: job.customerId,
       workers: [...job.workers],
-      startDate: new Date(job.startDate).toISOString().split('T')[0],
-      endDate: new Date(job.endDate).toISOString().split('T')[0],
+      startDate: formatDateForInput(job.startDate),
+      endDate: formatDateForInput(job.endDate),
       description: job.description || '',
       isRecurring: false,
       recurrenceType: 'weekly',
@@ -1531,8 +1536,8 @@ const ScheduleCalendar = () => {
                 title: '',
                 customerId: '',
                 workers: [],
-                startDate: today.toISOString().split('T')[0],
-                endDate: today.toISOString().split('T')[0],
+                startDate: formatDateForInput(today),
+                endDate: formatDateForInput(today),
                 description: '',
                 isRecurring: false,
                 recurrenceType: 'weekly',
