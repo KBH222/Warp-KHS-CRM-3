@@ -498,7 +498,7 @@ const JobDetailTabbed = () => {
                 cursor: 'pointer',
                 fontSize: '16.1px',
                 fontWeight: '500',
-                color: activeTab === tab.id ? '#3B82F6' : '#6B7280',
+                color: tab.id === 'tasks' ? '#EF4444' : (activeTab === tab.id ? '#3B82F6' : '#6B7280'),
                 borderBottom: activeTab === tab.id ? '2px solid #3B82F6' : '2px solid transparent',
                 marginBottom: '-2px',
                 whiteSpace: 'nowrap',
