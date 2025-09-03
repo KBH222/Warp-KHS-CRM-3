@@ -426,6 +426,7 @@ const CustomersEnhanced = () => {
           customerId: jobData.customerId || editingJob.customerId,
           photos: jobData.photos || [],
           plans: jobData.plans || [],
+          tasks: jobData.tasks || [],
           commentsText: jobData.commentsText || ''
         };
         
@@ -474,6 +475,7 @@ const CustomersEnhanced = () => {
           customerId: jobData.customerId,
           photos: jobData.photos || [],
           plans: jobData.plans || [],
+          tasks: jobData.tasks || [],
           commentsText: jobData.commentsText || ''
         };
         
@@ -528,6 +530,7 @@ const CustomersEnhanced = () => {
           notes: jobData.notes || '',
           photos: jobData.photos || [],
           plans: jobData.plans || [],
+          tasks: jobData.tasks || [],
           commentsText: jobData.commentsText || ''
         };
         const newJob = await jobsApi.create(createPayload);
