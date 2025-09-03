@@ -163,7 +163,8 @@ const ScheduleCalendar = () => {
   };
 
   const handleDateClick = (date) => {
-    toast.info('To add jobs, please use the Customers page');
+    // Navigate to customers page to add a job
+    navigate('/customers');
   };
 
 
@@ -1259,9 +1260,7 @@ const ScheduleCalendar = () => {
             {isLoading ? 'Syncing...' : '🔄 Sync'}
           </button>
           <button
-            onClick={() => {
-              toast.info('To add or edit jobs, please use the Customers page');
-            }}
+            onClick={() => navigate('/customers')}
             style={{
               padding: '8px 16px',
               backgroundColor: '#3B82F6',
