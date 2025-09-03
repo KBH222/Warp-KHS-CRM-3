@@ -609,7 +609,7 @@ const JobDetailTabbed = () => {
         {/* Tasks Tab */}
         {activeTab === 'tasks' && (
           <div style={{ position: 'relative', minHeight: '400px' }}>
-            <h2 style={{ margin: '0 0 16px 0', fontSize: '20.7px', fontWeight: '600' }}>Task List</h2>
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '20.7px', fontWeight: '600' }}>Task List (Flow Input)</h2>
             
             {/* Bulk Actions Toolbar */}
             <div style={{

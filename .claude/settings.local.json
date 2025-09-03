@@ -80,7 +80,8 @@
       "Bash(npx playwright:*)",
       "Bash(timeout:*)",
       "Bash(git rev-parse:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(/dev/null)"
     ],
     "deny": []
   }
