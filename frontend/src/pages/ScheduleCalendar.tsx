@@ -1,76 +1,93 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { calendarJobStorage, customerStorage } from '../utils/localStorage';
 import { workerService } from '../services/worker.service';
+import { customersApi } from '../services/api';
+import { toast } from 'react-toastify';
 
 const ScheduleCalendar = () => {
   const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState('month'); // month, week, day, gantt
-  const [showJobModal, setShowJobModal] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [editingJob, setEditingJob] = useState(null);
   const [showEditMenu, setShowEditMenu] = useState(null);
   const [draggedJob, setDraggedJob] = useState(null);
   const [dragOverDate, setDragOverDate] = useState(null);
-  const [quickAddDate, setQuickAddDate] = useState(null);
-  const [quickAddText, setQuickAddText] = useState('');
   
-  // Load jobs from localStorage or use defaults
-  const [allJobs, setAllJobs] = useState(() => {
-    try {
-      const savedJobs = calendarJobStorage.getAll();
-      if (savedJobs && savedJobs.length > 0) {
-        return savedJobs;
-      }
-    } catch (error) {
-      console.error('Failed to load saved jobs:', error);
-    }
-    // Default jobs for first time
-    return [
-      {
-        id: 'job1',
-        customerId: '1',
-        customerName: 'Sarah Johnson',
-        title: 'Kitchen Remodel',
-        startDate: new Date(2024, 11, 15), // Dec 15
-        endDate: new Date(2024, 11, 22),
-        workers: ['KBH'],
-        color: '#3B82F6',
-        price: 15000,
-        status: 'completed'
-      },
-      {
-        id: 'job2',
-        customerId: '1',
-        customerName: 'Sarah Johnson',
-        title: 'Bathroom Addition',
-        startDate: new Date(2024, 11, 18),
-        endDate: new Date(2024, 11, 20),
-        workers: ['ISA', 'TYL'],
-        color: '#10B981',
-        price: 8500,
-        status: 'in-progress'
-      },
-      {
-        id: 'job3',
-        customerId: '2',
-        customerName: 'Mike Davis',
-        title: 'Deck Installation',
-        startDate: new Date(2024, 11, 25),
-        endDate: new Date(2024, 11, 28),
-        workers: ['TYL'],
-        color: '#F59E0B',
-        price: 5000,
-        status: 'pending'
-      }
-    ];
-  });
+  // Load jobs from API
+  const [allJobs, setAllJobs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Save jobs to localStorage whenever they change
+  // Load jobs from API on mount
   useEffect(() => {
-    calendarJobStorage.save(allJobs);
-  }, [allJobs]);
+    loadJobs();
+  }, []);
+
+  const loadJobs = async () => {
+    try {
+      setIsLoading(true);
+      // Get all customers with their jobs
+      const customers = await customersApi.getAll();
+      
+      // Extract and transform jobs for calendar display
+      const jobs = [];
+      customers.forEach(customer => {
+        if (customer.jobs && customer.jobs.length > 0) {
+          customer.jobs.forEach(job => {
+            // Only include jobs with dates
+            if (job.startDate || job.endDate) {
+              jobs.push({
+                id: job.id,
+                customerId: customer.id,
+                customerName: customer.name,
+                title: job.title,
+                startDate: job.startDate ? new Date(job.startDate) : new Date(),
+                endDate: job.endDate ? new Date(job.endDate) : job.startDate ? new Date(job.startDate) : new Date(),
+                workers: extractWorkersFromJob(job),
+                color: getJobColor(job.status),
+                price: job.totalCost || 0,
+                status: job.status,
+                description: job.description,
+                priority: job.priority
+              });
+            }
+          });
+        }
+      });
+      
+      setAllJobs(jobs);
+    } catch (error) {
+      console.error('Failed to load jobs:', error);
+      toast.error('Failed to load schedule data');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Helper function to extract workers from job
+  const extractWorkersFromJob = (job) => {
+    // If job has assignedWorkers field
+    if (job.assignedWorkers && Array.isArray(job.assignedWorkers)) {
+      return job.assignedWorkers;
+    }
+    // If job has tasks with assignees
+    if (job.tasks && Array.isArray(job.tasks)) {
+      const assignees = job.tasks
+        .filter(task => task.assignedTo)
+        .map(task => task.assignedTo);
+      return [...new Set(assignees)]; // Remove duplicates
+    }
+    return [];
+  };
+
+  // Helper function to get color based on job status
+  const getJobColor = (status) => {
+    switch (status) {
+      case 'COMPLETED': return '#10B981';
+      case 'IN_PROGRESS': return '#3B82F6';
+      case 'QUOTED': return '#F59E0B';
+      case 'APPROVED': return '#8B5CF6';
+      default: return '#6B7280';
+    }
+  };
 
   // Scroll to current date in Gantt view
   useEffect(() => {
@@ -91,16 +108,7 @@ const ScheduleCalendar = () => {
     }
   }, [view, currentDate]);
 
-  // Get customers from localStorage for dropdown
-  const [customers, setCustomers] = useState([]);
-
-  // Load customers on component mount
-  useEffect(() => {
-    const savedCustomers = customerStorage.getAll() || [];
-    setCustomers(savedCustomers.map(c => ({ id: c.id, name: c.name })));
-  }, []);
-
-  // Get workers from service
+  // Get workers from service for display
   const [workers, setWorkers] = useState([]);
   const [workerColors, setWorkerColors] = useState({});
 
@@ -125,32 +133,7 @@ const ScheduleCalendar = () => {
     loadWorkers();
   }, []);
 
-  // New job form state
-  const [newJob, setNewJob] = useState({
-    title: '',
-    customerId: '',
-    workers: [],
-    startDate: '',
-    endDate: '',
-    description: '',
-    isRecurring: false,
-    recurrenceType: 'weekly', // daily, weekly, biweekly, monthly
-    recurrenceEnd: '',
-    recurrenceCount: 1,
-    entryType: 'work' // 'work' or 'personal'
-  });
-
   // Calendar helpers
-  const formatDateForInput = (date) => {
-    const d = new Date(date);
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  };
-
-  // Parse date string as local date (not UTC)
-  const parseLocalDate = (dateString) => {
-    const [year, month, day] = dateString.split('-').map(num => parseInt(num));
-    return new Date(year, month - 1, day);
-  };
 
   const getDaysInMonth = (date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -180,81 +163,20 @@ const ScheduleCalendar = () => {
   };
 
   const handleDateClick = (date) => {
-    setSelectedDate(date);
-    setEditingJob(null);
-    setNewJob({
-      title: '',
-      customerId: '',
-      workers: [],
-      startDate: formatDateForInput(date),
-      endDate: formatDateForInput(date),
-      description: '',
-      isRecurring: false,
-      recurrenceType: 'weekly',
-      recurrenceEnd: '',
-      recurrenceCount: 1,
-      entryType: 'work'
-    });
-    setShowJobModal(true);
+    toast.info('To add jobs, please use the Customers page');
   };
 
-  const handleQuickAdd = (date) => {
-    if (quickAddText.trim()) {
-      // Create a quick job with default settings
-      const newJobEntry = {
-        id: `job${Date.now()}`,
-        customerId: customers[0]?.id || '1', // Default to first customer
-        customerName: customers[0]?.name || 'Default Customer',
-        title: quickAddText.trim(),
-        startDate: new Date(date),
-        endDate: new Date(date),
-        workers: workers.length > 0 ? [workers[0]] : [], // Default to first worker
-        color: workers.length > 0 ? workerColors[workers[0]] : '#3B82F6',
-        description: '',
-        status: 'pending',
-        entryType: 'work' // Default to work entry
-      };
-      
-      setAllJobs([...allJobs, newJobEntry]);
-      setQuickAddDate(null);
-      setQuickAddText('');
-    }
-  };
 
-  const handleCellKeyDown = (e, date) => {
-    if (e.key === 'Enter' && quickAddDate?.toDateString() === date.toDateString()) {
-      e.preventDefault();
-      handleQuickAdd(date);
-    } else if (e.key === 'Escape') {
-      setQuickAddDate(null);
-      setQuickAddText('');
-    }
-  };
 
   const handleEditJob = (job) => {
-    setEditingJob(job);
-    setNewJob({
-      title: job.title,
-      customerId: job.customerId,
-      workers: [...job.workers],
-      startDate: formatDateForInput(job.startDate),
-      endDate: formatDateForInput(job.endDate),
-      description: job.description || '',
-      isRecurring: false,
-      recurrenceType: 'weekly',
-      recurrenceEnd: '',
-      recurrenceCount: 1,
-      entryType: job.entryType || 'work'
-    });
-    setShowJobModal(true);
+    // Navigate to the job in CustomersEnhanced page
+    navigate(`/customers?jobId=${job.id}`);
     setShowEditMenu(null);
   };
 
   const handleDeleteJob = (jobId) => {
-    if (confirm('Are you sure you want to delete this job?')) {
-      setAllJobs(allJobs.filter(job => job.id !== jobId));
-      setShowEditMenu(null);
-    }
+    toast.info('Please delete jobs from the Customers page');
+    setShowEditMenu(null);
   };
 
   const handleJobClick = (e, job) => {
@@ -289,20 +211,7 @@ const ScheduleCalendar = () => {
     e.stopPropagation();
     
     if (draggedJob && targetDate) {
-      const jobDuration = Math.ceil((new Date(draggedJob.endDate) - new Date(draggedJob.startDate)) / (1000 * 60 * 60 * 24));
-      const newStartDate = new Date(targetDate);
-      const newEndDate = new Date(targetDate);
-      newEndDate.setDate(newEndDate.getDate() + jobDuration);
-
-      setAllJobs((allJobs || []).map(job => 
-        job.id === draggedJob.id 
-          ? {
-              ...job,
-              startDate: newStartDate,
-              endDate: newEndDate
-            }
-          : job
-      ));
+      toast.info('Please update job dates from the Customers page');
     }
     
     setDraggedJob(null);
@@ -315,138 +224,6 @@ const ScheduleCalendar = () => {
     setDragOverDate(null);
   };
 
-  const generateRecurringJobs = (baseJob, recurrenceType, recurrenceEnd, recurrenceCount) => {
-    const jobs = [];
-    const startDate = new Date(baseJob.startDate);
-    const endDate = new Date(baseJob.endDate);
-    const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
-    
-    let currentStart = new Date(startDate);
-    let currentEnd = new Date(endDate);
-    let count = 0;
-    
-    const maxDate = recurrenceEnd ? new Date(recurrenceEnd) : new Date();
-    maxDate.setFullYear(maxDate.getFullYear() + 1); // Max 1 year if no end date
-    
-    while (count < recurrenceCount && currentStart <= maxDate) {
-      jobs.push({
-        ...baseJob,
-        id: `${baseJob.id}_${count}`,
-        startDate: new Date(currentStart),
-        endDate: new Date(currentEnd),
-        parentJobId: baseJob.id,
-        recurrenceIndex: count,
-        entryType: baseJob.entryType || 'work'
-      });
-      
-      // Move to next occurrence
-      switch (recurrenceType) {
-        case 'daily':
-          currentStart.setDate(currentStart.getDate() + 1);
-          currentEnd.setDate(currentEnd.getDate() + 1);
-          break;
-        case 'weekly':
-          currentStart.setDate(currentStart.getDate() + 7);
-          currentEnd.setDate(currentEnd.getDate() + 7);
-          break;
-        case 'biweekly':
-          currentStart.setDate(currentStart.getDate() + 14);
-          currentEnd.setDate(currentEnd.getDate() + 14);
-          break;
-        case 'monthly':
-          currentStart.setMonth(currentStart.getMonth() + 1);
-          currentEnd.setMonth(currentEnd.getMonth() + 1);
-          break;
-      }
-      
-      count++;
-    }
-    
-    return jobs;
-  };
-
-  const handleSubmitJob = (e) => {
-    e.preventDefault();
-    
-    // For personal entries, customer and workers are optional
-    if (!newJob.title) {
-      alert('Please provide a title');
-      return;
-    }
-    
-    if (newJob.entryType === 'work' && (!newJob.customerId || newJob.workers.length === 0)) {
-      alert('Please fill in all required fields and select at least one worker for work entries');
-      return;
-    }
-
-    const customer = newJob.entryType === 'work' ? customers.find(c => c.id === newJob.customerId) : null;
-    
-    if (editingJob) {
-      // Update existing job
-      setAllJobs((allJobs || []).map(job => 
-        job.id === editingJob.id 
-          ? {
-              ...job,
-              title: newJob.title,
-              customerId: newJob.customerId,
-              customerName: customer?.name || '',
-              startDate: parseLocalDate(newJob.startDate),
-              endDate: parseLocalDate(newJob.endDate),
-              workers: newJob.workers,
-              color: newJob.entryType === 'personal' ? '#9333EA' : (newJob.workers[0] ? workerColors[newJob.workers[0]] : '#3B82F6'),
-              description: newJob.description,
-              entryType: newJob.entryType
-            }
-          : job
-      ));
-    } else {
-      // Create new job
-      const baseJobEntry = {
-        id: `job${Date.now()}`,
-        customerId: newJob.customerId || '',
-        customerName: customer?.name || '',
-        title: newJob.title,
-        startDate: parseLocalDate(newJob.startDate),
-        endDate: parseLocalDate(newJob.endDate),
-        workers: newJob.workers,
-        color: newJob.entryType === 'personal' ? '#9333EA' : (newJob.workers[0] ? workerColors[newJob.workers[0]] : '#3B82F6'),
-        description: newJob.description,
-        isRecurring: newJob.isRecurring,
-        recurrenceType: newJob.recurrenceType,
-        entryType: newJob.entryType,
-        status: 'pending'
-      };
-      
-      if (newJob.isRecurring) {
-        // Generate all recurring instances
-        const recurringJobs = generateRecurringJobs(
-          baseJobEntry,
-          newJob.recurrenceType,
-          newJob.recurrenceEnd,
-          newJob.recurrenceCount
-        );
-        setAllJobs([...allJobs, ...recurringJobs]);
-      } else {
-        setAllJobs([...allJobs, baseJobEntry]);
-      }
-    }
-
-    setShowJobModal(false);
-    setEditingJob(null);
-    setNewJob({
-      title: '',
-      customerId: '',
-      workers: [],
-      startDate: '',
-      endDate: '',
-      description: '',
-      isRecurring: false,
-      recurrenceType: 'weekly',
-      recurrenceEnd: '',
-      recurrenceCount: 1,
-      entryType: 'work'
-    });
-  };
 
   const navigateMonth = (direction) => {
     const newDate = new Date(currentDate);
@@ -530,18 +307,7 @@ const ScheduleCalendar = () => {
           onDragLeave={handleDragLeave}
           onDrop={(e) => handleDrop(e, date)}
           onClick={() => {
-            if (!quickAddDate) {
-              setQuickAddDate(date);
-              setQuickAddText('');
-            }
-          }}
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (!quickAddDate && e.key !== 'Tab') {
-              // Start typing to create a new job
-              setQuickAddDate(date);
-              setQuickAddText('');
-            }
+            // Click on date number or + button to add
           }}
         >
           <div style={{ 
@@ -600,33 +366,6 @@ const ScheduleCalendar = () => {
               }
             }}
           >
-            {/* Quick Add Input */}
-            {quickAddDate?.toDateString() === date.toDateString() && (
-              <input
-                type="text"
-                value={quickAddText}
-                onChange={(e) => setQuickAddText(e.target.value)}
-                onKeyDown={(e) => handleCellKeyDown(e, date)}
-                onBlur={() => {
-                  if (!quickAddText.trim()) {
-                    setQuickAddDate(null);
-                    setQuickAddText('');
-                  }
-                }}
-                onClick={(e) => e.stopPropagation()}
-                placeholder="Type job title..."
-                autoFocus
-                style={{
-                  width: '100%',
-                  padding: '4px',
-                  marginBottom: '4px',
-                  border: '1px solid #3B82F6',
-                  borderRadius: '3px',
-                  fontSize: '12.65px',
-                  outline: 'none'
-                }}
-              />
-            )}
             
             {dayJobs.slice(0, 2).map((job, index) => (
               <div key={job.id} style={{ position: 'relative' }}>
@@ -844,45 +583,11 @@ const ScheduleCalendar = () => {
                     position: 'relative',
                     transition: 'background-color 0.2s'
                   }}
-                  onClick={() => {
-                    if (!quickAddDate) {
-                      setQuickAddDate(day);
-                      setQuickAddText('');
-                    } else if (quickAddDate?.toDateString() !== day.toDateString()) {
-                      handleDateClick(day);
-                    }
-                  }}
+                  onClick={() => handleDateClick(day)}
                   onDragOver={(e) => handleDragOver(e, day)}
                   onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, day)}
                 >
-                  {/* Quick Add Input */}
-                  {quickAddDate?.toDateString() === day.toDateString() && (
-                    <input
-                      type="text"
-                      value={quickAddText}
-                      onChange={(e) => setQuickAddText(e.target.value)}
-                      onKeyDown={(e) => handleCellKeyDown(e, day)}
-                      onBlur={() => {
-                        if (!quickAddText.trim()) {
-                          setQuickAddDate(null);
-                          setQuickAddText('');
-                        }
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                      placeholder="Type job title..."
-                      autoFocus
-                      style={{
-                        width: '100%',
-                        padding: '4px',
-                        marginBottom: '4px',
-                        border: '1px solid #3B82F6',
-                        borderRadius: '3px',
-                        fontSize: '12.65px',
-                        outline: 'none'
-                      }}
-                    />
-                  )}
                   
                   {dayJobs.map(job => (
                     <div
@@ -1534,24 +1239,28 @@ const ScheduleCalendar = () => {
             Schedule
           </h1>
         </div>
-        <button
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <button
+            onClick={() => loadJobs()}
+            disabled={isLoading}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: isLoading ? '#9CA3AF' : '#10B981',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              fontSize: '14px',
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+          >
+            {isLoading ? 'Syncing...' : '🔄 Sync'}
+          </button>
+          <button
             onClick={() => {
-              const today = new Date();
-              setEditingJob(null);
-              setNewJob({
-                title: '',
-                customerId: '',
-                workers: [],
-                startDate: formatDateForInput(today),
-                endDate: formatDateForInput(today),
-                description: '',
-                isRecurring: false,
-                recurrenceType: 'weekly',
-                recurrenceEnd: '',
-                recurrenceCount: 1,
-                entryType: 'work'
-              });
-              setShowJobModal(true);
+              toast.info('To add or edit jobs, please use the Customers page');
             }}
             style={{
               padding: '8px 16px',
@@ -1565,6 +1274,7 @@ const ScheduleCalendar = () => {
           >
             + New Job
           </button>
+        </div>
         </div>
 
         {/* View Switcher */}
@@ -1746,420 +1456,6 @@ const ScheduleCalendar = () => {
           </div>
         </div>
       </div>
-
-      {/* Job Creation Modal */}
-      {showJobModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'center',
-          zIndex: 50,
-          overflowY: 'auto',
-          paddingTop: '20px',
-          paddingBottom: '20px'
-        }}>
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            padding: '24px',
-            maxWidth: '500px',
-            width: '90%',
-            maxHeight: 'calc(100vh - 40px)',
-            overflowY: 'auto',
-            WebkitOverflowScrolling: 'touch',
-            margin: '0 auto'
-          }}>
-            <h2 style={{ fontSize: '23px', fontWeight: '600', marginBottom: '20px' }}>
-              {editingJob ? 'Edit Entry' : 'Schedule New Entry'}
-            </h2>
-
-            <form onSubmit={handleSubmitJob}>
-              {/* Entry Type Selector */}
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '16.1px', fontWeight: '500' }}>
-                  Entry Type
-                </label>
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <button
-                    type="button"
-                    onClick={() => setNewJob({ ...newJob, entryType: 'work' })}
-                    style={{
-                      flex: 1,
-                      padding: '12px',
-                      backgroundColor: newJob.entryType === 'work' ? '#3B82F6' : 'white',
-                      color: newJob.entryType === 'work' ? 'white' : '#374151',
-                      border: `2px solid ${newJob.entryType === 'work' ? '#3B82F6' : '#E5E7EB'}`,
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      fontSize: '16.1px',
-                      fontWeight: newJob.entryType === 'work' ? '600' : '400',
-                      transition: 'all 0.2s',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px'
-                    }}
-                  >
-                    <span style={{ fontSize: '20px' }}>💼</span>
-                    Work
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setNewJob({ ...newJob, entryType: 'personal' })}
-                    style={{
-                      flex: 1,
-                      padding: '12px',
-                      backgroundColor: newJob.entryType === 'personal' ? '#9333EA' : 'white',
-                      color: newJob.entryType === 'personal' ? 'white' : '#374151',
-                      border: `2px solid ${newJob.entryType === 'personal' ? '#9333EA' : '#E5E7EB'}`,
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      fontSize: '16.1px',
-                      fontWeight: newJob.entryType === 'personal' ? '600' : '400',
-                      transition: 'all 0.2s',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px'
-                    }}
-                  >
-                    <span style={{ fontSize: '20px' }}>🏠</span>
-                    Personal
-                  </button>
-                </div>
-              </div>
-              {/* Entry Title */}
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                  {newJob.entryType === 'work' ? 'Job Title' : 'Event Title'} *
-                </label>
-                <input
-                  type="text"
-                  value={newJob.title}
-                  onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
-                  placeholder={newJob.entryType === 'work' ? "e.g., Kitchen Remodel" : "e.g., Doctor's Appointment"}
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    border: '1px solid #E5E7EB',
-                    borderRadius: '6px',
-                    fontSize: '16.1px'
-                  }}
-                  required
-                />
-              </div>
-
-              {/* Customer - Only show for work entries */}
-              {newJob.entryType === 'work' && (
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                    Customer *
-                  </label>
-                <select
-                  value={newJob.customerId}
-                  onChange={(e) => setNewJob({ ...newJob, customerId: e.target.value })}
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    border: '1px solid #E5E7EB',
-                    borderRadius: '6px',
-                    fontSize: '16.1px',
-                    backgroundColor: 'white',
-                    cursor: 'pointer',
-                    appearance: 'none',
-                    backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'right 8px center',
-                    backgroundSize: '20px',
-                    paddingRight: '36px',
-                    transition: 'border-color 0.2s'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = '#3B82F6'}
-                  onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-                  onMouseEnter={(e) => e.target.style.borderColor = '#9CA3AF'}
-                  onMouseLeave={(e) => e.target.style.borderColor = '#E5E7EB'}
-                  required
-                >
-                  <option value="">Select a customer...</option>
-                  {customers.length === 0 ? (
-                    <option disabled>No customers available</option>
-                  ) : (
-                    customers.map(customer => (
-                      <option key={customer.id} value={customer.id}>
-                        {customer.name}
-                      </option>
-                    ))
-                  )}
-                </select>
-                </div>
-              )}
-
-              {/* Worker Assignment - Only show for work entries */}
-              {newJob.entryType === 'work' && (
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                    Assign Workers * (Select one or more)
-                  </label>
-                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                  {workers.map(worker => (
-                    <label
-                      key={worker}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        cursor: 'pointer',
-                        padding: '6px 12px',
-                        border: '1px solid #E5E7EB',
-                        borderRadius: '6px',
-                        backgroundColor: newJob.workers.includes(worker) ? '#EBF5FF' : 'white',
-                        transition: 'all 0.2s'
-                      }}
-                    >
-                      <input
-                        type="checkbox"
-                        value={worker}
-                        checked={newJob.workers.includes(worker)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setNewJob({ ...newJob, workers: [...newJob.workers, worker] });
-                          } else {
-                            setNewJob({ ...newJob, workers: newJob.workers.filter(w => w !== worker) });
-                          }
-                        }}
-                        style={{ cursor: 'pointer' }}
-                      />
-                      <span style={{ fontSize: '16.1px', fontWeight: newJob.workers.includes(worker) ? '500' : '400' }}>
-                        {worker}
-                      </span>
-                      <div style={{
-                        width: '16px',
-                        height: '16px',
-                        backgroundColor: workerColors[worker],
-                        borderRadius: '4px'
-                      }} />
-                    </label>
-                  ))}
-                </div>
-                </div>
-              )}
-
-              {/* Date Range */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                    Start Date *
-                  </label>
-                  <input
-                    type="date"
-                    value={newJob.startDate}
-                    onChange={(e) => setNewJob({ ...newJob, startDate: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '8px 12px',
-                      border: '1px solid #E5E7EB',
-                      borderRadius: '6px',
-                      fontSize: '16.1px'
-                    }}
-                    required
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                    End Date *
-                  </label>
-                  <input
-                    type="date"
-                    value={newJob.endDate}
-                    onChange={(e) => setNewJob({ ...newJob, endDate: e.target.value })}
-                    min={newJob.startDate}
-                    style={{
-                      width: '100%',
-                      padding: '8px 12px',
-                      border: '1px solid #E5E7EB',
-                      borderRadius: '6px',
-                      fontSize: '16.1px'
-                    }}
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Description */}
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                  Description
-                </label>
-                <textarea
-                  value={newJob.description}
-                  onChange={(e) => setNewJob({ ...newJob, description: e.target.value })}
-                  placeholder="Add job details..."
-                  rows={3}
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    border: '1px solid #E5E7EB',
-                    borderRadius: '6px',
-                    fontSize: '16.1px',
-                    resize: 'vertical'
-                  }}
-                />
-              </div>
-
-              {/* Recurring Job Settings */}
-              {!editingJob && (
-                <div style={{ marginBottom: '20px' }}>
-                  <label style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    marginBottom: '12px',
-                    cursor: 'pointer'
-                  }}>
-                    <input
-                      type="checkbox"
-                      checked={newJob.isRecurring}
-                      onChange={(e) => setNewJob({ ...newJob, isRecurring: e.target.checked })}
-                      style={{ cursor: 'pointer' }}
-                    />
-                    <span style={{ fontSize: '16.1px', fontWeight: '500' }}>
-                      Make this a recurring job
-                    </span>
-                  </label>
-
-                  {newJob.isRecurring && (
-                    <div style={{
-                      padding: '16px',
-                      backgroundColor: '#F9FAFB',
-                      borderRadius: '6px',
-                      border: '1px solid #E5E7EB'
-                    }}>
-                      <div style={{ marginBottom: '12px' }}>
-                        <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                          Repeat Every
-                        </label>
-                        <select
-                          value={newJob.recurrenceType}
-                          onChange={(e) => setNewJob({ ...newJob, recurrenceType: e.target.value })}
-                          style={{
-                            width: '100%',
-                            padding: '8px 12px',
-                            border: '1px solid #E5E7EB',
-                            borderRadius: '6px',
-                            fontSize: '16.1px',
-                            backgroundColor: 'white',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          <option value="daily">Day</option>
-                          <option value="weekly">Week</option>
-                          <option value="biweekly">Two Weeks</option>
-                          <option value="monthly">Month</option>
-                        </select>
-                      </div>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                        <div>
-                          <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                            Number of Occurrences
-                          </label>
-                          <input
-                            type="number"
-                            value={newJob.recurrenceCount}
-                            onChange={(e) => setNewJob({ ...newJob, recurrenceCount: parseInt(e.target.value) || 1 })}
-                            min="1"
-                            max="52"
-                            style={{
-                              width: '100%',
-                              padding: '8px 12px',
-                              border: '1px solid #E5E7EB',
-                              borderRadius: '6px',
-                              fontSize: '16.1px'
-                            }}
-                          />
-                        </div>
-                        <div>
-                          <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                            End By (Optional)
-                          </label>
-                          <input
-                            type="date"
-                            value={newJob.recurrenceEnd}
-                            onChange={(e) => setNewJob({ ...newJob, recurrenceEnd: e.target.value })}
-                            min={newJob.startDate}
-                            style={{
-                              width: '100%',
-                              padding: '8px 12px',
-                              border: '1px solid #E5E7EB',
-                              borderRadius: '6px',
-                              fontSize: '16.1px'
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Buttons */}
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowJobModal(false);
-                    setEditingJob(null);
-                    setNewJob({
-                      title: '',
-                      customerId: '',
-                      workers: [],
-                      startDate: '',
-                      endDate: '',
-                      description: '',
-                      isRecurring: false,
-                      recurrenceType: 'weekly',
-                      recurrenceEnd: '',
-                      recurrenceCount: 1,
-                      entryType: 'work'
-                    });
-                  }}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#E5E7EB',
-                    color: '#374151',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '16.1px'
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#3B82F6',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '16.1px'
-                  }}
-                >
-                  {editingJob ? 'Update Entry' : 'Create Entry'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
