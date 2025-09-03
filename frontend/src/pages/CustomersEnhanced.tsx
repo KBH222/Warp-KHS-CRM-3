@@ -1973,11 +1973,11 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     customerId: existingJob?.customerId || customer?.id,
     photos: existingJob?.photos || [],
     plans: existingJob?.plans || [],
+    tasks: existingJob?.tasks || [],
     notes: existingJob?.notes || '',
     comments: existingJob?.comments || [],
     commentsText: existingJob?.commentsText || '',
-    lists: existingJob?.lists || '',
-    tasks: existingJob?.tasks || []
+    lists: existingJob?.lists || ''
   });
   
 

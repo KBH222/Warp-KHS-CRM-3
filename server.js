@@ -685,6 +685,7 @@ app.get('/api/customers', authMiddleware, async (req, res) => {
             notes: true,
             photos: true,
             plans: true,
+            tasks: true,
             customerId: true
           }
         }
@@ -721,6 +722,18 @@ app.get('/api/customers', authMiddleware, async (req, res) => {
             }
           } else {
             parsedJob.plans = [];
+          }
+          
+          // Parse tasks
+          if (job.tasks) {
+            try {
+              parsedJob.tasks = JSON.parse(job.tasks);
+            } catch (e) {
+              console.error('Failed to parse tasks for job:', job.id, e);
+              parsedJob.tasks = [];
+            }
+          } else {
+            parsedJob.tasks = [];
           }
           
           return parsedJob;
