@@ -499,7 +499,7 @@ const JobDetailTabbed = () => {
                 fontSize: '16.1px',
                 fontWeight: '500',
                 color: tab.id === 'tasks' ? '#EF4444' : (activeTab === tab.id ? '#3B82F6' : '#6B7280'),
-                borderBottom: activeTab === tab.id ? '2px solid #3B82F6' : '2px solid transparent',
+                borderBottom: activeTab === tab.id ? (tab.id === 'tasks' ? '2px solid #EF4444' : '2px solid #3B82F6') : '2px solid transparent',
                 marginBottom: '-2px',
                 whiteSpace: 'nowrap',
                 transition: 'color 0.2s'
@@ -643,7 +643,7 @@ const JobDetailTabbed = () => {
         {/* Tasks Tab */}
         {activeTab === 'tasks' && (
           <div style={{ position: 'relative', minHeight: '400px' }}>
-            <h2 style={{ margin: '0 0 16px 0', fontSize: '20.7px', fontWeight: '600' }}>Task List (Flow Input - NO ADD BUTTON v2)</h2>
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '20.7px', fontWeight: '600' }}>Task List (RED TAB v3)</h2>
             
             {/* Bulk Actions Toolbar */}
             <div style={{
