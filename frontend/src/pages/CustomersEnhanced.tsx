@@ -34,6 +34,45 @@ const CustomersEnhanced = () => {
       .photos-scroll-container::-webkit-scrollbar-thumb:hover {
         background: #555;
       }
+      
+      /* Task list animations */
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      
+      /* Checkbox animations */
+      input[type="checkbox"] {
+        transition: all 0.2s ease;
+      }
+      
+      input[type="checkbox"]:checked {
+        transform: scale(1.1);
+      }
+      
+      /* Task item hover states */
+      .task-item:hover {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      
+      /* Mobile optimizations */
+      @media (max-width: 768px) {
+        .bulk-actions-toolbar {
+          flex-direction: column;
+          gap: 12px;
+        }
+        
+        .bulk-actions-toolbar > div {
+          width: 100%;
+          justify-content: center;
+        }
+      }
     `;
     document.head.appendChild(style);
     return () => {
@@ -1925,6 +1964,14 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
   const [isDraggingPhotos, setIsDraggingPhotos] = useState(false);
   const [isDraggingPlans, setIsDraggingPlans] = useState(false);
   
+  // Task list states
+  const [selectedTasks, setSelectedTasks] = useState<Set<string>>(new Set());
+  const [newTaskText, setNewTaskText] = useState('');
+  const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
+  const [dragOverTaskId, setDragOverTaskId] = useState<string | null>(null);
+  const [touchTimer, setTouchTimer] = useState<NodeJS.Timeout | null>(null);
+  const [isDraggingTask, setIsDraggingTask] = useState(false);
+  
   
   const [jobData, setJobData] = useState({
     id: existingJob?.id || null,
@@ -1941,7 +1988,8 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
     notes: existingJob?.notes || '',
     comments: existingJob?.comments || [],
     commentsText: existingJob?.commentsText || '',
-    lists: existingJob?.lists || ''
+    lists: existingJob?.lists || '',
+    tasks: existingJob?.tasks || []
   });
   
 
@@ -1963,15 +2011,16 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
         notes: existingJob.notes || '',
         comments: existingJob.comments || [],
         commentsText: existingJob.commentsText || '',
-        lists: existingJob.lists || ''
+        lists: existingJob.lists || '',
+        tasks: existingJob.tasks || []
       });
       setCurrentJobId(existingJob.id);
     }
   }, [existingJob, customer]);
 
   const tabs = [
-    { id: 'description', label: 'Tasks', icon: '📋' },
-    { id: 'lists', label: 'Lists', icon: '📑' },
+    { id: 'description', label: 'Info', icon: '📋' },
+    { id: 'lists', label: 'Tasks', icon: '✅' },
     { id: 'photos', label: 'Photos', icon: '📸' },
     { id: 'plans', label: 'Plans', icon: '📐' },
     { id: 'notes', label: 'Notes', icon: '📝' },
@@ -2412,7 +2461,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
             WebkitOverflowScrolling: 'touch',
             padding: '20px'
           }}>
-            {/* Job Description Tab */}
+            {/* Job Info Tab */}
             {activeTab === 'description' && (
               <div>
                 <div style={{ marginBottom: '16px' }}>
@@ -2462,26 +2511,385 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
               </div>
             )}
 
-            {/* Lists Tab */}
+            {/* Tasks Tab (formerly Lists) */}
             {activeTab === 'lists' && (
-              <div>
-                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-                  Task Lists
-                </label>
-                <textarea
-                  value={jobData.lists}
-                  onChange={(e) => setJobData({ ...jobData, lists: e.target.value })}
-                  rows={10}
-                  placeholder="Add task lists for this job..."
-                  style={{
-                    width: '100%',
+              <div style={{ position: 'relative' }}>
+                {/* Add Task Input */}
+                <div style={{ marginBottom: '20px' }}>
+                  <form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (newTaskText.trim()) {
+                      const newTask = {
+                        id: `task-${Date.now()}`,
+                        text: newTaskText.trim(),
+                        completed: false,
+                        order: jobData.tasks.length
+                      };
+                      setJobData(prev => ({
+                        ...prev,
+                        tasks: [...prev.tasks, newTask]
+                      }));
+                      setNewTaskText('');
+                      setUnsavedChanges(true);
+                    }
+                  }}>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <input
+                        type="text"
+                        value={newTaskText}
+                        onChange={(e) => setNewTaskText(e.target.value)}
+                        placeholder="Add a new task..."
+                        style={{
+                          flex: 1,
+                          padding: '12px',
+                          border: '1px solid #D1D5DB',
+                          borderRadius: '6px',
+                          fontSize: '16px'
+                        }}
+                      />
+                      <button
+                        type="submit"
+                        style={{
+                          padding: '12px 20px',
+                          backgroundColor: '#3B82F6',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          fontSize: '16px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                {/* Task List */}
+                <div style={{ 
+                  maxHeight: '500px', 
+                  overflowY: 'auto',
+                  WebkitOverflowScrolling: 'touch'
+                }}>
+                  {jobData.tasks.length === 0 ? (
+                    <div style={{
+                      textAlign: 'center',
+                      padding: '40px',
+                      color: '#9CA3AF'
+                    }}>
+                      No tasks yet. Add your first task above.
+                    </div>
+                  ) : (
+                    jobData.tasks
+                      .sort((a, b) => a.order - b.order)
+                      .map((task, index) => (
+                        <div
+                          key={task.id}
+                          draggable={!isDraggingTask}
+                          onDragStart={(e) => {
+                            setDraggedTaskId(task.id);
+                            setIsDraggingTask(true);
+                            e.dataTransfer.effectAllowed = 'move';
+                            // Add ghost image styling
+                            const target = e.currentTarget;
+                            target.style.opacity = '0.5';
+                          }}
+                          onDragEnd={(e) => {
+                            e.currentTarget.style.opacity = '1';
+                            setDraggedTaskId(null);
+                            setDragOverTaskId(null);
+                            setIsDraggingTask(false);
+                          }}
+                          onDragOver={(e) => {
+                            e.preventDefault();
+                            if (draggedTaskId && task.id !== draggedTaskId) {
+                              setDragOverTaskId(task.id);
+                            }
+                          }}
+                          onDragLeave={() => {
+                            setDragOverTaskId(null);
+                          }}
+                          onDrop={(e) => {
+                            e.preventDefault();
+                            if (draggedTaskId && task.id !== draggedTaskId) {
+                              const newTasks = [...jobData.tasks];
+                              const draggedIndex = newTasks.findIndex(t => t.id === draggedTaskId);
+                              const dropIndex = newTasks.findIndex(t => t.id === task.id);
+                              
+                              // Reorder tasks
+                              const [draggedTask] = newTasks.splice(draggedIndex, 1);
+                              newTasks.splice(dropIndex, 0, draggedTask);
+                              
+                              // Update order property
+                              newTasks.forEach((t, i) => t.order = i);
+                              
+                              setJobData(prev => ({ ...prev, tasks: newTasks }));
+                              setUnsavedChanges(true);
+                            }
+                            setDragOverTaskId(null);
+                          }}
+                          // Touch events for mobile drag
+                          onTouchStart={(e) => {
+                            const touch = e.touches[0];
+                            const timer = setTimeout(() => {
+                              setDraggedTaskId(task.id);
+                              setIsDraggingTask(true);
+                              // Haptic feedback on mobile if available
+                              if ('vibrate' in navigator) {
+                                navigator.vibrate(50);
+                              }
+                            }, 500); // Long press for 500ms
+                            setTouchTimer(timer);
+                          }}
+                          onTouchEnd={() => {
+                            if (touchTimer) {
+                              clearTimeout(touchTimer);
+                              setTouchTimer(null);
+                            }
+                            if (isDraggingTask) {
+                              setDraggedTaskId(null);
+                              setIsDraggingTask(false);
+                            }
+                          }}
+                          onTouchMove={(e) => {
+                            if (isDraggingTask && draggedTaskId) {
+                              e.preventDefault();
+                              const touch = e.touches[0];
+                              const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                              // Find the task element under the touch point
+                              const taskElement = element?.closest('[data-task-id]');
+                              if (taskElement) {
+                                const taskId = taskElement.getAttribute('data-task-id');
+                                if (taskId && taskId !== draggedTaskId) {
+                                  setDragOverTaskId(taskId);
+                                }
+                              }
+                            }
+                          }}
+                          data-task-id={task.id}
+                          className="task-item"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: '12px',
+                            backgroundColor: 'white',
+                            border: '1px solid #E5E7EB',
+                            borderRadius: '8px',
+                            marginBottom: '8px',
+                            cursor: isDraggingTask && draggedTaskId === task.id ? 'grabbing' : 'grab',
+                            transition: 'all 0.2s',
+                            transform: dragOverTaskId === task.id ? 'translateY(2px)' : 'none',
+                            boxShadow: dragOverTaskId === task.id ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
+                            opacity: draggedTaskId === task.id ? 0.5 : 1
+                          }}
+                        >
+                          {/* Drag Handle */}
+                          <div
+                            style={{
+                              padding: '8px',
+                              cursor: 'grab',
+                              color: '#9CA3AF',
+                              fontSize: '20px',
+                              lineHeight: 1,
+                              marginRight: '8px',
+                              userSelect: 'none',
+                              display: 'flex',
+                              alignItems: 'center'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.color = '#6B7280'}
+                            onMouseLeave={(e) => e.currentTarget.style.color = '#9CA3AF'}
+                          >
+                            ≡
+                          </div>
+
+                          {/* Checkbox */}
+                          <label
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              flex: 1,
+                              cursor: 'pointer',
+                              userSelect: 'none',
+                              minHeight: '44px' // Touch-friendly height
+                            }}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={task.completed || selectedTasks.has(task.id)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedTasks(prev => new Set([...prev, task.id]));
+                                } else {
+                                  setSelectedTasks(prev => {
+                                    const newSet = new Set(prev);
+                                    newSet.delete(task.id);
+                                    return newSet;
+                                  });
+                                }
+                                
+                                // Also update task completion status
+                                const newTasks = jobData.tasks.map(t =>
+                                  t.id === task.id ? { ...t, completed: e.target.checked } : t
+                                );
+                                setJobData(prev => ({ ...prev, tasks: newTasks }));
+                                setUnsavedChanges(true);
+                              }}
+                              style={{
+                                width: '24px',
+                                height: '24px',
+                                marginRight: '12px',
+                                cursor: 'pointer',
+                                accentColor: '#3B82F6'
+                              }}
+                            />
+                            <span style={{
+                              fontSize: '16px',
+                              textDecoration: task.completed ? 'line-through' : 'none',
+                              color: task.completed ? '#9CA3AF' : '#111827',
+                              transition: 'all 0.2s'
+                            }}>
+                              {task.text}
+                            </span>
+                          </label>
+
+                          {/* Delete Button */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setJobData(prev => ({
+                                ...prev,
+                                tasks: prev.tasks.filter(t => t.id !== task.id)
+                              }));
+                              setSelectedTasks(prev => {
+                                const newSet = new Set(prev);
+                                newSet.delete(task.id);
+                                return newSet;
+                              });
+                              setUnsavedChanges(true);
+                            }}
+                            style={{
+                              padding: '8px',
+                              backgroundColor: 'transparent',
+                              color: '#9CA3AF',
+                              border: 'none',
+                              borderRadius: '4px',
+                              cursor: 'pointer',
+                              fontSize: '18px',
+                              transition: 'all 0.2s'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.color = '#EF4444';
+                              e.currentTarget.style.backgroundColor = '#FEE2E2';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.color = '#9CA3AF';
+                              e.currentTarget.style.backgroundColor = 'transparent';
+                            }}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))
+                  )}
+                </div>
+
+                {/* Bulk Actions Toolbar */}
+                {selectedTasks.size > 0 && (
+                  <div className="bulk-actions-toolbar" style={{
+                    position: 'sticky',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: 'white',
+                    borderTop: '1px solid #E5E7EB',
                     padding: '12px',
-                    border: '1px solid #D1D5DB',
-                    borderRadius: '6px',
-                    fontSize: '18.4px',
-                    resize: 'vertical'
-                  }}
-                />
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '12px',
+                    boxShadow: '0 -4px 12px rgba(0,0,0,0.05)',
+                    animation: 'slideUp 0.3s ease-out',
+                    zIndex: 10
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <button
+                        onClick={() => {
+                          if (selectedTasks.size === jobData.tasks.length) {
+                            // Deselect all
+                            setSelectedTasks(new Set());
+                          } else {
+                            // Select all
+                            setSelectedTasks(new Set(jobData.tasks.map(t => t.id)));
+                          }
+                        }}
+                        style={{
+                          padding: '8px 16px',
+                          backgroundColor: '#F3F4F6',
+                          color: '#374151',
+                          border: 'none',
+                          borderRadius: '6px',
+                          fontSize: '14px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {selectedTasks.size === jobData.tasks.length ? 'Deselect All' : 'Select All'}
+                      </button>
+                      <span style={{ fontSize: '14px', color: '#6B7280' }}>
+                        {selectedTasks.size} selected
+                      </span>
+                    </div>
+                    
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button
+                        onClick={() => {
+                          const newTasks = jobData.tasks.map(t =>
+                            selectedTasks.has(t.id) ? { ...t, completed: true } : t
+                          );
+                          setJobData(prev => ({ ...prev, tasks: newTasks }));
+                          setSelectedTasks(new Set());
+                          setUnsavedChanges(true);
+                          toast.success(`${selectedTasks.size} tasks marked as complete`);
+                        }}
+                        style={{
+                          padding: '8px 16px',
+                          backgroundColor: '#10B981',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          fontSize: '14px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Complete
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (confirm(`Delete ${selectedTasks.size} selected tasks?`)) {
+                            setJobData(prev => ({
+                              ...prev,
+                              tasks: prev.tasks.filter(t => !selectedTasks.has(t.id))
+                            }));
+                            setSelectedTasks(new Set());
+                            setUnsavedChanges(true);
+                            toast.success(`${selectedTasks.size} tasks deleted`);
+                          }
+                        }}
+                        style={{
+                          padding: '8px 16px',
+                          backgroundColor: '#EF4444',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          fontSize: '14px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                )}
+
               </div>
             )}
 
