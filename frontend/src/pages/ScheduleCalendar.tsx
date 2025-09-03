@@ -146,6 +146,12 @@ const ScheduleCalendar = () => {
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   };
 
+  // Parse date string as local date (not UTC)
+  const parseLocalDate = (dateString) => {
+    const [year, month, day] = dateString.split('-').map(num => parseInt(num));
+    return new Date(year, month - 1, day);
+  };
+
   const getDaysInMonth = (date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   };
@@ -384,8 +390,8 @@ const ScheduleCalendar = () => {
               title: newJob.title,
               customerId: newJob.customerId,
               customerName: customer?.name || '',
-              startDate: new Date(newJob.startDate),
-              endDate: new Date(newJob.endDate),
+              startDate: parseLocalDate(newJob.startDate),
+              endDate: parseLocalDate(newJob.endDate),
               workers: newJob.workers,
               color: newJob.entryType === 'personal' ? '#9333EA' : (newJob.workers[0] ? workerColors[newJob.workers[0]] : '#3B82F6'),
               description: newJob.description,
@@ -400,8 +406,8 @@ const ScheduleCalendar = () => {
         customerId: newJob.customerId || '',
         customerName: customer?.name || '',
         title: newJob.title,
-        startDate: new Date(newJob.startDate),
-        endDate: new Date(newJob.endDate),
+        startDate: parseLocalDate(newJob.startDate),
+        endDate: parseLocalDate(newJob.endDate),
         workers: newJob.workers,
         color: newJob.entryType === 'personal' ? '#9333EA' : (newJob.workers[0] ? workerColors[newJob.workers[0]] : '#3B82F6'),
         description: newJob.description,
