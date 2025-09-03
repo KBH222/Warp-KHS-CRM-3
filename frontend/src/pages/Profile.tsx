@@ -37,6 +37,9 @@ const Profile = () => {
       weeklyReport: false
     },
     
+    // App Settings
+    navigationApp: 'google', // 'google', 'apple', 'waze'
+    
     // Working Hours
     workingHours: {
       monday: { start: '08:00', end: '17:00', enabled: true },
@@ -95,6 +98,7 @@ const Profile = () => {
     { id: 'personal', label: 'Personal Info', icon: '👤' },
     { id: 'business', label: 'Business Info', icon: '🏢' },
     { id: 'notifications', label: 'Notifications', icon: '🔔' },
+    { id: 'settings', label: 'Settings', icon: '⚙️' },
     { id: 'hours', label: 'Working Hours', icon: '🕐' },
     ...(isOwner ? [{ id: 'users', label: 'Users', icon: '👥' }] : []),
     { id: 'security', label: 'Security', icon: '🔒', isLink: true, path: '/security' },
@@ -681,6 +685,171 @@ const Profile = () => {
                 </label>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Settings Tab */}
+        {activeTab === 'settings' && (
+          <div>
+            <h2 style={{ fontSize: '20.7px', fontWeight: '600', marginBottom: '20px' }}>
+              App Settings
+            </h2>
+            
+            {/* Navigation App Preference */}
+            <div style={{ marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '18.4px', fontWeight: '500', marginBottom: '12px' }}>
+                Navigation App
+              </h3>
+              <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '16px' }}>
+                Choose which app opens when you tap on customer addresses
+              </p>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <label style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '16px',
+                  backgroundColor: profile.navigationApp === 'google' ? '#EBF5FF' : '#F9FAFB',
+                  border: `2px solid ${profile.navigationApp === 'google' ? '#3B82F6' : '#E5E7EB'}`,
+                  borderRadius: '8px',
+                  cursor: editMode ? 'pointer' : 'default',
+                  transition: 'all 0.2s'
+                }}>
+                  <input
+                    type="radio"
+                    name="navigationApp"
+                    value="google"
+                    checked={profile.navigationApp === 'google'}
+                    onChange={(e) => setProfile({ ...profile, navigationApp: e.target.value })}
+                    disabled={!editMode}
+                    style={{ 
+                      marginRight: '12px',
+                      cursor: editMode ? 'pointer' : 'default'
+                    }}
+                  />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '20px' }}>🗺️</span>
+                      <span style={{ fontSize: '16.1px', fontWeight: '500' }}>Google Maps</span>
+                    </div>
+                    <p style={{ fontSize: '13.8px', color: '#6B7280', margin: '4px 0 0 28px' }}>
+                      Opens in Google Maps app or web browser
+                    </p>
+                  </div>
+                </label>
+
+                <label style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '16px',
+                  backgroundColor: profile.navigationApp === 'apple' ? '#EBF5FF' : '#F9FAFB',
+                  border: `2px solid ${profile.navigationApp === 'apple' ? '#3B82F6' : '#E5E7EB'}`,
+                  borderRadius: '8px',
+                  cursor: editMode ? 'pointer' : 'default',
+                  transition: 'all 0.2s'
+                }}>
+                  <input
+                    type="radio"
+                    name="navigationApp"
+                    value="apple"
+                    checked={profile.navigationApp === 'apple'}
+                    onChange={(e) => setProfile({ ...profile, navigationApp: e.target.value })}
+                    disabled={!editMode}
+                    style={{ 
+                      marginRight: '12px',
+                      cursor: editMode ? 'pointer' : 'default'
+                    }}
+                  />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '20px' }}>🍎</span>
+                      <span style={{ fontSize: '16.1px', fontWeight: '500' }}>Apple Maps</span>
+                    </div>
+                    <p style={{ fontSize: '13.8px', color: '#6B7280', margin: '4px 0 0 28px' }}>
+                      Opens in Apple Maps (iPhone/iPad only)
+                    </p>
+                  </div>
+                </label>
+
+                <label style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '16px',
+                  backgroundColor: profile.navigationApp === 'waze' ? '#EBF5FF' : '#F9FAFB',
+                  border: `2px solid ${profile.navigationApp === 'waze' ? '#3B82F6' : '#E5E7EB'}`,
+                  borderRadius: '8px',
+                  cursor: editMode ? 'pointer' : 'default',
+                  transition: 'all 0.2s'
+                }}>
+                  <input
+                    type="radio"
+                    name="navigationApp"
+                    value="waze"
+                    checked={profile.navigationApp === 'waze'}
+                    onChange={(e) => setProfile({ ...profile, navigationApp: e.target.value })}
+                    disabled={!editMode}
+                    style={{ 
+                      marginRight: '12px',
+                      cursor: editMode ? 'pointer' : 'default'
+                    }}
+                  />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '20px' }}>🚗</span>
+                      <span style={{ fontSize: '16.1px', fontWeight: '500' }}>Waze</span>
+                    </div>
+                    <p style={{ fontSize: '13.8px', color: '#6B7280', margin: '4px 0 0 28px' }}>
+                      Opens in Waze navigation app
+                    </p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* Test Navigation Button */}
+            {!editMode && (
+              <div style={{
+                padding: '16px',
+                backgroundColor: '#F9FAFB',
+                borderRadius: '8px',
+                marginTop: '24px'
+              }}>
+                <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '12px' }}>
+                  Test your navigation app preference:
+                </p>
+                <button
+                  onClick={() => {
+                    const testAddress = "1234 Test Street, Honolulu, HI 96814";
+                    const encodedAddress = encodeURIComponent(testAddress);
+                    
+                    let url;
+                    if (profile.navigationApp === 'apple') {
+                      // Apple Maps URL scheme
+                      url = `maps://maps.apple.com/?q=${encodedAddress}`;
+                    } else if (profile.navigationApp === 'waze') {
+                      // Waze URL scheme
+                      url = `waze://?q=${encodedAddress}`;
+                    } else {
+                      // Google Maps (default)
+                      url = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+                    }
+                    
+                    window.open(url, '_blank');
+                  }}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#3B82F6',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '14px'
+                  }}
+                >
+                  Test Navigation App
+                </button>
+              </div>
+            )}
           </div>
         )}
 

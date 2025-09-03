@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { customerStorage } from '../utils/localStorage';
+import { customerStorage, profileStorage } from '../utils/localStorage';
 
 const CustomerDetailEnhanced = () => {
   const { id } = useParams();
@@ -31,7 +31,24 @@ const CustomerDetailEnhanced = () => {
   const handleAddressClick = (e) => {
     e.stopPropagation();
     const encodedAddress = encodeURIComponent(customer.address);
-    window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
+    
+    // Get user's navigation preference
+    const profile = profileStorage.get();
+    const navigationApp = profile?.navigationApp || 'google';
+    
+    let url;
+    if (navigationApp === 'apple') {
+      // Apple Maps URL scheme
+      url = `maps://maps.apple.com/?q=${encodedAddress}`;
+    } else if (navigationApp === 'waze') {
+      // Waze URL scheme
+      url = `waze://?q=${encodedAddress}`;
+    } else {
+      // Google Maps (default)
+      url = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+    }
+    
+    window.open(url, '_blank');
   };
 
   const getStatusColor = (status) => {

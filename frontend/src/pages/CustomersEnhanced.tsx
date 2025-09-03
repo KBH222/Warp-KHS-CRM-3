@@ -8,6 +8,7 @@ import { compressImage } from '../utils/imageCompression';
 import { enhancedSyncService } from '../services/sync.service.enhanced';
 import { geocodingService, AddressSuggestion } from '../services/geocoding.service';
 import { useDebounce } from '../hooks/useDebounce';
+import { profileStorage } from '../utils/localStorage';
 
 const CustomersEnhanced = () => {
   const navigate = useNavigate();
@@ -568,6 +569,40 @@ const CustomersEnhanced = () => {
       const errorMessage = err.message || 'Failed to delete job';
       toast.error('Failed to delete job: ' + errorMessage);
     }
+  };
+
+  // Click handlers for customer actions
+  const handleEmailClick = (email: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    window.location.href = `mailto:${email}`;
+  };
+
+  const handlePhoneClick = (phone: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    window.location.href = `tel:${phone.replace(/\D/g, '')}`;
+  };
+
+  const handleAddressClick = (address: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const encodedAddress = encodeURIComponent(address);
+    
+    // Get user's navigation preference
+    const profile = profileStorage.get();
+    const navigationApp = profile?.navigationApp || 'google';
+    
+    let url;
+    if (navigationApp === 'apple') {
+      // Apple Maps URL scheme
+      url = `maps://maps.apple.com/?q=${encodedAddress}`;
+    } else if (navigationApp === 'waze') {
+      // Waze URL scheme
+      url = `waze://?q=${encodedAddress}`;
+    } else {
+      // Google Maps (default)
+      url = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+    }
+    
+    window.open(url, '_blank');
   };
 
   return (
