@@ -1,10 +1,38 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const JobDetailTabbed = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('description');
+
+  // Add CSS animations
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes checkmark {
+        0% {
+          stroke-dasharray: 0 100;
+        }
+        100% {
+          stroke-dasharray: 100 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
 
   // Load job data from localStorage
   const [job, setJob] = useState(null);
@@ -51,6 +79,15 @@ const JobDetailTabbed = () => {
   const [newTaskAssignee, setNewTaskAssignee] = useState('');
   const [editingNotes, setEditingNotes] = useState(false);
   const [notes, setNotes] = useState('');
+  
+  // Task management state
+  const [selectedTasks, setSelectedTasks] = useState(new Set());
+  const [draggedTask, setDraggedTask] = useState(null);
+  const [dragOverIndex, setDragOverIndex] = useState(null);
+  const [isLongPress, setIsLongPress] = useState(false);
+  const taskInputRef = useRef(null);
+  const longPressTimer = useRef(null);
+  const touchStartPos = useRef({ x: 0, y: 0 });
   
   // Materials state
   const [materials, setMaterials] = useState([]);
@@ -99,23 +136,46 @@ const JobDetailTabbed = () => {
     { id: 'extraWork', label: 'Extra Work' }
   ];
 
-  const handleTaskToggle = (taskId) => {
-    setTasks(tasks.map(task => 
-      task.id === taskId ? { ...task, completed: !task.completed } : task
-    ));
+  const handleTaskToggle = (taskId, e) => {
+    e?.stopPropagation();
+    if (selectedTasks.size > 0) {
+      // If we're in selection mode, toggle selection instead
+      const newSelected = new Set(selectedTasks);
+      if (newSelected.has(taskId)) {
+        newSelected.delete(taskId);
+      } else {
+        newSelected.add(taskId);
+      }
+      setSelectedTasks(newSelected);
+    } else {
+      // Normal toggle behavior
+      setTasks(tasks.map(task => 
+        task.id === taskId ? { ...task, completed: !task.completed } : task
+      ));
+    }
   };
 
   const handleAddTask = (e) => {
     e.preventDefault();
     if (newTask.trim()) {
-      setTasks([...tasks, {
+      const newTaskItem = {
         id: Date.now(),
         text: newTask,
         completed: false,
-        assignedTo: newTaskAssignee || null
-      }]);
+        assignedTo: newTaskAssignee || null,
+        order: tasks.length
+      };
+      setTasks([...tasks, newTaskItem]);
       setNewTask('');
-      setNewTaskAssignee('');
+      // Keep focus in input for continuous entry
+      taskInputRef.current?.focus();
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleAddTask(e);
     }
   };
 
@@ -127,6 +187,118 @@ const JobDetailTabbed = () => {
 
   const handleDeleteTask = (taskId) => {
     setTasks(tasks.filter(task => task.id !== taskId));
+    // Remove from selected if it was selected
+    const newSelected = new Set(selectedTasks);
+    newSelected.delete(taskId);
+    setSelectedTasks(newSelected);
+  };
+
+  // Bulk actions
+  const handleSelectAll = () => {
+    if (selectedTasks.size === tasks.length) {
+      setSelectedTasks(new Set());
+    } else {
+      setSelectedTasks(new Set(tasks.map(t => t.id)));
+    }
+  };
+
+  const handleBulkComplete = () => {
+    setTasks(tasks.map(task => 
+      selectedTasks.has(task.id) ? { ...task, completed: true } : task
+    ));
+    setSelectedTasks(new Set());
+  };
+
+  const handleBulkDelete = () => {
+    if (window.confirm(`Delete ${selectedTasks.size} selected tasks?`)) {
+      setTasks(tasks.filter(task => !selectedTasks.has(task.id)));
+      setSelectedTasks(new Set());
+    }
+  };
+
+  // Drag and drop handlers
+  const handleDragStart = (e, task, index) => {
+    setDraggedTask({ task, index });
+    e.dataTransfer.effectAllowed = 'move';
+    e.currentTarget.style.opacity = '0.5';
+  };
+
+  const handleDragEnd = (e) => {
+    e.currentTarget.style.opacity = '';
+    setDraggedTask(null);
+    setDragOverIndex(null);
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverIndex(index);
+  };
+
+  const handleDrop = (e, dropIndex) => {
+    e.preventDefault();
+    if (draggedTask && draggedTask.index !== dropIndex) {
+      const newTasks = [...tasks];
+      const [removed] = newTasks.splice(draggedTask.index, 1);
+      newTasks.splice(dropIndex, 0, removed);
+      setTasks(newTasks);
+    }
+    setDraggedTask(null);
+    setDragOverIndex(null);
+  };
+
+  // Touch handlers for mobile drag
+  const handleTouchStart = (e, task, index) => {
+    const touch = e.touches[0];
+    touchStartPos.current = { x: touch.clientX, y: touch.clientY };
+    
+    longPressTimer.current = setTimeout(() => {
+      setIsLongPress(true);
+      setDraggedTask({ task, index });
+      // Add haptic feedback if available
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+    }, 500);
+  };
+
+  const handleTouchMove = (e) => {
+    const touch = e.touches[0];
+    const deltaX = Math.abs(touch.clientX - touchStartPos.current.x);
+    const deltaY = Math.abs(touch.clientY - touchStartPos.current.y);
+    
+    // Cancel long press if moved too much
+    if ((deltaX > 10 || deltaY > 10) && longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+
+    if (isLongPress && draggedTask) {
+      e.preventDefault();
+      // Find element under touch point
+      const element = document.elementFromPoint(touch.clientX, touch.clientY);
+      const taskElement = element?.closest('[data-task-index]');
+      if (taskElement) {
+        const index = parseInt(taskElement.getAttribute('data-task-index'));
+        setDragOverIndex(index);
+      }
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    clearTimeout(longPressTimer.current);
+    longPressTimer.current = null;
+
+    if (isLongPress && draggedTask && dragOverIndex !== null && draggedTask.index !== dragOverIndex) {
+      const newTasks = [...tasks];
+      const [removed] = newTasks.splice(draggedTask.index, 1);
+      newTasks.splice(dragOverIndex, 0, removed);
+      setTasks(newTasks);
+    }
+
+    setIsLongPress(false);
+    setDraggedTask(null);
+    setDragOverIndex(null);
   };
 
   // Material handling functions
@@ -436,100 +608,222 @@ const JobDetailTabbed = () => {
 
         {/* Tasks Tab */}
         {activeTab === 'tasks' && (
-          <div>
+          <div style={{ position: 'relative', minHeight: '400px' }}>
             <h2 style={{ margin: '0 0 16px 0', fontSize: '20.7px', fontWeight: '600' }}>Task List</h2>
             
-            {/* Add Task Form */}
-            <form onSubmit={handleAddTask} style={{ marginBottom: '16px' }}>
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                <input
-                  type="text"
-                  value={newTask}
-                  onChange={(e) => setNewTask(e.target.value)}
-                  placeholder="Add a new task..."
-                  style={{
-                    flex: '1 1 200px',
-                    padding: '8px 12px',
-                    border: '1px solid #E5E7EB',
-                    borderRadius: '6px',
-                    fontSize: '16.1px'
-                  }}
-                />
-                <select
-                  value={newTaskAssignee}
-                  onChange={(e) => setNewTaskAssignee(e.target.value)}
-                  style={{
-                    padding: '8px 12px',
-                    border: '1px solid #E5E7EB',
-                    borderRadius: '6px',
-                    fontSize: '16.1px',
-                    backgroundColor: 'white',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <option value="">Unassigned</option>
-                  {workers.map(worker => (
-                    <option key={worker} value={worker}>{worker}</option>
-                  ))}
-                </select>
-                <button
-                  type="submit"
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#3B82F6',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '16.1px'
-                  }}
-                >
-                  Add
-                </button>
+            {/* Bulk Actions Toolbar */}
+            <div style={{
+              position: 'sticky',
+              top: 0,
+              zIndex: 10,
+              marginBottom: '16px',
+              transform: selectedTasks.size > 0 ? 'translateY(0)' : 'translateY(-100%)',
+              opacity: selectedTasks.size > 0 ? 1 : 0,
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              pointerEvents: selectedTasks.size > 0 ? 'auto' : 'none'
+            }}>
+              <div style={{
+                backgroundColor: '#3B82F6',
+                color: 'white',
+                padding: '12px 16px',
+                borderRadius: '8px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <span style={{ fontSize: '16.1px', fontWeight: '500' }}>
+                    {selectedTasks.size} selected
+                  </span>
+                  <button
+                    onClick={handleSelectAll}
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                      color: 'white',
+                      border: 'none',
+                      padding: '6px 12px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '14.95px',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.3)'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
+                  >
+                    {selectedTasks.size === tasks.length ? 'Deselect All' : 'Select All'}
+                  </button>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={handleBulkComplete}
+                    style={{
+                      backgroundColor: '#10B981',
+                      color: 'white',
+                      border: 'none',
+                      padding: '6px 12px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '14.95px',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#059669'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#10B981'}
+                  >
+                    Complete
+                  </button>
+                  <button
+                    onClick={handleBulkDelete}
+                    style={{
+                      backgroundColor: '#EF4444',
+                      color: 'white',
+                      border: 'none',
+                      padding: '6px 12px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '14.95px',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#DC2626'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#EF4444'}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </form>
+            </div>
 
             {/* Task List */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {tasks.map(task => (
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '8px',
+              marginBottom: '80px' // Space for fixed input
+            }}>
+              {tasks.map((task, index) => (
                 <div 
                   key={task.id}
+                  data-task-index={index}
+                  draggable={!isLongPress}
+                  onDragStart={(e) => handleDragStart(e, task, index)}
+                  onDragEnd={handleDragEnd}
+                  onDragOver={(e) => handleDragOver(e, index)}
+                  onDrop={(e) => handleDrop(e, index)}
+                  onTouchStart={(e) => handleTouchStart(e, task, index)}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px',
-                    padding: '8px',
-                    backgroundColor: task.completed ? '#F3F4F6' : 'transparent',
-                    borderRadius: '6px',
-                    flexWrap: 'wrap'
+                    gap: '12px',
+                    padding: '12px',
+                    backgroundColor: selectedTasks.has(task.id) ? '#EBF5FF' : (task.completed ? '#F3F4F6' : 'white'),
+                    border: `2px solid ${dragOverIndex === index ? '#3B82F6' : (selectedTasks.has(task.id) ? '#3B82F6' : '#E5E7EB')}`,
+                    borderRadius: '8px',
+                    cursor: 'move',
+                    transition: 'all 0.2s ease',
+                    transform: draggedTask?.task.id === task.id && isLongPress ? 'scale(1.05)' : 'scale(1)',
+                    boxShadow: draggedTask?.task.id === task.id && isLongPress ? '0 10px 15px -3px rgba(0, 0, 0, 0.1)' : 'none',
+                    opacity: draggedTask?.task.id === task.id && !isLongPress ? 0.5 : 1,
+                    animation: task.id === tasks[tasks.length - 1]?.id && tasks.length > 0 ? 'slideIn 0.3s ease-out' : 'none'
                   }}
                 >
-                  <input
-                    type="checkbox"
-                    checked={task.completed}
-                    onChange={() => handleTaskToggle(task.id)}
-                    style={{ cursor: 'pointer' }}
-                  />
+                  {/* Drag Handle */}
+                  <div style={{
+                    color: '#9CA3AF',
+                    cursor: 'grab',
+                    fontSize: '20px',
+                    opacity: 0.5,
+                    transition: 'opacity 0.2s',
+                    userSelect: 'none'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = '0.5'}
+                  >
+                    ≡
+                  </div>
+
+                  {/* Enhanced Checkbox */}
+                  <label style={{
+                    position: 'relative',
+                    display: 'inline-block',
+                    width: '44px',
+                    height: '44px',
+                    cursor: 'pointer'
+                  }}>
+                    <input
+                      type="checkbox"
+                      checked={selectedTasks.has(task.id) || task.completed}
+                      onChange={(e) => handleTaskToggle(task.id, e)}
+                      style={{
+                        position: 'absolute',
+                        opacity: 0,
+                        width: '44px',
+                        height: '44px',
+                        cursor: 'pointer'
+                      }}
+                    />
+                    <span style={{
+                      position: 'absolute',
+                      top: '10px',
+                      left: '10px',
+                      height: '24px',
+                      width: '24px',
+                      backgroundColor: (selectedTasks.has(task.id) || task.completed) ? '#3B82F6' : 'white',
+                      border: `2px solid ${(selectedTasks.has(task.id) || task.completed) ? '#3B82F6' : '#D1D5DB'}`,
+                      borderRadius: '4px',
+                      transition: 'all 0.2s ease',
+                      '&:hover': {
+                        borderColor: '#3B82F6'
+                      }
+                    }}>
+                      {(selectedTasks.has(task.id) || task.completed) && (
+                        <svg 
+                          style={{
+                            position: 'absolute',
+                            top: '2px',
+                            left: '2px',
+                            width: '16px',
+                            height: '16px',
+                            animation: 'checkmark 0.2s ease-out'
+                          }}
+                          fill="none" 
+                          stroke="white" 
+                          strokeWidth="3"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      )}
+                    </span>
+                  </label>
+
+                  {/* Task Text */}
                   <span style={{
                     flex: '1 1 auto',
                     fontSize: '16.1px',
                     textDecoration: task.completed ? 'line-through' : 'none',
                     color: task.completed ? '#9CA3AF' : '#374151',
-                    minWidth: '150px'
+                    minWidth: '150px',
+                    userSelect: 'none'
                   }}>
                     {task.text}
                   </span>
+
+                  {/* Assignee */}
                   <select
                     value={task.assignedTo || ''}
                     onChange={(e) => handleAssignTask(task.id, e.target.value || null)}
+                    onClick={(e) => e.stopPropagation()}
                     style={{
-                      padding: '4px 8px',
+                      padding: '6px 10px',
                       border: '1px solid #E5E7EB',
                       borderRadius: '4px',
                       fontSize: '13.8px',
                       backgroundColor: task.assignedTo ? '#E0E7FF' : 'white',
                       color: task.assignedTo ? '#3730A3' : '#6B7280',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      transition: 'all 0.2s'
                     }}
                   >
                     <option value="">Unassigned</option>
@@ -537,28 +831,113 @@ const JobDetailTabbed = () => {
                       <option key={worker} value={worker}>{worker}</option>
                     ))}
                   </select>
+
+                  {/* Delete Button */}
                   <button
-                    onClick={() => handleDeleteTask(task.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteTask(task.id);
+                    }}
                     style={{
-                      padding: '4px 8px',
-                      backgroundColor: '#FEE2E2',
+                      padding: '8px',
+                      backgroundColor: 'transparent',
                       color: '#DC2626',
                       border: 'none',
                       borderRadius: '4px',
                       cursor: 'pointer',
-                      fontSize: '13.8px'
+                      fontSize: '20px',
+                      opacity: 0.6,
+                      transition: 'all 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '36px',
+                      height: '36px'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#FEE2E2';
+                      e.currentTarget.style.opacity = '1';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.opacity = '0.6';
                     }}
                   >
-                    Delete
+                    ×
                   </button>
                 </div>
               ))}
             </div>
+
             {tasks.length === 0 && (
-              <p style={{ textAlign: 'center', color: '#6B7280' }}>
-                No tasks yet. Add one above.
+              <p style={{ 
+                textAlign: 'center', 
+                color: '#6B7280',
+                padding: '40px 20px',
+                fontSize: '16.1px'
+              }}>
+                No tasks yet. Type below and press Enter to add tasks.
               </p>
             )}
+
+            {/* Fixed Input at Bottom */}
+            <div style={{
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              backgroundColor: 'white',
+              borderTop: '1px solid #E5E7EB',
+              padding: '16px',
+              boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
+              zIndex: 20
+            }}>
+              <form onSubmit={handleAddTask} style={{ maxWidth: '800px', margin: '0 auto' }}>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <input
+                    ref={taskInputRef}
+                    type="text"
+                    value={newTask}
+                    onChange={(e) => setNewTask(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Add a task..."
+                    style={{
+                      flex: '1',
+                      padding: '12px 16px',
+                      border: '2px solid #E5E7EB',
+                      borderRadius: '8px',
+                      fontSize: '16.1px',
+                      outline: 'none',
+                      transition: 'border-color 0.2s'
+                    }}
+                    onFocus={(e) => e.currentTarget.style.borderColor = '#3B82F6'}
+                    onBlur={(e) => e.currentTarget.style.borderColor = '#E5E7EB'}
+                  />
+                  <select
+                    value={newTaskAssignee}
+                    onChange={(e) => setNewTaskAssignee(e.target.value)}
+                    style={{
+                      padding: '12px 16px',
+                      border: '2px solid #E5E7EB',
+                      borderRadius: '8px',
+                      fontSize: '16.1px',
+                      backgroundColor: 'white',
+                      cursor: 'pointer',
+                      outline: 'none',
+                      transition: 'border-color 0.2s'
+                    }}
+                    onFocus={(e) => e.currentTarget.style.borderColor = '#3B82F6'}
+                    onBlur={(e) => e.currentTarget.style.borderColor = '#E5E7EB'}
+                  >
+                    <option value="">Unassigned</option>
+                    {workers.map(worker => (
+                      <option key={worker} value={worker}>{worker}</option>
+                    ))}
+                  </select>
+                </div>
+              </form>
+            </div>
+
           </div>
         )}
 
