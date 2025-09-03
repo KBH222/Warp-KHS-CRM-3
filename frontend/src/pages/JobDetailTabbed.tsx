@@ -46,8 +46,28 @@ const JobDetailTabbed = () => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(btn => {
           if (btn.textContent && btn.textContent.trim() === 'Add') {
-            console.warn('FOUND ADD BUTTON - REMOVING:', btn);
+            console.error('PHANTOM ADD BUTTON FOUND:', {
+              button: btn,
+              type: btn.type,
+              style: btn.getAttribute('style'),
+              parent: btn.parentElement,
+              parentStyle: btn.parentElement?.getAttribute('style'),
+              innerHTML: btn.parentElement?.innerHTML
+            });
             btn.style.display = 'none';
+            btn.remove();
+          }
+        });
+        
+        // Also look for type="submit" buttons
+        const submitButtons = document.querySelectorAll('button[type="submit"]');
+        submitButtons.forEach(btn => {
+          console.warn('SUBMIT BUTTON FOUND:', {
+            text: btn.textContent,
+            style: btn.getAttribute('style'),
+            parent: btn.parentElement?.tagName
+          });
+          if (btn.textContent && btn.textContent.trim() === 'Add') {
             btn.remove();
           }
         });
@@ -59,6 +79,7 @@ const JobDetailTabbed = () => {
       // Run again after a delay in case of dynamic rendering
       setTimeout(removeAddButtons, 100);
       setTimeout(removeAddButtons, 500);
+      setTimeout(removeAddButtons, 1000);
       
       // Watch for new buttons being added
       const observer = new MutationObserver(removeAddButtons);
@@ -929,8 +950,8 @@ const JobDetailTabbed = () => {
               boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
               zIndex: 20
             }}>
-              <form onSubmit={handleAddTask} style={{ maxWidth: '800px', margin: '0 auto' }}>
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <form onSubmit={handleAddTask} style={{ maxWidth: '800px', margin: '0 auto' }} data-version="NO-ADD-BUTTON-V6">
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }} data-container="task-input-container">
                   <input
                     ref={taskInputRef}
                     type="text"
