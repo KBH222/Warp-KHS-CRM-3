@@ -83,19 +83,6 @@ const DashboardEnhanced = () => {
       paddingBottom: '100px' // Extra padding for iOS scrolling
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
-        {/* DEPLOYMENT TEST BANNER */}
-        <div style={{
-          background: 'red',
-          color: 'yellow',
-          fontSize: '50px',
-          padding: '30px',
-          textAlign: 'center',
-          marginBottom: '20px',
-          animation: 'pulse 1s infinite'
-        }}>
-          🚨 RAILWAY DEPLOYMENT TEST - VERSION 5 - {new Date().toLocaleTimeString()} 🚨
-        </div>
-
         {/* Header Section */}
         <div style={{ 
           marginBottom: '20px',
