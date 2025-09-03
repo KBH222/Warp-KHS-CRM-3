@@ -136,7 +136,8 @@ const ScheduleCalendar = () => {
     isRecurring: false,
     recurrenceType: 'weekly', // daily, weekly, biweekly, monthly
     recurrenceEnd: '',
-    recurrenceCount: 1
+    recurrenceCount: 1,
+    entryType: 'work' // 'work' or 'personal'
   });
 
   // Calendar helpers
@@ -180,7 +181,8 @@ const ScheduleCalendar = () => {
       isRecurring: false,
       recurrenceType: 'weekly',
       recurrenceEnd: '',
-      recurrenceCount: 1
+      recurrenceCount: 1,
+      entryType: 'work'
     });
     setShowJobModal(true);
   };
@@ -198,7 +200,8 @@ const ScheduleCalendar = () => {
         workers: workers.length > 0 ? [workers[0]] : [], // Default to first worker
         color: workers.length > 0 ? workerColors[workers[0]] : '#3B82F6',
         description: '',
-        status: 'pending'
+        status: 'pending',
+        entryType: 'work' // Default to work entry
       };
       
       setAllJobs([...allJobs, newJobEntry]);
@@ -225,7 +228,12 @@ const ScheduleCalendar = () => {
       workers: [...job.workers],
       startDate: new Date(job.startDate).toISOString().split('T')[0],
       endDate: new Date(job.endDate).toISOString().split('T')[0],
-      description: job.description || ''
+      description: job.description || '',
+      isRecurring: false,
+      recurrenceType: 'weekly',
+      recurrenceEnd: '',
+      recurrenceCount: 1,
+      entryType: job.entryType || 'work'
     });
     setShowJobModal(true);
     setShowEditMenu(null);
@@ -316,7 +324,8 @@ const ScheduleCalendar = () => {
         startDate: new Date(currentStart),
         endDate: new Date(currentEnd),
         parentJobId: baseJob.id,
-        recurrenceIndex: count
+        recurrenceIndex: count,
+        entryType: baseJob.entryType || 'work'
       });
       
       // Move to next occurrence
@@ -348,12 +357,18 @@ const ScheduleCalendar = () => {
   const handleSubmitJob = (e) => {
     e.preventDefault();
     
-    if (!newJob.title || !newJob.customerId || newJob.workers.length === 0) {
-      alert('Please fill in all required fields and select at least one worker');
+    // For personal entries, customer and workers are optional
+    if (!newJob.title) {
+      alert('Please provide a title');
+      return;
+    }
+    
+    if (newJob.entryType === 'work' && (!newJob.customerId || newJob.workers.length === 0)) {
+      alert('Please fill in all required fields and select at least one worker for work entries');
       return;
     }
 
-    const customer = customers.find(c => c.id === newJob.customerId);
+    const customer = newJob.entryType === 'work' ? customers.find(c => c.id === newJob.customerId) : null;
     
     if (editingJob) {
       // Update existing job
@@ -363,12 +378,13 @@ const ScheduleCalendar = () => {
               ...job,
               title: newJob.title,
               customerId: newJob.customerId,
-              customerName: customer.name,
+              customerName: customer?.name || '',
               startDate: new Date(newJob.startDate),
               endDate: new Date(newJob.endDate),
               workers: newJob.workers,
-              color: workerColors[newJob.workers[0]], // Use first worker's color
-              description: newJob.description
+              color: newJob.entryType === 'personal' ? '#9333EA' : (newJob.workers[0] ? workerColors[newJob.workers[0]] : '#3B82F6'),
+              description: newJob.description,
+              entryType: newJob.entryType
             }
           : job
       ));
@@ -376,16 +392,18 @@ const ScheduleCalendar = () => {
       // Create new job
       const baseJobEntry = {
         id: `job${Date.now()}`,
-        customerId: newJob.customerId,
-        customerName: customer.name,
+        customerId: newJob.customerId || '',
+        customerName: customer?.name || '',
         title: newJob.title,
         startDate: new Date(newJob.startDate),
         endDate: new Date(newJob.endDate),
         workers: newJob.workers,
-        color: workerColors[newJob.workers[0]], // Use first worker's color
+        color: newJob.entryType === 'personal' ? '#9333EA' : (newJob.workers[0] ? workerColors[newJob.workers[0]] : '#3B82F6'),
         description: newJob.description,
         isRecurring: newJob.isRecurring,
-        recurrenceType: newJob.recurrenceType
+        recurrenceType: newJob.recurrenceType,
+        entryType: newJob.entryType,
+        status: 'pending'
       };
       
       if (newJob.isRecurring) {
@@ -414,7 +432,8 @@ const ScheduleCalendar = () => {
       isRecurring: false,
       recurrenceType: 'weekly',
       recurrenceEnd: '',
-      recurrenceCount: 1
+      recurrenceCount: 1,
+      entryType: 'work'
     });
   };
 
@@ -620,10 +639,11 @@ const ScheduleCalendar = () => {
                     opacity: draggedJob?.id === job.id ? 0.5 : 1,
                     transition: 'opacity 0.2s'
                   }}
-                  title={`${job.title} - ${job.customerName} (Drag to reschedule)${job.parentJobId ? ' - Recurring' : ''}`}
+                  title={`${job.title}${job.customerName ? ' - ' + job.customerName : ''} (Drag to reschedule)${job.parentJobId ? ' - Recurring' : ''}`}
                 >
                   {job.parentJobId && <span style={{ marginRight: '4px' }}>🔁</span>}
-                  {job.workers.join(', ')}: {job.title}
+                  {job.entryType === 'personal' && <span style={{ marginRight: '4px' }}>🏠</span>}
+                  {job.entryType === 'work' ? `${job.workers.join(', ')}: ${job.title}` : job.title}
                 </div>
                 
                 {/* Edit Menu */}
@@ -874,9 +894,10 @@ const ScheduleCalendar = () => {
                         opacity: draggedJob?.id === job.id ? 0.5 : 1,
                         transition: 'opacity 0.2s'
                       }}
-                      title={`${job.title} - ${job.customerName} (Drag to reschedule)`}
+                      title={`${job.title}${job.customerName ? ' - ' + job.customerName : ''} (Drag to reschedule)`}
                     >
-                      {job.workers.join(', ')}: {job.title}
+                      {job.entryType === 'personal' && <span style={{ marginRight: '4px' }}>🏠</span>}
+                      {job.entryType === 'work' ? `${job.workers.join(', ')}: ${job.title}` : job.title}
                     </div>
                   ))}
                   
@@ -1086,10 +1107,14 @@ const ScheduleCalendar = () => {
                     title={`Drag to reschedule ${job.title}`}
                   >
                     <div style={{ fontWeight: '600', fontSize: '16.1px', marginBottom: '4px' }}>
+                      {job.entryType === 'personal' && <span style={{ marginRight: '4px' }}>🏠</span>}
                       {job.title}
                     </div>
                     <div style={{ fontSize: '13.8px', opacity: 0.9 }}>
-                      {job.customerName} • {job.workers.join(', ')}
+                      {job.entryType === 'work' ? 
+                        `${job.customerName} • ${job.workers.join(', ')}` : 
+                        'Personal Entry'
+                      }
                     </div>
                     {job.description && (
                       <div style={{ fontSize: '12.65px', marginTop: '4px', opacity: 0.8 }}>
@@ -1360,8 +1385,9 @@ const ScheduleCalendar = () => {
                         display: 'flex',
                         alignItems: 'center'
                       }}
-                      title={`${job.title} - ${job.customerName}`}
+                      title={`${job.title}${job.customerName ? ' - ' + job.customerName : ''}`}
                     >
+                      {job.entryType === 'personal' && <span style={{ marginRight: '4px', fontSize: '11px' }}>🏠</span>}
                       {job.title}
                     </div>
                   );
@@ -1511,7 +1537,8 @@ const ScheduleCalendar = () => {
                 isRecurring: false,
                 recurrenceType: 'weekly',
                 recurrenceEnd: '',
-                recurrenceCount: 1
+                recurrenceCount: 1,
+                entryType: 'work'
               });
               setShowJobModal(true);
             }}
@@ -1677,15 +1704,35 @@ const ScheduleCalendar = () => {
         boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
       }}>
         <h3 style={{ fontSize: '18.4px', fontWeight: '600', marginBottom: '12px' }}>
-          Worker Legend
+          Legend
         </h3>
-        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-          {workers.map(workerName => (
-            <div key={workerName} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ width: '20px', height: '20px', backgroundColor: workerColors[workerName], borderRadius: '4px' }} />
-              <span style={{ fontSize: '16.1px' }}>{workerName}</span>
+        <div style={{ marginBottom: '16px' }}>
+          <h4 style={{ fontSize: '16.1px', fontWeight: '500', marginBottom: '8px' }}>Entry Types</h4>
+          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '20px' }}>💼</span>
+              <span style={{ fontSize: '16.1px' }}>Work Entry</span>
             </div>
-          ))}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '20px' }}>🏠</span>
+              <span style={{ fontSize: '16.1px' }}>Personal Entry</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '20px', height: '20px', backgroundColor: '#9333EA', borderRadius: '4px' }} />
+              <span style={{ fontSize: '16.1px' }}>Personal Color</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h4 style={{ fontSize: '16.1px', fontWeight: '500', marginBottom: '8px' }}>Workers</h4>
+          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+            {workers.map(workerName => (
+              <div key={workerName} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '20px', height: '20px', backgroundColor: workerColors[workerName], borderRadius: '4px' }} />
+                <span style={{ fontSize: '16.1px' }}>{workerName}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -1718,20 +1765,74 @@ const ScheduleCalendar = () => {
             margin: '0 auto'
           }}>
             <h2 style={{ fontSize: '23px', fontWeight: '600', marginBottom: '20px' }}>
-              {editingJob ? 'Edit Job' : 'Schedule New Job'}
+              {editingJob ? 'Edit Entry' : 'Schedule New Entry'}
             </h2>
 
             <form onSubmit={handleSubmitJob}>
-              {/* Job Title */}
+              {/* Entry Type Selector */}
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '16.1px', fontWeight: '500' }}>
+                  Entry Type
+                </label>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setNewJob({ ...newJob, entryType: 'work' })}
+                    style={{
+                      flex: 1,
+                      padding: '12px',
+                      backgroundColor: newJob.entryType === 'work' ? '#3B82F6' : 'white',
+                      color: newJob.entryType === 'work' ? 'white' : '#374151',
+                      border: `2px solid ${newJob.entryType === 'work' ? '#3B82F6' : '#E5E7EB'}`,
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '16.1px',
+                      fontWeight: newJob.entryType === 'work' ? '600' : '400',
+                      transition: 'all 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    <span style={{ fontSize: '20px' }}>💼</span>
+                    Work
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNewJob({ ...newJob, entryType: 'personal' })}
+                    style={{
+                      flex: 1,
+                      padding: '12px',
+                      backgroundColor: newJob.entryType === 'personal' ? '#9333EA' : 'white',
+                      color: newJob.entryType === 'personal' ? 'white' : '#374151',
+                      border: `2px solid ${newJob.entryType === 'personal' ? '#9333EA' : '#E5E7EB'}`,
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '16.1px',
+                      fontWeight: newJob.entryType === 'personal' ? '600' : '400',
+                      transition: 'all 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    <span style={{ fontSize: '20px' }}>🏠</span>
+                    Personal
+                  </button>
+                </div>
+              </div>
+              {/* Entry Title */}
               <div style={{ marginBottom: '16px' }}>
                 <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                  Job Title *
+                  {newJob.entryType === 'work' ? 'Job Title' : 'Event Title'} *
                 </label>
                 <input
                   type="text"
                   value={newJob.title}
                   onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
-                  placeholder="e.g., Kitchen Remodel"
+                  placeholder={newJob.entryType === 'work' ? "e.g., Kitchen Remodel" : "e.g., Doctor's Appointment"}
                   style={{
                     width: '100%',
                     padding: '8px 12px',
@@ -1743,11 +1844,12 @@ const ScheduleCalendar = () => {
                 />
               </div>
 
-              {/* Customer */}
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                  Customer *
-                </label>
+              {/* Customer - Only show for work entries */}
+              {newJob.entryType === 'work' && (
+                <div style={{ marginBottom: '16px' }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
+                    Customer *
+                  </label>
                 <select
                   value={newJob.customerId}
                   onChange={(e) => setNewJob({ ...newJob, customerId: e.target.value })}
@@ -1784,13 +1886,15 @@ const ScheduleCalendar = () => {
                     ))
                   )}
                 </select>
-              </div>
+                </div>
+              )}
 
-              {/* Worker Assignment */}
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                  Assign Workers * (Select one or more)
-                </label>
+              {/* Worker Assignment - Only show for work entries */}
+              {newJob.entryType === 'work' && (
+                <div style={{ marginBottom: '16px' }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
+                    Assign Workers * (Select one or more)
+                  </label>
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                   {workers.map(worker => (
                     <label
@@ -1832,7 +1936,8 @@ const ScheduleCalendar = () => {
                     </label>
                   ))}
                 </div>
-              </div>
+                </div>
+              )}
 
               {/* Date Range */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
@@ -2009,7 +2114,8 @@ const ScheduleCalendar = () => {
                       isRecurring: false,
                       recurrenceType: 'weekly',
                       recurrenceEnd: '',
-                      recurrenceCount: 1
+                      recurrenceCount: 1,
+                      entryType: 'work'
                     });
                   }}
                   style={{
@@ -2036,7 +2142,7 @@ const ScheduleCalendar = () => {
                     fontSize: '16.1px'
                   }}
                 >
-                  {editingJob ? 'Update Job' : 'Create Job'}
+                  {editingJob ? 'Update Entry' : 'Create Entry'}
                 </button>
               </div>
             </form>
