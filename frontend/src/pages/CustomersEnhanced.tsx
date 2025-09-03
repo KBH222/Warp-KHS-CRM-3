@@ -386,21 +386,6 @@ const CustomersEnhanced = () => {
     }
   };
 
-  const handlePhoneClick = (phone: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    window.location.href = `tel:${phone.replace(/\D/g, '')}`;
-  };
-
-  const handleAddressClick = (address: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const encodedAddress = encodeURIComponent(address);
-    window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
-  };
-
-  const handleEmailClick = (email: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    window.location.href = `mailto:${email}`;
-  };
 
   const handleAddJob = (customer: any) => {
     setSelectedCustomerForJob(customer);
