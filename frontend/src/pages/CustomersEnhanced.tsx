@@ -2842,23 +2842,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
                   zIndex: 10
                 }}>
-                  <form onSubmit={(e) => {
-                    e.preventDefault();
-                    if (newTaskText.trim()) {
-                      const newTask = {
-                        id: `task-${Date.now()}`,
-                        text: newTaskText.trim(),
-                        completed: false,
-                        order: jobData.tasks.length
-                      };
-                      setJobData(prev => ({
-                        ...prev,
-                        tasks: [...prev.tasks, newTask]
-                      }));
-                      setNewTaskText('');
-                      setUnsavedChanges(true);
-                    }
-                  }} style={{ maxWidth: '800px', margin: '0 auto' }}>
+                  <div style={{ maxWidth: '800px', margin: '0 auto' }}>
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                       <input
                         type="text"
@@ -2867,7 +2851,22 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' && !e.shiftKey) {
                             e.preventDefault();
-                            e.currentTarget.form.requestSubmit();
+                            e.stopPropagation();
+                            // Add task directly
+                            if (newTaskText.trim()) {
+                              const newTask = {
+                                id: `task-${Date.now()}`,
+                                text: newTaskText.trim(),
+                                completed: false,
+                                order: jobData.tasks.length
+                              };
+                              setJobData(prev => ({
+                                ...prev,
+                                tasks: [...prev.tasks, newTask]
+                              }));
+                              setNewTaskText('');
+                              setUnsavedChanges(true);
+                            }
                           }
                         }}
                         placeholder="Add a task..."
@@ -2885,7 +2884,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       />
                       {/* NO ADD BUTTON - JUST PRESS ENTER */}
                     </div>
-                  </form>
+                  </div>
                 </div>
 
               </div>
