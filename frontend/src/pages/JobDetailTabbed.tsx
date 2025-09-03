@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+// BUILD TIMESTAMP: 2025-09-03T02:00:00Z - FORCE REBUILD
 const JobDetailTabbed = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -665,7 +666,7 @@ const JobDetailTabbed = () => {
         {activeTab === 'tasks' && (
           <div style={{ position: 'relative', minHeight: '400px' }}>
             <h2 style={{ margin: '0 0 16px 0', fontSize: '20.7px', fontWeight: '600', color: 'red' }}>
-              Task List - NO ADD BUTTON VERSION (Built: {new Date().toISOString()})
+              Task List - v1.0.2 - NO ADD BUTTON (Deploy: {new Date().toLocaleString()})
             </h2>
             
             {/* Bulk Actions Toolbar */}
