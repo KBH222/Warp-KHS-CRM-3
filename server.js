@@ -852,6 +852,13 @@ app.get('/api/jobs', authMiddleware, async (req, res) => {
           parsed.plans = [];
         }
       }
+      if (job.tasks) {
+        try {
+          parsed.tasks = JSON.parse(job.tasks);
+        } catch (e) {
+          parsed.tasks = [];
+        }
+      }
       return parsed;
     });
     
@@ -876,12 +883,15 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
       notes: req.body.notes
     };
     
-    // Handle photos and plans - stringify arrays for storage
+    // Handle photos, plans, and tasks - stringify arrays for storage
     if (req.body.photos && Array.isArray(req.body.photos)) {
       jobData.photos = JSON.stringify(req.body.photos);
     }
     if (req.body.plans && Array.isArray(req.body.plans)) {
       jobData.plans = JSON.stringify(req.body.plans);
+    }
+    if (req.body.tasks && Array.isArray(req.body.tasks)) {
+      jobData.tasks = JSON.stringify(req.body.tasks);
     }
     
     const job = await prisma.job.create({
@@ -914,6 +924,17 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
       job.plans = [];
     }
     
+    if (job.tasks) {
+      try {
+        job.tasks = JSON.parse(job.tasks);
+      } catch (e) {
+        console.error('Failed to parse tasks:', e);
+        job.tasks = [];
+      }
+    } else {
+      job.tasks = [];
+    }
+    
     // Immediately verify what was saved in database
     const verification = await prisma.job.findUnique({
       where: { id: job.id }
@@ -942,12 +963,15 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
       notes: req.body.notes
     };
     
-    // Handle photos and plans - stringify arrays for storage
+    // Handle photos, plans, and tasks - stringify arrays for storage
     if (req.body.photos !== undefined) {
       updateData.photos = Array.isArray(req.body.photos) ? JSON.stringify(req.body.photos) : null;
     }
     if (req.body.plans !== undefined) {
       updateData.plans = Array.isArray(req.body.plans) ? JSON.stringify(req.body.plans) : null;
+    }
+    if (req.body.tasks !== undefined) {
+      updateData.tasks = Array.isArray(req.body.tasks) ? JSON.stringify(req.body.tasks) : null;
     }
     
     
@@ -981,6 +1005,17 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
       }
     } else {
       job.plans = [];
+    }
+    
+    if (job.tasks) {
+      try {
+        job.tasks = JSON.parse(job.tasks);
+      } catch (e) {
+        console.error('Failed to parse tasks:', e);
+        job.tasks = [];
+      }
+    } else {
+      job.tasks = [];
     }
     
     // Immediately verify what was saved in database

@@ -106,6 +106,7 @@ model Job {
   notes         String?
   photos        String?   @db.Text  // JSON array of photos
   plans         String?   @db.Text  // JSON array of plans
+  tasks         String?   @db.Text  // JSON array of tasks
   customerId    String
   customer      Customer  @relation(fields: [customerId], references: [id])
   createdById   String?
