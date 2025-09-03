@@ -912,12 +912,30 @@ app.post('/api/jobs', authMiddleware, async (req, res) => {
       jobData.tasks = JSON.stringify(req.body.tasks);
     }
     
-    const job = await prisma.job.create({
-      data: jobData,
-      include: {
-        customer: true
+    // Try to create with tasks first
+    let job;
+    try {
+      job = await prisma.job.create({
+        data: jobData,
+        include: {
+          customer: true
+        }
+      });
+    } catch (error) {
+      // If tasks column doesn't exist, retry without it
+      if (error.message?.includes('tasks')) {
+        console.log('Tasks column not found, retrying without tasks field...');
+        delete jobData.tasks;
+        job = await prisma.job.create({
+          data: jobData,
+          include: {
+            customer: true
+          }
+        });
+      } else {
+        throw error;
       }
-    });
+    }
     
     // Parse back to arrays for response
     if (job.photos) {
@@ -993,13 +1011,32 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
     }
     
     
-    const job = await prisma.job.update({
-      where: { id: req.params.id },
-      data: updateData,
-      include: {
-        customer: true
+    // Try to update with tasks first
+    let job;
+    try {
+      job = await prisma.job.update({
+        where: { id: req.params.id },
+        data: updateData,
+        include: {
+          customer: true
+        }
+      });
+    } catch (error) {
+      // If tasks column doesn't exist, retry without it
+      if (error.message?.includes('tasks') || error.code === 'P2025') {
+        console.log('Tasks column not found, retrying without tasks field...');
+        delete updateData.tasks;
+        job = await prisma.job.update({
+          where: { id: req.params.id },
+          data: updateData,
+          include: {
+            customer: true
+          }
+        });
+      } else {
+        throw error;
       }
-    });
+    }
     
     
     // Parse back to arrays for response
@@ -1046,7 +1083,18 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
     console.error('Error updating job:', error);
     console.error('Request params:', req.params);
     console.error('Request body:', req.body);
-    res.status(500).json({ error: 'Failed to update job', details: error.message });
+    console.error('Update data:', updateData);
+    
+    // Check if it's a column not found error
+    if (error.code === 'P2002' || error.message?.includes('tasks')) {
+      res.status(500).json({ 
+        error: 'Failed to update job - tasks column may not exist yet', 
+        details: error.message,
+        hint: 'The database migration may still be pending. Please try again in a few minutes.'
+      });
+    } else {
+      res.status(500).json({ error: 'Failed to update job', details: error.message });
+    }
   }
 });
 
