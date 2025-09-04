@@ -84,6 +84,7 @@ model Customer {
 
   // Relations
   jobs        Job[]
+  scheduleEvents ScheduleEvent[]
 
   @@index([name])
   @@index([phone])
@@ -337,6 +338,30 @@ model KHSToolsSync {
   deviceInfo             String?   // Optional device fingerprint
   
   @@index([lastUpdated])
+}
+
+// Schedule Events - for personal and work events
+model ScheduleEvent {
+  id            String    @id @default(cuid())
+  title         String
+  description   String?
+  eventType     String    // "personal" or "work"
+  startDate     DateTime
+  endDate       DateTime
+  
+  // For work events
+  customerId    String?
+  customer      Customer?  @relation(fields: [customerId], references: [id])
+  workers       Json?      // Array of worker names
+  
+  // Metadata
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@index([eventType])
+  @@index([startDate])
+  @@index([endDate])
+  @@index([customerId])
 }
 
 

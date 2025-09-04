@@ -2061,6 +2061,181 @@ app.delete('/api/users/:userId', authMiddleware, ownerMiddleware, async (req, re
   }
 });
 
+// Schedule Events API endpoints
+// GET /api/schedule-events - Get all schedule events
+app.get('/api/schedule-events', authMiddleware, async (req, res) => {
+  try {
+    const { startDate, endDate, eventType } = req.query;
+    
+    const where = {};
+    
+    // Add date filters if provided
+    if (startDate || endDate) {
+      where.startDate = {};
+      if (startDate) where.startDate.gte = new Date(startDate);
+      if (endDate) where.startDate.lte = new Date(endDate);
+    }
+    
+    // Add event type filter if provided
+    if (eventType) {
+      where.eventType = eventType;
+    }
+    
+    const events = await prisma.scheduleEvent.findMany({
+      where,
+      include: {
+        customer: {
+          select: {
+            id: true,
+            name: true,
+            reference: true
+          }
+        }
+      },
+      orderBy: { startDate: 'asc' }
+    });
+    
+    // Parse workers JSON for each event
+    const eventsWithParsedWorkers = events.map(event => ({
+      ...event,
+      workers: event.workers ? JSON.parse(event.workers) : []
+    }));
+    
+    res.json(eventsWithParsedWorkers);
+  } catch (error) {
+    console.error('[ScheduleEvents] Error fetching events:', error);
+    res.status(500).json({ error: 'Failed to fetch schedule events' });
+  }
+});
+
+// POST /api/schedule-events - Create a new schedule event
+app.post('/api/schedule-events', authMiddleware, async (req, res) => {
+  try {
+    const { title, description, eventType, startDate, endDate, customerId, workers } = req.body;
+    
+    // Validate required fields
+    if (!title || !eventType || !startDate || !endDate) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: title, eventType, startDate, endDate' 
+      });
+    }
+    
+    // For work events, customerId is required
+    if (eventType === 'work' && !customerId) {
+      return res.status(400).json({ 
+        error: 'Customer ID is required for work events' 
+      });
+    }
+    
+    const eventData = {
+      title,
+      description,
+      eventType,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate)
+    };
+    
+    // Add work-specific fields if it's a work event
+    if (eventType === 'work') {
+      eventData.customerId = customerId;
+      if (workers && workers.length > 0) {
+        eventData.workers = JSON.stringify(workers);
+      }
+    }
+    
+    const event = await prisma.scheduleEvent.create({
+      data: eventData,
+      include: {
+        customer: {
+          select: {
+            id: true,
+            name: true,
+            reference: true
+          }
+        }
+      }
+    });
+    
+    // Return event with parsed workers
+    const eventWithParsedWorkers = {
+      ...event,
+      workers: event.workers ? JSON.parse(event.workers) : []
+    };
+    
+    res.json(eventWithParsedWorkers);
+  } catch (error) {
+    console.error('[ScheduleEvents] Error creating event:', error);
+    res.status(500).json({ error: 'Failed to create schedule event' });
+  }
+});
+
+// PUT /api/schedule-events/:id - Update a schedule event
+app.put('/api/schedule-events/:id', authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, eventType, startDate, endDate, customerId, workers } = req.body;
+    
+    const updateData = {};
+    
+    if (title !== undefined) updateData.title = title;
+    if (description !== undefined) updateData.description = description;
+    if (eventType !== undefined) updateData.eventType = eventType;
+    if (startDate !== undefined) updateData.startDate = new Date(startDate);
+    if (endDate !== undefined) updateData.endDate = new Date(endDate);
+    
+    // Handle work event fields
+    if (eventType === 'work') {
+      if (customerId !== undefined) updateData.customerId = customerId;
+      if (workers !== undefined) updateData.workers = JSON.stringify(workers);
+    } else {
+      // Clear work fields for personal events
+      updateData.customerId = null;
+      updateData.workers = null;
+    }
+    
+    const event = await prisma.scheduleEvent.update({
+      where: { id },
+      data: updateData,
+      include: {
+        customer: {
+          select: {
+            id: true,
+            name: true,
+            reference: true
+          }
+        }
+      }
+    });
+    
+    // Return event with parsed workers
+    const eventWithParsedWorkers = {
+      ...event,
+      workers: event.workers ? JSON.parse(event.workers) : []
+    };
+    
+    res.json(eventWithParsedWorkers);
+  } catch (error) {
+    console.error('[ScheduleEvents] Error updating event:', error);
+    res.status(500).json({ error: 'Failed to update schedule event' });
+  }
+});
+
+// DELETE /api/schedule-events/:id - Delete a schedule event
+app.delete('/api/schedule-events/:id', authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    await prisma.scheduleEvent.delete({
+      where: { id }
+    });
+    
+    res.json({ message: 'Schedule event deleted successfully' });
+  } catch (error) {
+    console.error('[ScheduleEvents] Error deleting event:', error);
+    res.status(500).json({ error: 'Failed to delete schedule event' });
+  }
+});
+
 // Serve React app for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));

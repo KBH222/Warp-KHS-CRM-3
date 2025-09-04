@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { workerService } from '../services/worker.service';
-import { customersApi } from '../services/api';
+import { customersApi, scheduleEventsApi } from '../services/api';
 import { toast } from 'react-toastify';
 
 const ScheduleCalendar = () => {
@@ -35,11 +35,17 @@ const ScheduleCalendar = () => {
   const loadJobs = async () => {
     try {
       setIsLoading(true);
-      // Get all customers with their jobs
-      const customers = await customersApi.getAll();
+      
+      // Load both customers/jobs and schedule events in parallel
+      const [customers, scheduleEvents] = await Promise.all([
+        customersApi.getAll(),
+        scheduleEventsApi.getAll()
+      ]);
       
       // Extract and transform jobs for calendar display
       const jobs = [];
+      
+      // Add customer jobs
       customers.forEach(customer => {
         if (customer.jobs && customer.jobs.length > 0) {
           customer.jobs.forEach(job => {
@@ -57,11 +63,29 @@ const ScheduleCalendar = () => {
                 price: job.totalCost || 0,
                 status: job.status,
                 description: job.description,
-                priority: job.priority
+                priority: job.priority,
+                entryType: 'job' // Mark as regular job
               });
             }
           });
         }
+      });
+      
+      // Add schedule events
+      scheduleEvents.forEach(event => {
+        jobs.push({
+          id: event.id,
+          customerId: event.customerId,
+          customerName: event.customer?.name || '',
+          title: event.title,
+          startDate: new Date(event.startDate),
+          endDate: new Date(event.endDate),
+          workers: event.workers || [],
+          color: event.eventType === 'personal' ? '#9333EA' : (event.workers && event.workers[0] ? workerColors[event.workers[0]] : '#3B82F6'),
+          description: event.description,
+          entryType: event.eventType, // 'personal' or 'work'
+          isScheduleEvent: true // Mark as schedule event
+        });
       });
       
       setAllJobs(jobs);
@@ -208,13 +232,33 @@ const ScheduleCalendar = () => {
 
 
   const handleEditJob = (job) => {
-    // Navigate to the job in CustomersEnhanced page
-    navigate(`/customers?jobId=${job.id}`);
+    // Check if this is a schedule event or a regular job
+    if (job.isScheduleEvent) {
+      // For now, just show a toast message
+      toast.info('Edit functionality for schedule events coming soon');
+    } else {
+      // Navigate to the job in CustomersEnhanced page
+      navigate(`/customers?jobId=${job.id}`);
+    }
     setShowEditMenu(null);
   };
 
-  const handleDeleteJob = (jobId) => {
-    toast.info('Please delete jobs from the Customers page');
+  const handleDeleteJob = async (job) => {
+    if (job.isScheduleEvent) {
+      // Delete schedule event
+      if (confirm(`Delete this ${job.entryType} event?`)) {
+        try {
+          await scheduleEventsApi.delete(job.id);
+          toast.success('Event deleted successfully');
+          await loadJobs();
+        } catch (error) {
+          toast.error('Failed to delete event');
+        }
+      }
+    } else {
+      // Regular job
+      toast.info('Please delete jobs from the Customers page');
+    }
     setShowEditMenu(null);
   };
 
@@ -1519,15 +1563,46 @@ const ScheduleCalendar = () => {
               Add Schedule Event
             </h2>
             
-            <form onSubmit={(e) => {
+            <form onSubmit={async (e) => {
               e.preventDefault();
-              if (newEvent.type === 'work') {
-                toast.info('Work events will be saved to the selected customer. Feature coming soon.');
-              } else {
-                toast.info('Personal events feature coming soon.');
+              
+              try {
+                // Create the event data
+                const eventData = {
+                  title: newEvent.title,
+                  description: newEvent.description || '',
+                  eventType: newEvent.type,
+                  startDate: newEvent.startDate,
+                  endDate: newEvent.endDate,
+                  customerId: newEvent.type === 'work' ? newEvent.customerId : undefined,
+                  workers: newEvent.type === 'work' ? newEvent.workers : undefined
+                };
+                
+                // Create the schedule event
+                await scheduleEventsApi.create(eventData);
+                
+                // Show success message
+                toast.success(`${newEvent.type === 'work' ? 'Work' : 'Personal'} event created successfully!`);
+                
+                // Reload the calendar
+                await loadJobs();
+                
+                // Close the modal and reset form
+                setShowJobModal(false);
+                setSelectedDate(null);
+                setNewEvent({
+                  title: '',
+                  startDate: '',
+                  endDate: '',
+                  description: '',
+                  type: 'personal',
+                  customerId: '',
+                  workers: []
+                });
+              } catch (error) {
+                console.error('Error creating schedule event:', error);
+                toast.error('Failed to create event. Please try again.');
               }
-              setShowJobModal(false);
-              setSelectedDate(null);
             }}>
               {/* Event Type Selector */}
               <div style={{ marginBottom: '20px' }}>
