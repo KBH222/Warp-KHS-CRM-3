@@ -1,4 +1,4 @@
-import { apiClient } from './index';
+import { apiClient } from '../api.service';
 
 export interface ScheduleEvent {
   id: string;
@@ -45,28 +45,24 @@ export const scheduleEventsApi = {
     if (filters?.eventType) params.append('eventType', filters.eventType);
     
     const queryString = params.toString();
-    const response = await apiClient.get<ScheduleEvent[]>(
+    return await apiClient.get<ScheduleEvent[]>(
       `/api/schedule-events${queryString ? `?${queryString}` : ''}`
     );
-    return response.data;
   },
 
   // Get a single schedule event by ID
   getById: async (id: string): Promise<ScheduleEvent> => {
-    const response = await apiClient.get<ScheduleEvent>(`/api/schedule-events/${id}`);
-    return response.data;
+    return await apiClient.get<ScheduleEvent>(`/api/schedule-events/${id}`);
   },
 
   // Create a new schedule event
   create: async (data: CreateScheduleEventDto): Promise<ScheduleEvent> => {
-    const response = await apiClient.post<ScheduleEvent>('/api/schedule-events', data);
-    return response.data;
+    return await apiClient.post<ScheduleEvent>('/api/schedule-events', data);
   },
 
   // Update an existing schedule event
   update: async (id: string, data: UpdateScheduleEventDto): Promise<ScheduleEvent> => {
-    const response = await apiClient.put<ScheduleEvent>(`/api/schedule-events/${id}`, data);
-    return response.data;
+    return await apiClient.put<ScheduleEvent>(`/api/schedule-events/${id}`, data);
   },
 
   // Delete a schedule event
