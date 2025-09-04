@@ -1562,6 +1562,10 @@ const ScheduleCalendar = () => {
             <h2 style={{ fontSize: '23px', fontWeight: '600', marginBottom: '20px' }}>
               Add Schedule Event
             </h2>
+            {/* Version indicator for debugging */}
+            <div style={{ fontSize: '10px', color: '#999', marginBottom: '10px' }}>
+              v2 - Database Enabled
+            </div>
             
             <form onSubmit={async (e) => {
               e.preventDefault();
@@ -1601,7 +1605,14 @@ const ScheduleCalendar = () => {
                 });
               } catch (error) {
                 console.error('Error creating schedule event:', error);
-                toast.error('Failed to create event. Please try again.');
+                // Show more detailed error message
+                if (error.response?.data?.error) {
+                  toast.error(`Failed to create event: ${error.response.data.error}`);
+                } else if (error.message) {
+                  toast.error(`Failed to create event: ${error.message}`);
+                } else {
+                  toast.error('Failed to create event. Please try again.');
+                }
               }
             }}>
               {/* Event Type Selector */}
