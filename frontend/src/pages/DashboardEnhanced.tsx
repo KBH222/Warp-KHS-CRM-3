@@ -154,7 +154,7 @@ const DashboardEnhanced = () => {
                   <h3 style={{ 
                     fontSize: '20.7px', 
                     fontWeight: '600', 
-                    color: card.title === 'Customers' ? '#EF4444' : '#111827',
+                    color: '#111827',
                     marginBottom: '4px'
                   }}>
                     {card.title}
