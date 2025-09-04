@@ -58,12 +58,35 @@ const authMiddleware = (req, res, next) => {
 };
 
 // API Routes
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(),
-    message: 'KHS CRM API on Railway'
-  });
+app.get('/api/health', async (req, res) => {
+  try {
+    // Test database connection and check for ScheduleEvent table
+    await prisma.$queryRaw`SELECT 1`;
+    
+    let hasScheduleEvents = false;
+    try {
+      await prisma.$queryRaw`SELECT 1 FROM "ScheduleEvent" LIMIT 1`;
+      hasScheduleEvents = true;
+    } catch (e) {
+      // Table doesn't exist
+    }
+    
+    res.json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      message: 'KHS CRM API on Railway',
+      database: 'connected',
+      hasScheduleEvents
+    });
+  } catch (error) {
+    res.json({ 
+      status: 'error', 
+      timestamp: new Date().toISOString(),
+      message: 'KHS CRM API on Railway',
+      database: 'error',
+      error: error.message
+    });
+  }
 });
 
 // Debug endpoint to check if tasks column exists
@@ -2065,6 +2088,12 @@ app.delete('/api/users/:userId', authMiddleware, ownerMiddleware, async (req, re
 // GET /api/schedule-events - Get all schedule events
 app.get('/api/schedule-events', authMiddleware, async (req, res) => {
   try {
+    // Check if scheduleEvent model exists
+    if (!prisma.scheduleEvent) {
+      console.log('[ScheduleEvents] Model not available yet');
+      return res.json([]);
+    }
+
     const { startDate, endDate, eventType } = req.query;
     
     const where = {};
@@ -2104,6 +2133,11 @@ app.get('/api/schedule-events', authMiddleware, async (req, res) => {
     res.json(eventsWithParsedWorkers);
   } catch (error) {
     console.error('[ScheduleEvents] Error fetching events:', error);
+    // Return empty array instead of error to prevent frontend crashes
+    if (error.message?.includes('scheduleEvent') || error.code === 'P2021') {
+      console.log('[ScheduleEvents] Table does not exist yet, returning empty array');
+      return res.json([]);
+    }
     res.status(500).json({ error: 'Failed to fetch schedule events' });
   }
 });
@@ -2111,6 +2145,12 @@ app.get('/api/schedule-events', authMiddleware, async (req, res) => {
 // POST /api/schedule-events - Create a new schedule event
 app.post('/api/schedule-events', authMiddleware, async (req, res) => {
   try {
+    // Check if scheduleEvent model exists
+    if (!prisma.scheduleEvent) {
+      console.log('[ScheduleEvents] Model not available yet');
+      return res.status(503).json({ error: 'Schedule events feature not available yet' });
+    }
+
     const { title, description, eventType, startDate, endDate, customerId, workers } = req.body;
     
     // Validate required fields
@@ -2165,6 +2205,9 @@ app.post('/api/schedule-events', authMiddleware, async (req, res) => {
     res.json(eventWithParsedWorkers);
   } catch (error) {
     console.error('[ScheduleEvents] Error creating event:', error);
+    if (error.message?.includes('scheduleEvent') || error.code === 'P2021') {
+      return res.status(503).json({ error: 'Schedule events feature not available yet' });
+    }
     res.status(500).json({ error: 'Failed to create schedule event' });
   }
 });
@@ -2172,6 +2215,11 @@ app.post('/api/schedule-events', authMiddleware, async (req, res) => {
 // PUT /api/schedule-events/:id - Update a schedule event
 app.put('/api/schedule-events/:id', authMiddleware, async (req, res) => {
   try {
+    // Check if scheduleEvent model exists
+    if (!prisma.scheduleEvent) {
+      console.log('[ScheduleEvents] Model not available yet');
+      return res.status(503).json({ error: 'Schedule events feature not available yet' });
+    }
     const { id } = req.params;
     const { title, description, eventType, startDate, endDate, customerId, workers } = req.body;
     
@@ -2216,6 +2264,9 @@ app.put('/api/schedule-events/:id', authMiddleware, async (req, res) => {
     res.json(eventWithParsedWorkers);
   } catch (error) {
     console.error('[ScheduleEvents] Error updating event:', error);
+    if (error.message?.includes('scheduleEvent') || error.code === 'P2021') {
+      return res.status(503).json({ error: 'Schedule events feature not available yet' });
+    }
     res.status(500).json({ error: 'Failed to update schedule event' });
   }
 });
@@ -2223,6 +2274,11 @@ app.put('/api/schedule-events/:id', authMiddleware, async (req, res) => {
 // DELETE /api/schedule-events/:id - Delete a schedule event
 app.delete('/api/schedule-events/:id', authMiddleware, async (req, res) => {
   try {
+    // Check if scheduleEvent model exists
+    if (!prisma.scheduleEvent) {
+      console.log('[ScheduleEvents] Model not available yet');
+      return res.status(503).json({ error: 'Schedule events feature not available yet' });
+    }
     const { id } = req.params;
     
     await prisma.scheduleEvent.delete({
@@ -2232,6 +2288,9 @@ app.delete('/api/schedule-events/:id', authMiddleware, async (req, res) => {
     res.json({ message: 'Schedule event deleted successfully' });
   } catch (error) {
     console.error('[ScheduleEvents] Error deleting event:', error);
+    if (error.message?.includes('scheduleEvent') || error.code === 'P2021') {
+      return res.status(503).json({ error: 'Schedule events feature not available yet' });
+    }
     res.status(500).json({ error: 'Failed to delete schedule event' });
   }
 });
