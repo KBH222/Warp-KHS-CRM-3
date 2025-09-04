@@ -18,7 +18,9 @@ const ScheduleCalendar = () => {
     startDate: '',
     endDate: '',
     description: '',
-    type: 'personal' // personal event type
+    type: 'personal', // 'personal' or 'work'
+    customerId: '',
+    workers: []
   });
   
   // Load jobs from API
@@ -120,6 +122,7 @@ const ScheduleCalendar = () => {
   // Get workers from service for display
   const [workers, setWorkers] = useState([]);
   const [workerColors, setWorkerColors] = useState({});
+  const [customers, setCustomers] = useState([]);
 
   useEffect(() => {
     const loadWorkers = async () => {
@@ -141,6 +144,18 @@ const ScheduleCalendar = () => {
     
     loadWorkers();
   }, []);
+
+  // Load customers when modal is opened
+  useEffect(() => {
+    if (showJobModal) {
+      customersApi.getAll().then(customerList => {
+        setCustomers(customerList || []);
+      }).catch(err => {
+        console.error('Failed to load customers:', err);
+        setCustomers([]);
+      });
+    }
+  }, [showJobModal]);
 
   // Calendar helpers
 
@@ -183,7 +198,9 @@ const ScheduleCalendar = () => {
       startDate: formatDateForInput(date),
       endDate: formatDateForInput(date),
       description: '',
-      type: 'personal'
+      type: 'personal',
+      customerId: '',
+      workers: []
     });
     setShowJobModal(true);
   };
@@ -1504,21 +1521,79 @@ const ScheduleCalendar = () => {
             
             <form onSubmit={(e) => {
               e.preventDefault();
-              // For now, just show info about using Customers page for work jobs
-              toast.info('Personal events feature coming soon. Please use Customers page to add work jobs.');
+              if (newEvent.type === 'work') {
+                toast.info('Work events will be saved to the selected customer. Feature coming soon.');
+              } else {
+                toast.info('Personal events feature coming soon.');
+              }
               setShowJobModal(false);
               setSelectedDate(null);
             }}>
+              {/* Event Type Selector */}
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '16.1px', fontWeight: '500' }}>
+                  Event Type
+                </label>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setNewEvent({ ...newEvent, type: 'personal', customerId: '', workers: [] })}
+                    style={{
+                      flex: 1,
+                      padding: '12px',
+                      backgroundColor: newEvent.type === 'personal' ? '#9333EA' : 'white',
+                      color: newEvent.type === 'personal' ? 'white' : '#374151',
+                      border: `2px solid ${newEvent.type === 'personal' ? '#9333EA' : '#E5E7EB'}`,
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '16.1px',
+                      fontWeight: newEvent.type === 'personal' ? '600' : '400',
+                      transition: 'all 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    <span style={{ fontSize: '20px' }}>🏠</span>
+                    Personal
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNewEvent({ ...newEvent, type: 'work' })}
+                    style={{
+                      flex: 1,
+                      padding: '12px',
+                      backgroundColor: newEvent.type === 'work' ? '#3B82F6' : 'white',
+                      color: newEvent.type === 'work' ? 'white' : '#374151',
+                      border: `2px solid ${newEvent.type === 'work' ? '#3B82F6' : '#E5E7EB'}`,
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '16.1px',
+                      fontWeight: newEvent.type === 'work' ? '600' : '400',
+                      transition: 'all 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    <span style={{ fontSize: '20px' }}>💼</span>
+                    Work
+                  </button>
+                </div>
+              </div>
+
               {/* Event Title */}
               <div style={{ marginBottom: '16px' }}>
                 <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                  Event Title *
+                  {newEvent.type === 'work' ? 'Job Title' : 'Event Title'} *
                 </label>
                 <input
                   type="text"
                   value={newEvent.title}
                   onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-                  placeholder="e.g., Doctor appointment, Meeting"
+                  placeholder={newEvent.type === 'work' ? "e.g., Kitchen remodel, Deck installation" : "e.g., Doctor appointment, Meeting"}
                   style={{
                     width: '100%',
                     padding: '8px 12px',
@@ -1530,45 +1605,132 @@ const ScheduleCalendar = () => {
                 />
               </div>
 
+              {/* Customer - Only for work events */}
+              {newEvent.type === 'work' && (
+                <div style={{ marginBottom: '16px' }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
+                    Customer *
+                  </label>
+                  <select
+                    value={newEvent.customerId}
+                    onChange={(e) => setNewEvent({ ...newEvent, customerId: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      border: '1px solid #E5E7EB',
+                      borderRadius: '6px',
+                      fontSize: '16.1px',
+                      backgroundColor: 'white'
+                    }}
+                    required={newEvent.type === 'work'}
+                  >
+                    <option value="">Select a customer...</option>
+                    {customers.map(customer => (
+                      <option key={customer.id} value={customer.id}>
+                        {customer.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Workers - Only for work events */}
+              {newEvent.type === 'work' && (
+                <div style={{ marginBottom: '16px' }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
+                    Assign Workers
+                  </label>
+                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                    {workers.map(worker => (
+                      <label
+                        key={worker}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          cursor: 'pointer',
+                          padding: '6px 12px',
+                          border: '1px solid #E5E7EB',
+                          borderRadius: '6px',
+                          backgroundColor: newEvent.workers.includes(worker) ? '#EBF5FF' : 'white',
+                          transition: 'all 0.2s'
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          value={worker}
+                          checked={newEvent.workers.includes(worker)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setNewEvent({ ...newEvent, workers: [...newEvent.workers, worker] });
+                            } else {
+                              setNewEvent({ ...newEvent, workers: newEvent.workers.filter(w => w !== worker) });
+                            }
+                          }}
+                          style={{ cursor: 'pointer' }}
+                        />
+                        <span style={{ fontSize: '14px', fontWeight: newEvent.workers.includes(worker) ? '500' : '400' }}>
+                          {worker}
+                        </span>
+                        <div style={{
+                          width: '12px',
+                          height: '12px',
+                          backgroundColor: workerColors[worker],
+                          borderRadius: '3px'
+                        }} />
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Date Range */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                    Start Date *
-                  </label>
-                  <input
-                    type="date"
-                    value={newEvent.startDate}
-                    onChange={(e) => setNewEvent({ ...newEvent, startDate: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '8px 12px',
-                      border: '1px solid #E5E7EB',
-                      borderRadius: '6px',
-                      fontSize: '16.1px'
-                    }}
-                    required
-                  />
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
+                  Event Dates
+                </label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '8px' }}>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', color: '#6B7280' }}>
+                      Start Date *
+                    </label>
+                    <input
+                      type="date"
+                      value={newEvent.startDate}
+                      onChange={(e) => setNewEvent({ ...newEvent, startDate: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '8px 12px',
+                        border: '1px solid #E5E7EB',
+                        borderRadius: '6px',
+                        fontSize: '16.1px'
+                      }}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', color: '#6B7280' }}>
+                      End Date *
+                    </label>
+                    <input
+                      type="date"
+                      value={newEvent.endDate}
+                      onChange={(e) => setNewEvent({ ...newEvent, endDate: e.target.value })}
+                      min={newEvent.startDate}
+                      style={{
+                        width: '100%',
+                        padding: '8px 12px',
+                        border: '1px solid #E5E7EB',
+                        borderRadius: '6px',
+                        fontSize: '16.1px'
+                      }}
+                      required
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '16.1px', fontWeight: '500' }}>
-                    End Date *
-                  </label>
-                  <input
-                    type="date"
-                    value={newEvent.endDate}
-                    onChange={(e) => setNewEvent({ ...newEvent, endDate: e.target.value })}
-                    min={newEvent.startDate}
-                    style={{
-                      width: '100%',
-                      padding: '8px 12px',
-                      border: '1px solid #E5E7EB',
-                      borderRadius: '6px',
-                      fontSize: '16.1px'
-                    }}
-                    required
-                  />
-                </div>
+                <p style={{ fontSize: '13px', color: '#6B7280', margin: 0 }}>
+                  💡 Tip: Set different end date for multi-day events
+                </p>
               </div>
 
               {/* Description */}
@@ -1592,36 +1754,6 @@ const ScheduleCalendar = () => {
                 />
               </div>
 
-              {/* Info Box */}
-              <div style={{
-                padding: '12px',
-                backgroundColor: '#EBF5FF',
-                borderRadius: '6px',
-                marginBottom: '20px'
-              }}>
-                <p style={{ color: '#1E40AF', fontSize: '14px', margin: 0 }}>
-                  <strong>Note:</strong> This form is for personal events. To add work jobs with customer information, 
-                  please use the <button
-                    type="button"
-                    onClick={() => {
-                      navigate('/customers');
-                      setShowJobModal(false);
-                    }}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      padding: 0,
-                      color: '#1E40AF',
-                      textDecoration: 'underline',
-                      cursor: 'pointer',
-                      fontSize: 'inherit',
-                      fontWeight: '600'
-                    }}
-                  >
-                    Customers page
-                  </button>.
-                </p>
-              </div>
 
               {/* Buttons */}
               <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
@@ -1635,7 +1767,9 @@ const ScheduleCalendar = () => {
                       startDate: '',
                       endDate: '',
                       description: '',
-                      type: 'personal'
+                      type: 'personal',
+                      customerId: '',
+                      workers: []
                     });
                   }}
                   style={{
@@ -1654,7 +1788,7 @@ const ScheduleCalendar = () => {
                   type="submit"
                   style={{
                     padding: '8px 16px',
-                    backgroundColor: '#9333EA',
+                    backgroundColor: newEvent.type === 'work' ? '#3B82F6' : '#9333EA',
                     color: 'white',
                     border: 'none',
                     borderRadius: '6px',
@@ -1662,7 +1796,7 @@ const ScheduleCalendar = () => {
                     fontSize: '16.1px'
                   }}
                 >
-                  Add Personal Event
+                  Add {newEvent.type === 'work' ? 'Work' : 'Personal'} Event
                 </button>
               </div>
             </form>
