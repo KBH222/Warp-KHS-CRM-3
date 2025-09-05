@@ -134,6 +134,10 @@ const KHSInfo = () => {
   const [newToolName, setNewToolName] = useState('');
   const [showDemo, setShowDemo] = useState(false);
   const [showInstall, setShowInstall] = useState(false);
+  const [draggedToolId, setDraggedToolId] = useState<string | null>(null);
+  const [draggedCategory, setDraggedCategory] = useState<string | null>(null);
+  const [dragOverToolId, setDragOverToolId] = useState<string | null>(null);
+  const [selectedTools, setSelectedTools] = useState<Set<string>>(new Set());
 
   const tabs = ['Tools List', 'SOP', 'Office Docs', 'Specs'];
   const demoCategories = ['Kitchen', 'Bathroom', 'Flooring', 'Framing', 'Drywall'];
@@ -240,6 +244,14 @@ return;
       ...prev,
       [category]: prev[category].map(tool => ({ ...tool, checked: false })),
     }));
+    // Also clear any selections for this category
+    setSelectedTools(prev => {
+      const newSet = new Set(prev);
+      tools[category]?.forEach(tool => {
+        newSet.delete(tool.id);
+      });
+      return newSet;
+    });
   };
 
   const renderToolsList = () => {
@@ -472,21 +484,86 @@ return;
               </div>
 
               <div style={{ marginBottom: '16px' }}>
-                {tools[category]?.map(tool => (
+                {tools[category]?.map((tool, index) => (
                   <div
                     key={tool.id}
+                    draggable={!isLocked}
+                    onDragStart={(e) => {
+                      if (isLocked) return;
+                      setDraggedToolId(tool.id);
+                      setDraggedCategory(category);
+                      e.dataTransfer.effectAllowed = 'move';
+                      e.currentTarget.style.opacity = '0.5';
+                    }}
+                    onDragEnd={(e) => {
+                      e.currentTarget.style.opacity = '1';
+                      setDraggedToolId(null);
+                      setDraggedCategory(null);
+                      setDragOverToolId(null);
+                    }}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      if (draggedToolId && tool.id !== draggedToolId && draggedCategory === category) {
+                        setDragOverToolId(tool.id);
+                      }
+                    }}
+                    onDragLeave={() => {
+                      setDragOverToolId(null);
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      if (draggedToolId && tool.id !== draggedToolId && draggedCategory === category) {
+                        const categoryTools = [...(tools[category] || [])];
+                        const draggedIndex = categoryTools.findIndex(t => t.id === draggedToolId);
+                        const dropIndex = categoryTools.findIndex(t => t.id === tool.id);
+                        
+                        if (draggedIndex !== -1 && dropIndex !== -1) {
+                          const [draggedTool] = categoryTools.splice(draggedIndex, 1);
+                          categoryTools.splice(dropIndex, 0, draggedTool);
+                          
+                          setTools(prev => ({
+                            ...prev,
+                            [category]: categoryTools
+                          }));
+                        }
+                      }
+                      setDragOverToolId(null);
+                    }}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       padding: '4px 8px',
                       backgroundColor: tool.checked ? '#F9FAFB' : 'white',
                       borderBottom: '1px solid #E5E7EB',
+                      cursor: !isLocked && draggedToolId === tool.id ? 'grabbing' : 'move',
+                      transition: 'all 0.2s',
+                      transform: dragOverToolId === tool.id ? 'translateY(1px)' : 'none',
+                      boxShadow: dragOverToolId === tool.id ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
+                      opacity: draggedToolId === tool.id ? 0.5 : 1,
                       minHeight: '32px',
                     }}
                   >
+                    {/* Drag Handle */}
+                    {!isLocked && (
+                      <div
+                        style={{
+                          padding: '2px',
+                          cursor: 'grab',
+                          color: '#9CA3AF',
+                          fontSize: '14px',
+                          lineHeight: 1,
+                          marginRight: '6px',
+                          userSelect: 'none'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = '#6B7280'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#9CA3AF'}
+                      >
+                        ≡
+                      </div>
+                    )}
                     <input
                       type="checkbox"
-                      checked={tool.checked}
+                      checked={tool.checked || selectedTools.has(tool.id)}
                       onChange={() => handleToolCheck(category, tool.id)}
                       style={{
                         width: '16px',
