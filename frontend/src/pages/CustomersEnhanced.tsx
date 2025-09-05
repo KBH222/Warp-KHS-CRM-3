@@ -47,6 +47,17 @@ const CustomersEnhanced = () => {
         }
       }
       
+      @keyframes slideDown {
+        from {
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      
       /* Checkbox animations */
       input[type="checkbox"] {
         transition: all 0.2s ease;
@@ -2502,17 +2513,156 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
             {/* Tasks Tab (formerly Lists) */}
             {activeTab === 'lists' && (
               <div style={{ 
-                position: 'relative', 
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column'
               }}>
+                {/* Task Input at Top */}
+                <div style={{
+                  backgroundColor: 'white',
+                  borderBottom: '1px solid #E5E7EB',
+                  padding: '12px',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)'
+                }}>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <input
+                      type="text"
+                      value={newTaskText}
+                      onChange={(e) => setNewTaskText(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          // Add task directly
+                          if (newTaskText.trim()) {
+                            const newTask = {
+                              id: `task-${Date.now()}`,
+                              text: newTaskText.trim(),
+                              completed: false,
+                              order: jobData.tasks.length
+                            };
+                            setJobData(prev => ({
+                              ...prev,
+                              tasks: [...prev.tasks, newTask]
+                            }));
+                            setNewTaskText('');
+                            setUnsavedChanges(true);
+                          }
+                        }
+                      }}
+                      placeholder="Add a task..."
+                      style={{
+                        flex: 1,
+                        padding: '8px 12px',
+                        border: '1px solid #E5E7EB',
+                        borderRadius: '6px',
+                        fontSize: '15px',
+                        outline: 'none',
+                        transition: 'border-color 0.2s'
+                      }}
+                      onFocus={(e) => e.currentTarget.style.borderColor = '#3B82F6'}
+                      onBlur={(e) => e.currentTarget.style.borderColor = '#E5E7EB'}
+                    />
+                  </div>
+                </div>
+
+                {/* Bulk Actions Toolbar - Now below input */}
+                {selectedTasks.size > 0 && (
+                  <div className="bulk-actions-toolbar" style={{
+                    backgroundColor: '#F9FAFB',
+                    borderBottom: '1px solid #E5E7EB',
+                    padding: '8px 12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '8px',
+                    animation: 'slideDown 0.2s ease-out'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <button
+                        onClick={() => {
+                          if (selectedTasks.size === jobData.tasks.length) {
+                            // Deselect all
+                            setSelectedTasks(new Set());
+                          } else {
+                            // Select all
+                            setSelectedTasks(new Set(jobData.tasks.map(t => t.id)));
+                          }
+                        }}
+                        style={{
+                          padding: '6px 12px',
+                          backgroundColor: 'white',
+                          color: '#374151',
+                          border: '1px solid #E5E7EB',
+                          borderRadius: '4px',
+                          fontSize: '13px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {selectedTasks.size === jobData.tasks.length ? 'Deselect All' : 'Select All'}
+                      </button>
+                      <span style={{ fontSize: '13px', color: '#6B7280' }}>
+                        {selectedTasks.size} selected
+                      </span>
+                    </div>
+                    
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <button
+                        onClick={() => {
+                          const newTasks = jobData.tasks.map(t =>
+                            selectedTasks.has(t.id) ? { ...t, completed: true } : t
+                          );
+                          setJobData(prev => ({ ...prev, tasks: newTasks }));
+                          setSelectedTasks(new Set());
+                          setUnsavedChanges(true);
+                          toast.success(`${selectedTasks.size} tasks marked as complete`);
+                        }}
+                        style={{
+                          padding: '6px 12px',
+                          backgroundColor: '#10B981',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          fontSize: '13px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Complete
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (confirm(`Delete ${selectedTasks.size} selected tasks?`)) {
+                            setJobData(prev => ({
+                              ...prev,
+                              tasks: prev.tasks.filter(t => !selectedTasks.has(t.id))
+                            }));
+                            setSelectedTasks(new Set());
+                            setUnsavedChanges(true);
+                            toast.success(`${selectedTasks.size} tasks deleted`);
+                          }
+                        }}
+                        style={{
+                          padding: '6px 12px',
+                          backgroundColor: '#EF4444',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          fontSize: '13px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* Task List */}
                 <div style={{ 
                   flex: 1,
                   overflowY: 'auto',
                   WebkitOverflowScrolling: 'touch',
-                  paddingBottom: '60px'
+                  position: 'relative'
                 }}>
                   {jobData.tasks.length === 0 ? (
                     <div style={{
@@ -2731,160 +2881,6 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                         </div>
                       ))
                   )}
-                </div>
-
-                {/* Bulk Actions Toolbar */}
-                {selectedTasks.size > 0 && (
-                  <div className="bulk-actions-toolbar" style={{
-                    position: 'sticky',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    backgroundColor: 'white',
-                    borderTop: '1px solid #E5E7EB',
-                    padding: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '8px',
-                    boxShadow: '0 -4px 12px rgba(0,0,0,0.05)',
-                    animation: 'slideUp 0.3s ease-out',
-                    zIndex: 10
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <button
-                        onClick={() => {
-                          if (selectedTasks.size === jobData.tasks.length) {
-                            // Deselect all
-                            setSelectedTasks(new Set());
-                          } else {
-                            // Select all
-                            setSelectedTasks(new Set(jobData.tasks.map(t => t.id)));
-                          }
-                        }}
-                        style={{
-                          padding: '8px 16px',
-                          backgroundColor: '#F3F4F6',
-                          color: '#374151',
-                          border: 'none',
-                          borderRadius: '6px',
-                          fontSize: '14px',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        {selectedTasks.size === jobData.tasks.length ? 'Deselect All' : 'Select All'}
-                      </button>
-                      <span style={{ fontSize: '14px', color: '#6B7280' }}>
-                        {selectedTasks.size} selected
-                      </span>
-                    </div>
-                    
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <button
-                        onClick={() => {
-                          const newTasks = jobData.tasks.map(t =>
-                            selectedTasks.has(t.id) ? { ...t, completed: true } : t
-                          );
-                          setJobData(prev => ({ ...prev, tasks: newTasks }));
-                          setSelectedTasks(new Set());
-                          setUnsavedChanges(true);
-                          toast.success(`${selectedTasks.size} tasks marked as complete`);
-                        }}
-                        style={{
-                          padding: '8px 16px',
-                          backgroundColor: '#10B981',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '6px',
-                          fontSize: '14px',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        Complete
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (confirm(`Delete ${selectedTasks.size} selected tasks?`)) {
-                            setJobData(prev => ({
-                              ...prev,
-                              tasks: prev.tasks.filter(t => !selectedTasks.has(t.id))
-                            }));
-                            setSelectedTasks(new Set());
-                            setUnsavedChanges(true);
-                            toast.success(`${selectedTasks.size} tasks deleted`);
-                          }
-                        }}
-                        style={{
-                          padding: '8px 16px',
-                          backgroundColor: '#EF4444',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '6px',
-                          fontSize: '14px',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Fixed Task Input at Bottom */}
-                <div style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  backgroundColor: 'white',
-                  borderTop: '1px solid #E5E7EB',
-                  padding: '12px',
-                  boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
-                  zIndex: 10
-                }}>
-                  <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                      <input
-                        type="text"
-                        value={newTaskText}
-                        onChange={(e) => setNewTaskText(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            // Add task directly
-                            if (newTaskText.trim()) {
-                              const newTask = {
-                                id: `task-${Date.now()}`,
-                                text: newTaskText.trim(),
-                                completed: false,
-                                order: jobData.tasks.length
-                              };
-                              setJobData(prev => ({
-                                ...prev,
-                                tasks: [...prev.tasks, newTask]
-                              }));
-                              setNewTaskText('');
-                              setUnsavedChanges(true);
-                            }
-                          }
-                        }}
-                        placeholder="Add a task..."
-                        style={{
-                          flex: 1,
-                          padding: '8px 12px',
-                          border: '1px solid #E5E7EB',
-                          borderRadius: '6px',
-                          fontSize: '15px',
-                          outline: 'none',
-                          transition: 'border-color 0.2s'
-                        }}
-                        onFocus={(e) => e.currentTarget.style.borderColor = '#3B82F6'}
-                        onBlur={(e) => e.currentTarget.style.borderColor = '#E5E7EB'}
-                      />
-                      {/* NO ADD BUTTON - JUST PRESS ENTER */}
-                    </div>
-                  </div>
                 </div>
 
               </div>
