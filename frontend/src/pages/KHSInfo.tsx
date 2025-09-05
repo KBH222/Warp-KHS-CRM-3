@@ -410,7 +410,7 @@ return;
                   cursor: isLocked ? 'not-allowed' : 'pointer',
                 }}
               />
-              <span style={{ fontSize: '18px', fontWeight: '600', color: '#111827' }}>Repair</span>
+              <span style={{ fontSize: '18px', fontWeight: '600', color: '#DC2626' }}>Repair</span>
             </label>
           </div>
 
@@ -521,12 +521,12 @@ return;
           {/* Repair Categories */}
           {showRepair && (
             <div style={{
-              backgroundColor: '#DCFCE7',
+              backgroundColor: '#FEE2E2',
               padding: '16px',
               borderRadius: '8px',
               marginBottom: '16px',
             }}>
-              <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#14532D', marginBottom: '12px' }}>
+              <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#991B1B', marginBottom: '12px' }}>
                 Repair
               </h4>
               <div style={{
@@ -545,10 +545,10 @@ return;
                       cursor: isLocked ? 'not-allowed' : 'pointer',
                       opacity: isLocked ? 0.6 : 1,
                       whiteSpace: 'nowrap',
-                      backgroundColor: selectedCategories.includes(category) ? '#BBF7D0' : 'white',
+                      backgroundColor: selectedCategories.includes(category) ? '#FECACA' : 'white',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #86EFAC',
+                      border: '1px solid #FCA5A5',
                     }}
                   >
                     <input
@@ -563,7 +563,7 @@ return;
                         cursor: isLocked ? 'not-allowed' : 'pointer',
                       }}
                     />
-                    <span style={{ fontSize: '16px', color: '#14532D' }}>{category}</span>
+                    <span style={{ fontSize: '16px', color: '#7F1D1D' }}>{category}</span>
                   </label>
                 ))}
               </div>
