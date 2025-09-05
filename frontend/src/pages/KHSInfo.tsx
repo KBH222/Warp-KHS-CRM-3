@@ -454,23 +454,17 @@ return;
                   {category}
                 </h4>
                 <button
+                  type="button"
                   onClick={() => handleClearCategory(category)}
                   style={{
-                    padding: '4px 12px',
-                    backgroundColor: '#FB923C',
+                    padding: '6px 12px',
+                    backgroundColor: '#10B981',
                     color: 'white',
                     border: 'none',
                     borderRadius: '4px',
                     cursor: 'pointer',
-                    fontSize: '18px',
+                    fontSize: '13px',
                     fontWeight: '500',
-                    transition: 'background-color 0.2s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#F97316';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#FB923C';
                   }}
                 >
                   Clear
@@ -484,54 +478,63 @@ return;
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '8px 0',
-                      borderBottom: '1px solid #F3F4F6',
+                      padding: '4px 8px',
+                      backgroundColor: tool.checked ? '#F9FAFB' : 'white',
+                      borderBottom: '1px solid #E5E7EB',
+                      minHeight: '32px',
                     }}
                   >
-                    <label
+                    <input
+                      type="checkbox"
+                      checked={tool.checked}
+                      onChange={() => handleToolCheck(category, tool.id)}
                       style={{
-                        display: 'flex',
-                        alignItems: 'center',
+                        width: '16px',
+                        height: '16px',
+                        marginRight: '8px',
                         cursor: 'pointer',
-                        flex: 1,
+                        accentColor: '#3B82F6',
+                        flexShrink: 0
                       }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={tool.checked}
-                        onChange={() => handleToolCheck(category, tool.id)}
-                        style={{
-                          marginRight: '12px',
-                          width: '16px',
-                          height: '16px',
-                          cursor: 'pointer',
-                        }}
-                      />
-                      <span style={{
-                        fontSize: '18px',
-                        color: '#374151',
-                        textDecoration: tool.checked ? 'line-through' : 'none',
-                        opacity: tool.checked ? 0.6 : 1,
-                      }}>
-                        {tool.name}
-                      </span>
-                    </label>
+                    />
+                    <span style={{
+                      fontSize: '14px',
+                      lineHeight: '20px',
+                      textDecoration: tool.checked ? 'line-through' : 'none',
+                      color: tool.checked ? '#9CA3AF' : '#111827',
+                      flex: 1,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>
+                      {tool.name}
+                    </span>
                     {tool.custom && !isLocked && (
                       <button
+                        type="button"
                         onClick={() => handleDeleteTool(category, tool.id)}
                         style={{
-                          padding: '4px 8px',
-                          backgroundColor: '#FEE2E2',
-                          color: '#DC2626',
+                          padding: '2px 6px',
+                          backgroundColor: 'transparent',
+                          color: '#9CA3AF',
                           border: 'none',
-                          borderRadius: '4px',
+                          borderRadius: '3px',
                           cursor: 'pointer',
-                          fontSize: '14px',
-                          fontWeight: '500',
+                          fontSize: '18px',
+                          lineHeight: '18px',
+                          marginLeft: '8px',
+                          flexShrink: 0
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = '#EF4444';
+                          e.currentTarget.style.backgroundColor = '#FEE2E2';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = '#9CA3AF';
+                          e.currentTarget.style.backgroundColor = 'transparent';
                         }}
                       >
-                        Delete
+                        ×
                       </button>
                     )}
                   </div>
@@ -540,7 +543,12 @@ return;
 
               {/* Add new tool */}
               {!isLocked && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px' }}>
+                <div style={{
+                  backgroundColor: 'white',
+                  borderBottom: '1px solid #E5E7EB',
+                  padding: '12px',
+                  marginTop: '8px'
+                }}>
                   <input
                     type="text"
                     value={newToolName}
@@ -550,30 +558,19 @@ return;
                         handleAddTool(category);
                       }
                     }}
-                    placeholder="Add new tool..."
+                    placeholder="Add a tool..."
                     style={{
-                      width: '200px',
-                      padding: '6px 10px',
-                      border: '1px solid #D1D5DB',
+                      width: '100%',
+                      padding: '8px 12px',
+                      border: '1px solid #E5E7EB',
                       borderRadius: '6px',
-                      fontSize: '18px',
+                      fontSize: '15px',
+                      outline: 'none',
+                      transition: 'border-color 0.2s'
                     }}
+                    onFocus={(e) => e.currentTarget.style.borderColor = '#3B82F6'}
+                    onBlur={(e) => e.currentTarget.style.borderColor = '#E5E7EB'}
                   />
-                  <button
-                    onClick={() => handleAddTool(category)}
-                    style={{
-                      padding: '6px 12px',
-                      backgroundColor: '#3B82F6',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      fontSize: '18px',
-                      fontWeight: '500',
-                    }}
-                  >
-                    Add
-                  </button>
                 </div>
               )}
             </div>
