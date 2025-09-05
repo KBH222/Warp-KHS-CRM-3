@@ -2614,30 +2614,27 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                           style={{
                             display: 'flex',
                             alignItems: 'center',
-                            padding: '8px',
-                            backgroundColor: 'white',
-                            border: '1px solid #E5E7EB',
-                            borderRadius: '6px',
-                            marginBottom: '2px',
-                            cursor: isDraggingTask && draggedTaskId === task.id ? 'grabbing' : 'grab',
+                            padding: '4px 8px',
+                            backgroundColor: task.completed ? '#F9FAFB' : 'white',
+                            borderBottom: '1px solid #E5E7EB',
+                            cursor: isDraggingTask && draggedTaskId === task.id ? 'grabbing' : 'move',
                             transition: 'all 0.2s',
-                            transform: dragOverTaskId === task.id ? 'translateY(2px)' : 'none',
-                            boxShadow: dragOverTaskId === task.id ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
-                            opacity: draggedTaskId === task.id ? 0.5 : 1
+                            transform: dragOverTaskId === task.id ? 'translateY(1px)' : 'none',
+                            boxShadow: dragOverTaskId === task.id ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
+                            opacity: draggedTaskId === task.id ? 0.5 : 1,
+                            minHeight: '32px'
                           }}
                         >
                           {/* Drag Handle */}
                           <div
                             style={{
-                              padding: '4px',
+                              padding: '2px',
                               cursor: 'grab',
                               color: '#9CA3AF',
-                              fontSize: '16px',
+                              fontSize: '14px',
                               lineHeight: 1,
-                              marginRight: '4px',
-                              userSelect: 'none',
-                              display: 'flex',
-                              alignItems: 'center'
+                              marginRight: '6px',
+                              userSelect: 'none'
                             }}
                             onMouseEnter={(e) => e.currentTarget.style.color = '#6B7280'}
                             onMouseLeave={(e) => e.currentTarget.style.color = '#9CA3AF'}
@@ -2646,54 +2643,51 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                           </div>
 
                           {/* Checkbox */}
-                          <label
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              flex: 1,
-                              cursor: 'pointer',
-                              userSelect: 'none',
-                              minHeight: '28px' // Reduced height
+                          <input
+                            type="checkbox"
+                            checked={task.completed || selectedTasks.has(task.id)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedTasks(prev => new Set([...prev, task.id]));
+                              } else {
+                                setSelectedTasks(prev => {
+                                  const newSet = new Set(prev);
+                                  newSet.delete(task.id);
+                                  return newSet;
+                                });
+                              }
+                              
+                              // Also update task completion status
+                              const newTasks = jobData.tasks.map(t =>
+                                t.id === task.id ? { ...t, completed: e.target.checked } : t
+                              );
+                              setJobData(prev => ({ ...prev, tasks: newTasks }));
+                              setUnsavedChanges(true);
                             }}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={task.completed || selectedTasks.has(task.id)}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedTasks(prev => new Set([...prev, task.id]));
-                                } else {
-                                  setSelectedTasks(prev => {
-                                    const newSet = new Set(prev);
-                                    newSet.delete(task.id);
-                                    return newSet;
-                                  });
-                                }
-                                
-                                // Also update task completion status
-                                const newTasks = jobData.tasks.map(t =>
-                                  t.id === task.id ? { ...t, completed: e.target.checked } : t
-                                );
-                                setJobData(prev => ({ ...prev, tasks: newTasks }));
-                                setUnsavedChanges(true);
-                              }}
-                              style={{
-                                width: '20px',
-                                height: '20px',
-                                marginRight: '8px',
-                                cursor: 'pointer',
-                                accentColor: '#3B82F6'
-                              }}
-                            />
-                            <span style={{
-                              fontSize: '15px',
-                              textDecoration: task.completed ? 'line-through' : 'none',
-                              color: task.completed ? '#9CA3AF' : '#111827',
-                              transition: 'all 0.2s'
-                            }}>
-                              {task.text}
-                            </span>
-                          </label>
+                            style={{
+                              width: '16px',
+                              height: '16px',
+                              marginRight: '8px',
+                              cursor: 'pointer',
+                              accentColor: '#3B82F6',
+                              flexShrink: 0
+                            }}
+                          />
+
+                          {/* Task Text */}
+                          <span style={{
+                            fontSize: '14px',
+                            lineHeight: '20px',
+                            textDecoration: task.completed ? 'line-through' : 'none',
+                            color: task.completed ? '#9CA3AF' : '#111827',
+                            transition: 'all 0.2s',
+                            flex: 1,
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}>
+                            {task.text}
+                          </span>
 
                           {/* Delete Button */}
                           <button
@@ -2711,14 +2705,17 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                               setUnsavedChanges(true);
                             }}
                             style={{
-                              padding: '4px',
+                              padding: '2px 6px',
                               backgroundColor: 'transparent',
                               color: '#9CA3AF',
                               border: 'none',
-                              borderRadius: '4px',
+                              borderRadius: '3px',
                               cursor: 'pointer',
-                              fontSize: '16px',
-                              transition: 'all 0.2s'
+                              fontSize: '18px',
+                              lineHeight: '18px',
+                              transition: 'all 0.2s',
+                              marginLeft: '8px',
+                              flexShrink: 0
                             }}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.color = '#EF4444';
