@@ -2618,7 +2618,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                             backgroundColor: 'white',
                             border: '1px solid #E5E7EB',
                             borderRadius: '8px',
-                            marginBottom: '8px',
+                            marginBottom: '4px',
                             cursor: isDraggingTask && draggedTaskId === task.id ? 'grabbing' : 'grab',
                             transition: 'all 0.2s',
                             transform: dragOverTaskId === task.id ? 'translateY(2px)' : 'none',
