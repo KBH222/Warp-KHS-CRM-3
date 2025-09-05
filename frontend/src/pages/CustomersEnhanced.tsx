@@ -2630,6 +2630,9 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                             tasks: updatedTasks
                           }));
                           
+                          // Also clear all selections
+                          setSelectedTasks(new Set());
+                          
                           setUnsavedChanges(true);
                           toast.success(`${completedCount} task${completedCount > 1 ? 's' : ''} unmarked`);
                         }}
@@ -2646,16 +2649,18 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                         Clear
                       </button>
                       <button
-                        onClick={() => {
-                          if (confirm(`Delete ${selectedTasks.size} selected tasks?`)) {
-                            setJobData(prev => ({
-                              ...prev,
-                              tasks: prev.tasks.filter(t => !selectedTasks.has(t.id))
-                            }));
-                            setSelectedTasks(new Set());
-                            setUnsavedChanges(true);
-                            toast.success(`${selectedTasks.size} tasks deleted`);
-                          }
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const deleteCount = selectedTasks.size;
+                          setJobData(prev => ({
+                            ...prev,
+                            tasks: prev.tasks.filter(t => !selectedTasks.has(t.id))
+                          }));
+                          setSelectedTasks(new Set());
+                          setUnsavedChanges(true);
+                          toast.success(`${deleteCount} task${deleteCount > 1 ? 's' : ''} deleted`);
                         }}
                         style={{
                           padding: '6px 12px',
