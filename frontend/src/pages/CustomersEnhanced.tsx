@@ -2608,7 +2608,10 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     
                     <div style={{ display: 'flex', gap: '6px' }}>
                       <button
-                        onClick={() => {
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
                           // Clear all completed tasks
                           const completedCount = jobData.tasks.filter(t => t.completed).length;
                           if (completedCount === 0) {
@@ -2616,10 +2619,14 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                             return;
                           }
                           if (confirm(`Clear ${completedCount} completed task${completedCount > 1 ? 's' : ''}?`)) {
+                            // Remove completed tasks
+                            const remainingTasks = jobData.tasks.filter(t => !t.completed);
                             setJobData(prev => ({
                               ...prev,
-                              tasks: prev.tasks.filter(t => !t.completed)
+                              tasks: remainingTasks
                             }));
+                            // Clear selections since some selected tasks might have been removed
+                            setSelectedTasks(new Set());
                             setUnsavedChanges(true);
                             toast.success(`${completedCount} completed task${completedCount > 1 ? 's' : ''} cleared`);
                           }
