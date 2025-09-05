@@ -2512,7 +2512,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   flex: 1,
                   overflowY: 'auto',
                   WebkitOverflowScrolling: 'touch',
-                  paddingBottom: '80px'
+                  paddingBottom: '60px'
                 }}>
                   {jobData.tasks.length === 0 ? (
                     <div style={{
@@ -2614,11 +2614,11 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                           style={{
                             display: 'flex',
                             alignItems: 'center',
-                            padding: '12px',
+                            padding: '8px',
                             backgroundColor: 'white',
                             border: '1px solid #E5E7EB',
-                            borderRadius: '8px',
-                            marginBottom: '4px',
+                            borderRadius: '6px',
+                            marginBottom: '2px',
                             cursor: isDraggingTask && draggedTaskId === task.id ? 'grabbing' : 'grab',
                             transition: 'all 0.2s',
                             transform: dragOverTaskId === task.id ? 'translateY(2px)' : 'none',
@@ -2629,12 +2629,12 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                           {/* Drag Handle */}
                           <div
                             style={{
-                              padding: '8px',
+                              padding: '4px',
                               cursor: 'grab',
                               color: '#9CA3AF',
-                              fontSize: '20px',
+                              fontSize: '16px',
                               lineHeight: 1,
-                              marginRight: '8px',
+                              marginRight: '4px',
                               userSelect: 'none',
                               display: 'flex',
                               alignItems: 'center'
@@ -2653,7 +2653,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                               flex: 1,
                               cursor: 'pointer',
                               userSelect: 'none',
-                              minHeight: '44px' // Touch-friendly height
+                              minHeight: '28px' // Reduced height
                             }}
                           >
                             <input
@@ -2678,15 +2678,15 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                                 setUnsavedChanges(true);
                               }}
                               style={{
-                                width: '24px',
-                                height: '24px',
-                                marginRight: '12px',
+                                width: '20px',
+                                height: '20px',
+                                marginRight: '8px',
                                 cursor: 'pointer',
                                 accentColor: '#3B82F6'
                               }}
                             />
                             <span style={{
-                              fontSize: '16px',
+                              fontSize: '15px',
                               textDecoration: task.completed ? 'line-through' : 'none',
                               color: task.completed ? '#9CA3AF' : '#111827',
                               transition: 'all 0.2s'
@@ -2711,13 +2711,13 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                               setUnsavedChanges(true);
                             }}
                             style={{
-                              padding: '8px',
+                              padding: '4px',
                               backgroundColor: 'transparent',
                               color: '#9CA3AF',
                               border: 'none',
                               borderRadius: '4px',
                               cursor: 'pointer',
-                              fontSize: '18px',
+                              fontSize: '16px',
                               transition: 'all 0.2s'
                             }}
                             onMouseEnter={(e) => {
@@ -2745,11 +2745,11 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                     right: 0,
                     backgroundColor: 'white',
                     borderTop: '1px solid #E5E7EB',
-                    padding: '12px',
+                    padding: '8px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    gap: '12px',
+                    gap: '8px',
                     boxShadow: '0 -4px 12px rgba(0,0,0,0.05)',
                     animation: 'slideUp 0.3s ease-out',
                     zIndex: 10
@@ -2841,7 +2841,7 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                   right: 0,
                   backgroundColor: 'white',
                   borderTop: '1px solid #E5E7EB',
-                  padding: '16px',
+                  padding: '12px',
                   boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
                   zIndex: 10
                 }}>
@@ -2875,10 +2875,10 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                         placeholder="Add a task..."
                         style={{
                           flex: 1,
-                          padding: '12px 16px',
-                          border: '2px solid #E5E7EB',
-                          borderRadius: '8px',
-                          fontSize: '16.1px',
+                          padding: '8px 12px',
+                          border: '1px solid #E5E7EB',
+                          borderRadius: '6px',
+                          fontSize: '15px',
                           outline: 'none',
                           transition: 'border-color 0.2s'
                         }}
