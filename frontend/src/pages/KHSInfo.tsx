@@ -124,6 +124,90 @@ const predefinedTools: CategoryTools = {
     { id: 'p11', name: 'Paint can opener', checked: false },
     { id: 'p12', name: 'Rags', checked: false },
   ],
+  'Plumbing': [
+    { id: 'pl1', name: 'Pipe wrench', checked: false },
+    { id: 'pl2', name: 'Basin wrench', checked: false },
+    { id: 'pl3', name: 'Plunger', checked: false },
+    { id: 'pl4', name: 'Snake/Auger', checked: false },
+    { id: 'pl5', name: 'Torch and solder', checked: false },
+    { id: 'pl6', name: 'Pipe cutter', checked: false },
+    { id: 'pl7', name: 'Teflon tape', checked: false },
+    { id: 'pl8', name: 'Plumbers putty', checked: false },
+    { id: 'pl9', name: 'Flux and brushes', checked: false },
+    { id: 'pl10', name: 'Compression fittings', checked: false },
+    { id: 'pl11', name: 'Shutoff valve key', checked: false },
+    { id: 'pl12', name: 'Leak detector', checked: false },
+  ],
+  'Electrical': [
+    { id: 'el1', name: 'Multimeter', checked: false },
+    { id: 'el2', name: 'Wire strippers', checked: false },
+    { id: 'el3', name: 'Voltage tester', checked: false },
+    { id: 'el4', name: 'Circuit finder', checked: false },
+    { id: 'el5', name: 'Fish tape', checked: false },
+    { id: 'el6', name: 'Wire nuts', checked: false },
+    { id: 'el7', name: 'Electrical tape', checked: false },
+    { id: 'el8', name: 'GFCI tester', checked: false },
+    { id: 'el9', name: 'Insulated screwdrivers', checked: false },
+    { id: 'el10', name: 'Lineman pliers', checked: false },
+    { id: 'el11', name: 'Cable staples', checked: false },
+    { id: 'el12', name: 'Junction boxes', checked: false },
+  ],
+  'HVAC': [
+    { id: 'hv1', name: 'Manifold gauges', checked: false },
+    { id: 'hv2', name: 'Vacuum pump', checked: false },
+    { id: 'hv3', name: 'Refrigerant scale', checked: false },
+    { id: 'hv4', name: 'Leak detector', checked: false },
+    { id: 'hv5', name: 'Thermometer', checked: false },
+    { id: 'hv6', name: 'Fin comb', checked: false },
+    { id: 'hv7', name: 'Coil cleaner', checked: false },
+    { id: 'hv8', name: 'Filter replacements', checked: false },
+    { id: 'hv9', name: 'Duct tape', checked: false },
+    { id: 'hv10', name: 'Sheet metal tools', checked: false },
+    { id: 'hv11', name: 'Pipe insulation', checked: false },
+    { id: 'hv12', name: 'Service wrench', checked: false },
+  ],
+  'Roofing': [
+    { id: 'rf1', name: 'Roofing nailer', checked: false },
+    { id: 'rf2', name: 'Shingle remover', checked: false },
+    { id: 'rf3', name: 'Roofing hammer', checked: false },
+    { id: 'rf4', name: 'Tin snips', checked: false },
+    { id: 'rf5', name: 'Chalk line', checked: false },
+    { id: 'rf6', name: 'Roofing knife', checked: false },
+    { id: 'rf7', name: 'Safety harness', checked: false },
+    { id: 'rf8', name: 'Tar paper', checked: false },
+    { id: 'rf9', name: 'Roofing cement', checked: false },
+    { id: 'rf10', name: 'Flashing', checked: false },
+    { id: 'rf11', name: 'Ridge vent', checked: false },
+    { id: 'rf12', name: 'Roof brackets', checked: false },
+  ],
+  'Windows': [
+    { id: 'w1', name: 'Glazing tool', checked: false },
+    { id: 'w2', name: 'Putty knife', checked: false },
+    { id: 'w3', name: 'Glass cutter', checked: false },
+    { id: 'w4', name: 'Caulk gun', checked: false },
+    { id: 'w5', name: 'Level', checked: false },
+    { id: 'w6', name: 'Shims', checked: false },
+    { id: 'w7', name: 'Weatherstripping', checked: false },
+    { id: 'w8', name: 'Glazing compound', checked: false },
+    { id: 'w9', name: 'Screen tool', checked: false },
+    { id: 'w10', name: 'Suction cups', checked: false },
+    { id: 'w11', name: 'Window cleaner', checked: false },
+    { id: 'w12', name: 'Insulation foam', checked: false },
+  ],
+  'Doors': [
+    { id: 'd1', name: 'Door jig', checked: false },
+    { id: 'd2', name: 'Hole saw', checked: false },
+    { id: 'd3', name: 'Chisel set', checked: false },
+    { id: 'd4', name: 'Strike plate tool', checked: false },
+    { id: 'd5', name: 'Level', checked: false },
+    { id: 'd6', name: 'Shims', checked: false },
+    { id: 'd7', name: 'Weatherstripping', checked: false },
+    { id: 'd8', name: 'Door sweep', checked: false },
+    { id: 'd9', name: 'Hinge pins', checked: false },
+    { id: 'd10', name: 'Lockset', checked: false },
+    { id: 'd11', name: 'Threshold', checked: false },
+    { id: 'd12', name: 'Door closer', checked: false },
+  ],
 };
 
 const KHSInfo = () => {
@@ -134,6 +218,7 @@ const KHSInfo = () => {
   const [newToolName, setNewToolName] = useState('');
   const [showDemo, setShowDemo] = useState(false);
   const [showInstall, setShowInstall] = useState(false);
+  const [showRepair, setShowRepair] = useState(false);
   const [draggedToolId, setDraggedToolId] = useState<string | null>(null);
   const [draggedCategory, setDraggedCategory] = useState<string | null>(null);
   const [dragOverToolId, setDragOverToolId] = useState<string | null>(null);
@@ -143,6 +228,7 @@ const KHSInfo = () => {
   const tabs = ['Tools List', 'SOP', 'Office Docs', 'Specs'];
   const demoCategories = ['Kitchen', 'Bathroom', 'Flooring', 'Framing', 'Drywall'];
   const installCategories = ['Cabinets', 'Drywall', 'Flooring', 'Framing', 'Decking', 'Painting'];
+  const repairCategories = ['Plumbing', 'Electrical', 'HVAC', 'Roofing', 'Windows', 'Doors'];
 
   // Load saved data on mount
   useEffect(() => {
@@ -154,25 +240,27 @@ const KHSInfo = () => {
       setIsLocked(parsed.isLocked || false);
       setShowDemo(parsed.showDemo || false);
       setShowInstall(parsed.showInstall || false);
+      setShowRepair(parsed.showRepair || false);
     } else {
       // Initialize with predefined tools
       setTools(predefinedTools);
     }
   }, []);
 
-  // Clear invalid categories when Demo/Install changes
+  // Clear invalid categories when Demo/Install/Repair changes
   useEffect(() => {
-    if (!showDemo && !showInstall) {
+    if (!showDemo && !showInstall && !showRepair) {
       setSelectedCategories([]);
     } else {
       // Remove categories that are no longer available
       const availableCategories = [
         ...(showDemo ? demoCategories : []),
-        ...(showInstall ? installCategories : [])
+        ...(showInstall ? installCategories : []),
+        ...(showRepair ? repairCategories : [])
       ];
       setSelectedCategories(prev => prev.filter(cat => availableCategories.includes(cat)));
     }
-  }, [showDemo, showInstall, demoCategories, installCategories]);
+  }, [showDemo, showInstall, showRepair, demoCategories, installCategories, repairCategories]);
 
   // Save data whenever it changes
   useEffect(() => {
@@ -182,9 +270,10 @@ const KHSInfo = () => {
       isLocked,
       showDemo,
       showInstall,
+      showRepair,
     };
     localStorage.setItem('khs-tools-data', JSON.stringify(dataToSave));
-  }, [tools, selectedCategories, isLocked, showDemo, showInstall]);
+  }, [tools, selectedCategories, isLocked, showDemo, showInstall, showRepair]);
 
   const handleCategoryToggle = (category: string) => {
     if (isLocked) {
@@ -302,6 +391,27 @@ return;
               />
               <span style={{ fontSize: '18px', fontWeight: '600', color: '#111827' }}>Install</span>
             </label>
+
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              cursor: isLocked ? 'not-allowed' : 'pointer',
+              opacity: isLocked ? 0.6 : 1,
+            }}>
+              <input
+                type="checkbox"
+                checked={showRepair}
+                onChange={(e) => setShowRepair(e.target.checked)}
+                disabled={isLocked}
+                style={{
+                  marginRight: '8px',
+                  width: '18px',
+                  height: '18px',
+                  cursor: isLocked ? 'not-allowed' : 'pointer',
+                }}
+              />
+              <span style={{ fontSize: '18px', fontWeight: '600', color: '#111827' }}>Repair</span>
+            </label>
           </div>
 
           {/* Demo Categories */}
@@ -407,10 +517,62 @@ return;
               </div>
             </div>
           )}
+
+          {/* Repair Categories */}
+          {showRepair && (
+            <div style={{
+              backgroundColor: '#DCFCE7',
+              padding: '16px',
+              borderRadius: '8px',
+              marginBottom: '16px',
+            }}>
+              <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#14532D', marginBottom: '12px' }}>
+                Repair
+              </h4>
+              <div style={{
+                display: 'flex',
+                gap: '12px',
+                overflowX: 'auto',
+                paddingBottom: '8px',
+                WebkitOverflowScrolling: 'touch',
+              }}>
+                {repairCategories.map(category => (
+                  <label
+                    key={category}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      cursor: isLocked ? 'not-allowed' : 'pointer',
+                      opacity: isLocked ? 0.6 : 1,
+                      whiteSpace: 'nowrap',
+                      backgroundColor: selectedCategories.includes(category) ? '#BBF7D0' : 'white',
+                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      border: '1px solid #86EFAC',
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedCategories.includes(category)}
+                      onChange={() => handleCategoryToggle(category)}
+                      disabled={isLocked}
+                      style={{
+                        marginRight: '8px',
+                        width: '16px',
+                        height: '16px',
+                        cursor: isLocked ? 'not-allowed' : 'pointer',
+                      }}
+                    />
+                    <span style={{ fontSize: '16px', color: '#14532D' }}>{category}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Global Add Tool Input */}
-        {(showDemo || showInstall) && selectedCategories.length > 0 && !isLocked && (
+        {(showDemo || showInstall || showRepair) && selectedCategories.length > 0 && !isLocked && (
           <div style={{
             backgroundColor: 'white',
             border: '1px solid #E5E7EB',
@@ -483,7 +645,7 @@ return;
         )}
 
         {/* Selected Categories Tools */}
-        {!showDemo && !showInstall ? null : selectedCategories.length === 0 ? (
+        {!showDemo && !showInstall && !showRepair ? null : selectedCategories.length === 0 ? (
           <div style={{
             textAlign: 'center',
             padding: '40px',
