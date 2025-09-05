@@ -2606,30 +2606,61 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       </span>
                     </div>
                     
-                    <button
-                      onClick={() => {
-                        if (confirm(`Delete ${selectedTasks.size} selected tasks?`)) {
-                          setJobData(prev => ({
-                            ...prev,
-                            tasks: prev.tasks.filter(t => !selectedTasks.has(t.id))
-                          }));
-                          setSelectedTasks(new Set());
-                          setUnsavedChanges(true);
-                          toast.success(`${selectedTasks.size} tasks deleted`);
-                        }
-                      }}
-                      style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#EF4444',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        fontSize: '13px',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Delete
-                    </button>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <button
+                        onClick={() => {
+                          // Clear all completed tasks
+                          const completedCount = jobData.tasks.filter(t => t.completed).length;
+                          if (completedCount === 0) {
+                            toast.info('No completed tasks to clear');
+                            return;
+                          }
+                          if (confirm(`Clear ${completedCount} completed task${completedCount > 1 ? 's' : ''}?`)) {
+                            setJobData(prev => ({
+                              ...prev,
+                              tasks: prev.tasks.filter(t => !t.completed)
+                            }));
+                            setUnsavedChanges(true);
+                            toast.success(`${completedCount} completed task${completedCount > 1 ? 's' : ''} cleared`);
+                          }
+                        }}
+                        style={{
+                          padding: '6px 12px',
+                          backgroundColor: '#10B981',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          fontSize: '13px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Clear
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (confirm(`Delete ${selectedTasks.size} selected tasks?`)) {
+                            setJobData(prev => ({
+                              ...prev,
+                              tasks: prev.tasks.filter(t => !selectedTasks.has(t.id))
+                            }));
+                            setSelectedTasks(new Set());
+                            setUnsavedChanges(true);
+                            toast.success(`${selectedTasks.size} tasks deleted`);
+                          }
+                        }}
+                        style={{
+                          padding: '6px 12px',
+                          backgroundColor: '#EF4444',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          fontSize: '13px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 )}
 
