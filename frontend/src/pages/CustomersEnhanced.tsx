@@ -2606,54 +2606,30 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                       </span>
                     </div>
                     
-                    <div style={{ display: 'flex', gap: '6px' }}>
-                      <button
-                        onClick={() => {
-                          const newTasks = jobData.tasks.map(t =>
-                            selectedTasks.has(t.id) ? { ...t, completed: true } : t
-                          );
-                          setJobData(prev => ({ ...prev, tasks: newTasks }));
+                    <button
+                      onClick={() => {
+                        if (confirm(`Delete ${selectedTasks.size} selected tasks?`)) {
+                          setJobData(prev => ({
+                            ...prev,
+                            tasks: prev.tasks.filter(t => !selectedTasks.has(t.id))
+                          }));
                           setSelectedTasks(new Set());
                           setUnsavedChanges(true);
-                          toast.success(`${selectedTasks.size} tasks marked as complete`);
-                        }}
-                        style={{
-                          padding: '6px 12px',
-                          backgroundColor: '#10B981',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          fontSize: '13px',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        Complete
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (confirm(`Delete ${selectedTasks.size} selected tasks?`)) {
-                            setJobData(prev => ({
-                              ...prev,
-                              tasks: prev.tasks.filter(t => !selectedTasks.has(t.id))
-                            }));
-                            setSelectedTasks(new Set());
-                            setUnsavedChanges(true);
-                            toast.success(`${selectedTasks.size} tasks deleted`);
-                          }
-                        }}
-                        style={{
-                          padding: '6px 12px',
-                          backgroundColor: '#EF4444',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          fontSize: '13px',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
+                          toast.success(`${selectedTasks.size} tasks deleted`);
+                        }
+                      }}
+                      style={{
+                        padding: '6px 12px',
+                        backgroundColor: '#EF4444',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        fontSize: '13px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Delete
+                    </button>
                   </div>
                 )}
 
