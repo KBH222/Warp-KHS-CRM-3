@@ -2612,24 +2612,26 @@ const AddJobModal = ({ customer, onClose, onSave, existingJob = null, onDelete =
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          // Clear all completed tasks
+                          // Unmark all completed tasks (remove strikethrough)
                           const completedCount = jobData.tasks.filter(t => t.completed).length;
                           if (completedCount === 0) {
-                            toast.info('No completed tasks to clear');
+                            toast.info('No completed tasks to unmark');
                             return;
                           }
-                          if (confirm(`Clear ${completedCount} completed task${completedCount > 1 ? 's' : ''}?`)) {
-                            // Remove completed tasks
-                            const remainingTasks = jobData.tasks.filter(t => !t.completed);
-                            setJobData(prev => ({
-                              ...prev,
-                              tasks: remainingTasks
-                            }));
-                            // Clear selections since some selected tasks might have been removed
-                            setSelectedTasks(new Set());
-                            setUnsavedChanges(true);
-                            toast.success(`${completedCount} completed task${completedCount > 1 ? 's' : ''} cleared`);
-                          }
+                          
+                          // Set all tasks' completed status to false
+                          const updatedTasks = jobData.tasks.map(task => ({
+                            ...task,
+                            completed: false
+                          }));
+                          
+                          setJobData(prev => ({
+                            ...prev,
+                            tasks: updatedTasks
+                          }));
+                          
+                          setUnsavedChanges(true);
+                          toast.success(`${completedCount} task${completedCount > 1 ? 's' : ''} unmarked`);
                         }}
                         style={{
                           padding: '6px 12px',
