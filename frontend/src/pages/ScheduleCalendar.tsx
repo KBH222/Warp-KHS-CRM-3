@@ -4,6 +4,26 @@ import { workerService } from '../services/worker.service';
 import { customersApi, scheduleEventsApi } from '../services/api';
 import { toast } from 'react-toastify';
 
+// Timezone utility functions to handle date conversion properly
+const formatDateForInput = (date) => {
+  if (!date) return '';
+  // Create a new date and adjust for local timezone
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const convertLocalDateToUTC = (dateString) => {
+  if (!dateString) return '';
+  // Parse the date string as local time (not UTC)
+  const [year, month, day] = dateString.split('-').map(Number);
+  const localDate = new Date(year, month - 1, day);
+  // Return ISO string which will be in UTC
+  return localDate.toISOString();
+};
+
 const ScheduleCalendar = () => {
   const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -210,10 +230,6 @@ const ScheduleCalendar = () => {
     });
   };
 
-  const formatDateForInput = (date) => {
-    const d = new Date(date);
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  };
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
@@ -1571,13 +1587,13 @@ const ScheduleCalendar = () => {
               e.preventDefault();
               
               try {
-                // Create the event data
+                // Create the event data with proper timezone handling
                 const eventData = {
                   title: newEvent.title,
                   description: newEvent.description || '',
                   eventType: newEvent.type,
-                  startDate: newEvent.startDate,
-                  endDate: newEvent.endDate,
+                  startDate: convertLocalDateToUTC(newEvent.startDate),
+                  endDate: convertLocalDateToUTC(newEvent.endDate),
                   customerId: newEvent.type === 'work' ? newEvent.customerId : undefined,
                   workers: newEvent.type === 'work' ? newEvent.workers : undefined
                 };

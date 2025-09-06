@@ -1240,6 +1240,153 @@ app.delete('/api/workers/:id', authMiddleware, async (req, res) => {
   }
 });
 
+// Schedule Events Routes
+app.get('/api/schedule-events', authMiddleware, async (req, res) => {
+  try {
+    const { startDate, endDate, eventType } = req.query;
+    const where = {};
+    
+    if (startDate || endDate) {
+      where.startDate = {};
+      if (startDate) where.startDate.gte = new Date(startDate);
+      if (endDate) where.startDate.lte = new Date(endDate);
+    }
+    
+    if (eventType) {
+      where.eventType = eventType;
+    }
+    
+    const events = await prisma.scheduleEvent.findMany({
+      where,
+      include: {
+        customer: {
+          select: {
+            id: true,
+            name: true,
+            reference: true
+          }
+        }
+      },
+      orderBy: {
+        startDate: 'asc'
+      }
+    });
+    
+    res.json(events);
+  } catch (error) {
+    console.error('Error fetching schedule events:', error);
+    res.status(500).json({ error: 'Failed to fetch schedule events' });
+  }
+});
+
+app.get('/api/schedule-events/:id', authMiddleware, async (req, res) => {
+  try {
+    const event = await prisma.scheduleEvent.findUnique({
+      where: { id: req.params.id },
+      include: {
+        customer: {
+          select: {
+            id: true,
+            name: true,
+            reference: true
+          }
+        }
+      }
+    });
+    
+    if (!event) {
+      return res.status(404).json({ error: 'Schedule event not found' });
+    }
+    
+    res.json(event);
+  } catch (error) {
+    console.error('Error fetching schedule event:', error);
+    res.status(500).json({ error: 'Failed to fetch schedule event' });
+  }
+});
+
+app.post('/api/schedule-events', authMiddleware, async (req, res) => {
+  try {
+    const { title, description, eventType, startDate, endDate, customerId, workers } = req.body;
+    
+    if (!title || !eventType || !startDate || !endDate) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+    
+    const event = await prisma.scheduleEvent.create({
+      data: {
+        title,
+        description,
+        eventType,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+        customerId,
+        workers: workers || []
+      },
+      include: {
+        customer: {
+          select: {
+            id: true,
+            name: true,
+            reference: true
+          }
+        }
+      }
+    });
+    
+    res.status(201).json(event);
+  } catch (error) {
+    console.error('Error creating schedule event:', error);
+    res.status(500).json({ error: 'Failed to create schedule event' });
+  }
+});
+
+app.put('/api/schedule-events/:id', authMiddleware, async (req, res) => {
+  try {
+    const { title, description, eventType, startDate, endDate, customerId, workers } = req.body;
+    
+    const updateData = {};
+    if (title !== undefined) updateData.title = title;
+    if (description !== undefined) updateData.description = description;
+    if (eventType !== undefined) updateData.eventType = eventType;
+    if (startDate !== undefined) updateData.startDate = new Date(startDate);
+    if (endDate !== undefined) updateData.endDate = new Date(endDate);
+    if (customerId !== undefined) updateData.customerId = customerId;
+    if (workers !== undefined) updateData.workers = workers;
+    
+    const event = await prisma.scheduleEvent.update({
+      where: { id: req.params.id },
+      data: updateData,
+      include: {
+        customer: {
+          select: {
+            id: true,
+            name: true,
+            reference: true
+          }
+        }
+      }
+    });
+    
+    res.json(event);
+  } catch (error) {
+    console.error('Error updating schedule event:', error);
+    res.status(500).json({ error: 'Failed to update schedule event' });
+  }
+});
+
+app.delete('/api/schedule-events/:id', authMiddleware, async (req, res) => {
+  try {
+    await prisma.scheduleEvent.delete({
+      where: { id: req.params.id }
+    });
+    res.status(204).send();
+  } catch (error) {
+    console.error('Error deleting schedule event:', error);
+    res.status(500).json({ error: 'Failed to delete schedule event' });
+  }
+});
+
 // Sync Routes
 app.post('/api/sync/push', authMiddleware, async (req, res) => {
   try {
