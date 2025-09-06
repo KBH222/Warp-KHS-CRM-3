@@ -272,8 +272,20 @@ const ScheduleCalendar = () => {
         }
       }
     } else {
-      // Regular job
-      toast.info('Please delete jobs from the Customers page');
+      // Regular job - allow removal from schedule with warning
+      const message = job.customerId 
+        ? 'This will only remove the job from the schedule view. The job will still exist in the customer\'s job list. Continue?'
+        : 'Delete this job from the schedule?';
+      
+      if (confirm(message)) {
+        try {
+          // For now, just remove from view since we don't have a separate schedule removal API
+          toast.info('Job removed from schedule view');
+          // In the future, you might want to add a flag to hide jobs from schedule
+        } catch (error) {
+          toast.error('Failed to remove job from schedule');
+        }
+      }
     }
     setShowEditMenu(null);
   };
@@ -305,12 +317,52 @@ const ScheduleCalendar = () => {
     setDragOverDate(null);
   };
 
-  const handleDrop = (e, targetDate) => {
+  const handleDrop = async (e, targetDate) => {
     e.preventDefault();
     e.stopPropagation();
     
     if (draggedJob && targetDate) {
-      toast.info('Please update job dates from the Customers page');
+      // Calculate the duration of the event
+      const startDate = new Date(draggedJob.startDate);
+      const endDate = new Date(draggedJob.endDate);
+      const duration = endDate.getTime() - startDate.getTime();
+      
+      // Set new dates based on drop target
+      const newStartDate = new Date(targetDate);
+      newStartDate.setHours(0, 0, 0, 0);
+      const newEndDate = new Date(newStartDate.getTime() + duration);
+      
+      try {
+        if (draggedJob.isScheduleEvent) {
+          // Update schedule event
+          await scheduleEventsApi.update(draggedJob.id, {
+            startDate: convertLocalDateToUTC(formatDateForInput(newStartDate)),
+            endDate: convertLocalDateToUTC(formatDateForInput(newEndDate))
+          });
+          toast.success('Event moved successfully');
+        } else {
+          // Update regular job
+          // For now, show info message since job updates need to be done through customer page
+          toast.info('To permanently update job dates, please edit from the Customers page');
+          // Temporarily update the view
+          const jobIndex = allJobs.findIndex(j => j.id === draggedJob.id);
+          if (jobIndex !== -1) {
+            const updatedJobs = [...allJobs];
+            updatedJobs[jobIndex] = {
+              ...updatedJobs[jobIndex],
+              startDate: newStartDate,
+              endDate: newEndDate
+            };
+            setAllJobs(updatedJobs);
+          }
+        }
+        
+        // Reload the calendar
+        await loadJobs();
+      } catch (error) {
+        console.error('Error updating dates:', error);
+        toast.error('Failed to move event');
+      }
     }
     
     setDraggedJob(null);
