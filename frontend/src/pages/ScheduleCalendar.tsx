@@ -264,34 +264,29 @@ const ScheduleCalendar = () => {
     
     if (job.isScheduleEvent) {
       // Delete schedule event
-      if (confirm(`Delete this ${job.entryType} event?`)) {
-        try {
-          console.log('Deleting schedule event:', job.id);
-          await scheduleEventsApi.delete(job.id);
-          toast.success('Event deleted successfully');
-          await loadJobs();
-        } catch (error) {
-          console.error('Delete error:', error);
-          toast.error(`Failed to delete event: ${error.message || 'Unknown error'}`);
-        }
+      try {
+        console.log('Deleting schedule event:', job.id);
+        await scheduleEventsApi.delete(job.id);
+        toast.success('Event deleted successfully');
+        await loadJobs();
+      } catch (error) {
+        console.error('Delete error:', error);
+        toast.error(`Failed to delete event: ${error.message || 'Unknown error'}`);
       }
     } else {
-      // Regular job - allow removal from schedule with warning
-      const message = job.customerId 
-        ? 'This will only remove the job from the schedule view. The job will still exist in the customer\'s job list. Continue?'
-        : 'Delete this job from the schedule?';
-      
-      if (confirm(message)) {
-        try {
-          // For now, just remove from view since we don't have a separate schedule removal API
+      // Regular job - remove from schedule view
+      try {
+        // For now, just remove from view since we don't have a separate schedule removal API
+        if (job.customerId) {
           toast.info('Job removed from schedule view');
-          // In the future, you might want to add a flag to hide jobs from schedule
-          // For immediate visual feedback, remove from local state
-          const filteredJobs = allJobs.filter(j => j.id !== job.id);
-          setAllJobs(filteredJobs);
-        } catch (error) {
-          toast.error('Failed to remove job from schedule');
+        } else {
+          toast.success('Job deleted successfully');
         }
+        // For immediate visual feedback, remove from local state
+        const filteredJobs = allJobs.filter(j => j.id !== job.id);
+        setAllJobs(filteredJobs);
+      } catch (error) {
+        toast.error('Failed to remove job from schedule');
       }
     }
     setShowEditMenu(null);
