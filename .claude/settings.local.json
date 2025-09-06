@@ -84,7 +84,9 @@
       "Bash(/dev/null)",
       "Bash(tree:*)",
       "Bash(start C:Usersbrucedevkhs-crmtest-tasks-no-button.html)",
-      "Bash(start http://localhost:5173/clear-sw.html)"
+      "Bash(start http://localhost:5173/clear-sw.html)",
+      "Bash(cat:*)",
+      "WebFetch(domain:khs-crm-3-production.up.railway.app)"
     ],
     "deny": []
   }

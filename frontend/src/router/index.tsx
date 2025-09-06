@@ -23,7 +23,7 @@ const JobPhotos = lazy(() => import('../pages/JobPhotos'));
 const PracticalSecurity = lazy(() => import('../pages/PracticalSecurity'));
 const SyncDebug = lazy(() => import('../pages/SyncDebug'));
 const DebugEnv = lazy(() => import('../pages/DebugEnv'));
-const KHSInfo = lazy(() => import('../pages/KHSInfoSimple'));
+const KHSInfo = lazy(() => import('../pages/KHSInfo'));
 const TestConnection = lazy(() => import('../pages/TestConnection'));
 
 // Loading component
