@@ -260,15 +260,19 @@ const ScheduleCalendar = () => {
   };
 
   const handleDeleteJob = async (job) => {
+    console.log('handleDeleteJob called with:', job);
+    
     if (job.isScheduleEvent) {
       // Delete schedule event
       if (confirm(`Delete this ${job.entryType} event?`)) {
         try {
+          console.log('Deleting schedule event:', job.id);
           await scheduleEventsApi.delete(job.id);
           toast.success('Event deleted successfully');
           await loadJobs();
         } catch (error) {
-          toast.error('Failed to delete event');
+          console.error('Delete error:', error);
+          toast.error(`Failed to delete event: ${error.message || 'Unknown error'}`);
         }
       }
     } else {
@@ -282,6 +286,9 @@ const ScheduleCalendar = () => {
           // For now, just remove from view since we don't have a separate schedule removal API
           toast.info('Job removed from schedule view');
           // In the future, you might want to add a flag to hide jobs from schedule
+          // For immediate visual feedback, remove from local state
+          const filteredJobs = allJobs.filter(j => j.id !== job.id);
+          setAllJobs(filteredJobs);
         } catch (error) {
           toast.error('Failed to remove job from schedule');
         }
@@ -634,7 +641,7 @@ const ScheduleCalendar = () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeleteJob(job.id);
+                        handleDeleteJob(job);
                       }}
                       style={{
                         display: 'block',
@@ -1318,7 +1325,7 @@ const ScheduleCalendar = () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeleteJob(job.id);
+                        handleDeleteJob(job);
                       }}
                       style={{
                         display: 'block',
