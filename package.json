@@ -12,6 +12,7 @@
     "dev:frontend": "npm run dev --workspace=frontend",
     "build": "cd frontend && npm install && npm run build",
     "start": "npx prisma generate && node server.js",
+    "preview": "npm run start",
     "build:railway": "npm install && cd frontend && npm install && npm run build && cd .. && npx prisma generate",
     "start:railway": "npx prisma generate && node server.js",
     "migrate:prod": "node migrate-production.js",
