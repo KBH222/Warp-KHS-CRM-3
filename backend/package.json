@@ -7,6 +7,7 @@
     "dev": "tsx watch src/server.ts",
     "build": "npm install && prisma generate && tsc",
     "render-build": "npm install --production=false && prisma generate && tsc",
+    "railway-build": "npm install && prisma db push --accept-data-loss && prisma generate && tsc",
     "start": "node dist/server-simple.js",
     "start:full": "node dist/server.js",
     "postinstall": "prisma generate",
