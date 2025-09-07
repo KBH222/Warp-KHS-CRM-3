@@ -11,7 +11,7 @@
     "dev:backend": "npm run dev --workspace=backend",
     "dev:frontend": "npm run dev --workspace=frontend",
     "build": "cd frontend && npm install && npm run build",
-    "start": "npx prisma generate && node server.js",
+    "start": "npx prisma migrate deploy && npx prisma generate && node server.js",
     "preview": "npm run start",
     "build:railway": "npm install && cd frontend && npm install && npm run build && cd .. && npx prisma generate",
     "start:railway": "npx prisma migrate deploy && npx prisma generate && node server.js",
