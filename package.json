@@ -14,7 +14,7 @@
     "start": "npx prisma generate && node server.js",
     "preview": "npm run start",
     "build:railway": "npm install && cd frontend && npm install && npm run build && cd .. && npx prisma generate",
-    "start:railway": "npx prisma generate && node server.js",
+    "start:railway": "npx prisma migrate deploy && npx prisma generate && node server.js",
     "migrate:prod": "node migrate-production.js",
     "build:vercel": "cd frontend && npm install && npm run build",
     "build:shared": "echo 'Shared build skipped - no longer needed'",
